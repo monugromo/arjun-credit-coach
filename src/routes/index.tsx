@@ -923,7 +923,7 @@ function RazorpayScreen({ user, onBack, onSuccess }:
       <div className="p-4 bg-white border-b border-gray-100 flex items-center justify-between">
         <div>
           <div className="text-[11px] uppercase font-semibold text-gray-500">Total payable</div>
-          <div className="text-2xl font-extrabold text-gray-900">₹99<span className="text-sm text-gray-500 font-medium">/month</span></div>
+          <div className="text-2xl font-extrabold text-gray-900">₹{amount}<span className="text-sm text-gray-500 font-medium">/{planLabel}</span></div>
         </div>
         <div className="text-right">
           <div className="text-[11px] text-gray-500">Paying as</div>
