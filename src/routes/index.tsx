@@ -902,6 +902,9 @@ function RazorpayScreen({ user, onBack, onSuccess }:
   { user: DemoUser; onBack: () => void; onSuccess: () => void }) {
   const [method, setMethod] = useState<"upi" | "card" | "netbanking">("upi");
   const [processing, setProcessing] = useState(false);
+  const trialAvailable = user.key === "ntc";
+  const amount = trialAvailable ? 9 : 99;
+  const planLabel = trialAvailable ? "7-day trial" : "monthly";
   const pay = () => {
     setProcessing(true);
     setTimeout(onSuccess, 1800);
