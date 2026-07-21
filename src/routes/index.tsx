@@ -17,7 +17,7 @@ import actionPlanPreview from "@/assets/action-plan-preview.jpg";
 import scoreProjection from "@/assets/score-projection.jpg";
 import {
   DEMOS, maskPan, distressedTasks, ntcTasks, distressedFactors,
-  fdCards, updatesFeed, type DemoUser, type ChatMsg, type FdCard,
+  fdCards, updatesFeed, initialChat, type DemoUser, type ChatMsg, type FdCard,
 } from "@/lib/groscore-data";
 
 export const Route = createFileRoute("/")({
@@ -139,7 +139,7 @@ function Index() {
     go("chat");
   };
 
-  // Auto-play intro stream when entering chat for the first time, then auto-call
+  // Auto-play intro stream when entering chat for the first time, then show call popup
   useEffect(() => {
     if (screen !== "chat" || !user) return;
     if (chatPhase !== "intro" || chat.length > 0) return;
@@ -147,6 +147,7 @@ function Index() {
     streamingRef.current = true;
     (async () => {
       await sleep(400);
+      await streamCoach(initialChat(user.key));
       setChatPhase("awaiting-consent");
       setShowCallPopup(true);
       streamingRef.current = false;
@@ -485,41 +486,7 @@ function Index() {
               setChatPhase("awaiting-consent");
               go("call-incoming");
             }}
-            onCancel={() => {
-              setShowCallPopup(false);
-              if (streamingRef.current) return;
-              streamingRef.current = true;
-              setChatPhase("post-call");
-              (async () => {
-                if (user.key === "ntc") {
-                  await streamCoach([
-                    { id: "hi" + Date.now(), from: "coach", kind: "text", text: `Hi ${user.name} 👋` },
-                    { id: "intro" + Date.now(), from: "coach", kind: "text",
-                      text: "Main Arjun hoon, aapka personal credit coach." },
-                    { id: "ntc1" + Date.now(), from: "coach", kind: "text",
-                      text: "Ek baat clear kar du — aap reject nahi hue ho 🙏 Aapki abhi credit history hi nahi hai, isliye banks ko data nahi mila." },
-                    { id: "ntc2" + Date.now(), from: "coach", kind: "text",
-                      text: "2 minute ka yeh short video dekh lo — 'NTC' ka matlab samajh aa jayega 👇" },
-                    { id: "ntcvid" + Date.now(), from: "coach", kind: "videoIntro" },
-                    { id: "ntc3" + Date.now(), from: "coach", kind: "text",
-                      text: "Jab time mile, bata do kab call karu — 2 minute mein aapka plan share kar dunga." },
-                    { id: "ntccb" + Date.now(), from: "coach", kind: "callbackOptions" },
-                  ]);
-                } else {
-                  await streamCoach([
-                    { id: "hi" + Date.now(), from: "coach", kind: "text", text: `Hi ${user.name} 👋` },
-                    { id: "intro" + Date.now(), from: "coach", kind: "text",
-                      text: "Main Arjun hoon, aapka personal credit coach." },
-                    { id: "cb1" + Date.now(), from: "coach", kind: "text",
-                      text: "Koi baat nahi 🙂 lagta hai abhi busy ho." },
-                    { id: "cb2" + Date.now(), from: "coach", kind: "text",
-                      text: "Aap bata do — kab call karu? 2 minute ka hi kaam hai, uske baad aapki poori report aur plan share kar dunga." },
-                    { id: "cb3" + Date.now(), from: "coach", kind: "callbackOptions" },
-                  ]);
-                }
-                streamingRef.current = false;
-              })();
-            }}
+            onCancel={() => setShowCallPopup(false)}
           />
         )}
       </div>
@@ -2899,6 +2866,7 @@ function AttachThumb({ img, label }: { img: string; label: string }) {
 function MiniProfilePopup({ user, onCall, onCancel }:
   { user: DemoUser; onCall: () => void; onCancel: () => void }) {
   const isNTC = user.key === "ntc";
+  const issueCount = distressedFactors.filter((f) => f.status === "Needs fix").length;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-5">
       <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden">
@@ -2916,29 +2884,39 @@ function MiniProfilePopup({ user, onCall, onCancel }:
           </button>
         </div>
 
-        {/* Credit score gauge */}
-        <div className="mx-5">
-          {isNTC ? (
-            <div className="rounded-2xl p-5 text-center" style={{ background: "#E8F5EE" }}>
-              <div className="w-16 h-16 rounded-full bg-white mx-auto flex items-center justify-center text-3xl shadow-sm">🌱</div>
-              <div className="text-[15px] font-bold text-gray-900 mt-3">No worries, {user.name}!</div>
-              <div className="text-[13px] text-gray-600 mt-1 leading-relaxed">
-                You're new to credit. We'll help you get your first loan — step by step.
+        {/* Mini credit profile card */}
+        <div className="mx-5 rounded-2xl p-4" style={{ background: "#F3F4F6" }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">Credit Score</div>
+              <div className="text-[28px] font-extrabold text-gray-900 leading-none mt-1">
+                {isNTC ? "—" : user.score}
               </div>
             </div>
-          ) : (
-            <ScoreGaugeCard value={user.score ?? 413} />
-          )}
+            <span className="px-2.5 py-1 rounded-full text-[11px] font-bold" style={{ background: isNTC ? "#E5E7EB" : "#FEE2E2", color: isNTC ? "#374151" : "#B91C1C" }}>
+              {isNTC ? "No score yet" : user.band}
+            </span>
+          </div>
+          <div className="mt-4 flex items-center gap-3 text-[13px] text-gray-700">
+            <span>{isNTC ? "0 loans" : "3 loans"}</span>
+            <span className="w-1 h-1 rounded-full bg-gray-400" />
+            <span>{isNTC ? "0 cards" : "0 cards"}</span>
+            <span className="w-1 h-1 rounded-full bg-gray-400" />
+            <span>{isNTC ? "0 enquiries" : "5 enquiries"}</span>
+          </div>
+          <div className="mt-3">
+            <span className="inline-flex items-center px-2 py-1 rounded-md text-[11px] font-semibold" style={{ background: isNTC ? "#E0E7FF" : "#FEE2E2", color: isNTC ? "#3730A3" : "#991B1B" }}>
+              {isNTC ? "No credit history" : `${issueCount} issues to fix`}
+            </span>
+          </div>
         </div>
 
         {/* Reassurance */}
-        {!isNTC && (
-          <div className="px-5 pt-4">
-            <p className="text-[14px] text-gray-800 leading-relaxed">
-              It's okay, you are not rejected for a loan. Your score is just less. We will help you build it.
-            </p>
-          </div>
-        )}
+        <div className="px-5 pt-4">
+          <p className="text-[14px] text-gray-800 leading-relaxed">
+            It's okay, you are not rejected for a loan. Your score is just less. We will help you build it.
+          </p>
+        </div>
 
         {/* Buttons */}
         <div className="px-5 pt-4 pb-5 space-y-2">
@@ -2948,7 +2926,7 @@ function MiniProfilePopup({ user, onCall, onCancel }:
             style={{ background: WA.accent }}
           >
             <Phone className="w-4 h-4" />
-            Call Arjun
+            Ask our finance expert
           </button>
           <button
             onClick={onCancel}
