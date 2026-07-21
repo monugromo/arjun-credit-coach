@@ -984,6 +984,65 @@ function PaymentSuccess({ onDone }: { onDone: () => void }) {
   );
 }
 
+/* ====================== ANALYZING (post-fetch, pre-paywall) ====================== */
+function AnalyzingScreen({ user, onDone }: { user: DemoUser; onDone: () => void }) {
+  const isNTC = user.key === "ntc";
+  const steps = isNTC
+    ? [
+        "Checking bureau… no active file yet",
+        "You're 'New to Credit' — that's fixable",
+        "Shortlisting starter cards for you",
+        "Prepping Arjun with your build-up plan",
+      ]
+    : [
+        "Pulling your Equifax report…",
+        "Scoring 24 factors that move CIBIL",
+        "Detecting disputes & risky accounts",
+        "Building your personalised action plan",
+      ];
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const iv = setInterval(() => {
+      setIdx((i) => (i < steps.length - 1 ? i + 1 : i));
+    }, 900);
+    const t = setTimeout(onDone, steps.length * 900 + 600);
+    return () => { clearInterval(iv); clearTimeout(t); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <div className="h-14 flex items-center px-4 text-white font-semibold text-[17px]" style={{ background: "#1c6b4f" }}>
+        Analyzing your profile
+      </div>
+      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
+        <div className="relative w-24 h-24 mb-6">
+          <div className="absolute inset-0 rounded-full border-4 border-[#e3e8e2]" />
+          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#4bbf72] animate-spin" />
+          <Sparkles className="absolute inset-0 m-auto w-8 h-8" style={{ color: "#1c6b4f" }} />
+        </div>
+        <h2 className="text-lg font-bold text-[#0e1b2a]">Hang tight, {user.name}…</h2>
+        <p className="text-sm text-[#6b7a86] mt-1">Arjun is prepping your session</p>
+        <div className="mt-8 w-full max-w-xs space-y-2 text-left">
+          {steps.map((s, i) => (
+            <div key={s} className={`flex items-center gap-3 text-[13px] transition-opacity ${i <= idx ? "opacity-100" : "opacity-30"}`}>
+              {i < idx ? (
+                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: "#4bbf72" }} />
+              ) : i === idx ? (
+                <Loader2 className="w-4 h-4 shrink-0 animate-spin" style={{ color: "#1c6b4f" }} />
+              ) : (
+                <div className="w-4 h-4 shrink-0 rounded-full border border-[#e3e8e2]" />
+              )}
+              <span className={i <= idx ? "text-[#0e1b2a] font-medium" : "text-[#6b7a86]"}>{s}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
 /* ====================== PERMISSIONS (WhatsApp style) ====================== */
 function PermAllScreen({ onAllow, onDeny }: { onAllow: () => void; onDeny: () => void }) {
   const items = [
