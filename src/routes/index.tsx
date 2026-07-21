@@ -19,6 +19,7 @@ import {
   DEMOS, maskPan, distressedTasks, ntcTasks, distressedFactors,
   fdCards, updatesFeed, initialChat, type DemoUser, type ChatMsg, type FdCard,
 } from "@/lib/groscore-data";
+import OnboardingChat from "@/components/OnboardingChat";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -73,7 +74,7 @@ const DOODLE_SVG = `
 const DOODLE_URL = `url("data:image/svg+xml;utf8,${DOODLE_SVG}")`;
 
 type Screen =
-  | "landing" | "phone" | "otp" | "name" | "fetch" | "panInput"
+  | "landing" | "onboarding" | "phone" | "otp" | "name" | "fetch" | "panInput"
   | "panValidate" | "expired" | "payment" | "payment-success"
   | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
   | "ntc-checklist"
@@ -363,7 +364,16 @@ function Index() {
           setUser(u); setName(u.name); setPhone(u.phone);
           startChatFlow(u);
         }} />
-        {screen === "landing" && <Landing onStart={() => go("phone")} />}
+        {screen === "landing" && <Landing onStart={() => go("onboarding")} />}
+        {screen === "onboarding" && (
+          <OnboardingChat
+            onBack={() => go("landing")}
+            onDone={(u) => {
+              setUser(u); setName(u.name); setPhone(u.phone);
+              go("perm-all");
+            }}
+          />
+        )}
         {screen === "phone" && (
           <PhoneScreen phone={phone} setPhone={setPhone} onBack={() => go("landing")} onSubmit={onPhoneSubmit} />
         )}
