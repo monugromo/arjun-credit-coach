@@ -388,13 +388,16 @@ function Index() {
         {screen === "fetch" && user && (
           <PanCardScreen
             user={user} name={name} setName={setName}
-            onConfirm={() => go("perm-all")}
+            onConfirm={() => go("analyzing")}
             onChangeNumber={() => go("phone")}
             onNotFound={() => go("panInput")}
           />
         )}
         {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go("perm-all")} />
+          <PanInputScreen onContinue={() => go("analyzing")} />
+        )}
+        {screen === "analyzing" && user && (
+          <AnalyzingScreen user={user} onDone={() => go("payment")} />
         )}
         {screen === "perm-all" && (
           <PermAllScreen
