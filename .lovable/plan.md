@@ -1,53 +1,68 @@
-
 ## Goal
 
-When the user first lands on the chat screen (right after onboarding), show a modal popup with their mini credit profile + reassurance copy. The popup offers two actions:
+Rebuild the GroScore onboarding as a stack of single-purpose full-screen steps (matching the new spec / screenshots) with a new brand palette. The WhatsApp-style Arjun chat becomes the product home the user lands in only after payment. Same components/UI library, new flow + UX.
 
-- **Ask our finance expert** → starts the existing call flow, which after the call triggers the existing auto‑message flow (unchanged).
-- **Cancel** → just closes the popup.
+## New brand tokens (added to `src/styles.css`)
 
-Works for both demo users: NTC (Rahul) and Credit-score / Distressed (Sonu). Nothing else in the app changes.
+- `--gs-brand: #1c6b4f` (header/dark green)
+- `--gs-accent: #4bbf72` / hover `#3aa762` (CTA pill)
+- `--gs-ink: #0e1b2a`, `--gs-muted: #6b7a86`
+- `--gs-card: #f4f8f4`, `--gs-hairline: #e3e8e2`, `--gs-navy: #12294a`
+- Chat header stays WhatsApp-green (product home only)
 
-## What appears in the popup
+## Screen sequence (state machine in `src/routes/index.tsx`)
 
-Header: user avatar/initial + name + phone.
+Editable dev-nav toggles for `userState`, `bureauResult`, `isNTC`, `tasks`, `trialAvailable` so every branch is testable.
 
-Mini credit profile card (same numbers already used elsewhere in the app):
+1. **Landing** — white bg, GroScore wordmark (Gro accent / Score navy), tagline, animated gauge 413 (red/POOR) → 750+ (green/GOOD) over ~2.2s with arc colour interpolation, CTA fades in on completion, trust line at bottom.
+2. **Phone** — green header "Enter your phone number", +91 selector, 10-digit numpad, pre-checked soft-check consent, demo rows, `Next`.
+3. **OTP** — header "Verifying your number", 4 boxes auto-filling 1-2-3-4 with "✨ Detecting code from SMS…", resend timer, auto-advance.
+4. **Router** (invisible): new → screen 5, active → home, lapsed → ₹99 restart paywall variant → home.
+5. **Name** — header "What's your name?", empty text field, PAN-card illustration with "Name" circled + arrow, caption, `Continue` triggers mock fetch.
+6. **Fetching** — header "GroScore", spinner + "Aapki details check kar rahe hain…" ~1.5s → branch.
+7. **Confirm identity** (`bureauResult=hit`) — masked "IS THIS YOU?" card, `Yes, that's me`, secondary `Edit name` / `Change number` / `PAN not found? Enter manually`.
+7a. **PAN input** — auto-uppercase 10-char field → re-fetch. If still no-hit → `isNTC=true` → screen 8 NTC variant.
+8. **Analyzing** — header "GROSCORE", 4 progress ticks over ~1.8s, trust footer. Mocks task-gen → `tasks`.
+9. **Paywall `<Paywall score tasks isNTC amount />`** (reusable):
+   - Aspiration hero: gauge + "413 → 750+" (NTC copy variant).
+   - 4-row value stack (always).
+   - Dynamic hero line depending on tasks/score/NTC.
+   - Task module: 0 hidden, 1–2 "sabse tez jeet", 3+ top-3 by points + "aur N aur"; each row = title + green `+pts` chip (fix locked).
+   - Loud autopay line: "₹9 aaj · phir ₹99/mahina 3 din baad · 1 din pehle yaad dilayenge · kabhi bhi cancel."
+   - Price: ~~₹299~~ → ₹9, 67% OFF chip.
+   - CTA copy depends on NTC. Trust line. Single screen, CTA visible without scrolling.
+10. **Razorpay mock** — CTA → success → home. Amount = ₹9 or ₹99.
+11. **Product home** — existing WhatsApp-style Arjun chat: header + score summary card at top (413 / POOR / Powered by Equifax / reassurance) + first Arjun message "Ho gaya! 🎉 Sabse pehle aapki #1 problem theek karte hain." No popup.
 
-- **Distressed (Sonu, 9876500002)** — Score `413`, band `Poor`, `3 loans · 0 cards · 5 enquiries`, small "6 issues to fix" chip.
-- **NTC (Rahul, 9876500001)** — Score `—`, band `No score yet`, `0 loans · 0 cards · 0 enquiries`, small "No credit history" chip.
+## Reusable pieces
 
-Reassurance line (as requested, same copy for both):
-> "It's okay, you are not rejected for a loan. Your score is just less. We will help you build it."
+- `<OnboardHeader title />` — dark-green bar, white title, back chevron.
+- `<PrimaryCta />` — full-width green pill pinned bottom with safe-area padding.
+- `<Paywall score tasks isNTC amount />` — takes props, renders adaptively.
+- Score gauge component (SVG arc, colour interpolation) reused on Landing + Paywall.
 
-Buttons:
-- Primary: **Ask our finance expert** (phone icon)
-- Secondary: **Cancel**
+## Mock data
 
-## Behavior change on the landing chat screen
+Update `src/lib/groscore-data.ts`:
+- Rename coach → Arjun everywhere in strings.
+- Demo accounts: Rahul (new, NTC), Sonu (new, hit, 413, 3 tasks), Darpan (lapsed → ₹99 restart).
+- Task list with `{title, points, urgent?}` shape; helper to sum points; dev toggles for `[]` / `[one]` / decent-score 720 case.
 
-Current flow (`src/routes/index.tsx`, `useEffect` around lines 141–161):
-1. Enter chat → Kabir auto-streams intro messages → auto navigates to `call-incoming`.
+## What gets removed / kept
 
-New flow:
-1. Enter chat → Kabir auto-streams the same intro messages (unchanged).
-2. Instead of auto‑navigating to `call-incoming`, open the new popup (state: `showCallPopup = true`).
-3. **Ask our finance expert** → close popup, `setChatPhase("awaiting-consent")`, `go("call-incoming")` (this reuses the existing `IncomingCall` → `ActiveCall` → `postCallChat` path, so the existing auto messages after the call fire exactly as they do today).
-4. **Cancel** → close popup only. Chat stays where it is; no other side effects. (The user can re-open by tapping the existing header call icon if they want — no new entry points added.)
-
-Nothing else in the chat, post-call streaming, tasks, report screens, or landing/onboarding is touched.
-
-## Technical details
-
-- **New component** `MiniProfilePopup` in `src/routes/index.tsx` (kept local to match the file's existing pattern of co-located components). Props: `user: DemoUser`, `onCall: () => void`, `onCancel: () => void`. Renders as a centered modal with a dark scrim (`fixed inset-0 z-50`), rounded card, uses existing tokens (`WA.green`, gray palette) and `lucide-react` icons already imported (`Phone`, `X`, `TrendingDown`/`UserPlus`).
-- **Content branching** inside the component on `user.key === "ntc"` vs `"distressed"` — reuse numbers already present in `KabirProfile` / `CreditReport` (score `413`, `NTC`, counts `3/0/5` vs `0/0/0`, `distressedFactors` count for the "issues" chip).
-- **State**: add `const [showCallPopup, setShowCallPopup] = useState(false)` in the main `App` component.
-- **Trigger**: in the intro `useEffect`, replace `setScreen("call-incoming")` with `setShowCallPopup(true)` (keep `setChatPhase("awaiting-consent")` so we stay in the correct phase).
-- **Reset**: clear `showCallPopup` in `logout()` alongside the other resets.
-- **Render**: mount `{showCallPopup && user && <MiniProfilePopup ... />}` alongside the existing screen switch so it overlays the chat.
-- No changes to `IncomingCall`, `ActiveCall`, `postCallChat`, or any chat message content — the automatic post-call messages continue to fire from the existing code path.
+- Remove old landing, permissions, NTC checklist, email intro, score-journey, expired, etc. that don't map to new spec (keep the chat + report + tasks + profile + subscription screens; those are already the product home).
+- Keep the mini-profile popup work? **No** — spec says "No separate popup — value already shown on the wall." Remove `showCallPopup` and `MiniProfilePopup`.
 
 ## Out of scope
 
-- No changes to landing, phone/OTP, PAN, permissions, NTC checklist, chat messages, report, tasks, profile, or subscription screens.
-- No new routes, no new data, no design-token changes.
+- Real Equifax / Razorpay / auth (still mocked with timeouts).
+- Desktop layout — mWeb only (max-width 430px).
+
+## Technical notes
+
+- All screens live inside `Index()` state machine; each screen is a component in `src/routes/index.tsx` (mirrors current pattern). No new routes.
+- Brand tokens via CSS vars → Tailwind arbitrary values (`bg-[var(--gs-brand)]`) or added to `@theme inline` for `bg-gs-brand` utilities.
+- Gauge animation: `requestAnimationFrame` over 2200ms, ease-out; arc stroke colour lerped red→amber→green.
+- Playwright verify: landing→phone→otp→name→fetch→confirm→analyzing→paywall→success→chat happy path with Sonu.
+
+This is a large rewrite (~1000+ lines touched in `src/routes/index.tsx`). Approve to proceed.
