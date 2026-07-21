@@ -522,32 +522,35 @@ function Landing({ onStart }: { onStart: () => void }) {
         </div>
 
         {/* Headline */}
-        <h1 className="text-[32px] font-extrabold text-[#0a0a2e] leading-[1.1] tracking-[-0.02em]">
-          Your personal<br />credit coach
+        <h1 className="text-[30px] font-extrabold text-[#0e1b2a] leading-[1.1] tracking-[-0.02em]">
+          Bharat's #1<br />Credit Coaching App
         </h1>
 
         {/* Subhead */}
-        <p className="mt-5 text-[15px] text-gray-500 leading-[1.65] max-w-[300px]">
-          Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
+        <p className="mt-5 text-[15px] text-[#6b7a86] leading-[1.65] max-w-[300px]">
+          AI + human coaching to fix disputes, build score, and unlock better loans — in Hinglish.
         </p>
 
         {/* Feature pills */}
-        <div className="mt-8 flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 bg-white border border-[#01be87]/15 rounded-full px-3 py-1.5 text-[13px] font-medium text-[#01be87] shadow-sm">
+        <div className="mt-8 flex items-center gap-2 flex-wrap justify-center">
+          <span className="inline-flex items-center gap-1.5 bg-white border border-[#1c6b4f]/15 rounded-full px-3 py-1.5 text-[12px] font-medium text-[#1c6b4f] shadow-sm">
             <Sparkles className="w-3.5 h-3.5" /> AI Coach
+          </span>
+          <span className="inline-flex items-center gap-1.5 bg-white border border-[#1c6b4f]/15 rounded-full px-3 py-1.5 text-[12px] font-medium text-[#1c6b4f] shadow-sm">
+            <ShieldAlert className="w-3.5 h-3.5" /> Dispute help
           </span>
         </div>
       </div>
 
       {/* Bottom CTA */}
       <div className="relative px-8 pb-12 pt-4 z-10">
-        <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#01be87]/20 to-transparent" />
+        <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#1c6b4f]/20 to-transparent" />
         <button
           onClick={onStart}
           className="w-full text-white font-bold py-4 rounded-full text-base shadow-md active:scale-[0.98] transition"
-          style={{ background: WA.accent }}
+          style={{ background: "#4bbf72" }}
         >
-          Get Started
+          Start free — 7-day trial
         </button>
         <p className="text-center text-[11px] text-gray-400 mt-4 tracking-wide">
           Trusted by 50,000+ users across India
