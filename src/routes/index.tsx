@@ -364,7 +364,16 @@ function Index() {
           setUser(u); setName(u.name); setPhone(u.phone);
           startChatFlow(u);
         }} />
-        {screen === "landing" && <Landing onStart={() => go("phone")} />}
+        {screen === "landing" && <Landing onStart={() => go("onboarding")} />}
+        {screen === "onboarding" && (
+          <OnboardingChat
+            onBack={() => go("landing")}
+            onDone={(u) => {
+              setUser(u); setName(u.name); setPhone(u.phone);
+              go("perm-all");
+            }}
+          />
+        )}
         {screen === "phone" && (
           <PhoneScreen phone={phone} setPhone={setPhone} onBack={() => go("landing")} onSubmit={onPhoneSubmit} />
         )}
