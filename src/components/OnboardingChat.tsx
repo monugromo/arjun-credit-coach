@@ -81,7 +81,8 @@ export default function OnboardingChat({
     await sleep(220);
   };
   type RichMsg = Extract<Msg, { from: "coach"; kind: "confirm" | "pan-card" | "analyze" | "paywall" }>;
-  const pushCoachRich = async (msg: Omit<RichMsg, "id">) => {
+  type DistOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+  const pushCoachRich = async (msg: DistOmit<RichMsg, "id">) => {
     setTyping(true);
     await sleep(900);
     setTyping(false);
