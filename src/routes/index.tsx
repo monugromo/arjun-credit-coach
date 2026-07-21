@@ -2866,7 +2866,7 @@ function AttachThumb({ img, label }: { img: string; label: string }) {
 function MiniProfilePopup({ user, onCall, onCancel }:
   { user: DemoUser; onCall: () => void; onCancel: () => void }) {
   const isNTC = user.key === "ntc";
-  const issueCount = distressedFactors.filter((f) => f.status === "Needs fix").length;
+  const issueCount = distressedTasks.length;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-5">
       <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden">
