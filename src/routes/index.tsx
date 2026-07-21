@@ -19,6 +19,7 @@ import {
   DEMOS, maskPan, distressedTasks, ntcTasks, distressedFactors,
   fdCards, updatesFeed, initialChat, type DemoUser, type ChatMsg, type FdCard,
 } from "@/lib/groscore-data";
+import OnboardingChat from "@/components/OnboardingChat";
 
 export const Route = createFileRoute("/")({
   head: () => ({
