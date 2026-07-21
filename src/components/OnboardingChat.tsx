@@ -80,12 +80,13 @@ export default function OnboardingChat({
     setTimes((t) => ({ ...t, [id]: nowTime() }));
     await sleep(220);
   };
-  const pushCoachRich = async (msg: Omit<Msg, "id">) => {
+  type RichMsg = Extract<Msg, { from: "coach"; kind: "confirm" | "pan-card" | "analyze" | "paywall" }>;
+  const pushCoachRich = async (msg: Omit<RichMsg, "id">) => {
     setTyping(true);
     await sleep(900);
     setTyping(false);
     const id = uid();
-    setMsgs((m) => [...m, { ...(msg as Msg), id }]);
+    setMsgs((m) => [...m, { ...msg, id } as Msg]);
     setTimes((t) => ({ ...t, [id]: nowTime() }));
     await sleep(220);
   };
