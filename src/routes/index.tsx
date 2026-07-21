@@ -966,7 +966,7 @@ function RazorpayScreen({ user, onBack, onSuccess }:
         <button onClick={pay} disabled={processing}
           className="w-full text-white font-bold py-3.5 rounded-lg disabled:opacity-60 flex items-center justify-center gap-2"
           style={{ background: "#072654" }}>
-          {processing ? (<><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>) : "Pay ₹99"}
+          {processing ? (<><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>) : `Pay ₹${amount}`}
         </button>
         <div className="flex items-center justify-center gap-1.5 mt-2 text-[10px] text-gray-500">
           <Lock className="w-3 h-3" /> 256-bit encrypted · Powered by Razorpay
