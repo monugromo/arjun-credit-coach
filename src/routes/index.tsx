@@ -984,7 +984,7 @@ function PaymentSuccess({ onDone }: { onDone: () => void }) {
         <CheckCircle2 className="w-12 h-12 text-emerald-600" />
       </div>
       <h2 className="text-2xl font-bold text-gray-900">Payment successful</h2>
-      <p className="text-gray-600 mt-2 text-sm">₹99 charged · Subscription active</p>
+      <p className="text-gray-600 mt-2 text-sm">Subscription active</p>
       <p className="text-gray-400 mt-6 text-xs">Taking you to Arjun…</p>
     </div>
   );
