@@ -38,7 +38,7 @@ export const T = {
    ===================================================================== */
 export function Phone({ children, bg = T.card }: { children: ReactNode; bg?: string }) {
   return (
-    <div className="w-full h-full flex flex-col overflow-hidden" style={{ minHeight: 700, background: bg }}>
+    <div className="relative w-full h-full flex flex-col overflow-hidden" style={{ minHeight: 700, background: bg }}>
       {children}
     </div>
   );
