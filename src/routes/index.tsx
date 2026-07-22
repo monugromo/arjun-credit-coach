@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   Phone, MoreVertical, ChevronLeft, ChevronDown, Send, Paperclip,
   Camera, Smile, Mic, FileText, Lock, User, Settings, MessageCircle,
