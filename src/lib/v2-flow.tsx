@@ -1,208 +1,147 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import {
-  ArrowLeft, Check, CheckCheck, ChevronDown, Loader2, MoreVertical,
-  Search, Camera, MessageCircle, AlertTriangle, X, Lock,
-  TrendingUp, BellRing, FileText, Bot, Sprout,
-} from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { ChevronLeft, Check, Lock, ShieldCheck, Sparkles, TrendingUp, AlertTriangle, Loader2, X } from "lucide-react";
 import { DEMOS, distressedTasks, maskPan, type DemoUser } from "@/lib/groscore-data";
 
-/* =====================================================================
-   DESIGN TOKENS — WhatsApp
-   ===================================================================== */
-export const T = {
-  // WhatsApp palette
-  navy:     "#128C7E",  // header teal (kept name for API compat)
-  teal:     "#128C7E",
-  tealDark: "#075E54",
-  green:    "#25D366",  // brand green / CTA
-  greenDeep:"#128C7E",
-  bubbleOut:"#DCF8C6",  // outgoing bubble
-  wallpaper:"#ECE5DD",  // chat bg
-  bg:       "#FFFFFF",
-  card:     "#FFFFFF",
-  ink:      "#111B21",
-  sub:      "#667781",
-  subLight: "#8696A0",
-  line:     "#E9EDEF",
-  divider:  "#F0F2F5",
-  blue:     "#25D366",  // alias so Paywall CTA reads green (API compat)
-  blueSoft: "#E7FBEE",
-  greenSoft:"#E7FBEE",
-  amber:    "#F5A524",
-  danger:   "#EA4335",
-  dangerSoft:"#FDE7E5",
+/* ---------- Tokens (reuse WhatsApp green from existing app) ---------- */
+export const WA = {
+  green: "#075E54",
+  accent: "#25D366",
+  cream: "#F7F3EA",
+  ink: "#111827",
+  sub: "#6B7280",
+  line: "#E5E7EB",
+  danger: "#DC2626",
 };
 
-/* =====================================================================
-   CHROME
-   ===================================================================== */
-export function Phone({ children, bg = T.card }: { children: ReactNode; bg?: string }) {
+/* ---------- Shared chrome ---------- */
+export function Phone({ children }: { children: ReactNode }) {
   return (
-    <div className="relative w-full h-full flex flex-col overflow-hidden" style={{ minHeight: 700, background: bg }}>
+    <div className="w-full h-full flex flex-col bg-white overflow-hidden" style={{ minHeight: 700 }}>
       {children}
     </div>
   );
 }
 
-/** WhatsApp status/top bar — teal, white text, back arrow, title, kebab */
-export function WaBar({ title, onBack, right }: { title: string; onBack?: () => void; right?: ReactNode }) {
+export function TopBar({ title, onBack, right }: { title: string; onBack?: () => void; right?: ReactNode }) {
   return (
-    <div className="flex items-center gap-4 px-4 h-14 shrink-0" style={{ background: T.tealDark, color: "#fff" }}>
+    <div className="flex items-center gap-3 px-3 h-14 text-white" style={{ background: WA.green }}>
       {onBack ? (
-        <button onClick={onBack} className="-ml-1 p-1"><ArrowLeft className="w-6 h-6" /></button>
+        <button onClick={onBack} className="p-1 -ml-1"><ChevronLeft className="w-6 h-6" /></button>
       ) : <div className="w-6" />}
-      <div className="flex-1 font-medium text-[19px] tracking-tight">{title}</div>
-      {right ?? <button className="p-1 -mr-1"><MoreVertical className="w-5 h-5" /></button>}
+      <div className="flex-1 font-semibold text-[17px] truncate">{title}</div>
+      {right}
     </div>
   );
 }
-// alias for compat with any external caller
-export const TopBar = WaBar;
 
-/** WhatsApp primary pill (green, uppercase-ish) */
 export function PrimaryBtn({ children, onClick, disabled }: { children: ReactNode; onClick?: () => void; disabled?: boolean }) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className="text-white font-medium text-[15px] px-6 py-3 rounded-full disabled:opacity-40 transition active:scale-[0.98] shadow-sm"
-      style={{ background: T.green }}
+      className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40 transition"
+      style={{ background: WA.accent }}
     >
       {children}
     </button>
-  );
-}
-
-export function SecondaryBtn({ children, onClick }: { children: ReactNode; onClick?: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className="font-medium text-[14px] px-6 py-2.5 rounded-full transition active:scale-[0.98]"
-      style={{ color: T.teal, background: "transparent" }}
-    >
-      {children}
-    </button>
-  );
-}
-
-/* Small text link, WA green */
-function Link({ children, onClick }: { children: ReactNode; onClick?: () => void }) {
-  return <button onClick={onClick} className="font-medium underline" style={{ color: T.teal }}>{children}</button>;
-}
-
-/* WhatsApp logo — circle + chat bubble */
-function WaLogo({ size = 96 }: { size?: number }) {
-  return (
-    <div
-      className="rounded-full flex items-center justify-center"
-      style={{ width: size, height: size, background: T.green }}
-    >
-      <MessageCircle className="text-white" style={{ width: size * 0.55, height: size * 0.55 }} fill="white" strokeWidth={0} />
-      <div
-        className="absolute"
-        style={{
-          transform: `translate(${size * 0.22}px, ${size * 0.22}px)`,
-          width: size * 0.18, height: size * 0.18,
-          background: T.green, clipPath: "polygon(0 0, 100% 100%, 0 100%)",
-        }}
-      />
-    </div>
   );
 }
 
 /* =====================================================================
-   1. WELCOME (WhatsApp "Welcome to …" screen)
+   SCREENS
    ===================================================================== */
+
+/* 1. Landing ---------------------------------------------------------- */
 export function Landing({ onStart }: { onStart: () => void }) {
+  const [score, setScore] = useState(413);
+  useEffect(() => {
+    let v = 413;
+    const id = setInterval(() => {
+      v = Math.min(v + 14, 762);
+      setScore(v);
+      if (v >= 762) clearInterval(id);
+    }, 40);
+    return () => clearInterval(id);
+  }, []);
+  const pct = Math.min(1, (score - 300) / 600);
+  const color = score < 500 ? "#DC2626" : score < 650 ? "#F59E0B" : "#16A34A";
   return (
-    <Phone bg="#fff">
-      <div className="flex-1 flex flex-col items-center px-8 pt-20 pb-10">
-        <WaLogo size={110} />
-        <h1 className="mt-10 text-[26px] font-normal text-center" style={{ color: T.ink }}>
-          Welcome to <span className="font-semibold">GroScore</span>
-        </h1>
-        <p className="mt-6 text-[14px] text-center leading-relaxed" style={{ color: T.sub }}>
-          Read our <span style={{ color: T.teal }}>Privacy Policy</span>. Tap "Agree and continue" to accept
-          the <span style={{ color: T.teal }}>Terms of Service</span>.
-        </p>
-
-        <div className="flex-1" />
-
-        <div className="mt-8 flex flex-col items-center gap-3">
-          <PrimaryBtn onClick={onStart}>AGREE AND CONTINUE</PrimaryBtn>
-          <div className="mt-4 flex items-center gap-1.5 text-[11px]" style={{ color: T.subLight }}>
-            from <span className="font-semibold" style={{ color: T.sub }}>GroScore</span>
+    <Phone>
+      <div className="flex-1 flex flex-col px-6 pt-14 pb-8" style={{ background: WA.cream }}>
+        <div className="flex-1 flex flex-col items-center justify-center gap-8">
+          <div className="text-center">
+            <div className="text-[13px] font-bold tracking-[0.3em] text-gray-500">GROSCORE</div>
+            <h1 className="mt-3 text-3xl font-bold leading-tight" style={{ color: WA.ink }}>
+              Your personal<br />credit coach
+            </h1>
           </div>
+          <div className="w-full max-w-xs">
+            <div className="flex items-baseline justify-between mb-2">
+              <span className="text-xs text-gray-500">Your score</span>
+              <span className="text-4xl font-bold tabular-nums" style={{ color }}>{score}</span>
+            </div>
+            <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
+              <div className="h-full transition-all duration-100" style={{ width: `${pct * 100}%`, background: color }} />
+            </div>
+            <div className="mt-1 flex justify-between text-[10px] text-gray-400">
+              <span>300</span><span>750+</span>
+            </div>
+          </div>
+        </div>
+        <div className="space-y-3">
+          <PrimaryBtn onClick={onStart}>Start now</PrimaryBtn>
+          <p className="text-center text-[11px] text-gray-500 flex items-center justify-center gap-1">
+            <Lock className="w-3 h-3" /> Checking here won't affect your score
+          </p>
         </div>
       </div>
     </Phone>
   );
 }
 
-/* =====================================================================
-   2. PHONE — WhatsApp underlined input, country row
-   ===================================================================== */
+/* 2. Phone ------------------------------------------------------------ */
 export function PhoneEntry({ onNext, onBack, initial = "" }: { onNext: (p: string) => void; onBack: () => void; initial?: string }) {
   const [phone, setPhone] = useState(initial);
   const ok = /^\d{10}$/.test(phone);
+  const isDemo = DEMOS[phone];
   return (
-    <Phone bg="#fff">
-      <WaBar title="Enter your phone number" onBack={onBack} />
-      <div className="flex-1 flex flex-col px-6 pt-6 pb-6">
-        <p className="text-[13px] leading-relaxed text-center" style={{ color: T.sub }}>
-          GroScore will need to verify your phone number.{" "}
-          <span style={{ color: T.teal }}>What's my number?</span>
-        </p>
-
-        {/* Country picker row (underlined) */}
-        <div className="mt-10 mx-auto w-[240px]">
-          <div
-            className="flex items-center justify-between pb-1.5"
-            style={{ borderBottom: `2px solid ${T.teal}` }}
-          >
-            <span className="text-[16px]" style={{ color: T.ink }}>India</span>
-            <ChevronDown className="w-5 h-5" style={{ color: T.teal }} />
-          </div>
-
-          <div className="mt-6 flex items-end gap-3">
-            <div className="flex items-center gap-1" style={{ borderBottom: `2px solid ${T.teal}` }}>
-              <span className="text-[16px]" style={{ color: T.ink }}>+</span>
-              <input
-                value="91"
-                readOnly
-                className="w-8 text-[16px] outline-none bg-transparent"
-                style={{ color: T.ink }}
-              />
-            </div>
-            <input
-              autoFocus
-              inputMode="numeric"
-              maxLength={10}
-              value={phone}
-              onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-              placeholder="phone number"
-              className="flex-1 text-[16px] outline-none bg-transparent tabular-nums pb-1"
-              style={{ color: T.ink, borderBottom: `2px solid ${T.teal}` }}
-            />
-          </div>
+    <Phone>
+      <TopBar title="Enter mobile number" onBack={onBack} />
+      <div className="flex-1 flex flex-col px-6 pt-8 pb-6">
+        <h2 className="text-xl font-bold">We'll send you a code</h2>
+        <p className="mt-1 text-sm text-gray-500">Used to fetch your credit report — soft check only.</p>
+        <div className="mt-6 flex items-center gap-2 border-b-2 pb-2" style={{ borderColor: ok ? WA.accent : WA.line }}>
+          <span className="text-lg font-medium">+91</span>
+          <input
+            autoFocus
+            inputMode="numeric"
+            maxLength={10}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+            placeholder="10-digit mobile"
+            className="flex-1 text-lg font-medium outline-none tabular-nums"
+          />
         </div>
-
-        <p className="mt-8 text-[12px] text-center" style={{ color: T.subLight }}>
-          Carrier SMS charges may apply.
-        </p>
-
-        <div className="flex-1" />
-        <div className="flex justify-end">
-          <PrimaryBtn onClick={() => ok && onNext(phone)} disabled={!ok}>NEXT</PrimaryBtn>
+        {isDemo && <p className="mt-2 text-xs" style={{ color: WA.accent }}>Demo: {isDemo.key} account</p>}
+        <label className="mt-6 flex items-start gap-2 text-[12px] text-gray-600">
+          <input type="checkbox" defaultChecked className="mt-0.5 accent-current" style={{ accentColor: WA.accent }} />
+          <span>Fetch my credit report — soft check, won't affect my score.</span>
+        </label>
+        <div className="mt-3 rounded-lg bg-gray-50 p-3 text-[11px] text-gray-500 leading-relaxed">
+          <div className="font-semibold text-gray-700 mb-1">Try demo:</div>
+          <button onClick={() => setPhone("9876500001")} className="block underline">9876500001 — new user (NTC)</button>
+          <button onClick={() => setPhone("9876500002")} className="block underline">9876500002 — distressed</button>
+          <button onClick={() => setPhone("9876500003")} className="block underline">9876500003 — lapsed</button>
+        </div>
+        <div className="mt-auto pt-6">
+          <PrimaryBtn onClick={() => ok && onNext(phone)} disabled={!ok}>Send code</PrimaryBtn>
         </div>
       </div>
     </Phone>
   );
 }
 
-/* =====================================================================
-   3. OTP — WhatsApp "Verifying your number"
-   ===================================================================== */
+/* 3. OTP -------------------------------------------------------------- */
 export function OtpEntry({ phone, onNext, onBack, onChangeNumber }: { phone: string; onNext: () => void; onBack: () => void; onChangeNumber: () => void }) {
   const [otp, setOtp] = useState("");
   const [attempts, setAttempts] = useState(0);
@@ -211,31 +150,33 @@ export function OtpEntry({ phone, onNext, onBack, onChangeNumber }: { phone: str
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => { inputRef.current?.focus(); }, []);
   useEffect(() => { if (timer <= 0) return; const t = setTimeout(() => setTimer(timer - 1), 1000); return () => clearTimeout(t); }, [timer]);
+
   const locked = attempts >= 5;
 
   function submit(v: string) {
     setOtp(v);
-    if (v.length !== 4) return;
-    if (v === "0000") {
-      setError("Wrong code. Try again.");
-      setAttempts((a) => a + 1);
-      setTimeout(() => setOtp(""), 350);
-    } else {
-      setError(null);
-      onNext();
+    if (v.length === 4) {
+      // any 4 digits work in demo; use "0000" to force wrong
+      if (v === "0000") {
+        setError("Wrong code. Try again.");
+        setAttempts((a) => a + 1);
+        setTimeout(() => setOtp(""), 400);
+      } else {
+        onNext();
+      }
     }
   }
 
   return (
-    <Phone bg="#fff">
-      <WaBar title="Verifying your number" onBack={onBack} />
-      <div className="flex-1 flex flex-col px-6 pt-6 pb-6">
-        <p className="text-[13px] leading-relaxed" style={{ color: T.sub }}>
-          Waiting to automatically detect an SMS sent to <b style={{ color: T.ink }}>+91 {phone.slice(0, 5)} {phone.slice(5)}</b>.{" "}
-          <Link onClick={onChangeNumber}>Wrong number?</Link>
+    <Phone>
+      <TopBar title="Verify OTP" onBack={onBack} />
+      <div className="flex-1 flex flex-col px-6 pt-8 pb-6">
+        <h2 className="text-xl font-bold">Enter the 4-digit code</h2>
+        <p className="mt-1 text-sm text-gray-500">
+          Sent to +91 {phone.slice(0, 2)}xxxxxx{phone.slice(-2)} · <button onClick={onChangeNumber} className="underline">change</button>
         </p>
 
-        <div className="mt-10 mx-auto w-full max-w-[280px] relative">
+        <div className="mt-8 relative">
           <input
             ref={inputRef}
             value={otp}
@@ -244,317 +185,204 @@ export function OtpEntry({ phone, onNext, onBack, onChangeNumber }: { phone: str
             className="absolute inset-0 opacity-0"
             disabled={locked}
           />
-          <div className="flex gap-4 justify-center">
+          <div className="flex gap-3 justify-center">
             {[0, 1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="w-12 text-center text-[26px] font-normal tabular-nums pb-1.5"
-                style={{
-                  borderBottom: `2px solid ${error ? T.danger : otp[i] ? T.teal : "#B4B7BA"}`,
-                  color: T.ink,
-                }}
-              >
-                {otp[i] ?? <span style={{ color: "#D1D5DB" }}>–</span>}
+              <div key={i} className="w-14 h-16 rounded-xl border-2 flex items-center justify-center text-2xl font-bold tabular-nums"
+                style={{ borderColor: otp[i] ? WA.accent : WA.line, background: locked ? "#F3F4F6" : "white" }}>
+                {otp[i] ?? ""}
               </div>
             ))}
           </div>
         </div>
 
-        {error && !locked && (
-          <p className="mt-6 text-center text-[13px]" style={{ color: T.danger }}>
-            {error} · {5 - attempts} attempts left
-          </p>
-        )}
+        {error && !locked && <p className="mt-4 text-center text-sm" style={{ color: WA.danger }}>{error} ({5 - attempts} left)</p>}
         {locked && (
-          <div className="mt-6 mx-4 p-3 rounded-lg text-[13px] text-center" style={{ background: T.dangerSoft, color: T.danger }}>
-            Too many wrong tries. Come back in 15 minutes.
+          <div className="mt-4 p-3 rounded-lg border text-sm text-center" style={{ borderColor: WA.danger, color: WA.danger }}>
+            Too many attempts. Try again in 15 minutes.
           </div>
         )}
 
-        <div className="mt-8 text-center text-[13px]">
-          <div style={{ color: T.sub }}>Didn't receive code?</div>
-          <div className="mt-3">
-            {timer > 0 ? (
-              <span style={{ color: T.subLight }}>Resend SMS in 0:{timer.toString().padStart(2, "0")}</span>
-            ) : (
-              <button
-                onClick={() => { setTimer(30); setAttempts(0); setError(null); }}
-                className="font-medium"
-                style={{ color: T.teal }}
-              >
-                Resend SMS
-              </button>
-            )}
-          </div>
-        </div>
+        <p className="mt-6 text-center text-xs text-gray-500 flex items-center justify-center gap-1">
+          <Lock className="w-3 h-3" /> This is a soft enquiry — score is not affected.
+        </p>
 
-        <div className="flex-1" />
-        <div className="text-center text-[11px]" style={{ color: T.subLight }}>
-          Any 4 digits work · use <b>0000</b> to force error
+        <div className="mt-auto pt-6 text-center text-sm">
+          {timer > 0 ? (
+            <span className="text-gray-400">Resend code in 0:{timer.toString().padStart(2, "0")}</span>
+          ) : (
+            <button onClick={() => { setTimer(30); setAttempts(0); setError(null); }} className="underline font-medium" style={{ color: WA.green }}>
+              Resend code
+            </button>
+          )}
+          <div className="mt-3 text-[11px] text-gray-400">Hint: enter any 4 digits (0000 = wrong)</div>
         </div>
       </div>
     </Phone>
   );
 }
 
-/* =====================================================================
-   4. NAME — WhatsApp "Profile info" (avatar + name)
-   ===================================================================== */
-export function NameEntry({
-  onNext, onBack, initial = "", autofilled = false,
-}: {
-  onNext: (n: string) => void; onBack: () => void; initial?: string; autofilled?: boolean;
-}) {
+/* 4. Name ------------------------------------------------------------- */
+export function NameEntry({ onNext, onBack, initial = "" }: { onNext: (n: string) => void; onBack: () => void; initial?: string }) {
   const [name, setName] = useState(initial);
   const ok = name.trim().length >= 2;
-  const initials = (name || "?").trim().split(/\s+/).map(s => s[0]).slice(0, 2).join("").toUpperCase();
   return (
-    <Phone bg="#fff">
-      <WaBar title="Profile info" onBack={onBack} />
-      <div className="flex-1 flex flex-col px-6 pt-6 pb-6">
-        <p className="text-[13px] leading-relaxed text-center" style={{ color: T.sub }}>
-          Please provide your name{autofilled ? " — we prefilled it from your PAN, edit if needed" : " and an optional profile photo"}.
-        </p>
-
-        {/* Avatar with camera badge */}
-        <div className="mt-8 relative mx-auto">
-          <div
-            className="w-24 h-24 rounded-full flex items-center justify-center text-white text-[28px] font-medium"
-            style={{ background: T.teal }}
-          >
-            {initials || "?"}
+    <Phone>
+      <TopBar title="What's your name?" onBack={onBack} />
+      <div className="flex-1 flex flex-col px-6 pt-8 pb-6">
+        <h2 className="text-xl font-bold">Your full name</h2>
+        <p className="mt-1 text-sm text-gray-500">Exactly as printed on your PAN card.</p>
+        <input
+          autoFocus
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="e.g. Rahul Kumar Sharma"
+          className="mt-6 text-lg font-medium border-b-2 pb-2 outline-none uppercase"
+          style={{ borderColor: ok ? WA.accent : WA.line }}
+        />
+        <div className="mt-6 rounded-xl border p-4 flex gap-3" style={{ borderColor: WA.line, background: "#FAFAFA" }}>
+          <div className="w-16 h-10 rounded bg-white border flex items-center justify-center text-[10px] font-bold text-gray-400" style={{ borderColor: WA.line }}>
+            PAN
           </div>
-          <div
-            className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center"
-            style={{ background: T.green, boxShadow: "0 2px 6px rgba(0,0,0,0.15)" }}
-          >
-            <Camera className="w-4 h-4 text-white" />
+          <div className="text-[12px] text-gray-600 leading-relaxed">
+            Match the name letter-for-letter with your PAN. Middle names matter.
           </div>
         </div>
-
-        <div className="mt-10 flex items-end gap-3">
-          <input
-            autoFocus
-            value={name}
-            onChange={(e) => setName(e.target.value.toUpperCase())}
-            placeholder="Type your name here"
-            className="flex-1 text-[16px] outline-none bg-transparent tracking-wide pb-1.5"
-            style={{ color: T.ink, borderBottom: `2px solid ${ok ? T.teal : "#B4B7BA"}` }}
-          />
-          <span className="text-[13px] pb-1.5" style={{ color: T.subLight }}>{25 - Math.min(name.length, 25)}  😊</span>
-        </div>
-        <p className="mt-3 text-[12px]" style={{ color: T.subLight }}>
-          Match your PAN — bureau checks are letter-for-letter.
-        </p>
-
-        <div className="flex-1" />
-        <div className="flex justify-center">
-          <PrimaryBtn onClick={() => ok && onNext(name.trim())} disabled={!ok}>NEXT</PrimaryBtn>
+        <div className="mt-auto pt-6">
+          <PrimaryBtn onClick={() => ok && onNext(name.trim())} disabled={!ok}>Continue</PrimaryBtn>
         </div>
       </div>
     </Phone>
   );
 }
 
-/* =====================================================================
-   5. FETCHING — WA style spinner
-   ===================================================================== */
+/* 5. Fetching --------------------------------------------------------- */
 export function Fetching({ onDone }: { onDone: () => void }) {
-  useEffect(() => { const t = setTimeout(onDone, 1500); return () => clearTimeout(t); }, [onDone]);
+  useEffect(() => { const t = setTimeout(onDone, 1600); return () => clearTimeout(t); }, [onDone]);
   return (
-    <Phone bg="#fff">
-      <div className="flex-1 flex flex-col items-center justify-center gap-5 px-8">
-        <Loader2 className="w-10 h-10 animate-spin" style={{ color: T.teal }} />
-        <div className="text-center">
-          <div className="text-[15px] font-medium" style={{ color: T.ink }}>Fetching your details</div>
-          <div className="mt-1 text-[13px]" style={{ color: T.sub }}>Talking to Equifax…</div>
-        </div>
+    <Phone>
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 bg-white">
+        <Loader2 className="w-10 h-10 animate-spin" style={{ color: WA.green }} />
+        <p className="text-sm text-gray-600">Checking your details…</p>
       </div>
     </Phone>
   );
 }
 
-/* =====================================================================
-   6. CONFIRM IDENTITY — WA settings-list style
-   ===================================================================== */
+/* 6. Confirm identity ------------------------------------------------- */
 export function ConfirmIdentity({
-  user, name, savedName, onYes, onEditName, onChangeNumber, onNotMe,
+  user, name, onYes, onEditName, onChangeNumber, onNotMe,
 }: {
-  user: DemoUser; name: string; savedName?: string;
-  onYes: (finalName: string) => void; onEditName: () => void; onChangeNumber: () => void; onNotMe: () => void;
+  user: DemoUser; name: string;
+  onYes: () => void; onEditName: () => void; onChangeNumber: () => void; onNotMe: () => void;
 }) {
   const dobMap: Record<string, string> = { ntc: "14 Aug 1998", distressed: "02 Mar 1989", expired: "27 Nov 1985" };
-  const [useSaved, setUseSaved] = useState(false);
-  const bureauName = (name || user.name).toUpperCase();
-  const cmsName = (savedName || "").toUpperCase();
-  const displayName = useSaved && cmsName ? cmsName : bureauName;
-  const initials = displayName.split(/\s+/).map(s => s[0]).slice(0, 2).join("");
-
+  const displayName = (name || user.name).toUpperCase();
   return (
-    <Phone bg="#fff">
-      <WaBar title="Confirm your identity" onBack={onEditName} />
-      <div className="flex-1 flex flex-col overflow-y-auto">
-        {/* Big avatar header */}
-        <div className="flex flex-col items-center pt-6 pb-5" style={{ background: "#fff" }}>
-          <div
-            className="w-24 h-24 rounded-full flex items-center justify-center text-white text-[30px] font-medium"
-            style={{ background: T.teal }}
-          >
-            {initials}
-          </div>
-          <div className="mt-3 text-[17px] font-medium" style={{ color: T.ink }}>{displayName}</div>
-          <div className="text-[13px]" style={{ color: T.sub }}>Details from Equifax</div>
+    <Phone>
+      <TopBar title="Confirm identity" />
+      <div className="flex-1 flex flex-col px-5 pt-6 pb-6">
+        <h2 className="text-[22px] font-bold">Is this you?</h2>
+        <p className="mt-1 text-sm text-gray-500">Fetched from the credit bureau.</p>
+        <div className="mt-5 rounded-2xl border overflow-hidden" style={{ borderColor: WA.line }}>
+          <Row label="Name" value={<span className="font-semibold">{displayName}</span>} action="Edit" onAction={onEditName} />
+          <Row label="Mobile" value={<span className="font-mono">+91 {user.phone.slice(0, 2)}xxxxxx{user.phone.slice(-2)}</span>} action="Change" onAction={onChangeNumber} />
+          <Row label="PAN" value={<span className="font-mono tracking-wider">{maskPan(user.pan)}</span>} />
+          <Row label="Date of birth" value={dobMap[user.key] ?? "—"} last />
         </div>
-
-        {/* WA-style settings list */}
-        <div style={{ background: T.divider }}>
-          <SectionHeader>Account</SectionHeader>
-          <WaRow label="Name" value={displayName} onClick={onEditName} />
-          {cmsName && cmsName !== bureauName && (
-            <div className="px-4 py-3 flex items-center gap-3 bg-white" style={{ borderTop: `1px solid ${T.divider}` }}>
-              <input
-                type="checkbox"
-                checked={useSaved}
-                onChange={(e) => setUseSaved(e.target.checked)}
-                style={{ accentColor: T.green }}
-              />
-              <span className="text-[13px]" style={{ color: T.sub }}>Use my saved name ({cmsName})</span>
-            </div>
-          )}
-          <WaRow label="Phone" value={`+91 ${user.phone.slice(0, 2)}xxxxxx${user.phone.slice(-2)}`} onClick={onChangeNumber} />
-          <WaRow label="PAN" value={maskPan(user.pan)} mono />
-          <WaRow label="Date of birth" value={dobMap[user.key] ?? "—"} last />
-        </div>
-
-        <div className="px-6 py-5 text-center">
-          <button onClick={onNotMe} className="text-[13px]" style={{ color: T.teal }}>
-            Not you? Enter PAN manually
-          </button>
-        </div>
-
-        <div className="mt-auto p-5 flex flex-col items-center gap-2">
-          <PrimaryBtn onClick={() => onYes(displayName)}>YES, THAT'S ME</PrimaryBtn>
-          <p className="text-[11px]" style={{ color: T.subLight }}>Soft check only — won't affect your score.</p>
+        <button onClick={onNotMe} className="mt-4 text-[13px] text-gray-500 underline self-center">
+          Not you? Enter PAN manually
+        </button>
+        <div className="mt-auto pt-6 space-y-2">
+          <PrimaryBtn onClick={onYes}>Yes, that's me</PrimaryBtn>
+          <p className="text-[11px] text-center text-gray-400">Soft check only — won't affect your score.</p>
         </div>
       </div>
     </Phone>
   );
 }
 
-function SectionHeader({ children }: { children: ReactNode }) {
+function Row({ label, value, action, onAction, last }: { label: string; value: ReactNode; action?: string; onAction?: () => void; last?: boolean }) {
   return (
-    <div className="px-4 pt-4 pb-1.5 text-[13px] font-medium" style={{ color: T.teal, background: T.divider }}>
-      {children}
+    <div className={`flex items-center justify-between px-4 py-3 ${last ? "" : "border-b"}`} style={{ borderColor: WA.line }}>
+      <div className="min-w-0">
+        <div className="text-[11px] uppercase tracking-wide text-gray-400">{label}</div>
+        <div className="mt-0.5 text-[15px] text-gray-900 truncate">{value}</div>
+      </div>
+      {action && <button onClick={onAction} className="text-[12px] font-semibold" style={{ color: WA.green }}>{action}</button>}
     </div>
   );
 }
 
-function WaRow({ label, value, onClick, mono, last }: { label: string; value: string; onClick?: () => void; mono?: boolean; last?: boolean }) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={!onClick}
-      className="w-full text-left px-4 py-3 bg-white flex flex-col"
-      style={{ borderBottom: last ? "none" : `1px solid ${T.divider}` }}
-    >
-      <span className={`text-[16px] ${mono ? "font-mono tracking-wider" : ""}`} style={{ color: T.ink }}>{value}</span>
-      <span className="text-[12px] mt-0.5" style={{ color: T.sub }}>{label}</span>
-    </button>
-  );
-}
-
-/* =====================================================================
-   7. PAN FALLBACK — WA underline input
-   ===================================================================== */
+/* 7. PAN input (fallback) --------------------------------------------- */
 export function PanFallback({ onNext, onBack }: { onNext: (p: string) => void; onBack: () => void }) {
   const [pan, setPan] = useState("");
   const ok = /^[A-Z]{5}\d{4}[A-Z]$/.test(pan);
-  const showErr = pan.length === 10 && !ok;
   return (
-    <Phone bg="#fff">
-      <WaBar title="Enter your PAN" onBack={onBack} />
-      <div className="flex-1 flex flex-col px-6 pt-6 pb-6">
-        <p className="text-[13px] leading-relaxed text-center" style={{ color: T.sub }}>
-          We couldn't find you with mobile + name. Your PAN is a guaranteed match.
+    <Phone>
+      <TopBar title="Enter your PAN" onBack={onBack} />
+      <div className="flex-1 flex flex-col px-6 pt-8 pb-6">
+        <h2 className="text-xl font-bold">Enter your PAN</h2>
+        <p className="mt-1 text-sm text-gray-500">10 characters, exactly as on your card.</p>
+        <input
+          autoFocus
+          value={pan}
+          onChange={(e) => setPan(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10))}
+          placeholder="ABCPX1234F"
+          className="mt-6 text-lg font-mono tracking-widest border-b-2 pb-2 outline-none"
+          style={{ borderColor: ok ? WA.accent : WA.line }}
+        />
+        {pan.length === 10 && !ok && <p className="mt-2 text-xs" style={{ color: WA.danger }}>Invalid PAN format.</p>}
+        <p className="mt-6 text-[11px] text-gray-500 flex items-center gap-1">
+          <ShieldCheck className="w-3.5 h-3.5" /> Encrypted — only used to fetch your report.
         </p>
-
-        <div className="mt-12">
-          <input
-            autoFocus
-            value={pan}
-            onChange={(e) => setPan(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10))}
-            placeholder="ABCPX1234F"
-            className="w-full text-center text-[22px] font-mono tracking-[0.3em] outline-none bg-transparent pb-2"
-            style={{ color: T.ink, borderBottom: `2px solid ${showErr ? T.danger : ok ? T.teal : "#B4B7BA"}` }}
-          />
-          <p className="mt-2 text-[12px] text-center" style={{ color: showErr ? T.danger : T.subLight }}>
-            {showErr ? "Invalid PAN format" : "10 characters · exactly as printed"}
-          </p>
-        </div>
-
-        <div className="mt-6 mx-auto flex items-center gap-2 text-[11px]" style={{ color: T.sub }}>
-          <Lock className="w-3.5 h-3.5" /> Encrypted end-to-end. Only used to fetch your report.
-        </div>
-
-        <div className="flex-1" />
-        <div className="flex justify-end">
-          <PrimaryBtn onClick={() => ok && onNext(pan)} disabled={!ok}>NEXT</PrimaryBtn>
+        <div className="mt-auto pt-6">
+          <PrimaryBtn onClick={() => ok && onNext(pan)} disabled={!ok}>Continue</PrimaryBtn>
         </div>
       </div>
     </Phone>
   );
 }
 
-/* =====================================================================
-   8. ANALYZING — WA chat-loading feel
-   ===================================================================== */
+/* 8. Analyzing -------------------------------------------------------- */
 export function Analyzing({ user, onDone }: { user: DemoUser; onDone: () => void }) {
   const steps = user.hasScore
     ? ["Fetching report", `Analyzing ${distressedTasks.length} issues`, "Preparing dispute plan", "Arjun is ready"]
-    : ["Checking bureau", "No history found — new to credit", "Shortlisting starter cards", "Arjun is ready"];
+    : ["Checking bureau", "No history found — that's ok", "Shortlisting starter cards", "Arjun is ready"];
   const [i, setI] = useState(0);
   useEffect(() => {
-    if (i >= steps.length) { const t = setTimeout(onDone, 500); return () => clearTimeout(t); }
-    const t = setTimeout(() => setI(i + 1), 650);
+    if (i >= steps.length) { const t = setTimeout(onDone, 400); return () => clearTimeout(t); }
+    const t = setTimeout(() => setI(i + 1), 700);
     return () => clearTimeout(t);
   }, [i, steps.length, onDone]);
   return (
-    <Phone bg="#fff">
-      <WaBar title="Setting up" />
-      <div className="flex-1 flex flex-col justify-center px-8">
+    <Phone>
+      <div className="flex-1 flex flex-col justify-center px-8 bg-white">
         <div className="text-center mb-8">
-          <WaLogo size={64} />
-          <h2 className="mt-5 text-[20px] font-medium" style={{ color: T.ink }}>
-            {user.hasScore ? "Building your plan" : "Setting up your profile"}
-          </h2>
+          <div className="text-xs font-bold tracking-[0.3em] text-gray-400">ANALYZING</div>
+          <h2 className="mt-2 text-2xl font-bold">Building your plan</h2>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {steps.map((s, idx) => {
             const done = idx < i;
             const active = idx === i;
             return (
-              <div key={s} className="flex items-center gap-3 py-2">
-                <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                  {done ? <CheckCheck className="w-5 h-5" style={{ color: T.teal }} /> :
-                   active ? <Loader2 className="w-4 h-4 animate-spin" style={{ color: T.sub }} /> :
-                   <div className="w-2 h-2 rounded-full" style={{ background: "#D1D5DB" }} />}
+              <div key={s} className="flex items-center gap-3 text-[15px]">
+                <div className="w-6 h-6 rounded-full flex items-center justify-center"
+                  style={{ background: done ? WA.accent : active ? "#FEF3C7" : "#F3F4F6" }}>
+                  {done ? <Check className="w-4 h-4 text-white" /> : active ? <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600" /> : null}
                 </div>
-                <span className="text-[15px]" style={{ color: done ? T.ink : active ? T.ink : T.subLight, fontWeight: active ? 500 : 400 }}>
-                  {s}
-                </span>
+                <span className={done ? "text-gray-900" : active ? "text-gray-900 font-medium" : "text-gray-400"}>{s}</span>
               </div>
             );
           })}
         </div>
-        <p className="mt-10 text-center text-[11px]" style={{ color: T.subLight }}>Joined by 2,14,000+ Indians this month.</p>
+        <p className="mt-10 text-center text-[11px] text-gray-400">Joined by 2,14,000+ Indians this month.</p>
       </div>
     </Phone>
   );
 }
 
-/* =====================================================================
-   9. PAYWALL — WhatsApp Business-style card
-   ===================================================================== */
+/* 9. Paywall (adaptive) ---------------------------------------------- */
 export function Paywall({ user, onPay, onBack }: { user: DemoUser; onPay: () => void; onBack: () => void }) {
   const isNTC = !user.hasScore;
   const current = user.score ?? 0;
@@ -563,85 +391,75 @@ export function Paywall({ user, onPay, onBack }: { user: DemoUser; onPay: () => 
   const topGain = distressedTasks.slice(0, 3).reduce((a, b) => a + b.impact, 0);
 
   const hero = isNTC
-    ? { line: "Zero → 750+. Your first card, your first score.", left: "NTC", right: "750+", leftColor: T.sub }
+    ? { line: "Zero se 750+ tak", left: "NTC", right: "750+" }
     : tasksCount >= 3
-      ? { line: `+${topGain} points possible from your top 3 fixes`, left: `${current}`, right: `${target}+`, leftColor: current < 550 ? T.danger : T.amber }
-      : { line: "Protect and grow your score", left: `${current}`, right: `${target}+`, leftColor: T.amber };
-
-  const heroPct = isNTC ? 0.05 : Math.max(0.05, Math.min(1, (current - 300) / 600));
+      ? { line: `+${topGain} pts possible`, left: `${current}`, right: `${target}+` }
+      : { line: "Protect & grow your score", left: `${current}`, right: `${target}+` };
 
   return (
-    <Phone bg={T.divider}>
-      <WaBar title="Unlock your plan" onBack={onBack} />
-      <div className="flex-1 flex flex-col overflow-y-auto">
-        {/* Hero card */}
-        <div className="m-3 rounded-lg bg-white p-4 shadow-sm">
+    <Phone>
+      <TopBar title="Unlock your plan" onBack={onBack} />
+      <div className="flex-1 flex flex-col px-5 pt-5 pb-5" style={{ background: WA.cream }}>
+        {/* Hero */}
+        <div className="rounded-2xl bg-white p-4 border" style={{ borderColor: WA.line }}>
           <div className="flex items-baseline justify-between">
             <div>
-              <div className="text-[11px] uppercase tracking-wider font-medium" style={{ color: T.sub }}>Today</div>
-              <div className="text-[36px] font-semibold leading-none tabular-nums" style={{ color: hero.leftColor }}>{hero.left}</div>
+              <div className="text-[11px] uppercase tracking-wide text-gray-400">Your score</div>
+              <div className="text-3xl font-bold" style={{ color: isNTC ? "#6B7280" : current < 550 ? WA.danger : "#F59E0B" }}>
+                {hero.left}
+              </div>
             </div>
-            <TrendingUp className="w-5 h-5" style={{ color: T.sub }} />
+            <TrendingUp className="w-5 h-5 text-gray-400" />
             <div className="text-right">
-              <div className="text-[11px] uppercase tracking-wider font-medium" style={{ color: T.sub }}>Target</div>
-              <div className="text-[36px] font-semibold leading-none tabular-nums" style={{ color: T.green }}>{hero.right}</div>
+              <div className="text-[11px] uppercase tracking-wide text-gray-400">Target</div>
+              <div className="text-3xl font-bold" style={{ color: WA.accent }}>{hero.right}</div>
             </div>
           </div>
-          <div className="mt-4 h-1.5 rounded-full overflow-hidden" style={{ background: T.divider }}>
-            <div className="h-full" style={{ width: `${heroPct * 100}%`, background: T.green }} />
+          <div className="mt-3 h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-full" style={{ width: isNTC ? "8%" : `${((current - 300) / 600) * 100}%`, background: WA.accent }} />
           </div>
-          <div className="mt-3 text-[13px] font-medium" style={{ color: T.ink }}>{hero.line}</div>
+          <div className="mt-2 text-[13px] font-semibold" style={{ color: WA.green }}>{hero.line}</div>
         </div>
 
-        {/* Tasks */}
+        {/* Task module */}
         {tasksCount > 0 && (
-          <div className="mx-3 rounded-lg bg-white shadow-sm overflow-hidden">
-            <div className="px-4 pt-3 pb-1 text-[12px] font-medium" style={{ color: T.teal }}>Fix these first</div>
-            {distressedTasks.slice(0, 3).map((t, idx) => (
-              <div
-                key={t.id}
-                className="flex items-start justify-between px-4 py-3"
-                style={{ borderTop: idx === 0 ? "none" : `1px solid ${T.divider}` }}
-              >
+          <div className="mt-4 rounded-2xl bg-white p-4 border" style={{ borderColor: WA.line }}>
+            <div className="text-[11px] uppercase tracking-wide text-gray-400 mb-2">Fix these first</div>
+            {distressedTasks.slice(0, 3).map((t) => (
+              <div key={t.id} className="flex items-center justify-between py-2 border-b last:border-0" style={{ borderColor: WA.line }}>
                 <div className="min-w-0 flex-1">
-                  <div className="text-[14px] font-medium" style={{ color: T.ink }}>{t.title}</div>
-                  <div className="text-[12px] mt-0.5" style={{ color: T.sub }}>{t.desc}</div>
+                  <div className="text-[14px] font-medium text-gray-900 truncate">{t.title}</div>
+                  <div className="text-[12px] text-gray-500 truncate">{t.desc}</div>
                 </div>
-                <div className="ml-3 shrink-0 px-2 py-0.5 rounded-md text-[12px] font-semibold" style={{ background: T.bubbleOut, color: T.tealDark }}>
-                  +{t.impact}
-                </div>
+                <div className="ml-3 text-[13px] font-bold" style={{ color: WA.accent }}>+{t.impact}</div>
               </div>
             ))}
             {tasksCount > 3 && (
-              <div className="px-4 py-2.5 text-[12px]" style={{ borderTop: `1px solid ${T.divider}`, color: T.sub }}>
-                and {tasksCount - 3} more inside
-              </div>
+              <div className="mt-2 text-[12px] text-gray-500">and {tasksCount - 3} more</div>
             )}
           </div>
         )}
 
         {/* Value stack */}
-        <div className="mx-3 mt-3 rounded-lg bg-white shadow-sm p-4">
-          <div className="text-[12px] font-medium mb-2" style={{ color: T.teal }}>What you get</div>
+        <div className="mt-4 rounded-2xl bg-white p-4 border" style={{ borderColor: WA.line }}>
           {[
-            { icon: Bot, t: "Arjun, your credit coach, 24×7" },
-            { icon: TrendingUp, t: "Monthly score tracking" },
-            { icon: BellRing, t: "Enquiry, error & fraud alerts" },
-            { icon: FileText, t: "Dispute help + full report" },
-          ].map(({ icon: Ic, t }) => (
-            <div key={t} className="flex items-center gap-3 py-1.5 text-[14px]" style={{ color: T.ink }}>
-              <Ic className="w-4 h-4 shrink-0" style={{ color: T.teal }} />
-              {t}
+            "Arjun, your coach, 24×7",
+            "Monthly score tracking",
+            "Enquiry, error & fraud alerts",
+            "Dispute help + full report",
+          ].map((v) => (
+            <div key={v} className="flex items-center gap-2 py-1.5 text-[14px]">
+              <Check className="w-4 h-4" style={{ color: WA.accent }} /> {v}
             </div>
           ))}
         </div>
 
-        <div className="p-4 mt-2 flex flex-col items-center gap-2 sticky bottom-0" style={{ background: T.divider }}>
+        <div className="mt-auto pt-4 space-y-2">
           <PrimaryBtn onClick={onPay}>
-            {isNTC ? "START BUILDING FOR ₹9" : "FIX THESE FOR ₹9"}
+            {isNTC ? "Start building for ₹9" : `Fix these for ₹9`}
           </PrimaryBtn>
-          <p className="text-[11px] text-center leading-snug" style={{ color: T.sub }}>
-            <b style={{ color: T.ink }}>₹9 today</b> · ₹99/mo starts in 3 days · reminder 1 day before · cancel anytime
+          <p className="text-[11px] text-center text-gray-500 leading-snug">
+            ₹9 today · ₹99/month after 3 days · reminder 1 day before · cancel anytime.
           </p>
         </div>
       </div>
@@ -649,99 +467,55 @@ export function Paywall({ user, onPay, onBack }: { user: DemoUser; onPay: () => 
   );
 }
 
-/* =====================================================================
-   10. LAPSED ₹99 WALL
-   ===================================================================== */
+/* 10. Lapsed ₹99 wall ------------------------------------------------- */
 export function LapsedWall({ user, onPay, onBack }: { user: DemoUser; onPay: () => void; onBack: () => void }) {
   return (
-    <Phone bg="#fff">
-      <WaBar title="Restart subscription" onBack={onBack} />
-      <div className="flex-1 flex flex-col px-6 pt-8 pb-6 items-center text-center">
-        <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: "#FEF3C7" }}>
-          <AlertTriangle className="w-7 h-7" style={{ color: T.amber }} />
+    <Phone>
+      <TopBar title="Restart subscription" onBack={onBack} />
+      <div className="flex-1 flex flex-col px-6 pt-8 pb-6">
+        <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "#FEF3C7" }}>
+          <AlertTriangle className="w-6 h-6 text-amber-600" />
         </div>
-        <h2 className="mt-4 text-[22px] font-medium" style={{ color: T.ink }}>Welcome back, {user.name.split(" ")[0]}</h2>
-        <p className="mt-2 text-[14px]" style={{ color: T.sub }}>
-          Your subscription ended. Restart to see today's score and unlock your coach.
-        </p>
-
-        <div className="mt-6 w-full rounded-lg bg-white p-5 shadow-sm border" style={{ borderColor: T.line }}>
+        <h2 className="mt-4 text-xl font-bold">Welcome back, {user.name}</h2>
+        <p className="mt-1 text-sm text-gray-500">Your subscription ended. Restart to unlock your coach and latest score.</p>
+        <div className="mt-6 rounded-2xl border p-4" style={{ borderColor: WA.line }}>
           <div className="flex items-baseline justify-between">
-            <span className="text-[14px]" style={{ color: T.ink }}>Monthly plan</span>
-            <span className="text-[32px] font-semibold" style={{ color: T.ink }}>
-              ₹99<span className="text-[12px] font-normal" style={{ color: T.sub }}>/mo</span>
-            </span>
+            <span className="text-sm">Monthly plan</span>
+            <span className="text-2xl font-bold">₹99<span className="text-xs font-normal text-gray-500">/mo</span></span>
           </div>
-          <div className="mt-4 space-y-2 text-[13px] text-left" style={{ color: T.ink }}>
-            {["Fresh report + updated score", "Coach, alerts, disputes", "Cancel anytime"].map((v) => (
-              <div key={v} className="flex items-center gap-2.5">
-                <Check className="w-4 h-4" style={{ color: T.green }} /> {v}
-              </div>
-            ))}
+          <div className="mt-3 space-y-1 text-[13px] text-gray-600">
+            <div className="flex items-center gap-2"><Check className="w-4 h-4" style={{ color: WA.accent }} /> Fresh report + updated score</div>
+            <div className="flex items-center gap-2"><Check className="w-4 h-4" style={{ color: WA.accent }} /> Coach, alerts, disputes</div>
           </div>
         </div>
-
-        {user.score && (
-          <div className="mt-4 w-full rounded-lg px-4 py-2.5 flex items-center justify-between" style={{ background: T.bubbleOut }}>
-            <span className="text-[12px]" style={{ color: T.tealDark }}>Last known score</span>
-            <span className="text-[18px] font-semibold" style={{ color: T.tealDark }}>{user.score}</span>
-          </div>
-        )}
-
-        <div className="flex-1" />
-        <div className="w-full pt-6 flex flex-col items-center gap-2">
-          <PrimaryBtn onClick={onPay}>RESTART FOR ₹99</PrimaryBtn>
-          <p className="text-[11px]" style={{ color: T.subLight }}>You'll be charged today. Cancel anytime.</p>
+        <div className="mt-auto pt-6 space-y-2">
+          <PrimaryBtn onClick={onPay}>Restart for ₹99</PrimaryBtn>
+          <p className="text-[11px] text-center text-gray-400">Cancel anytime.</p>
         </div>
       </div>
     </Phone>
   );
 }
 
-/* =====================================================================
-   11. RAZORPAY MOCK
-   ===================================================================== */
+/* 11. Razorpay mock --------------------------------------------------- */
 export function RazorpayMock({ amount, onSuccess, onBack }: { amount: number; onSuccess: () => void; onBack: () => void }) {
   const [busy, setBusy] = useState(false);
-  const [method, setMethod] = useState("upi-gpay");
-  const methods = [
-    { id: "upi-gpay", t: "UPI · Google Pay" },
-    { id: "upi-phonepe", t: "UPI · PhonePe" },
-    { id: "card", t: "Card ending 4242" },
-    { id: "nb", t: "Netbanking · HDFC" },
-  ];
   return (
-    <Phone bg="#fff">
-      <WaBar title="Razorpay" onBack={onBack} />
-      <div className="flex-1 flex flex-col px-5 pt-5 pb-5">
-        <div className="rounded-lg p-5 text-center" style={{ background: T.tealDark, color: "#fff" }}>
-          <div className="text-[11px] uppercase tracking-widest opacity-80">Total payable</div>
-          <div className="mt-1 text-[40px] font-semibold">₹{amount}</div>
-          {amount === 9 && <div className="text-[11px] opacity-80 mt-1">₹99/mo starts in 3 days</div>}
+    <Phone>
+      <TopBar title="Razorpay" onBack={onBack} />
+      <div className="flex-1 flex flex-col px-6 pt-8 pb-6">
+        <div className="text-center">
+          <div className="text-xs text-gray-400">Total</div>
+          <div className="text-4xl font-bold">₹{amount}</div>
         </div>
-        <div className="mt-5 text-[12px] font-medium" style={{ color: T.teal }}>PAYMENT METHOD</div>
-        <div className="mt-2 space-y-1.5">
-          {methods.map((m) => (
-            <button
-              key={m.id}
-              onClick={() => setMethod(m.id)}
-              className="w-full text-left p-3.5 rounded-lg border flex items-center gap-3 bg-white transition"
-              style={{ borderColor: method === m.id ? T.teal : T.line }}
-            >
-              <div
-                className="w-4 h-4 rounded-full border-2 flex items-center justify-center"
-                style={{ borderColor: method === m.id ? T.teal : "#B4B7BA" }}
-              >
-                {method === m.id && <div className="w-2 h-2 rounded-full" style={{ background: T.teal }} />}
-              </div>
-              <span className="text-[14px]" style={{ color: T.ink }}>{m.t}</span>
-            </button>
+        <div className="mt-6 space-y-2">
+          {["UPI · GPay", "UPI · PhonePe", "Card ending 4242", "Netbanking"].map((m) => (
+            <button key={m} className="w-full text-left p-3 rounded-xl border" style={{ borderColor: WA.line }}>{m}</button>
           ))}
         </div>
-        <div className="flex-1" />
-        <div className="flex justify-center">
+        <div className="mt-auto pt-6">
           <PrimaryBtn onClick={() => { setBusy(true); setTimeout(onSuccess, 900); }} disabled={busy}>
-            {busy ? "PROCESSING…" : `PAY ₹${amount}`}
+            {busy ? "Processing…" : `Pay ₹${amount}`}
           </PrimaryBtn>
         </div>
       </div>
@@ -749,121 +523,64 @@ export function RazorpayMock({ amount, onSuccess, onBack }: { amount: number; on
   );
 }
 
-/* =====================================================================
-   12. SUCCESS
-   ===================================================================== */
+/* 12. Success --------------------------------------------------------- */
 export function PaySuccess({ onHome }: { onHome: () => void }) {
   useEffect(() => { const t = setTimeout(onHome, 1400); return () => clearTimeout(t); }, [onHome]);
   return (
-    <Phone bg="#fff">
-      <div className="flex-1 flex flex-col items-center justify-center gap-4">
-        <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: T.green }}>
-          <Check className="w-9 h-9 text-white" strokeWidth={3} />
+    <Phone>
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 bg-white">
+        <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: WA.accent }}>
+          <Check className="w-8 h-8 text-white" />
         </div>
-        <div className="text-[18px] font-medium" style={{ color: T.ink }}>Payment successful</div>
-        <div className="text-[13px]" style={{ color: T.sub }}>Setting up your coach…</div>
+        <div className="text-lg font-bold">Payment successful</div>
+        <div className="text-sm text-gray-500">Setting up your coach…</div>
       </div>
     </Phone>
   );
 }
 
-/* =====================================================================
-   13. HOME STUB — WhatsApp chat list
-   ===================================================================== */
+/* 13. Home stub ------------------------------------------------------- */
 export function HomeStub({ user, onRestart }: { user: DemoUser; onRestart: () => void }) {
-  const chats = user.hasScore
-    ? [
-        { name: "Arjun · your coach", msg: `Your score is ${user.score}. Let's fix 3 things today.`, time: "now", unread: 3, pinned: true },
-        { name: "Score updates", msg: "New report available", time: "9:12 AM", unread: 1 },
-        { name: "Disputes", msg: "HDFC responded to your query", time: "Yesterday" },
-        { name: "Alerts", msg: "New enquiry from Bajaj Finance", time: "Yesterday" },
-      ]
-    : [
-        { name: "Arjun · your coach", msg: "Welcome! Let's set up your first card.", time: "now", unread: 2, pinned: true },
-        { name: "Getting started", msg: "3 steps to your first score", time: "9:12 AM", unread: 1 },
-      ];
   return (
-    <Phone bg="#fff">
-      <div className="h-14 flex items-center justify-between px-4 shrink-0" style={{ background: T.tealDark, color: "#fff" }}>
-        <div className="font-medium text-[19px]">GroScore</div>
-        <div className="flex items-center gap-5">
-          <Camera className="w-5 h-5" />
-          <Search className="w-5 h-5" />
-          <MoreVertical className="w-5 h-5" />
+    <Phone>
+      <TopBar title="Arjun · your coach" right={<Sparkles className="w-5 h-5" />} />
+      <div className="flex-1 flex flex-col p-5 gap-4" style={{ background: WA.cream }}>
+        <div className="rounded-2xl bg-white p-4 border" style={{ borderColor: WA.line }}>
+          <div className="text-xs text-gray-400">Welcome</div>
+          <div className="text-lg font-bold">{user.name}</div>
+          {user.hasScore ? (
+            <div className="mt-2 text-3xl font-bold" style={{ color: WA.green }}>{user.score}<span className="text-sm text-gray-400 ml-1">/ 900</span></div>
+          ) : (
+            <div className="mt-2 text-sm text-gray-500">No score yet — let's build one.</div>
+          )}
         </div>
-      </div>
-      {/* Tabs */}
-      <div className="flex items-center px-4 gap-6 text-[13px] font-medium shrink-0" style={{ background: T.tealDark, color: "rgba(255,255,255,0.7)" }}>
-        {["CHATS", "STATUS", "CALLS"].map((t, i) => (
-          <div key={t} className="py-2.5 pb-3" style={{
-            color: i === 0 ? "#fff" : undefined,
-            borderBottom: i === 0 ? "3px solid #fff" : "3px solid transparent",
-          }}>{t}</div>
-        ))}
-      </div>
-
-      <div className="flex-1 overflow-y-auto">
-        {chats.map((c) => {
-          const initials = c.name.split(" ")[0].slice(0, 2).toUpperCase();
-          return (
-            <div key={c.name} className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: `1px solid ${T.divider}` }}>
-              <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-[15px] font-medium shrink-0" style={{ background: T.teal }}>
-                {initials}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-baseline justify-between gap-2">
-                  <span className="text-[15px] font-medium truncate" style={{ color: T.ink }}>{c.name}</span>
-                  <span className="text-[11px] shrink-0" style={{ color: c.unread ? T.green : T.subLight }}>{c.time}</span>
-                </div>
-                <div className="flex items-center justify-between gap-2 mt-0.5">
-                  <span className="text-[13px] truncate" style={{ color: T.sub }}>{c.msg}</span>
-                  {c.unread ? (
-                    <span className="shrink-0 min-w-[20px] h-5 px-1.5 rounded-full text-[11px] font-semibold text-white flex items-center justify-center" style={{ background: T.green }}>
-                      {c.unread}
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-
-        <div className="px-4 py-6 text-center text-[12px]" style={{ color: T.subLight }}>
-          Signed in as {user.name}
-          <div className="mt-3">
-            <SecondaryBtn onClick={onRestart}>Restart demo</SecondaryBtn>
-          </div>
+        <div className="rounded-2xl bg-white p-4 border text-sm text-gray-600" style={{ borderColor: WA.line }}>
+          This is the placeholder home. The existing chat UI lives at <code className="text-xs">/</code>.
         </div>
-      </div>
-
-      {/* FAB */}
-      <div className="absolute" style={{ bottom: 24, right: 20 }}>
-        <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style={{ background: T.green }}>
-          <MessageCircle className="w-6 h-6 text-white" fill="white" strokeWidth={0} />
+        <div className="mt-auto">
+          <button onClick={onRestart} className="w-full py-3 rounded-full border text-sm font-medium" style={{ borderColor: WA.line }}>
+            Restart flow
+          </button>
         </div>
       </div>
     </Phone>
   );
 }
 
-/* =====================================================================
-   14. ERRORS
-   ===================================================================== */
+/* Error / edge screens ------------------------------------------------ */
 export function GenericError({ msg, onRetry }: { msg: string; onRetry: () => void }) {
   return (
-    <Phone bg="#fff">
-      <WaBar title="Something went wrong" />
-      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-4">
-        <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: T.dangerSoft }}>
-          <X className="w-7 h-7" style={{ color: T.danger }} />
+    <Phone>
+      <TopBar title="Something went wrong" />
+      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-3">
+        <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "#FEE2E2" }}>
+          <X className="w-6 h-6" style={{ color: WA.danger }} />
         </div>
-        <div className="font-medium text-[16px]" style={{ color: T.ink }}>{msg}</div>
-        <PrimaryBtn onClick={onRetry}>RETRY</PrimaryBtn>
+        <div className="font-bold">{msg}</div>
+        <button onClick={onRetry} className="mt-2 px-5 py-2 rounded-full text-white text-sm font-semibold" style={{ background: WA.green }}>
+          Retry
+        </button>
       </div>
     </Phone>
   );
 }
-
-/* Suppress unused-import lint */
-const _unused = { useMemo };
-export default _unused;
