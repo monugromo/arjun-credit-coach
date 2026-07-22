@@ -31,8 +31,9 @@ type Step =
   | "confirm" | "pan" | "analyzing" | "paywall"
   | "lapsed" | "razorpay" | "success" | "home";
 
-const ACTIVE_PHONE = "9876500002"; // reuse distressed as "active paid" for the demo
-const EXPIRED_PHONE = "9876500003";
+const NEW_PHONE = "9876500001";     // NTC — full journey ends on NTC paywall
+const ACTIVE_PHONE = "9876500002";   // paid subscriber — straight to chats
+const EXPIRED_PHONE = "9876500003";  // lapsed — ₹99 restart wall
 
 function V2Flow() {
   const { entry } = useSearch({ from: "/v2/" });
@@ -63,6 +64,7 @@ function V2Flow() {
 
   function startNew() {
     setFlow("new");
+    setPhone(NEW_PHONE);   // prefill so full journey hits Confirm Identity
     setStep("landing");
   }
   function startActive() {
