@@ -74,7 +74,7 @@ const DOODLE_URL = `url("data:image/svg+xml;utf8,${DOODLE_SVG}")`;
 
 type Screen =
   | "landing" | "phone" | "otp" | "name" | "fetch" | "panInput"
-  | "panValidate" | "expired" | "analyzing" | "payment" | "payment-success"
+  | "panValidate" | "expired" | "payment" | "payment-success"
   | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
   | "ntc-checklist"
   | "chat" | "call-incoming" | "call-active"
@@ -379,7 +379,7 @@ function Index() {
             onRestart={() => go("payment")} />
         )}
         {screen === "payment" && user && (
-          <RazorpayScreen user={user} onBack={() => go("analyzing")}
+          <RazorpayScreen user={user} onBack={() => go("expired")}
             onSuccess={() => go("payment-success")} />
         )}
         {screen === "payment-success" && user && (
@@ -388,16 +388,13 @@ function Index() {
         {screen === "fetch" && user && (
           <PanCardScreen
             user={user} name={name} setName={setName}
-            onConfirm={() => go("analyzing")}
+            onConfirm={() => go("perm-all")}
             onChangeNumber={() => go("phone")}
             onNotFound={() => go("panInput")}
           />
         )}
         {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go("analyzing")} />
-        )}
-        {screen === "analyzing" && user && (
-          <AnalyzingScreen user={user} onDone={() => go("payment")} />
+          <PanInputScreen onContinue={() => go("perm-all")} />
         )}
         {screen === "perm-all" && (
           <PermAllScreen
@@ -522,35 +519,32 @@ function Landing({ onStart }: { onStart: () => void }) {
         </div>
 
         {/* Headline */}
-        <h1 className="text-[30px] font-extrabold text-[#0e1b2a] leading-[1.1] tracking-[-0.02em]">
-          Bharat's #1<br />Credit Coaching App
+        <h1 className="text-[32px] font-extrabold text-[#0a0a2e] leading-[1.1] tracking-[-0.02em]">
+          Your personal<br />credit coach
         </h1>
 
         {/* Subhead */}
-        <p className="mt-5 text-[15px] text-[#6b7a86] leading-[1.65] max-w-[300px]">
-          AI + human coaching to fix disputes, build score, and unlock better loans — in Hinglish.
+        <p className="mt-5 text-[15px] text-gray-500 leading-[1.65] max-w-[300px]">
+          Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
         </p>
 
         {/* Feature pills */}
-        <div className="mt-8 flex items-center gap-2 flex-wrap justify-center">
-          <span className="inline-flex items-center gap-1.5 bg-white border border-[#1c6b4f]/15 rounded-full px-3 py-1.5 text-[12px] font-medium text-[#1c6b4f] shadow-sm">
+        <div className="mt-8 flex items-center gap-3">
+          <span className="inline-flex items-center gap-1.5 bg-white border border-[#01be87]/15 rounded-full px-3 py-1.5 text-[13px] font-medium text-[#01be87] shadow-sm">
             <Sparkles className="w-3.5 h-3.5" /> AI Coach
-          </span>
-          <span className="inline-flex items-center gap-1.5 bg-white border border-[#1c6b4f]/15 rounded-full px-3 py-1.5 text-[12px] font-medium text-[#1c6b4f] shadow-sm">
-            <ShieldAlert className="w-3.5 h-3.5" /> Dispute help
           </span>
         </div>
       </div>
 
       {/* Bottom CTA */}
       <div className="relative px-8 pb-12 pt-4 z-10">
-        <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#1c6b4f]/20 to-transparent" />
+        <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#01be87]/20 to-transparent" />
         <button
           onClick={onStart}
           className="w-full text-white font-bold py-4 rounded-full text-base shadow-md active:scale-[0.98] transition"
-          style={{ background: "#4bbf72" }}
+          style={{ background: WA.accent }}
         >
-          Start free — 7-day trial
+          Get Started
         </button>
         <p className="text-center text-[11px] text-gray-400 mt-4 tracking-wide">
           Trusted by 50,000+ users across India
@@ -902,9 +896,6 @@ function RazorpayScreen({ user, onBack, onSuccess }:
   { user: DemoUser; onBack: () => void; onSuccess: () => void }) {
   const [method, setMethod] = useState<"upi" | "card" | "netbanking">("upi");
   const [processing, setProcessing] = useState(false);
-  const trialAvailable = user.key === "ntc";
-  const amount = trialAvailable ? 9 : 99;
-  const planLabel = trialAvailable ? "7-day trial" : "monthly";
   const pay = () => {
     setProcessing(true);
     setTimeout(onSuccess, 1800);
@@ -923,7 +914,7 @@ function RazorpayScreen({ user, onBack, onSuccess }:
       <div className="p-4 bg-white border-b border-gray-100 flex items-center justify-between">
         <div>
           <div className="text-[11px] uppercase font-semibold text-gray-500">Total payable</div>
-          <div className="text-2xl font-extrabold text-gray-900">₹{amount}<span className="text-sm text-gray-500 font-medium">/{planLabel}</span></div>
+          <div className="text-2xl font-extrabold text-gray-900">₹99<span className="text-sm text-gray-500 font-medium">/month</span></div>
         </div>
         <div className="text-right">
           <div className="text-[11px] text-gray-500">Paying as</div>
@@ -966,7 +957,7 @@ function RazorpayScreen({ user, onBack, onSuccess }:
         <button onClick={pay} disabled={processing}
           className="w-full text-white font-bold py-3.5 rounded-lg disabled:opacity-60 flex items-center justify-center gap-2"
           style={{ background: "#072654" }}>
-          {processing ? (<><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>) : `Pay ₹${amount}`}
+          {processing ? (<><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>) : "Pay ₹99"}
         </button>
         <div className="flex items-center justify-center gap-1.5 mt-2 text-[10px] text-gray-500">
           <Lock className="w-3 h-3" /> 256-bit encrypted · Powered by Razorpay
@@ -984,70 +975,11 @@ function PaymentSuccess({ onDone }: { onDone: () => void }) {
         <CheckCircle2 className="w-12 h-12 text-emerald-600" />
       </div>
       <h2 className="text-2xl font-bold text-gray-900">Payment successful</h2>
-      <p className="text-gray-600 mt-2 text-sm">Subscription active</p>
+      <p className="text-gray-600 mt-2 text-sm">₹99 charged · Subscription active</p>
       <p className="text-gray-400 mt-6 text-xs">Taking you to Arjun…</p>
     </div>
   );
 }
-
-/* ====================== ANALYZING (post-fetch, pre-paywall) ====================== */
-function AnalyzingScreen({ user, onDone }: { user: DemoUser; onDone: () => void }) {
-  const isNTC = user.key === "ntc";
-  const steps = isNTC
-    ? [
-        "Checking bureau… no active file yet",
-        "You're 'New to Credit' — that's fixable",
-        "Shortlisting starter cards for you",
-        "Prepping Arjun with your build-up plan",
-      ]
-    : [
-        "Pulling your Equifax report…",
-        "Scoring 24 factors that move CIBIL",
-        "Detecting disputes & risky accounts",
-        "Building your personalised action plan",
-      ];
-  const [idx, setIdx] = useState(0);
-  useEffect(() => {
-    const iv = setInterval(() => {
-      setIdx((i) => (i < steps.length - 1 ? i + 1 : i));
-    }, 900);
-    const t = setTimeout(onDone, steps.length * 900 + 600);
-    return () => { clearInterval(iv); clearTimeout(t); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return (
-    <div className="flex-1 flex flex-col bg-white">
-      <div className="h-14 flex items-center px-4 text-white font-semibold text-[17px]" style={{ background: "#1c6b4f" }}>
-        Analyzing your profile
-      </div>
-      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
-        <div className="relative w-24 h-24 mb-6">
-          <div className="absolute inset-0 rounded-full border-4 border-[#e3e8e2]" />
-          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#4bbf72] animate-spin" />
-          <Sparkles className="absolute inset-0 m-auto w-8 h-8" style={{ color: "#1c6b4f" }} />
-        </div>
-        <h2 className="text-lg font-bold text-[#0e1b2a]">Hang tight, {user.name}…</h2>
-        <p className="text-sm text-[#6b7a86] mt-1">Arjun is prepping your session</p>
-        <div className="mt-8 w-full max-w-xs space-y-2 text-left">
-          {steps.map((s, i) => (
-            <div key={s} className={`flex items-center gap-3 text-[13px] transition-opacity ${i <= idx ? "opacity-100" : "opacity-30"}`}>
-              {i < idx ? (
-                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: "#4bbf72" }} />
-              ) : i === idx ? (
-                <Loader2 className="w-4 h-4 shrink-0 animate-spin" style={{ color: "#1c6b4f" }} />
-              ) : (
-                <div className="w-4 h-4 shrink-0 rounded-full border border-[#e3e8e2]" />
-              )}
-              <span className={i <= idx ? "text-[#0e1b2a] font-medium" : "text-[#6b7a86]"}>{s}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
 
 /* ====================== PERMISSIONS (WhatsApp style) ====================== */
 function PermAllScreen({ onAllow, onDeny }: { onAllow: () => void; onDeny: () => void }) {
