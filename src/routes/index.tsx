@@ -687,70 +687,126 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
   const [draft, setDraft] = useState(name);
   useEffect(() => { const t = setTimeout(() => setLoading(false), 1500); return () => clearTimeout(t); }, []);
 
+  const displayName = (name || user.name).toUpperCase();
+  const maskedMobile = user.phone.slice(0, 2) + "xxxxxx" + user.phone.slice(-2);
+  const maskedPan = maskPan(user.pan);
+  const dobByKey: Record<string, string> = {
+    ntc: "14 Aug 1998",
+    distressed: "02 Mar 1989",
+    expired: "27 Nov 1985",
+  };
+  const dob = dobByKey[user.key] ?? "—";
+
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Confirm your identity" />
-      <div className="p-5 flex-1 flex flex-col">
+      <div className="px-5 pt-5 pb-5 flex-1 flex flex-col">
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-4">
             <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
-            <p className="text-gray-600">Fetching your credit profile…</p>
+            <p className="text-gray-600 text-sm">Fetching your credit profile…</p>
           </div>
         ) : (
           <>
-            <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">Is this you?</p>
-
-            {/* PAN card (real reference image with user data overlay) */}
-            <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200">
-              <img src={panCardRef} alt="PAN card" className="w-full block" />
-              {/* Name overlay — covers the "YOUR NAME" placeholder */}
-              <div className="absolute" style={{ left: "11%", top: "42%", width: "42%" }}>
-                {editing ? (
-                  <div className="flex items-center gap-1 bg-white/95 rounded px-1 py-0.5">
-                    <input value={draft} onChange={(e) => setDraft(e.target.value)}
-                      className="flex-1 min-w-0 text-[13px] font-bold uppercase border-b border-gray-400 outline-none bg-transparent" />
-                    <button onClick={() => { setName(draft); setEditing(false); }}
-                      className="text-white text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: WA.accent }}>OK</button>
-                  </div>
-                ) : (
-                  <div className="text-[13px] sm:text-sm font-bold uppercase text-gray-900 bg-white rounded px-1.5 py-0.5 inline-block tracking-wide shadow-sm">
-                    {(name || user.name)}
-                  </div>
-                )}
-              </div>
-              {/* PAN number overlay — covers the "ABCDE1234F" placeholder */}
-              <div className="absolute" style={{ left: "11%", top: "72%", width: "50%" }}>
-                <div className="font-mono text-[13px] sm:text-sm font-bold tracking-wider text-gray-900 bg-white rounded px-1.5 py-0.5 inline-block shadow-sm">
-                  {user.pan}
-                </div>
-              </div>
+            <div>
+              <h2 className="text-[22px] leading-tight font-bold text-gray-900">Is this you?</h2>
+              <p className="mt-1 text-sm text-gray-500">Details fetched from the credit bureau. Confirm to continue.</p>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <button onClick={() => { setDraft(name); setEditing(true); }}
-                className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-700">
-                <Edit2 className="w-4 h-4" /> Edit name
-              </button>
-              <button onClick={onChangeNumber}
-                className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-700">
-                <Phone className="w-4 h-4" /> Change number
-              </button>
+            {/* Receipt-style stack */}
+            <div className="mt-5 rounded-2xl border border-gray-200 bg-white overflow-hidden">
+              <ReceiptRow
+                label="Name"
+                value={
+                  editing ? (
+                    <div className="flex items-center gap-1.5">
+                      <input
+                        autoFocus
+                        value={draft}
+                        onChange={(e) => setDraft(e.target.value)}
+                        className="flex-1 min-w-0 text-[15px] font-semibold uppercase border-b border-gray-400 outline-none bg-transparent py-0.5"
+                      />
+                      <button
+                        onClick={() => { setName(draft.trim() || name); setEditing(false); }}
+                        className="text-white text-[11px] font-bold px-2 py-1 rounded"
+                        style={{ background: WA.accent }}
+                      >Save</button>
+                    </div>
+                  ) : (
+                    <span className="font-semibold text-gray-900 tracking-wide">{displayName}</span>
+                  )
+                }
+                actionLabel={editing ? undefined : "Edit"}
+                onAction={editing ? undefined : () => { setDraft(name || user.name); setEditing(true); }}
+              />
+              <ReceiptRow
+                label="Mobile"
+                value={<span className="font-mono text-gray-900">+91 {maskedMobile}</span>}
+                actionLabel="Change"
+                onAction={onChangeNumber}
+              />
+              <ReceiptRow
+                label="PAN"
+                value={<span className="font-mono tracking-wider text-gray-900">{maskedPan}</span>}
+              />
+              <ReceiptRow
+                label="Date of birth"
+                value={<span className="text-gray-900">{dob}</span>}
+                hint="From bureau records"
+                last
+              />
             </div>
 
-            <button onClick={onNotFound} className="mt-3 text-xs text-gray-500 underline self-center">
-              PAN not found? Enter manually
+            <button onClick={onNotFound} className="mt-4 text-[13px] text-gray-500 underline self-center">
+              Not you? Enter PAN manually
             </button>
 
-            <div className="mt-auto pt-6">
-              <button onClick={onConfirm}
-                className="w-full text-white font-bold py-3.5 rounded-full"
-                style={{ background: WA.accent }}>
+            <div className="mt-auto pt-6 space-y-2">
+              <button
+                onClick={onConfirm}
+                disabled={editing}
+                className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+                style={{ background: WA.accent }}
+              >
                 Yes, that's me
               </button>
+              <p className="text-[11px] text-center text-gray-400">
+                Soft check only — won't affect your score.
+              </p>
             </div>
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+function ReceiptRow({
+  label, value, actionLabel, onAction, hint, last,
+}: {
+  label: string;
+  value: React.ReactNode;
+  actionLabel?: string;
+  onAction?: () => void;
+  hint?: string;
+  last?: boolean;
+}) {
+  return (
+    <div className={`px-4 py-3.5 flex items-start gap-3 ${last ? "" : "border-b border-gray-100"}`}>
+      <div className="w-24 shrink-0 text-[11px] uppercase tracking-wide text-gray-500 pt-1">{label}</div>
+      <div className="flex-1 min-w-0 text-[15px]">
+        <div className="break-words">{value}</div>
+        {hint && <div className="mt-0.5 text-[11px] text-gray-400">{hint}</div>}
+      </div>
+      {actionLabel && onAction && (
+        <button
+          onClick={onAction}
+          className="text-[12px] font-semibold uppercase tracking-wide shrink-0 px-2 py-1 rounded-md"
+          style={{ color: WA.green }}
+        >
+          {actionLabel}
+        </button>
+      )}
     </div>
   );
 }
