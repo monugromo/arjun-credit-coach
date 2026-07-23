@@ -3089,13 +3089,8 @@ const ALL_SCREENS: Array<{ key: Screen; label: string; section: string }> = [
   { key: "name", label: "4. Name", section: "Onboarding" },
   { key: "fetch", label: "5. PAN card confirm", section: "Onboarding" },
   { key: "panInput", label: "5b. PAN manual entry", section: "Onboarding" },
-  { key: "perm-all", label: "6a. Permissions (SMS · Phone · Notif · Mic)", section: "Permissions" },
-  { key: "perm-blocked", label: "6b. Permissions blocked", section: "Permissions" },
-  { key: "perm-email-intro", label: "6c. Gmail intro", section: "Permissions" },
-  { key: "loading-email", label: "6c·. Loading (Gmail)", section: "Permissions" },
-  { key: "perm-email", label: "6d. Google sign-in sheet", section: "Permissions" },
-  { key: "loading-journey", label: "6d·. Loading (Journey)", section: "Permissions" },
-  { key: "score-journey", label: "6d. Score journey", section: "Permissions" },
+  { key: "loading-journey", label: "6. Loading (Journey)", section: "Analyzing" },
+  { key: "score-journey", label: "7. Score journey", section: "Analyzing" },
   
   
   { key: "chat", label: "7. Chat", section: "Main" },
