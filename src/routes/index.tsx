@@ -998,13 +998,13 @@ function ReceiptRow({
 function HasCreditScreen({ onYes, onNo, onBack }: { onYes: () => void; onNo: () => void; onBack: () => void }) {
   const [choice, setChoice] = useState<"yes" | "no" | null>(null);
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white animate-fade-in">
       <WATopBar title="A quick question" onBack={onBack} />
       <div className="px-6 pt-6 flex-1 flex flex-col">
-        <h2 className="text-[22px] font-bold text-gray-900 leading-tight">Do you have any loan or credit card?</h2>
-        <p className="mt-2 text-sm text-gray-600">
-          This helps us decide whether to fetch your credit report by PAN, or start you fresh with no history.
-        </p>
+        <WAPromptBubble>
+          <div className="font-semibold text-gray-900 mb-1">Do you have any loan or credit card?</div>
+          <div className="text-[12.5px] text-gray-600">Helps us decide whether to pull your report by PAN, or start you fresh.</div>
+        </WAPromptBubble>
 
         <div className="mt-6 space-y-3">
           <OptionCard
