@@ -74,6 +74,7 @@ const DOODLE_URL = `url("data:image/svg+xml;utf8,${DOODLE_SVG}")`;
 
 type Screen =
   | "landing" | "phone" | "otp" | "name" | "fetch" | "panInput"
+  | "bureau-validate" | "bureau-fetching"
   | "panValidate" | "expired" | "payment" | "payment-success"
   | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
   | "ntc-checklist"
@@ -376,14 +377,29 @@ function Index() {
             }} />
         )}
         {screen === "name" && (
-          <NameScreen name={name} setName={setName} onBack={() => go("otp")} onContinue={() => go("fetch")} />
+          <NameScreen name={name} setName={setName} onBack={() => go("otp")}
+            onContinue={() => go(user?.key === "ntc" ? "bureau-validate" : "fetch")} />
+        )}
+        {screen === "bureau-validate" && user && (
+          <BureauValidateScreen
+            user={user} name={name}
+            onYes={() => go("payment")}
+            onNotMe={() => go("panInput")}
+            onBack={() => go("name")}
+          />
+        )}
+        {screen === "bureau-fetching" && user && (
+          <BureauFetching
+            onFound={() => go("bureau-validate")}
+            onNotFound={() => go("payment")}
+          />
         )}
         {screen === "expired" && user && (
           <ExpiredScreen user={user} onLogout={logout}
             onRestart={() => go("payment")} />
         )}
         {screen === "payment" && user && (
-          <RazorpayScreen user={user} onBack={() => go("expired")}
+          <RazorpayScreen user={user} onBack={() => go(user.key === "ntc" ? "bureau-validate" : "expired")}
             onSuccess={() => go("payment-success")} />
         )}
         {screen === "payment-success" && user && (
@@ -398,7 +414,7 @@ function Index() {
           />
         )}
         {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go("perm-all")} />
+          <PanInputScreen onContinue={() => go(user?.key === "ntc" ? "bureau-fetching" : "perm-all")} />
         )}
         {screen === "perm-all" && (
           <PermAllScreen
@@ -660,9 +676,9 @@ function OtpScreen({ phone, otp, setOtp, onBack, onDone }: { phone: string; otp:
 function NameScreen({ name, setName, onBack, onContinue }: { name: string; setName: (s: string) => void; onBack: () => void; onContinue: () => void }) {
   return (
     <div className="flex-1 flex flex-col bg-white">
-      <WATopBar title="What's your name?" onBack={onBack} />
+      <WATopBar title="Your name (as in bureau)" onBack={onBack} />
       <div className="p-6 flex-1">
-        <p className="text-sm text-gray-600 mb-2">Enter your name <b>exactly as it appears on your PAN card</b> — we use this to fetch your credit bureau details.</p>
+        <p className="text-sm text-gray-600 mb-2">Enter your name <b>exactly as it appears in the credit bureau</b> — it helps us fetch accurate data on the first try.</p>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
           className="w-full border-b-2 pb-2 mt-4 text-xl outline-none bg-transparent"
           style={{ borderColor: WA.accent }} />
@@ -781,6 +797,125 @@ function PanInputScreen({ onContinue }: { onContinue: () => void }) {
     </div>
   );
 }
+
+/* ====================== BUREAU VALIDATE (card with 4 fields) ====================== */
+function BureauValidateScreen({ user, name, onYes, onNotMe, onBack }:
+  { user: DemoUser; name: string; onYes: () => void; onNotMe: () => void; onBack: () => void }) {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => { const t = setTimeout(() => setLoading(false), 1400); return () => clearTimeout(t); }, []);
+  const displayName = (name || user.name).toUpperCase();
+  const rows: Array<{ label: string; value: string; icon: React.ComponentType<{ className?: string }> }> = [
+    { label: "Name", value: displayName, icon: User },
+    { label: "Mobile", value: `+91 ${user.phone.slice(0, 5)} ${user.phone.slice(5)}`, icon: Phone },
+    { label: "PAN", value: user.pan, icon: BadgeCheck },
+    { label: "Date of birth", value: user.dob || "—", icon: FileText },
+  ];
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Confirm your identity" onBack={onBack} />
+      {loading ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6">
+          <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+          <p className="text-gray-600 text-sm">Fetching your details from the bureau…</p>
+        </div>
+      ) : (
+        <>
+          <div className="p-5 flex-1 overflow-y-auto">
+            <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">Is this you?</p>
+            <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="px-4 py-3 flex items-center gap-3" style={{ background: "#F1FBF4" }}>
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold" style={{ background: WA.green }}>
+                  {displayName.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[11px] uppercase font-semibold text-emerald-700 tracking-wide">Bureau match</div>
+                  <div className="font-bold text-gray-900 truncate">{displayName}</div>
+                </div>
+                <BadgeCheck className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div className="divide-y divide-gray-100">
+                {rows.map((r) => {
+                  const Icon = r.icon;
+                  return (
+                    <div key={r.label} className="flex items-center gap-3 px-4 py-3">
+                      <div className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center shrink-0">
+                        <Icon className="w-4 h-4 text-gray-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">{r.label}</div>
+                        <div className="font-semibold text-gray-900 text-[15px] truncate">{r.value}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <p className="text-[11px] text-gray-500 mt-3 text-center leading-relaxed">
+              These details came from your credit bureau record. Please confirm before we proceed.
+            </p>
+          </div>
+          <div className="p-5 pt-2 space-y-2.5">
+            <button onClick={onYes}
+              className="w-full text-white font-bold py-3.5 rounded-full"
+              style={{ background: WA.accent }}>
+              Yes, that's me
+            </button>
+            <button onClick={onNotMe}
+              className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
+              Not me
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ====================== BUREAU FETCHING (after "Not me" PAN entry) ====================== */
+function BureauFetching({ onFound, onNotFound }: { onFound: () => void; onNotFound: () => void }) {
+  const [phase, setPhase] = useState<"loading" | "notfound">("loading");
+  useEffect(() => {
+    const t = setTimeout(() => setPhase("notfound"), 1800);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Fetching from bureau" />
+      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
+        {phase === "loading" ? (
+          <>
+            <div className="w-14 h-14 border-4 rounded-full animate-spin mb-5" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+            <p className="text-gray-700 font-semibold">Looking up your credit record…</p>
+            <p className="text-gray-500 text-sm mt-1">This usually takes a few seconds.</p>
+          </>
+        ) : (
+          <>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ background: "#FEF3C7" }}>
+              <AlertTriangle className="w-8 h-8 text-amber-600" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">No credit history found</h2>
+            <p className="text-gray-600 text-sm mt-2 max-w-xs leading-relaxed">
+              We couldn't find bureau records for this PAN. That's okay — your credit coach can help you build a score from scratch.
+            </p>
+            <div className="mt-8 w-full space-y-2.5">
+              <button onClick={onNotFound}
+                className="w-full text-white font-bold py-3.5 rounded-full"
+                style={{ background: WA.accent }}>
+                Continue — unlock coach
+              </button>
+              <button onClick={onFound}
+                className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
+                Retry with corrected details
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
 
 /* ====================== PAN VALIDATE (name + PAN together) ====================== */
 function PanValidateScreen({ name, setName, defaultPan, onBack, onContinue }:
