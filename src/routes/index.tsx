@@ -1119,10 +1119,10 @@ function PanFoundScreen({ user, name, onContinue }: { user: DemoUser; name: stri
   const displayName = (name || user.name);
   const pretty = maskPanMid(user.pan);
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white animate-fade-in">
       <WATopBar title="Report found" />
       <div className="flex-1 flex flex-col px-6 pt-8">
-        <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "#E8F5E9" }}>
+        <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center animate-scale-in" style={{ background: "#E8F5E9" }}>
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={WA.accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
