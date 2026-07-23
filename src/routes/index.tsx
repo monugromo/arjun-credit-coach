@@ -1077,7 +1077,7 @@ function PanInputScreen({ onContinue, onBack }: { onContinue: () => void; onBack
     setTimeout(() => { setChecking(false); onContinue(); }, 1400);
   };
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white animate-fade-in">
       <WATopBar title="Enter your PAN" onBack={onBack} />
       <div className="p-6 flex-1 flex flex-col">
         {checking ? (
@@ -1087,8 +1087,10 @@ function PanInputScreen({ onContinue, onBack }: { onContinue: () => void; onBack
           </div>
         ) : (
           <>
-            <p className="text-sm text-gray-600 mb-6">Enter your 10-character PAN exactly as printed on your PAN card.</p>
-            <label className="text-[11px] uppercase font-bold tracking-wider text-gray-500">PAN number</label>
+            <WAPromptBubble>
+              Enter your 10-character PAN, exactly as printed on your card.
+            </WAPromptBubble>
+            <label className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mt-6 block">PAN number</label>
             <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10))}
               placeholder="ABCDE1234F"
               className="w-full border-b-2 pb-2 mt-1 text-xl tracking-[0.25em] font-mono outline-none bg-transparent"
