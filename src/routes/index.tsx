@@ -879,7 +879,7 @@ function BureauFetchFailScreen({ user, onRetry, onEnterPan, onChangeNumber }: {
 
   if (checking) {
     return (
-      <div className="flex-1 flex flex-col bg-white">
+      <div className="flex-1 flex flex-col bg-white animate-fade-in">
         <WATopBar title="Fetching your report" />
         <div className="flex-1 flex flex-col items-center justify-center gap-4">
           <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
@@ -890,7 +890,7 @@ function BureauFetchFailScreen({ user, onRetry, onEnterPan, onChangeNumber }: {
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white animate-fade-in">
       <WATopBar title="Couldn't fetch report" />
       <div className="flex-1 flex flex-col px-6 pt-8">
         <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "#FFF4E5" }}>
