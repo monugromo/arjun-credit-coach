@@ -742,7 +742,7 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
   };
 
   return (
-    <div className="flex-1 flex flex-col" style={{ background: "#F7F8FA" }}>
+    <div className="flex-1 flex flex-col animate-fade-in" style={{ background: "#F7F8FA" }}>
       <WATopBar title="Confirm your identity" />
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 bg-white">
