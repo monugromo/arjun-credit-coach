@@ -3419,8 +3419,10 @@ const ALL_SCREENS: Array<{ key: Screen; label: string; section: string }> = [
   { key: "otp", label: "3. OTP (auto-fill)", section: "Onboarding" },
   { key: "name", label: "4. Name", section: "Onboarding" },
   { key: "fetch", label: "5. PAN card confirm", section: "Onboarding" },
-  { key: "panInput", label: "5b. PAN manual entry", section: "Onboarding" },
-  { key: "fetchFail", label: "5c. Bureau fetch failed", section: "Onboarding" },
+  { key: "hasCredit", label: "5b. Do you have credit?", section: "Onboarding" },
+  { key: "panInput", label: "5c. PAN manual entry", section: "Onboarding" },
+  { key: "panFound", label: "5d. Report found by PAN", section: "Onboarding" },
+  { key: "fetchFail", label: "5e. Bureau fetch failed", section: "Onboarding" },
   { key: "loading-journey", label: "6. Loading (Journey)", section: "Analyzing" },
   { key: "score-journey", label: "7. Score journey", section: "Analyzing" },
   
