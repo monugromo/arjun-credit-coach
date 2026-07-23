@@ -389,7 +389,7 @@ function Index() {
             onRestart={() => go("payment")} />
         )}
         {screen === "payment" && user && (
-          <RazorpayScreen user={user} onBack={() => go("expired")}
+          <RazorpayScreen user={user} onBack={() => go("otp")}
             onSuccess={() => go("payment-success")} />
         )}
         {screen === "payment-success" && user && (
