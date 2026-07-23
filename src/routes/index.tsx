@@ -668,14 +668,28 @@ function OtpScreen({ phone, otp, setOtp, onBack, onDone }: { phone: string; otp:
 }
 
 /* ====================== NAME ====================== */
+function WAPromptBubble({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="animate-fade-in flex items-start gap-2">
+      <div className="w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-white text-[12px] font-bold shadow-sm"
+        style={{ background: `linear-gradient(135deg, ${WA.accent}, #128C7E)` }}>G</div>
+      <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-gray-50 border border-gray-100 px-3.5 py-2.5 text-[13.5px] text-gray-800 leading-snug shadow-sm">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function NameScreen({ name, setName, onBack, onContinue }: { name: string; setName: (s: string) => void; onBack: () => void; onContinue: () => void }) {
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white animate-fade-in">
       <WATopBar title="What's your name?" onBack={onBack} />
       <div className="p-6 flex-1">
-        <p className="text-sm text-gray-600 mb-2">Enter your name <b>exactly as it appears on your PAN card</b> — we use this to fetch your credit bureau details.</p>
+        <WAPromptBubble>
+          Enter your name <b>exactly as it appears on your PAN card</b> — we'll use it to fetch your credit bureau details.
+        </WAPromptBubble>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
-          className="w-full border-b-2 pb-2 mt-4 text-xl outline-none bg-transparent"
+          className="w-full border-b-2 pb-2 mt-6 text-xl outline-none bg-transparent"
           style={{ borderColor: WA.accent }} />
         <div className="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-3">
           <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find your name</div>
@@ -685,8 +699,8 @@ function NameScreen({ name, setName, onBack, onContinue }: { name: string; setNa
       </div>
       <div className="p-6">
         <button onClick={onContinue} disabled={!name.trim()}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
-          style={{ background: WA.accent }}>
+          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40 shadow-lg"
+          style={{ background: WA.accent, boxShadow: `0 8px 20px -8px ${WA.accent}` }}>
           Continue
         </button>
       </div>
