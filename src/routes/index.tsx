@@ -668,14 +668,28 @@ function OtpScreen({ phone, otp, setOtp, onBack, onDone }: { phone: string; otp:
 }
 
 /* ====================== NAME ====================== */
+function WAPromptBubble({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="animate-fade-in flex items-start gap-2">
+      <div className="w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-white text-[12px] font-bold shadow-sm"
+        style={{ background: `linear-gradient(135deg, ${WA.accent}, #128C7E)` }}>G</div>
+      <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-gray-50 border border-gray-100 px-3.5 py-2.5 text-[13.5px] text-gray-800 leading-snug shadow-sm">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function NameScreen({ name, setName, onBack, onContinue }: { name: string; setName: (s: string) => void; onBack: () => void; onContinue: () => void }) {
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white animate-fade-in">
       <WATopBar title="What's your name?" onBack={onBack} />
       <div className="p-6 flex-1">
-        <p className="text-sm text-gray-600 mb-2">Enter your name <b>exactly as it appears on your PAN card</b> — we use this to fetch your credit bureau details.</p>
+        <WAPromptBubble>
+          Enter your name <b>exactly as it appears on your PAN card</b> — we'll use it to fetch your credit bureau details.
+        </WAPromptBubble>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
-          className="w-full border-b-2 pb-2 mt-4 text-xl outline-none bg-transparent"
+          className="w-full border-b-2 pb-2 mt-6 text-xl outline-none bg-transparent"
           style={{ borderColor: WA.accent }} />
         <div className="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-3">
           <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find your name</div>
@@ -685,8 +699,8 @@ function NameScreen({ name, setName, onBack, onContinue }: { name: string; setNa
       </div>
       <div className="p-6">
         <button onClick={onContinue} disabled={!name.trim()}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
-          style={{ background: WA.accent }}>
+          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40 shadow-lg"
+          style={{ background: WA.accent, boxShadow: `0 8px 20px -8px ${WA.accent}` }}>
           Continue
         </button>
       </div>
@@ -728,7 +742,7 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
   };
 
   return (
-    <div className="flex-1 flex flex-col" style={{ background: "#F7F8FA" }}>
+    <div className="flex-1 flex flex-col animate-fade-in" style={{ background: "#F7F8FA" }}>
       <WATopBar title="Confirm your identity" />
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 bg-white">
@@ -865,7 +879,7 @@ function BureauFetchFailScreen({ user, onRetry, onEnterPan, onChangeNumber }: {
 
   if (checking) {
     return (
-      <div className="flex-1 flex flex-col bg-white">
+      <div className="flex-1 flex flex-col bg-white animate-fade-in">
         <WATopBar title="Fetching your report" />
         <div className="flex-1 flex flex-col items-center justify-center gap-4">
           <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
@@ -876,7 +890,7 @@ function BureauFetchFailScreen({ user, onRetry, onEnterPan, onChangeNumber }: {
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white animate-fade-in">
       <WATopBar title="Couldn't fetch report" />
       <div className="flex-1 flex flex-col px-6 pt-8">
         <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "#FFF4E5" }}>
@@ -984,13 +998,13 @@ function ReceiptRow({
 function HasCreditScreen({ onYes, onNo, onBack }: { onYes: () => void; onNo: () => void; onBack: () => void }) {
   const [choice, setChoice] = useState<"yes" | "no" | null>(null);
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white animate-fade-in">
       <WATopBar title="A quick question" onBack={onBack} />
       <div className="px-6 pt-6 flex-1 flex flex-col">
-        <h2 className="text-[22px] font-bold text-gray-900 leading-tight">Do you have any loan or credit card?</h2>
-        <p className="mt-2 text-sm text-gray-600">
-          This helps us decide whether to fetch your credit report by PAN, or start you fresh with no history.
-        </p>
+        <WAPromptBubble>
+          <div className="font-semibold text-gray-900 mb-1">Do you have any loan or credit card?</div>
+          <div className="text-[12.5px] text-gray-600">Helps us decide whether to pull your report by PAN, or start you fresh.</div>
+        </WAPromptBubble>
 
         <div className="mt-6 space-y-3">
           <OptionCard
@@ -1063,7 +1077,7 @@ function PanInputScreen({ onContinue, onBack }: { onContinue: () => void; onBack
     setTimeout(() => { setChecking(false); onContinue(); }, 1400);
   };
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white animate-fade-in">
       <WATopBar title="Enter your PAN" onBack={onBack} />
       <div className="p-6 flex-1 flex flex-col">
         {checking ? (
@@ -1073,8 +1087,10 @@ function PanInputScreen({ onContinue, onBack }: { onContinue: () => void; onBack
           </div>
         ) : (
           <>
-            <p className="text-sm text-gray-600 mb-6">Enter your 10-character PAN exactly as printed on your PAN card.</p>
-            <label className="text-[11px] uppercase font-bold tracking-wider text-gray-500">PAN number</label>
+            <WAPromptBubble>
+              Enter your 10-character PAN, exactly as printed on your card.
+            </WAPromptBubble>
+            <label className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mt-6 block">PAN number</label>
             <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10))}
               placeholder="ABCDE1234F"
               className="w-full border-b-2 pb-2 mt-1 text-xl tracking-[0.25em] font-mono outline-none bg-transparent"
@@ -1103,10 +1119,10 @@ function PanFoundScreen({ user, name, onContinue }: { user: DemoUser; name: stri
   const displayName = (name || user.name);
   const pretty = maskPanMid(user.pan);
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white animate-fade-in">
       <WATopBar title="Report found" />
       <div className="flex-1 flex flex-col px-6 pt-8">
-        <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "#E8F5E9" }}>
+        <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center animate-scale-in" style={{ background: "#E8F5E9" }}>
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={WA.accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
