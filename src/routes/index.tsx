@@ -373,10 +373,12 @@ function Index() {
         )}
         {screen === "otp" && user && (
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
-            onBack={() => go("phone")} onDone={() =>
-              go(user.expired ? "expired"
-                : user.incomplete ? "fetch"
-                : "name")} />
+            onBack={() => go("phone")} onDone={() => {
+              if (user.expired) { go("payment"); return; }
+              if (user.incomplete) { go("fetch"); return; }
+              if (user.key === "distressed") { startChatFlow(user); return; }
+              go("name");
+            }} />
         )}
         {screen === "name" && (
           <NameScreen name={name} setName={setName} onBack={() => go("otp")}
