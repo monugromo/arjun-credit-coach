@@ -375,7 +375,6 @@ function Index() {
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
             onBack={() => go("phone")} onDone={() =>
               go(user.expired ? "expired"
-                : user.fetchFail ? "fetchFail"
                 : user.incomplete ? "fetch"
                 : "name")} />
         )}
@@ -399,19 +398,29 @@ function Index() {
             user={user} name={name} setName={setName}
             onConfirm={() => go("loading-journey")}
             onChangeNumber={() => go("phone")}
-            onNotFound={() => go("panInput")}
+            onNotFound={() => go("hasCredit")}
           />
         )}
         {screen === "fetchFail" && user && (
           <BureauFetchFailScreen
             user={user}
             onRetry={() => go("fetch")}
-            onEnterPan={() => go("panInput")}
+            onEnterPan={() => go("hasCredit")}
             onChangeNumber={() => go("phone")}
           />
         )}
+        {screen === "hasCredit" && (
+          <HasCreditScreen
+            onYes={() => go("panInput")}
+            onNo={() => go("loading-journey")}
+            onBack={() => go(user?.fetchFail ? "fetchFail" : "fetch")}
+          />
+        )}
         {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go("loading-journey")} />
+          <PanInputScreen onContinue={() => go("panFound")} onBack={() => go("hasCredit")} />
+        )}
+        {screen === "panFound" && user && (
+          <PanFoundScreen user={user} name={name} onContinue={() => go("loading-journey")} />
         )}
         {screen === "ntc-checklist" && user && (
           <NTCChecklistScreen user={user} onDone={() => {
