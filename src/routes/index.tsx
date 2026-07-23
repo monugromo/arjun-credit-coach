@@ -388,33 +388,13 @@ function Index() {
         {screen === "fetch" && user && (
           <PanCardScreen
             user={user} name={name} setName={setName}
-            onConfirm={() => go("perm-all")}
+            onConfirm={() => go("loading-journey")}
             onChangeNumber={() => go("phone")}
             onNotFound={() => go("panInput")}
           />
         )}
         {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go("perm-all")} />
-        )}
-        {screen === "perm-all" && (
-          <PermAllScreen
-            onAllow={() => go("perm-email-intro")}
-            onDeny={() => go("perm-blocked")}
-          />
-        )}
-        {screen === "perm-blocked" && (
-          <PermBlocked onRetry={() => go("perm-all")} />
-        )}
-        {screen === "perm-email" && (
-          <EmailPerm
-            onDone={() => go("ntc-checklist")}
-          />
-        )}
-        {screen === "perm-email-intro" && (
-          <EmailIntro onContinue={() => go("loading-email")} onSkip={() => go("ntc-checklist")} />
-        )}
-        {screen === "loading-email" && (
-          <LoadingScreen label="Opening Google sign-in…" onDone={() => go("perm-email")} />
+          <PanInputScreen onContinue={() => go("loading-journey")} />
         )}
         {screen === "ntc-checklist" && user && (
           <NTCChecklistScreen user={user} onDone={() => {
