@@ -372,10 +372,15 @@ function Index() {
         )}
         {screen === "otp" && user && (
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
-            onBack={() => go("phone")} onDone={() => go(user.expired ? "expired" : user.incomplete ? "fetch" : "name")} />
+            onBack={() => go("phone")} onDone={() =>
+              go(user.expired ? "expired"
+                : user.fetchFail ? "fetchFail"
+                : user.incomplete ? "fetch"
+                : "name")} />
         )}
         {screen === "name" && (
-          <NameScreen name={name} setName={setName} onBack={() => go("otp")} onContinue={() => go("fetch")} />
+          <NameScreen name={name} setName={setName} onBack={() => go("otp")}
+            onContinue={() => go(user?.fetchFail ? "fetchFail" : "fetch")} />
         )}
         {screen === "expired" && user && (
           <ExpiredScreen user={user} onLogout={logout}
@@ -394,6 +399,14 @@ function Index() {
             onConfirm={() => go("loading-journey")}
             onChangeNumber={() => go("phone")}
             onNotFound={() => go("panInput")}
+          />
+        )}
+        {screen === "fetchFail" && user && (
+          <BureauFetchFailScreen
+            user={user}
+            onRetry={() => go("fetch")}
+            onEnterPan={() => go("panInput")}
+            onChangeNumber={() => go("phone")}
           />
         )}
         {screen === "panInput" && (
