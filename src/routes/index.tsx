@@ -589,6 +589,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
               ["9876500002", "Active", "Sonu · Score 413, needs fixes"],
               ["9876500003", "Lapsed", "Darpan · Trial ended, restart ₹99"],
               ["9876500004", "Incomplete", "Priya · Dropped mid-flow, resume"],
+              ["9876500005", "Fetch failed", "Amit · Bureau lookup fails"],
             ].map(([p, tag, label]) => (
               <button key={p} onClick={() => setPhone(p)}
                 className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
