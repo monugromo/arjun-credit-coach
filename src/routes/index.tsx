@@ -569,14 +569,22 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
           </div>
         </div>
         <div className="mt-6">
-          <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
+          <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts · one per branch</div>
           <div className="flex flex-col gap-2">
-            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"]].map(([p, label]) => (
+            {[
+              ["9876500001", "New", "Rahul · No credit history yet"],
+              ["9876500002", "Active", "Sonu · Score 413, needs fixes"],
+              ["9876500003", "Lapsed", "Darpan · Trial ended, restart ₹99"],
+              ["9876500004", "Incomplete", "Priya · Dropped mid-flow, resume"],
+            ].map(([p, tag, label]) => (
               <button key={p} onClick={() => setPhone(p)}
                 className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                 <span>
-                  <div className="font-medium text-gray-900">+91 {p.slice(0, 5)} {p.slice(5)}</div>
-                  <div className="text-xs text-gray-500">{label}</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: "#E8F5E9", color: WA.green }}>{tag}</span>
+                    <span className="font-medium text-gray-900">+91 {p.slice(0, 5)} {p.slice(5)}</span>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-0.5">{label}</div>
                 </span>
                 <ChevronRight className="w-4 h-4 text-gray-400" />
               </button>
