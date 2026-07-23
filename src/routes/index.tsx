@@ -685,6 +685,7 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
     ntc: "14 Aug 1998",
     distressed: "02 Mar 1989",
     expired: "27 Nov 1985",
+    incomplete: "09 Jun 1992",
   };
   const dob = dobByKey[user.key] ?? "—";
 
