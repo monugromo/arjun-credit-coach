@@ -149,7 +149,7 @@ function Index() {
       await sleep(400);
       await streamCoach(initialChat(user.key));
       setChatPhase("awaiting-consent");
-      setShowCallPopup(true);
+      if (user.key !== "direct") setShowCallPopup(true);
       streamingRef.current = false;
     })();
   }, [screen, user, chatPhase, chat.length]);
