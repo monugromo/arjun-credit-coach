@@ -73,7 +73,8 @@ const DOODLE_SVG = `
 const DOODLE_URL = `url("data:image/svg+xml;utf8,${DOODLE_SVG}")`;
 
 type Screen =
-  | "landing" | "phone" | "otp" | "name" | "fetch" | "fetchFail" | "panInput"
+  | "landing" | "phone" | "otp" | "name" | "fetch" | "fetchFail"
+  | "hasCredit" | "panInput" | "panFound"
   | "panValidate" | "expired" | "payment" | "payment-success"
   | "loading-journey" | "score-journey"
   | "ntc-checklist"
@@ -374,7 +375,6 @@ function Index() {
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
             onBack={() => go("phone")} onDone={() =>
               go(user.expired ? "expired"
-                : user.fetchFail ? "fetchFail"
                 : user.incomplete ? "fetch"
                 : "name")} />
         )}
@@ -398,19 +398,29 @@ function Index() {
             user={user} name={name} setName={setName}
             onConfirm={() => go("loading-journey")}
             onChangeNumber={() => go("phone")}
-            onNotFound={() => go("panInput")}
+            onNotFound={() => go("hasCredit")}
           />
         )}
         {screen === "fetchFail" && user && (
           <BureauFetchFailScreen
             user={user}
             onRetry={() => go("fetch")}
-            onEnterPan={() => go("panInput")}
+            onEnterPan={() => go("hasCredit")}
             onChangeNumber={() => go("phone")}
           />
         )}
+        {screen === "hasCredit" && (
+          <HasCreditScreen
+            onYes={() => go("panInput")}
+            onNo={() => go("loading-journey")}
+            onBack={() => go(user?.fetchFail ? "fetchFail" : "fetch")}
+          />
+        )}
         {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go("loading-journey")} />
+          <PanInputScreen onContinue={() => go("panFound")} onBack={() => go("hasCredit")} />
+        )}
+        {screen === "panFound" && user && (
+          <PanFoundScreen user={user} name={name} onContinue={() => go("loading-journey")} />
         )}
         {screen === "ntc-checklist" && user && (
           <NTCChecklistScreen user={user} onDone={() => {
@@ -971,24 +981,165 @@ function ReceiptRow({
   );
 }
 
-function PanInputScreen({ onContinue }: { onContinue: () => void }) {
-  const [pan, setPan] = useState("");
+function HasCreditScreen({ onYes, onNo, onBack }: { onYes: () => void; onNo: () => void; onBack: () => void }) {
+  const [choice, setChoice] = useState<"yes" | "no" | null>(null);
   return (
     <div className="flex-1 flex flex-col bg-white">
-      <WATopBar title="Enter your PAN" />
-      <div className="p-6 flex-1">
-        <p className="text-sm text-gray-600 mb-6">We couldn't find your details — enter your 10-character PAN.</p>
-        <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().slice(0, 10))}
-          placeholder="ABCDE1234F"
-          className="w-full border-b-2 pb-2 text-xl tracking-widest outline-none"
-          style={{ borderColor: WA.accent }} />
+      <WATopBar title="A quick question" onBack={onBack} />
+      <div className="px-6 pt-6 flex-1 flex flex-col">
+        <h2 className="text-[22px] font-bold text-gray-900 leading-tight">Do you have any loan or credit card?</h2>
+        <p className="mt-2 text-sm text-gray-600">
+          This helps us decide whether to fetch your credit report by PAN, or start you fresh with no history.
+        </p>
+
+        <div className="mt-6 space-y-3">
+          <OptionCard
+            active={choice === "yes"}
+            onClick={() => setChoice("yes")}
+            title="Yes, I have one or more"
+            desc="Loan, credit card, EMI, or overdraft — even if closed"
+            emoji="💳"
+          />
+          <OptionCard
+            active={choice === "no"}
+            onClick={() => setChoice("no")}
+            title="No, I've never had any"
+            desc="First-time credit user — we'll build your score from scratch"
+            emoji="🌱"
+          />
+        </div>
+
+        <div className="mt-auto pb-6 pt-6">
+          <button
+            onClick={() => (choice === "yes" ? onYes() : choice === "no" ? onNo() : null)}
+            disabled={!choice}
+            className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40 shadow-lg"
+            style={{ background: WA.accent, boxShadow: `0 8px 20px -8px ${WA.accent}` }}
+          >
+            Continue
+          </button>
+        </div>
       </div>
-      <div className="p-6">
-        <button onClick={onContinue} disabled={pan.length !== 10}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
-          style={{ background: WA.accent }}>
-          Continue
-        </button>
+    </div>
+  );
+}
+
+function OptionCard({ active, onClick, title, desc, emoji }: {
+  active: boolean; onClick: () => void; title: string; desc: string; emoji: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full text-left rounded-2xl border-2 p-4 flex items-start gap-3 transition-colors"
+      style={{
+        borderColor: active ? WA.accent : "#E5E7EB",
+        background: active ? "#E8F5E9" : "#FFFFFF",
+      }}
+    >
+      <div className="text-2xl leading-none pt-0.5">{emoji}</div>
+      <div className="flex-1 min-w-0">
+        <div className="text-[15px] font-semibold text-gray-900">{title}</div>
+        <div className="text-[12px] text-gray-600 mt-0.5">{desc}</div>
+      </div>
+      <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5"
+        style={{ borderColor: active ? WA.accent : "#CBD5E1", background: active ? WA.accent : "transparent" }}>
+        {active && (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        )}
+      </div>
+    </button>
+  );
+}
+
+function PanInputScreen({ onContinue, onBack }: { onContinue: () => void; onBack?: () => void }) {
+  const [pan, setPan] = useState("");
+  const [checking, setChecking] = useState(false);
+  const panOk = /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan);
+  const submit = () => {
+    if (!panOk) return;
+    setChecking(true);
+    setTimeout(() => { setChecking(false); onContinue(); }, 1400);
+  };
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Enter your PAN" onBack={onBack} />
+      <div className="p-6 flex-1 flex flex-col">
+        {checking ? (
+          <div className="flex-1 flex flex-col items-center justify-center gap-4">
+            <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+            <p className="text-gray-600 text-sm">Looking up your credit report…</p>
+          </div>
+        ) : (
+          <>
+            <p className="text-sm text-gray-600 mb-6">Enter your 10-character PAN exactly as printed on your PAN card.</p>
+            <label className="text-[11px] uppercase font-bold tracking-wider text-gray-500">PAN number</label>
+            <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10))}
+              placeholder="ABCDE1234F"
+              className="w-full border-b-2 pb-2 mt-1 text-xl tracking-[0.25em] font-mono outline-none bg-transparent"
+              style={{ borderColor: WA.accent }} />
+            {pan.length === 10 && !panOk && (
+              <p className="text-[12px] text-red-600 mt-2">Format looks off — 5 letters, 4 digits, 1 letter.</p>
+            )}
+            <p className="text-[12px] text-gray-500 mt-3">🔒 Soft check only — won't affect your score.</p>
+          </>
+        )}
+      </div>
+      {!checking && (
+        <div className="p-6">
+          <button onClick={submit} disabled={!panOk}
+            className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40 shadow-lg"
+            style={{ background: WA.accent, boxShadow: `0 8px 20px -8px ${WA.accent}` }}>
+            Continue
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PanFoundScreen({ user, name, onContinue }: { user: DemoUser; name: string; onContinue: () => void }) {
+  const displayName = (name || user.name);
+  const pretty = maskPanMid(user.pan);
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Report found" />
+      <div className="flex-1 flex flex-col px-6 pt-8">
+        <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "#E8F5E9" }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={WA.accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <h2 className="mt-5 text-[22px] font-bold text-gray-900 text-center">We found your details</h2>
+        <p className="mt-2 text-sm text-gray-600 text-center">
+          Your credit report is available with the bureau. Confirm to continue.
+        </p>
+
+        <div className="mt-6 rounded-2xl bg-gray-50 border border-gray-100 divide-y divide-gray-100">
+          <div className="px-4 py-3 flex justify-between items-center">
+            <span className="text-[12px] uppercase tracking-wide text-gray-500">Name</span>
+            <span className="text-[14px] font-semibold text-gray-900">{displayName}</span>
+          </div>
+          <div className="px-4 py-3 flex justify-between items-center">
+            <span className="text-[12px] uppercase tracking-wide text-gray-500">PAN</span>
+            <span className="text-[14px] font-mono tracking-wider text-gray-900">{pretty}</span>
+          </div>
+          <div className="px-4 py-3 flex justify-between items-center">
+            <span className="text-[12px] uppercase tracking-wide text-gray-500">Bureau</span>
+            <span className="text-[14px] font-semibold text-gray-900">Equifax ✓</span>
+          </div>
+        </div>
+
+        <div className="mt-auto pt-8 pb-6">
+          <button
+            onClick={onContinue}
+            className="w-full text-white font-bold py-3.5 rounded-full shadow-lg"
+            style={{ background: WA.accent, boxShadow: `0 8px 20px -8px ${WA.accent}` }}
+          >
+            Continue
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -3268,8 +3419,10 @@ const ALL_SCREENS: Array<{ key: Screen; label: string; section: string }> = [
   { key: "otp", label: "3. OTP (auto-fill)", section: "Onboarding" },
   { key: "name", label: "4. Name", section: "Onboarding" },
   { key: "fetch", label: "5. PAN card confirm", section: "Onboarding" },
-  { key: "panInput", label: "5b. PAN manual entry", section: "Onboarding" },
-  { key: "fetchFail", label: "5c. Bureau fetch failed", section: "Onboarding" },
+  { key: "hasCredit", label: "5b. Do you have credit?", section: "Onboarding" },
+  { key: "panInput", label: "5c. PAN manual entry", section: "Onboarding" },
+  { key: "panFound", label: "5d. Report found by PAN", section: "Onboarding" },
+  { key: "fetchFail", label: "5e. Bureau fetch failed", section: "Onboarding" },
   { key: "loading-journey", label: "6. Loading (Journey)", section: "Analyzing" },
   { key: "score-journey", label: "7. Score journey", section: "Analyzing" },
   
