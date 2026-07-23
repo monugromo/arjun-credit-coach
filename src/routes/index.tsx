@@ -691,97 +691,251 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(name);
   useEffect(() => { const t = setTimeout(() => setLoading(false), 1500); return () => clearTimeout(t); }, []);
+  // Silence unused-var since Mobile "Change" was removed per spec (edit only Name here).
+  void onChangeNumber;
 
-  const displayName = (name || user.name).toUpperCase();
-  const maskedMobile = user.phone.slice(0, 2) + "xxxxxx" + user.phone.slice(-2);
-  const maskedPan = maskPan(user.pan);
+  const displayName = (name || user.name);
+  const initial = (displayName.trim()[0] || "?").toUpperCase();
+  const fullMobile = `+91 ${user.phone.slice(0, 5)} ${user.phone.slice(5)}`;
+  const pretty = maskPanMid(user.pan); // BMH****66A
   const dobByKey: Record<string, string> = {
     ntc: "14 Aug 1998",
     distressed: "02 Mar 1989",
     expired: "27 Nov 1985",
     incomplete: "09 Jun 1992",
+    fetchFail: "—",
   };
   const dob = dobByKey[user.key] ?? "—";
 
+  const saveName = () => {
+    const next = draft.trim();
+    if (!next) { setEditing(false); return; }
+    setName(next);
+    setEditing(false);
+    // Simulate re-fetch after name change (re-run confirmation flow)
+    setLoading(true);
+    setTimeout(() => setLoading(false), 1400);
+  };
+
+  return (
+    <div className="flex-1 flex flex-col" style={{ background: "#F7F8FA" }}>
+      <WATopBar title="Confirm your identity" />
+      {loading ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 bg-white">
+          <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+          <p className="text-gray-600 text-sm">Fetching your credit profile…</p>
+        </div>
+      ) : (
+        <div className="flex-1 flex flex-col">
+          {/* WhatsApp-style profile header */}
+          <div className="bg-white pt-6 pb-5 px-5 flex flex-col items-center border-b border-gray-100">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center text-white text-3xl font-semibold shadow"
+              style={{ background: `linear-gradient(135deg, ${WA.accent}, #128C7E)` }}>
+              {initial}
+            </div>
+            <div className="mt-3 flex items-center gap-2">
+              {editing ? (
+                <input
+                  autoFocus
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") saveName(); }}
+                  className="text-[20px] font-semibold text-gray-900 text-center border-b-2 outline-none bg-transparent min-w-0 max-w-[220px]"
+                  style={{ borderColor: WA.accent }}
+                />
+              ) : (
+                <h2 className="text-[20px] font-semibold text-gray-900">{displayName}</h2>
+              )}
+              {editing ? (
+                <button
+                  onClick={saveName}
+                  className="text-white text-[11px] font-bold px-2.5 py-1 rounded-full"
+                  style={{ background: WA.accent }}
+                >Save</button>
+              ) : (
+                <button
+                  aria-label="Edit name"
+                  onClick={() => { setDraft(displayName); setEditing(true); }}
+                  className="p-1.5 rounded-full hover:bg-gray-100"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={WA.green} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                  </svg>
+                </button>
+              )}
+            </div>
+            <p className="mt-1 text-[12px] text-gray-500">as per your PAN card</p>
+          </div>
+
+          {/* WhatsApp settings-style grouped list */}
+          <div className="mt-3 bg-white">
+            <WAInfoRow
+              icon={
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#667781" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+              }
+              label="Mobile"
+              value={fullMobile}
+            />
+            <WAInfoRow
+              icon={
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#667781" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="M7 10h4M7 14h6" />
+                </svg>
+              }
+              label="PAN"
+              value={<span className="font-mono tracking-wider">{pretty}</span>}
+            />
+            <WAInfoRow
+              icon={
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#667781" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M16 2v4M8 2v4M3 10h18" />
+                </svg>
+              }
+              label="Date of birth"
+              value={dob}
+              last
+            />
+          </div>
+
+          <p className="px-5 mt-3 text-[12px] text-gray-500">
+            Only your name can be edited here. To change mobile number, verify with OTP.
+          </p>
+
+          <div className="mt-auto p-5 pt-6 bg-white border-t border-gray-100">
+            <button
+              onClick={onConfirm}
+              disabled={editing}
+              className="w-full text-white font-bold py-4 rounded-full disabled:opacity-40 shadow-lg text-[16px]"
+              style={{ background: WA.accent, boxShadow: `0 8px 20px -8px ${WA.accent}` }}
+            >
+              Yes, that's me
+            </button>
+            <button
+              onClick={onNotFound}
+              className="mt-3 w-full py-2.5 text-[13px] font-medium"
+              style={{ color: WA.green }}
+            >
+              Not me — enter PAN manually
+            </button>
+            <p className="text-[11px] text-center text-gray-400 mt-1">
+              Soft check only — won't affect your score.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function WAInfoRow({ icon, label, value, last }: {
+  icon: React.ReactNode; label: string; value: React.ReactNode; last?: boolean;
+}) {
+  return (
+    <div className={`flex items-center gap-4 px-5 py-3.5 ${last ? "" : "border-b border-gray-100"}`}>
+      <div className="w-8 h-8 flex items-center justify-center shrink-0">{icon}</div>
+      <div className="flex-1 min-w-0">
+        <div className="text-[15px] text-gray-900">{value}</div>
+        <div className="text-[12px] text-gray-500 mt-0.5">{label}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ====================== BUREAU FETCH FAILED ====================== */
+function BureauFetchFailScreen({ user, onRetry, onEnterPan, onChangeNumber }: {
+  user: DemoUser; onRetry: () => void; onEnterPan: () => void; onChangeNumber: () => void;
+}) {
+  const [checking, setChecking] = useState(true);
+  useEffect(() => { const t = setTimeout(() => setChecking(false), 1400); return () => clearTimeout(t); }, []);
+
+  if (checking) {
+    return (
+      <div className="flex-1 flex flex-col bg-white">
+        <WATopBar title="Fetching your report" />
+        <div className="flex-1 flex flex-col items-center justify-center gap-4">
+          <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+          <p className="text-gray-600 text-sm">Contacting the credit bureau…</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 flex flex-col bg-white">
-      <WATopBar title="Confirm your identity" />
-      <div className="px-5 pt-5 pb-5 flex-1 flex flex-col">
-        {loading ? (
-          <div className="flex-1 flex flex-col items-center justify-center gap-4">
-            <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
-            <p className="text-gray-600 text-sm">Fetching your credit profile…</p>
-          </div>
-        ) : (
-          <>
-            <div>
-              <h2 className="text-[22px] leading-tight font-bold text-gray-900">Is this you?</h2>
-              <p className="mt-1 text-sm text-gray-500">Details fetched from the credit bureau. Confirm to continue.</p>
-            </div>
+      <WATopBar title="Couldn't fetch report" />
+      <div className="flex-1 flex flex-col px-6 pt-8">
+        <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "#FFF4E5" }}>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#B26A00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+        </div>
+        <h2 className="mt-5 text-[22px] font-bold text-gray-900 text-center">We couldn't fetch your credit report</h2>
+        <p className="mt-2 text-sm text-gray-600 text-center">
+          The bureau didn't respond for <span className="font-medium">+91 {user.phone.slice(0, 5)} {user.phone.slice(5)}</span>.
+          This can happen when your number isn't linked to a credit account, or the bureau is temporarily down.
+        </p>
 
-            {/* Receipt-style stack */}
-            <div className="mt-5 rounded-2xl border border-gray-200 bg-white overflow-hidden">
-              <ReceiptRow
-                label="Name"
-                value={
-                  editing ? (
-                    <div className="flex items-center gap-1.5">
-                      <input
-                        autoFocus
-                        value={draft}
-                        onChange={(e) => setDraft(e.target.value)}
-                        className="flex-1 min-w-0 text-[15px] font-semibold uppercase border-b border-gray-400 outline-none bg-transparent py-0.5"
-                      />
-                      <button
-                        onClick={() => { setName(draft.trim() || name); setEditing(false); }}
-                        className="text-white text-[11px] font-bold px-2 py-1 rounded"
-                        style={{ background: WA.accent }}
-                      >Save</button>
-                    </div>
-                  ) : (
-                    <span className="font-semibold text-gray-900 tracking-wide">{displayName}</span>
-                  )
-                }
-                actionLabel={editing ? undefined : "Edit"}
-                onAction={editing ? undefined : () => { setDraft(name || user.name); setEditing(true); }}
-              />
-              <ReceiptRow
-                label="Mobile"
-                value={<span className="font-mono text-gray-900">+91 {maskedMobile}</span>}
-                actionLabel="Change"
-                onAction={onChangeNumber}
-              />
-              <ReceiptRow
-                label="PAN"
-                value={<span className="font-mono tracking-wider text-gray-900">{maskedPan}</span>}
-              />
-              <ReceiptRow
-                label="Date of birth"
-                value={<span className="text-gray-900">{dob}</span>}
-                hint="From bureau records"
-                last
-              />
-            </div>
+        <div className="mt-6 rounded-2xl bg-gray-50 p-4 space-y-3">
+          <FailOption
+            n={1}
+            title="Try again"
+            desc="Retry the bureau lookup — usually works on the second try."
+          />
+          <FailOption
+            n={2}
+            title="Enter PAN manually"
+            desc="Most reliable fallback. We'll fetch your report by PAN."
+          />
+          <FailOption
+            n={3}
+            title="Use a different number"
+            desc="If your credit accounts are on another mobile, sign in with that number."
+          />
+        </div>
 
-            <button onClick={onNotFound} className="mt-4 text-[13px] text-gray-500 underline self-center">
-              Not you? Enter PAN manually
-            </button>
+        <div className="mt-auto pt-6 pb-5 space-y-2">
+          <button
+            onClick={onEnterPan}
+            className="w-full text-white font-bold py-3.5 rounded-full shadow-lg"
+            style={{ background: WA.accent, boxShadow: `0 8px 20px -8px ${WA.accent}` }}
+          >
+            Enter PAN manually
+          </button>
+          <button
+            onClick={onRetry}
+            className="w-full font-semibold py-3 rounded-full border border-gray-300 text-gray-800"
+          >
+            Try again
+          </button>
+          <button
+            onClick={onChangeNumber}
+            className="w-full py-2.5 text-[13px] font-medium"
+            style={{ color: WA.green }}
+          >
+            Use a different number
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-            <div className="mt-auto pt-6 space-y-2">
-              <button
-                onClick={onConfirm}
-                disabled={editing}
-                className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
-                style={{ background: WA.accent }}
-              >
-                Yes, that's me
-              </button>
-              <p className="text-[11px] text-center text-gray-400">
-                Soft check only — won't affect your score.
-              </p>
-            </div>
-          </>
-        )}
+function FailOption({ n, title, desc }: { n: number; title: string; desc: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0" style={{ background: WA.accent }}>
+        {n}
+      </div>
+      <div className="flex-1">
+        <div className="text-[14px] font-semibold text-gray-900">{title}</div>
+        <div className="text-[12px] text-gray-600 mt-0.5">{desc}</div>
       </div>
     </div>
   );
