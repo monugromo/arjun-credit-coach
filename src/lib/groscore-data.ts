@@ -18,6 +18,7 @@ export const DEMOS: Record<string, DemoUser> = {
     phone: "9876500001",
     name: "Rahul",
     pan: "ABCPR1234F",
+    dob: "12/08/1998",
     hasScore: false,
   },
   "9876500002": {
@@ -25,6 +26,7 @@ export const DEMOS: Record<string, DemoUser> = {
     phone: "9876500002",
     name: "Sonu",
     pan: "ABCPS5678F",
+    dob: "24/03/1992",
     hasScore: true,
     score: 413,
     band: "Poor",
