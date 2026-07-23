@@ -3269,6 +3269,7 @@ const ALL_SCREENS: Array<{ key: Screen; label: string; section: string }> = [
   { key: "name", label: "4. Name", section: "Onboarding" },
   { key: "fetch", label: "5. PAN card confirm", section: "Onboarding" },
   { key: "panInput", label: "5b. PAN manual entry", section: "Onboarding" },
+  { key: "fetchFail", label: "5c. Bureau fetch failed", section: "Onboarding" },
   { key: "loading-journey", label: "6. Loading (Journey)", section: "Analyzing" },
   { key: "score-journey", label: "7. Score journey", section: "Analyzing" },
   
