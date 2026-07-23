@@ -1,4 +1,4 @@
-export type DemoKey = "ntc" | "distressed" | "expired";
+export type DemoKey = "ntc" | "distressed" | "expired" | "incomplete";
 
 export interface DemoUser {
   key: DemoKey;
@@ -9,6 +9,7 @@ export interface DemoUser {
   score?: number;
   band?: string;
   expired?: boolean;
+  incomplete?: boolean;
 }
 
 export const DEMOS: Record<string, DemoUser> = {
@@ -37,6 +38,16 @@ export const DEMOS: Record<string, DemoUser> = {
     score: 612,
     band: "Fair",
     expired: true,
+  },
+  "9876500004": {
+    key: "incomplete",
+    phone: "9876500004",
+    name: "Priya",
+    pan: "ABCPP3456G",
+    hasScore: true,
+    score: 548,
+    band: "Fair",
+    incomplete: true,
   },
 };
 
