@@ -486,17 +486,6 @@ function Index() {
         {screen === "profile" && user && <Profile user={user} onBack={() => go("chat")} />}
         {screen === "subscription" && <Subscription onBack={() => go("chat")} />}
         {screen === "help" && <Help onBack={() => go("chat")} />}
-        {showCallPopup && user && (
-          <MiniProfilePopup
-            user={user}
-            onCall={() => {
-              setShowCallPopup(false);
-              setChatPhase("awaiting-consent");
-              go("call-incoming");
-            }}
-            onCancel={() => setShowCallPopup(false)}
-          />
-        )}
       </div>
     </div>
   );
