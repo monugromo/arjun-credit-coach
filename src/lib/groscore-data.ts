@@ -50,9 +50,18 @@ export const DEMOS: Record<string, DemoUser> = {
     band: "Fair",
     incomplete: true,
   },
+  "9876500005": {
+    key: "fetchFail",
+    phone: "9876500005",
+    name: "Amit",
+    pan: "BMHPA6766A",
+    hasScore: false,
+    fetchFail: true,
+  },
 };
 
 export const maskPan = (pan: string) => pan.slice(0, 3) + "xxxx" + pan.slice(-1);
+export const maskPanMid = (pan: string) => pan.slice(0, 3) + "****" + pan.slice(-3);
 
 export interface ChatMsg {
   id: string;
