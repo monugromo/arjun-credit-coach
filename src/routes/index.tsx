@@ -16,7 +16,7 @@ import reportPreview from "@/assets/report-preview.jpg";
 import actionPlanPreview from "@/assets/action-plan-preview.jpg";
 import scoreProjection from "@/assets/score-projection.jpg";
 import {
-  DEMOS, maskPan, distressedTasks, ntcTasks, distressedFactors,
+  DEMOS, maskPan, maskPanMid, distressedTasks, ntcTasks, distressedFactors,
   fdCards, updatesFeed, initialChat, type DemoUser, type ChatMsg, type FdCard,
 } from "@/lib/groscore-data";
 
