@@ -1,4 +1,4 @@
-export type DemoKey = "ntc" | "distressed" | "expired";
+export type DemoKey = "ntc" | "distressed" | "expired" | "direct";
 
 export interface DemoUser {
   key: DemoKey;
@@ -38,6 +38,15 @@ export const DEMOS: Record<string, DemoUser> = {
     band: "Fair",
     expired: true,
   },
+  "9876500004": {
+    key: "direct",
+    phone: "9876500004",
+    name: "Priya",
+    pan: "ABCPP3456F",
+    hasScore: true,
+    score: 748,
+    band: "Good",
+  },
 };
 
 export const maskPan = (pan: string) => pan.slice(0, 3) + "xxxx" + pan.slice(-1);
@@ -55,6 +64,32 @@ const t = (h: number, m: number) =>
   `${h > 12 ? h - 12 : h}:${m.toString().padStart(2, "0")} ${h >= 12 ? "pm" : "am"}`;
 
 export const initialChat = (key: DemoKey): ChatMsg[] => {
+  if (key === "direct") {
+    return [
+      { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
+      {
+        id: "p1",
+        from: "coach",
+        kind: "text",
+        text: "Welcome back, Priya! 👋",
+        time: t(20, 28),
+      },
+      {
+        id: "p2",
+        from: "coach",
+        kind: "text",
+        text: "Aapka credit score 748 hai — Good band mein. Keep it up!",
+        time: t(20, 28),
+      },
+      {
+        id: "p3",
+        from: "coach",
+        kind: "text",
+        text: "Koi bhi sawaal ho credit ya loan ke baare mein, bas pooch lena 💚",
+        time: t(20, 29),
+      },
+    ];
+  }
   if (key === "distressed") {
     return [
       { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
