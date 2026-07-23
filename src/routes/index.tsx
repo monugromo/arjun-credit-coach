@@ -374,7 +374,7 @@ function Index() {
         {screen === "otp" && user && (
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
             onBack={() => go("phone")} onDone={() => {
-              if (user.expired) { go("payment"); return; }
+              if (user.expired) { go("expired"); return; }
               if (user.incomplete) { go("fetch"); return; }
               if (user.key === "distressed") { startChatFlow(user); return; }
               go("name");
@@ -389,7 +389,7 @@ function Index() {
             onRestart={() => go("payment")} />
         )}
         {screen === "payment" && user && (
-          <RazorpayScreen user={user} onBack={() => go("otp")}
+          <RazorpayScreen user={user} onBack={() => go("expired")}
             onSuccess={() => go("payment-success")} />
         )}
         {screen === "payment-success" && user && (
@@ -486,17 +486,6 @@ function Index() {
         {screen === "profile" && user && <Profile user={user} onBack={() => go("chat")} />}
         {screen === "subscription" && <Subscription onBack={() => go("chat")} />}
         {screen === "help" && <Help onBack={() => go("chat")} />}
-        {showCallPopup && user && (
-          <MiniProfilePopup
-            user={user}
-            onCall={() => {
-              setShowCallPopup(false);
-              setChatPhase("awaiting-consent");
-              go("call-incoming");
-            }}
-            onCancel={() => setShowCallPopup(false)}
-          />
-        )}
       </div>
     </div>
   );
