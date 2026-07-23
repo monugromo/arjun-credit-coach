@@ -127,7 +127,7 @@ function Index() {
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
     if (!u) {
-      alert("Try demo phones:\n9876500001 — New (NTC)\n9876500002 — Active (distressed)\n9876500003 — Lapsed (trial ended)\n9876500004 — Incomplete (resume)");
+      alert("Try demo phones:\n9876500001 — New (NTC)\n9876500002 — Active (distressed)\n9876500003 — Lapsed (trial ended)\n9876500004 — Incomplete (resume)\n9876500005 — Bureau fetch failed");
       return;
     }
     setUser(u);
