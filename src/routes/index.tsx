@@ -377,14 +377,29 @@ function Index() {
             }} />
         )}
         {screen === "name" && (
-          <NameScreen name={name} setName={setName} onBack={() => go("otp")} onContinue={() => go("fetch")} />
+          <NameScreen name={name} setName={setName} onBack={() => go("otp")}
+            onContinue={() => go(user?.key === "ntc" ? "bureau-validate" : "fetch")} />
+        )}
+        {screen === "bureau-validate" && user && (
+          <BureauValidateScreen
+            user={user} name={name}
+            onYes={() => go("payment")}
+            onNotMe={() => go("panInput")}
+            onBack={() => go("name")}
+          />
+        )}
+        {screen === "bureau-fetching" && user && (
+          <BureauFetching
+            onFound={() => go("bureau-validate")}
+            onNotFound={() => go("payment")}
+          />
         )}
         {screen === "expired" && user && (
           <ExpiredScreen user={user} onLogout={logout}
             onRestart={() => go("payment")} />
         )}
         {screen === "payment" && user && (
-          <RazorpayScreen user={user} onBack={() => go("expired")}
+          <RazorpayScreen user={user} onBack={() => go(user.key === "ntc" ? "bureau-validate" : "expired")}
             onSuccess={() => go("payment-success")} />
         )}
         {screen === "payment-success" && user && (
@@ -399,7 +414,7 @@ function Index() {
           />
         )}
         {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go("perm-all")} />
+          <PanInputScreen onContinue={() => go(user?.key === "ntc" ? "bureau-fetching" : "perm-all")} />
         )}
         {screen === "perm-all" && (
           <PermAllScreen
