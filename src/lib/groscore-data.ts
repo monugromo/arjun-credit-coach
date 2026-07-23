@@ -1,4 +1,4 @@
-export type DemoKey = "ntc" | "distressed" | "expired" | "incomplete";
+export type DemoKey = "ntc" | "distressed" | "expired" | "incomplete" | "fetchFail";
 
 export interface DemoUser {
   key: DemoKey;
@@ -10,6 +10,7 @@ export interface DemoUser {
   band?: string;
   expired?: boolean;
   incomplete?: boolean;
+  fetchFail?: boolean;
 }
 
 export const DEMOS: Record<string, DemoUser> = {
