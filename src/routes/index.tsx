@@ -75,7 +75,7 @@ const DOODLE_URL = `url("data:image/svg+xml;utf8,${DOODLE_SVG}")`;
 type Screen =
   | "landing" | "phone" | "otp" | "name" | "fetch" | "panInput"
   | "panValidate" | "expired" | "payment" | "payment-success"
-  | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
+  | "loading-journey" | "score-journey"
   | "ntc-checklist"
   | "chat" | "call-incoming" | "call-active"
   | "report" | "tasks" | "arjun-profile"
@@ -126,7 +126,10 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed) or 9876500003 (Expired)"); return; }
+    if (!u) {
+      alert("Try demo phones:\n9876500001 — New (NTC)\n9876500002 — Active (distressed)\n9876500003 — Lapsed (trial ended)\n9876500004 — Incomplete (resume)");
+      return;
+    }
     setUser(u);
     setName(u.name);
     go("otp");
@@ -369,7 +372,7 @@ function Index() {
         )}
         {screen === "otp" && user && (
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
-            onBack={() => go("phone")} onDone={() => go(user.expired ? "expired" : "name")} />
+            onBack={() => go("phone")} onDone={() => go(user.expired ? "expired" : user.incomplete ? "fetch" : "name")} />
         )}
         {screen === "name" && (
           <NameScreen name={name} setName={setName} onBack={() => go("otp")} onContinue={() => go("fetch")} />
@@ -388,33 +391,13 @@ function Index() {
         {screen === "fetch" && user && (
           <PanCardScreen
             user={user} name={name} setName={setName}
-            onConfirm={() => go("perm-all")}
+            onConfirm={() => go("loading-journey")}
             onChangeNumber={() => go("phone")}
             onNotFound={() => go("panInput")}
           />
         )}
         {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go("perm-all")} />
-        )}
-        {screen === "perm-all" && (
-          <PermAllScreen
-            onAllow={() => go("perm-email-intro")}
-            onDeny={() => go("perm-blocked")}
-          />
-        )}
-        {screen === "perm-blocked" && (
-          <PermBlocked onRetry={() => go("perm-all")} />
-        )}
-        {screen === "perm-email" && (
-          <EmailPerm
-            onDone={() => go("ntc-checklist")}
-          />
-        )}
-        {screen === "perm-email-intro" && (
-          <EmailIntro onContinue={() => go("loading-email")} onSkip={() => go("ntc-checklist")} />
-        )}
-        {screen === "loading-email" && (
-          <LoadingScreen label="Opening Google sign-in…" onDone={() => go("perm-email")} />
+          <PanInputScreen onContinue={() => go("loading-journey")} />
         )}
         {screen === "ntc-checklist" && user && (
           <NTCChecklistScreen user={user} onDone={() => {
@@ -586,14 +569,22 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
           </div>
         </div>
         <div className="mt-6">
-          <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
+          <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts · one per branch</div>
           <div className="flex flex-col gap-2">
-            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"]].map(([p, label]) => (
+            {[
+              ["9876500001", "New", "Rahul · No credit history yet"],
+              ["9876500002", "Active", "Sonu · Score 413, needs fixes"],
+              ["9876500003", "Lapsed", "Darpan · Trial ended, restart ₹99"],
+              ["9876500004", "Incomplete", "Priya · Dropped mid-flow, resume"],
+            ].map(([p, tag, label]) => (
               <button key={p} onClick={() => setPhone(p)}
                 className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                 <span>
-                  <div className="font-medium text-gray-900">+91 {p.slice(0, 5)} {p.slice(5)}</div>
-                  <div className="text-xs text-gray-500">{label}</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: "#E8F5E9", color: WA.green }}>{tag}</span>
+                    <span className="font-medium text-gray-900">+91 {p.slice(0, 5)} {p.slice(5)}</span>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-0.5">{label}</div>
                 </span>
                 <ChevronRight className="w-4 h-4 text-gray-400" />
               </button>
@@ -694,6 +685,7 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
     ntc: "14 Aug 1998",
     distressed: "02 Mar 1989",
     expired: "27 Nov 1985",
+    incomplete: "09 Jun 1992",
   };
   const dob = dobByKey[user.key] ?? "—";
 
@@ -3109,13 +3101,8 @@ const ALL_SCREENS: Array<{ key: Screen; label: string; section: string }> = [
   { key: "name", label: "4. Name", section: "Onboarding" },
   { key: "fetch", label: "5. PAN card confirm", section: "Onboarding" },
   { key: "panInput", label: "5b. PAN manual entry", section: "Onboarding" },
-  { key: "perm-all", label: "6a. Permissions (SMS · Phone · Notif · Mic)", section: "Permissions" },
-  { key: "perm-blocked", label: "6b. Permissions blocked", section: "Permissions" },
-  { key: "perm-email-intro", label: "6c. Gmail intro", section: "Permissions" },
-  { key: "loading-email", label: "6c·. Loading (Gmail)", section: "Permissions" },
-  { key: "perm-email", label: "6d. Google sign-in sheet", section: "Permissions" },
-  { key: "loading-journey", label: "6d·. Loading (Journey)", section: "Permissions" },
-  { key: "score-journey", label: "6d. Score journey", section: "Permissions" },
+  { key: "loading-journey", label: "6. Loading (Journey)", section: "Analyzing" },
+  { key: "score-journey", label: "7. Score journey", section: "Analyzing" },
   
   
   { key: "chat", label: "7. Chat", section: "Main" },
