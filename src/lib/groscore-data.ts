@@ -5,6 +5,7 @@ export interface DemoUser {
   phone: string;
   name: string;
   pan: string;
+  dob?: string;
   hasScore: boolean;
   score?: number;
   band?: string;
