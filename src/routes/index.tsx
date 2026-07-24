@@ -1025,20 +1025,20 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
       <WATopBar title="Confirm your identity" onBack={onBack} />
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6">
-          <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
-          <p className="text-gray-600 text-sm">{updated ? "Re-fetching with your new PAN…" : "Fetching your details from the bureau…"}</p>
+          <div className={UI.spinnerWrap} style={UI.spinnerStyle} />
+          <p className="text-gray-700 font-semibold">{updated ? "Re-fetching with your new PAN…" : "Fetching your details from the bureau…"}</p>
         </div>
       ) : (
         <>
-          <div className="p-5 flex-1 overflow-y-auto">
-            <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">{updated ? "Updated details — is this you?" : "Is this you?"}</p>
+          <div className={UI.body}>
+            <p className={`${UI.eyebrow} mb-3`}>{updated ? "Updated details — is this you?" : "Is this you?"}</p>
             <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="px-4 py-3 flex items-center gap-3" style={{ background: "#F1FBF4" }}>
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-white" style={{ background: WA.green }}>
                   <User className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm uppercase font-bold text-emerald-700 tracking-wide">Bureau Match</div>
+                  <div className={UI.eyebrowEmerald}>Bureau Match</div>
                 </div>
                 <BadgeCheck className="w-5 h-5 text-emerald-600" />
               </div>
@@ -1051,7 +1051,7 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
                         <Icon className="w-4 h-4 text-gray-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">{r.label}</div>
+                        <div className={UI.eyebrow}>{r.label}</div>
                         <div className="font-semibold text-gray-900 text-[15px] truncate">{r.value}</div>
                       </div>
                     </div>
@@ -1063,14 +1063,14 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
               These details came from your credit bureau record. Please confirm before we proceed.
             </p>
           </div>
-          <div className="p-5 pt-2 space-y-2.5">
+          <div className={`${UI.footer} space-y-2.5`}>
             <button onClick={onYes}
-              className="w-full text-white font-bold py-3.5 rounded-full"
+              className={UI.primaryBtn}
               style={{ background: WA.accent }}>
               Yes, that's me
             </button>
             <button onClick={onNotMe}
-              className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
+              className={UI.secondaryBtn}>
               Not me
             </button>
           </div>
