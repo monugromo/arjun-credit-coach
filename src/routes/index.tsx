@@ -479,7 +479,7 @@ function Index() {
           <PanMobileLinkScreen
             onBack={() => go(user.phone === "9876500006" ? "ntc2-edit" : "panInput")}
             onVerified={() => go("bureau-refetch")}
-            onSkip={() => go("expired")}
+            onSkip={() => goToPaywall()}
           />
         )}
         {screen === "perm-all" && (
