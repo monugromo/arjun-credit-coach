@@ -1495,7 +1495,7 @@ function PaywallLoaderScreen({ onDone }: { onDone: () => void }) {
   useEffect(() => { const t = setTimeout(onDone, 2000); return () => clearTimeout(t); }, [onDone]);
   useEffect(() => {
     const timers = [setTimeout(() => setStep(1), 400), setTimeout(() => setStep(2), 900), setTimeout(() => setStep(3), 1400)];
-    return () => timers.forEach(clearTimeout waiting);
+    return () => timers.forEach(clearTimeout);
   }, []);
   const steps = [
     { label: "Profile checked", icon: User },
