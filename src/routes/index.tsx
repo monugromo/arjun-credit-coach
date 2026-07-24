@@ -53,7 +53,7 @@ const UI = {
   eyebrowAmber: "text-[11px] uppercase font-bold tracking-wider text-amber-700",
   eyebrowEmerald: "text-[11px] uppercase font-bold tracking-wider text-emerald-700",
   body: "p-5 flex-1 overflow-y-auto",
-  footer: "px-5 pb-6 pt-3",
+  footer: "px-5 pb-8 pt-3",
   spinnerWrap: "w-12 h-12 border-4 rounded-full animate-spin",
   spinnerStyle: { borderColor: "#E5E7EB", borderTopColor: "#25D366" } as React.CSSProperties,
   amberCard: "rounded-2xl border border-amber-100 p-5",
