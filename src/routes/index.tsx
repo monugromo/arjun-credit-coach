@@ -150,7 +150,7 @@ function Index() {
     streamingRef.current = true;
     (async () => {
       await sleep(400);
-      await streamCoach(initialChat(user.key));
+      await streamCoach(initialChat(user.key, user.name));
       setChatPhase("awaiting-consent");
       if (user.key !== "direct") setShowCallPopup(true);
       streamingRef.current = false;
