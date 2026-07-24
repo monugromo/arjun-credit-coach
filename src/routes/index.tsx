@@ -123,6 +123,8 @@ function Index() {
   const streamingRef = useRef(false);
   const [showCallPopup, setShowCallPopup] = useState(false);
   const [bureauUpdated, setBureauUpdated] = useState(false);
+  const [mobileLinked, setMobileLinked] = useState(false);
+  const [journeyVariant, setJourneyVariant] = useState<JourneyVariant>("matched");
 
   const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
   const typingDelay = (msg: Partial<ChatMsg>) => {
