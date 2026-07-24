@@ -570,39 +570,31 @@ const nowTime = () => {
 function Landing({ onStart }: { onStart: () => void }) {
   return (
     <div className="flex-1 flex flex-col relative overflow-hidden bg-white">
-      {/* Soft WhatsApp-green wash at top */}
+      {/* Soft green wash at top */}
       <div
-        className="absolute inset-x-0 top-0 h-[55%]"
+        className="absolute inset-x-0 top-0 h-[45%]"
         style={{
           background:
-            "radial-gradient(120% 80% at 50% 0%, #E7F8EE 0%, #F4FBF6 40%, #ffffff 80%)",
+            "radial-gradient(120% 80% at 50% 0%, #E7F8EE 0%, #F4FBF6 45%, #ffffff 85%)",
         }}
       />
 
-      {/* Top: logo */}
-      <div className="relative z-10 pt-10 px-6">
-        <img src={groLogo} alt="GroScore" className="w-36 h-auto" />
+      {/* Logo — large, left aligned like reference */}
+      <div className="relative z-10 pt-20 px-6">
+        <img src={groLogo} alt="GroScore" className="w-60 h-auto" />
       </div>
 
-      {/* Spacer pushes headline lower like reference */}
       <div className="flex-1" />
 
-      {/* Headline block — left aligned */}
+      {/* Headline — dark green, left aligned */}
       <div className="relative z-10 px-6">
-        <span
-          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide uppercase mb-4"
-          style={{
-            background: "#E7F8EE",
-            color: WA.green,
-            border: `1px solid ${WA.accent}40`,
-          }}
+        <h1
+          className="text-[38px] font-extrabold leading-[1.05] tracking-[-0.02em]"
+          style={{ color: "#0B3B2E" }}
         >
-          <Sparkles className="w-3 h-3" /> AI Coach
-        </span>
-        <h1 className="text-[40px] font-extrabold leading-[1.05] tracking-[-0.02em]" style={{ color: WA.green }}>
           Your personal<br />credit coach
         </h1>
-        <p className="mt-4 text-[15px] text-gray-600 leading-[1.55] max-w-[320px]">
+        <p className="mt-5 text-[15px] text-gray-600 leading-[1.55] max-w-[340px]">
           Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
         </p>
       </div>
@@ -611,13 +603,13 @@ function Landing({ onStart }: { onStart: () => void }) {
       <div className="relative z-10 px-6 pt-6 pb-8">
         <div className="flex items-center gap-3 mb-5">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: "#E7F8EE", color: WA.green }}
+            className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
+            style={{ background: "#E7F8EE", color: "#0B3B2E" }}
           >
             <Lock className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-[13px] font-semibold text-gray-900">Private &amp; secure</div>
+            <div className="text-[14px] font-bold text-gray-900">Private &amp; secure</div>
             <div className="text-[12px] text-gray-500">Your data stays confidential</div>
           </div>
         </div>
@@ -636,6 +628,7 @@ function Landing({ onStart }: { onStart: () => void }) {
     </div>
   );
 }
+
 
 
 /* ====================== ONBOARDING (WhatsApp top bar, English) ====================== */
