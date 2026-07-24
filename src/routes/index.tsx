@@ -913,8 +913,9 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
             We couldn't find your record
           </h2>
           <p className="text-sm text-gray-700 mt-2 leading-relaxed">
-            Your PAN is linked to <span className="font-bold text-gray-900">+91 98XXXX9289</span>. Verify that number with an OTP so we can pull your bureau record.
+            Your PAN is linked to <span className="font-bold text-gray-900">+91 98XXXX9289</span>.
           </p>
+
         </div>
 
         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Mobile number</label>
