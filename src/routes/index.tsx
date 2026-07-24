@@ -570,51 +570,51 @@ const nowTime = () => {
 function Landing({ onStart }: { onStart: () => void }) {
   return (
     <div className="flex-1 flex flex-col relative overflow-hidden bg-white">
-      {/* Top emerald wash */}
+      {/* Soft WhatsApp-green wash at top */}
       <div
-        className="absolute inset-x-0 top-0 h-[62%]"
+        className="absolute inset-x-0 top-0 h-[55%]"
         style={{
           background:
-            "radial-gradient(120% 80% at 50% 0%, #d6f5e6 0%, #eaf9f1 35%, #ffffff 75%)",
+            "radial-gradient(120% 80% at 50% 0%, #E7F8EE 0%, #F4FBF6 40%, #ffffff 80%)",
         }}
       />
-      <div className="absolute -top-32 -left-24 w-80 h-80 rounded-full bg-[#01be87]/20 blur-3xl" />
-      <div className="absolute top-20 -right-24 w-72 h-72 rounded-full bg-[#18186b]/10 blur-3xl" />
 
       {/* Content */}
       <div className="flex-1 flex flex-col items-center px-8 relative z-10 pt-16">
-        {/* Logo mark in soft chip */}
-        <div className="inline-flex items-center justify-center px-6 py-4 rounded-3xl bg-white/70 backdrop-blur-md border border-white shadow-[0_10px_40px_-15px_rgba(1,190,135,0.35)]">
-          <img src={groLogo} alt="GroScore" className="w-44 h-auto" />
-        </div>
+        {/* Logo */}
+        <img src={groLogo} alt="GroScore" className="w-44 h-auto" />
 
         {/* Feature pill */}
         <div className="mt-8">
-          <span className="inline-flex items-center gap-1.5 bg-white border border-[#01be87]/25 rounded-full px-3.5 py-1.5 text-[12px] font-semibold text-[#01be87] shadow-sm tracking-wide uppercase">
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] font-semibold tracking-wide uppercase"
+            style={{
+              background: "#E7F8EE",
+              color: WA.green,
+              border: `1px solid ${WA.accent}40`,
+            }}
+          >
             <Sparkles className="w-3.5 h-3.5" /> AI Coach
           </span>
         </div>
 
         {/* Headline */}
-        <h1 className="mt-6 text-[38px] font-extrabold text-[#0a0a2e] leading-[1.05] tracking-[-0.03em] text-center">
+        <h1 className="mt-6 text-[34px] font-extrabold leading-[1.1] tracking-[-0.02em] text-center" style={{ color: WA.green }}>
           Your personal<br />credit coach
         </h1>
 
         {/* Subhead */}
-        <p className="mt-5 text-[15px] text-gray-500 leading-[1.6] max-w-[300px] text-center">
+        <p className="mt-4 text-[15px] text-gray-600 leading-[1.6] max-w-[300px] text-center">
           Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
         </p>
       </div>
 
-      {/* Bottom CTA */}
+      {/* Bottom CTA — consistent with onboarding screens */}
       <div className="relative px-6 pb-10 pt-6 z-10">
         <button
           onClick={onStart}
-          className="w-full text-white font-semibold py-4 rounded-2xl text-[15px] active:scale-[0.98] transition"
-          style={{
-            background: "linear-gradient(135deg, #01be87 0%, #049e73 100%)",
-            boxShadow: "0 14px 30px -12px rgba(1,190,135,0.55)",
-          }}
+          className="w-full text-white font-bold py-3.5 rounded-full active:scale-[0.98] transition"
+          style={{ background: WA.accent }}
         >
           Get Started
         </button>
