@@ -436,7 +436,7 @@ function Index() {
           <Ntc2NoHistoryScreen
             user={user} name={name}
             onHasCredit={() => go("ntc2-edit")}
-            onNoCredit={() => go("expired")}
+            onNoCredit={() => goToPaywall()}
             onBack={() => go("name")}
           />
         )}
