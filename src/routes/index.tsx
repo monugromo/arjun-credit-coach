@@ -849,12 +849,12 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6">
           <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
-          <p className="text-gray-600 text-sm">Fetching your details from the bureau…</p>
+          <p className="text-gray-600 text-sm">{updated ? "Re-fetching with your new PAN…" : "Fetching your details from the bureau…"}</p>
         </div>
       ) : (
         <>
           <div className="p-5 flex-1 overflow-y-auto">
-            <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">Is this you?</p>
+            <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">{updated ? "Updated details — is this you?" : "Is this you?"}</p>
             <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="px-4 py-3 flex items-center gap-3" style={{ background: "#F1FBF4" }}>
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold" style={{ background: WA.green }}>
