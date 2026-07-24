@@ -398,10 +398,7 @@ function Index() {
           />
         )}
         {screen === "bureau-fetching" && user && (
-          <BureauFetching
-            onFound={() => go("bureau-validate")}
-            onNotFound={() => go("expired")}
-          />
+          <Ntc2FetchScreen onDone={() => go("ntc2-nohistory")} />
         )}
         {screen === "bureau-refetch" && user && (
           <BureauRefetch onDone={() => {
@@ -905,48 +902,6 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
 }
 
 /* ====================== BUREAU FETCHING (after "Not me" PAN entry) ====================== */
-function BureauFetching({ onFound, onNotFound }: { onFound: () => void; onNotFound: () => void }) {
-  const [phase, setPhase] = useState<"loading" | "notfound">("loading");
-  useEffect(() => {
-    const t = setTimeout(() => setPhase("notfound"), 1800);
-    return () => clearTimeout(t);
-  }, []);
-  return (
-    <div className="flex-1 flex flex-col bg-white">
-      <WATopBar title="Fetching from bureau" />
-      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
-        {phase === "loading" ? (
-          <>
-            <div className="w-14 h-14 border-4 rounded-full animate-spin mb-5" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
-            <p className="text-gray-700 font-semibold">Looking up your credit record…</p>
-            <p className="text-gray-500 text-sm mt-1">This usually takes a few seconds.</p>
-          </>
-        ) : (
-          <>
-            <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ background: "#FEF3C7" }}>
-              <AlertTriangle className="w-8 h-8 text-amber-600" />
-            </div>
-            <h2 className="text-xl font-bold text-gray-900">No credit history found</h2>
-            <p className="text-gray-600 text-sm mt-2 max-w-xs leading-relaxed">
-              We couldn't find bureau records for this PAN. That's okay — your credit coach can help you build a score from scratch.
-            </p>
-            <div className="mt-8 w-full space-y-2.5">
-              <button onClick={onNotFound}
-                className="w-full text-white font-bold py-3.5 rounded-full"
-                style={{ background: WA.accent }}>
-                Continue — unlock coach
-              </button>
-              <button onClick={onFound}
-                className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
-                Retry with corrected details
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
 
 /* ====================== BUREAU REFETCH (after "Not me" PAN entry — found updated details) ====================== */
 function BureauRefetch({ onDone }: { onDone: () => void }) {
