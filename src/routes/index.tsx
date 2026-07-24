@@ -628,7 +628,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Enter your phone number" onBack={onBack} />
-      <div className="p-6 flex-1">
+      <div className="p-6 flex-1 overflow-y-auto min-h-0">
         <p className="text-sm text-gray-600 mb-6 leading-relaxed">
           GroScore will send an SMS to verify your phone number. Carrier charges may apply.
         </p>
@@ -684,7 +684,7 @@ function OtpScreen({ phone, otp, setOtp, onBack, onDone }: { phone: string; otp:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Verifying your number" onBack={onBack} />
-      <div className="p-6 flex-1">
+      <div className="p-6 flex-1 overflow-y-auto min-h-0">
         <p className="text-sm text-gray-600 mb-6">
           We sent a 6-digit code to <b>+91 {phone.slice(0, 5)} {phone.slice(5)}</b>
         </p>
@@ -715,7 +715,7 @@ function NameScreen({ name, setName, onBack, onContinue }: { name: string; setNa
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Your name (as in bureau)" onBack={onBack} />
-      <div className="p-6 flex-1">
+      <div className="p-6 flex-1 overflow-y-auto min-h-0">
         <p className="text-sm text-gray-600 mb-2">Enter your name <b>exactly as it appears in the credit bureau</b> — it helps us fetch accurate data on the first try.</p>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
           className="w-full border-b-2 pb-2 mt-4 text-xl outline-none bg-transparent"
