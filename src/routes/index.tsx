@@ -187,7 +187,7 @@ function Index() {
     setScreen("landing"); setPhone(""); setOtp(""); setUser(null);
     setName(""); setChat([]); setTasks(distressedTasks);
     setReportUpdated(false); setTasksUpdated(false); setMenuOpen(false);
-    setChatPhase("intro"); setShowCallPopup(false); setBureauUpdated(false);
+    setChatPhase("intro"); setShowCallPopup(false); setBureauUpdated(false); setMobileLinked(false);
   };
 
   const postCallChat = (accepted: boolean) => {
