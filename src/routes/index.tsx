@@ -10,6 +10,7 @@ import {
   Layers, Search, UserPlus, Wallet, BadgeCheck, Zap,
 } from "lucide-react";
 import kabirImg from "@/assets/kabir.jpg";
+import arjunImg from "@/assets/arjun.jpg";
 import groLogo from "@/assets/GroScore.svg";
 import panCardRef from "@/assets/pan-card-ref.png";
 import reportPreview from "@/assets/report-preview.jpg";
