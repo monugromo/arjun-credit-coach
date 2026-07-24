@@ -387,11 +387,15 @@ function Index() {
   return (
     <div className="h-[100dvh] w-full bg-neutral-200 flex items-stretch sm:items-center justify-center overflow-hidden">
       <div className="relative w-full sm:max-w-[420px] h-[100dvh] sm:h-[min(900px,100dvh-3rem)] sm:my-6 bg-white overflow-hidden sm:rounded-[2.5rem] sm:shadow-2xl sm:border sm:border-black/10 flex flex-col">
+        <div className="absolute top-2 right-2 z-[100] pointer-events-none select-none px-2 py-1 rounded-md bg-black/70 text-white text-[10px] font-mono tracking-wide shadow">
+          {screen}
+        </div>
         <DevNav current={screen} go={go} hasUser={!!user} loadDemo={(k) => {
           const u = k === "ntc" ? DEMOS["9876500001"] : DEMOS["9876500004"];
           setUser(u); setName(u.name); setPhone(u.phone);
           startChatFlow(u);
         }} />
+
         {screen === "landing" && <Landing onStart={() => go("phone")} />}
         {screen === "phone" && (
           <PhoneScreen phone={phone} setPhone={setPhone} onBack={() => go("landing")} onSubmit={onPhoneSubmit} />
@@ -692,19 +696,40 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         </div>
         <div className="mt-6">
           <div className={`${UI.eyebrow} mb-2`}>Demo accounts</div>
-          <div className="flex flex-col gap-2">
-            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Neha · New to credit"], ["9876500003", "Aarav · NTC · No history"], ["9876500004", "Sonu · Score 413"], ["9876500005", "Darpan · Trial ended"], ["9876500006", "Vikram · NTC · No history"]].map(([p, label]) => (
-              <button key={p} onClick={() => setPhone(p)}
-                className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
-                <span>
-                  <div className="font-medium text-gray-900">+91 {p.slice(0, 5)} {p.slice(5)}</div>
-                  <div className="text-xs text-gray-500">{label}</div>
-                </span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-            ))}
+          <div className="flex flex-col gap-3">
+            <div>
+              <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">Bureau data found</div>
+              <div className="flex flex-col gap-2">
+                {[["9876500001", "001", "Rahul · New to credit"], ["9876500002", "002", "Neha · New to credit"], ["9876500006", "006", "Vikram · NTC · Linked-number fetch"]].map(([p, id, label]) => (
+                  <button key={p} onClick={() => setPhone(p)}
+                    className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
+                    <span>
+                      <div className="font-medium text-gray-900">#{id} · +91 {p.slice(0, 5)} {p.slice(5)}</div>
+                      <div className="text-xs text-gray-500">{label}</div>
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">No bureau data</div>
+              <div className="flex flex-col gap-2">
+                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"]].map(([p, id, label]) => (
+                  <button key={p} onClick={() => setPhone(p)}
+                    className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
+                    <span>
+                      <div className="font-medium text-gray-900">#{id} · +91 {p.slice(0, 5)} {p.slice(5)}</div>
+                      <div className="text-xs text-gray-500">{label}</div>
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
       <div className={UI.footer}>
         <button onClick={onSubmit} disabled={phone.length !== 10}
