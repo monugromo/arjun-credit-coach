@@ -880,7 +880,8 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
 }
 
 /* ====================== PAN → MOBILE LINK (verify OTP on linked number) ====================== */
-function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: () => void }) {
+function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
+  { onBack: () => void; onVerified: () => void; onSkip: () => void }) {
   const [phone, setPhone] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
@@ -903,16 +904,16 @@ function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Verify linked number" onBack={onBack} />
       <div className="p-6 flex-1 overflow-y-auto">
-        <div className="rounded-2xl border border-gray-200 p-5 mb-5" style={{ background: "#F1FBF4" }}>
-          <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3" style={{ background: "#DCF7E3" }}>
-            <Phone className="w-6 h-6 text-emerald-700" />
+        <div className="rounded-2xl border border-amber-200 p-5 mb-5" style={{ background: "#FFF8EC" }}>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3" style={{ background: "#FDE9C2" }}>
+            <AlertTriangle className="w-6 h-6 text-amber-700" />
           </div>
-          <div className="text-[11px] uppercase font-bold tracking-wider text-emerald-700 mb-1">PAN linked number</div>
+          <div className="text-[11px] uppercase font-bold tracking-wider text-amber-700 mb-1">Bureau result</div>
           <h2 className="text-lg font-bold text-gray-900 leading-snug">
-            Enter the mobile number linked to your PAN
+            We couldn't find your record
           </h2>
-          <p className="text-sm text-gray-600 mt-2 leading-relaxed">
-            We'll send an OTP to verify so we can pull your bureau record accurately.
+          <p className="text-sm text-gray-700 mt-2 leading-relaxed">
+            Your PAN is linked to <span className="font-bold text-gray-900">+91 98XXXX9289</span>. Verify that number with an OTP so we can pull your bureau record.
           </p>
         </div>
 
@@ -926,7 +927,7 @@ function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: (
             maxLength={10}
             value={phone}
             onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); setOtpSent(false); }}
-            placeholder="10-digit mobile"
+            placeholder="Enter linked mobile number"
             className="flex-1 outline-none text-base text-gray-900 bg-transparent"
           />
         </div>
@@ -971,13 +972,13 @@ function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: (
       </div>
       <div className="p-6 pt-2 space-y-2.5">
         <button
-          onClick={onDone}
-          disabled={otpSent && !otpValid}
+          onClick={onVerified}
+          disabled={!otpValid}
           className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
           style={{ background: WA.accent }}>
-          Continue
+          Verify & continue
         </button>
-        <button onClick={onDone}
+        <button onClick={onSkip}
           className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
           I'll do it later
         </button>
