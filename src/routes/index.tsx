@@ -415,7 +415,11 @@ function Index() {
             onRestart={() => go("payment")} />
         )}
         {screen === "payment" && user && (
-          <RazorpayScreen user={user} onBack={() => go(user.key === "ntc" ? "bureau-validate" : "expired")}
+          <RazorpayScreen user={user} onBack={() => go(
+            user.key === "ntc" ? "bureau-validate"
+            : user.key === "ntc2" ? "ntc2-nohistory"
+            : "expired"
+          )}
             onSuccess={() => go("payment-success")} />
         )}
         {screen === "payment-success" && user && (
@@ -430,7 +434,11 @@ function Index() {
           />
         )}
         {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go(user?.key === "ntc" ? "bureau-fetching" : "perm-all")} />
+          <PanInputScreen onContinue={() => go(
+            user?.key === "ntc" ? "bureau-fetching"
+            : user?.key === "ntc2" ? "payment"
+            : "perm-all"
+          )} />
         )}
         {screen === "perm-all" && (
           <PermAllScreen
