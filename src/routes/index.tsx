@@ -369,6 +369,7 @@ function Index() {
           setUser(u); setName(u.name); setPhone(u.phone);
           startChatFlow(u);
         }} />
+        {screen === "splash" && <SplashScreen onDone={() => go("landing")} />}
         {screen === "landing" && <Landing onStart={() => go("phone")} />}
         {screen === "phone" && (
           <PhoneScreen phone={phone} setPhone={setPhone} onBack={() => go("landing")} onSubmit={onPhoneSubmit} />
