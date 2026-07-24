@@ -840,7 +840,7 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
 
             <div className="mt-auto pt-6">
               <button onClick={onConfirm}
-                className="w-full text-white font-bold py-3.5 rounded-full"
+                className={UI.primaryBtn}
                 style={{ background: WA.accent }}>
                 Yes, that's me
               </button>
