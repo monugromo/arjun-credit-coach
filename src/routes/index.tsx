@@ -12,6 +12,7 @@ import {
 import kabirImg from "@/assets/kabir.jpg";
 import arjunImg from "@/assets/arjun.jpg";
 import groLogo from "@/assets/GroScore.svg";
+import splashVideo from "@/assets/splash-logo.mp4.asset.json";
 import panCardRef from "@/assets/pan-card-ref.png";
 import reportPreview from "@/assets/report-preview.jpg";
 import actionPlanPreview from "@/assets/action-plan-preview.jpg";
