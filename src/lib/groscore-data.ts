@@ -43,13 +43,12 @@ export const DEMOS: Record<string, DemoUser> = {
     expired: true,
   },
   "9876500004": {
-    key: "direct",
+    key: "ntc",
     phone: "9876500004",
-    name: "Priya",
-    pan: "ABCPP3456F",
-    hasScore: true,
-    score: 748,
-    band: "Good",
+    name: "Neha",
+    pan: "ABCPN4455F",
+    dob: "09/06/1997",
+    hasScore: false,
   },
   "9876500005": {
     key: "ntc2",
