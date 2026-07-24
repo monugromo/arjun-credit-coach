@@ -1244,11 +1244,11 @@ function Ntc2NoHistoryScreen({ user, name, onHasCredit, onNoCredit, onBack }:
         </div>
 
       </div>
-      <div className="p-5 pt-2">
+      <div className={UI.footer}>
         <button
           onClick={() => (choice === "yes" ? onHasCredit() : onNoCredit())}
           disabled={!choice}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          className={UI.primaryBtn}
           style={{ background: WA.accent }}>
           Continue
         </button>
