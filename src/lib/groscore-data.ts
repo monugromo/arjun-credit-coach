@@ -1,4 +1,4 @@
-export type DemoKey = "ntc" | "ntc3" | "distressed" | "expired" | "direct";
+export type DemoKey = "ntc" | "ntc2" | "ntc3" | "distressed" | "expired" | "direct";
 
 export interface DemoUser {
   key: DemoKey;
@@ -50,6 +50,19 @@ export const DEMOS: Record<string, DemoUser> = {
     hasScore: true,
     score: 748,
     band: "Good",
+  },
+  "9876500005": {
+    key: "ntc2",
+    phone: "9876500005",
+    name: "Aarav",
+    pan: "ABCPA7788F",
+    dob: "05/11/2000",
+    hasScore: false,
+    updated: {
+      name: "Aarav Mehta",
+      pan: "AMHPA7788F",
+      dob: "05/11/2000",
+    },
   },
   "9876500006": {
     key: "ntc3",
@@ -131,6 +144,14 @@ export const initialChat = (key: DemoKey): ChatMsg[] => {
         text: "Report milte hi dekh lena, aur bataana agar kuch samajh na aaye.",
         time: t(20, 29),
       },
+    ];
+  }
+  if (key === "ntc2") {
+    return [
+      { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
+      { id: "a1", from: "coach", kind: "text", text: "Welcome to GroScore, Aarav! 👋", time: t(20, 28) },
+      { id: "a2", from: "coach", kind: "text", text: "Abhi aapka koi credit history nahi hai — bilkul fresh start. Chinta mat karo, hum mil ke banayenge 💚", time: t(20, 28) },
+      { id: "a3", from: "coach", kind: "text", text: "Main aapko 2 minute mein call karta hoon, pehla step samjha doonga.", time: t(20, 29) },
     ];
   }
   if (key === "ntc3") {

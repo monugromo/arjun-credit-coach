@@ -75,7 +75,7 @@ const DOODLE_URL = `url("data:image/svg+xml;utf8,${DOODLE_SVG}")`;
 type Screen =
   | "landing" | "phone" | "otp" | "name" | "fetch" | "panInput"
   | "bureau-validate" | "bureau-fetching" | "bureau-refetch"
-  | "ntc2-nohistory"
+  | "ntc2-fetch" | "ntc2-nohistory" | "ntc2-edit"
   | "panValidate" | "expired" | "payment" | "payment-success"
   | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
   | "ntc-checklist"
@@ -129,7 +129,7 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct) or 9876500006 (NTC · PAN re-fetch)"); return; }
+    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct), 9876500005 (NTC · No history) or 9876500006 (NTC · PAN re-fetch)"); return; }
     setUser(u);
     setName(u.name);
     go("otp");
@@ -381,6 +381,7 @@ function Index() {
         {screen === "name" && (
           <NameScreen name={name} setName={setName} onBack={() => go("otp")}
             onContinue={() => {
+              if (user?.key === "ntc2") return go("ntc2-fetch");
               if (user?.key === "ntc" || user?.key === "ntc3") {
                 setBureauUpdated(false);
                 return go("bureau-validate");
@@ -406,12 +407,22 @@ function Index() {
             go("bureau-validate");
           }} />
         )}
+        {screen === "ntc2-fetch" && user && (
+          <Ntc2FetchScreen onDone={() => go("ntc2-nohistory")} />
+        )}
         {screen === "ntc2-nohistory" && user && (
           <Ntc2NoHistoryScreen
             user={user} name={name}
-            onHasCredit={() => go("panInput")}
+            onHasCredit={() => go("ntc2-edit")}
             onNoCredit={() => go("expired")}
             onBack={() => go("name")}
+          />
+        )}
+        {screen === "ntc2-edit" && user && (
+          <EditDetailsScreen
+            user={user} name={name} setName={setName}
+            onBack={() => go("ntc2-nohistory")}
+            onContinue={() => go("bureau-refetch")}
           />
         )}
         {screen === "expired" && user && (
@@ -435,10 +446,11 @@ function Index() {
         )}
         {screen === "panInput" && user && (
           <PanInputScreen user={user} name={name} setName={setName}
-            onBack={() => go("bureau-validate")}
+            onBack={() => go(user.key === "ntc2" ? "ntc2-nohistory" : "bureau-validate")}
             onContinue={() => go(
               user.key === "ntc3" ? "bureau-refetch"
               : user.key === "ntc" ? "bureau-fetching"
+              : user.key === "ntc2" ? "bureau-refetch"
               : "perm-all"
             )} />
         )}
@@ -634,7 +646,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         <div className="mt-6">
           <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
           <div className="flex flex-col gap-2">
-            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Priya · Direct to chat"], ["9876500006", "Kavya · NTC · PAN re-fetch"]].map(([p, label]) => (
+            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Priya · Direct to chat"], ["9876500005", "Aarav · NTC · No history"], ["9876500006", "Kavya · NTC · PAN re-fetch"]].map(([p, label]) => (
               <button key={p} onClick={() => setPhone(p)}
                 className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                 <span>
@@ -960,6 +972,54 @@ function BureauRefetch({ onDone }: { onDone: () => void }) {
 }
 
 
+/* ====================== EDIT DETAILS (NTC2: user says they have a loan/CC) ====================== */
+function EditDetailsScreen({ user, name, setName, onBack, onContinue }:
+  { user: DemoUser; name: string; setName: (v: string) => void; onBack: () => void; onContinue: () => void }) {
+  const [localName, setLocalName] = useState(name || user.name);
+  const [pan, setPan] = useState(user.pan || "");
+  const valid = localName.trim().length >= 2 && pan.length === 10;
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Edit your details" onBack={onBack} />
+      <div className="p-6 flex-1 overflow-y-auto">
+        <p className="text-sm text-gray-600 mb-5 leading-relaxed">
+          Let's try once more. Please enter your <b>full name</b> exactly as on your PAN card, along with your PAN number.
+        </p>
+        <div className="space-y-5">
+          <div>
+            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">Full name (as per PAN)</label>
+            <input value={localName} onChange={(e) => setLocalName(e.target.value)}
+              placeholder="e.g. Aarav Mehta"
+              className="w-full border-b-2 pb-2 mt-1 text-lg outline-none"
+              style={{ borderColor: WA.accent }} />
+          </div>
+          <div>
+            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">PAN number</label>
+            <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().slice(0, 10))}
+              placeholder="ABCDE1234F"
+              className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none"
+              style={{ borderColor: WA.accent }} />
+          </div>
+        </div>
+        <p className="text-[11px] text-gray-500 mt-5 leading-relaxed">
+          We'll use these to re-check your credit bureau record.
+        </p>
+        <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-3">
+          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find these</div>
+          <img src={panCardRef} alt="PAN card reference" className="w-full rounded-lg" />
+          <div className="text-[11px] text-gray-500 mt-2 text-center">Copy your name and 10-character PAN exactly as shown on your PAN card.</div>
+        </div>
+      </div>
+      <div className="p-6 pt-2">
+        <button onClick={() => { setName(localName.trim()); onContinue(); }} disabled={!valid}
+          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          style={{ background: WA.accent }}>
+          Re-check bureau
+        </button>
+      </div>
+    </div>
+  );
+}
 
 
 
