@@ -101,32 +101,6 @@ const t = (h: number, m: number) =>
   `${h > 12 ? h - 12 : h}:${m.toString().padStart(2, "0")} ${h >= 12 ? "pm" : "am"}`;
 
 export const initialChat = (key: DemoKey, name?: string): ChatMsg[] => {
-  if (key === "direct") {
-    return [
-      { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
-      {
-        id: "p1",
-        from: "coach",
-        kind: "text",
-        text: "Welcome back, Priya! 👋",
-        time: t(20, 28),
-      },
-      {
-        id: "p2",
-        from: "coach",
-        kind: "text",
-        text: "Aapka credit score 748 hai — Good band mein. Keep it up!",
-        time: t(20, 28),
-      },
-      {
-        id: "p3",
-        from: "coach",
-        kind: "text",
-        text: "Koi bhi sawaal ho credit ya loan ke baare mein, bas pooch lena 💚",
-        time: t(20, 29),
-      },
-    ];
-  }
   if (key === "distressed") {
     return [
       { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
