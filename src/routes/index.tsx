@@ -444,13 +444,15 @@ function Index() {
             onNotFound={() => go("panInput")}
           />
         )}
-        {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go(
-            user?.key === "ntc3" ? "bureau-refetch"
-            : user?.key === "ntc" ? "bureau-fetching"
-            : user?.key === "ntc2" ? "payment"
-            : "perm-all"
-          )} />
+        {screen === "panInput" && user && (
+          <PanInputScreen user={user} name={name} setName={setName}
+            onBack={() => go(user.key === "ntc2" ? "ntc2-nohistory" : "bureau-validate")}
+            onContinue={() => go(
+              user.key === "ntc3" ? "bureau-refetch"
+              : user.key === "ntc" ? "bureau-fetching"
+              : user.key === "ntc2" ? "bureau-refetch"
+              : "perm-all"
+            )} />
         )}
         {screen === "perm-all" && (
           <PermAllScreen
@@ -811,23 +813,48 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
   );
 }
 
-function PanInputScreen({ onContinue }: { onContinue: () => void }) {
+function PanInputScreen({ user, name, setName, onBack, onContinue }:
+  { user: DemoUser; name: string; setName: (v: string) => void; onBack: () => void; onContinue: () => void }) {
+  const [localName, setLocalName] = useState(name || user.name);
   const [pan, setPan] = useState("");
+  const valid = localName.trim().length >= 2 && pan.length === 10;
   return (
     <div className="flex-1 flex flex-col bg-white">
-      <WATopBar title="Enter your PAN" />
-      <div className="p-6 flex-1">
-        <p className="text-sm text-gray-600 mb-6">We couldn't find your details — enter your 10-character PAN.</p>
-        <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().slice(0, 10))}
-          placeholder="ABCDE1234F"
-          className="w-full border-b-2 pb-2 text-xl tracking-widest outline-none"
-          style={{ borderColor: WA.accent }} />
+      <WATopBar title="Re-check your details" onBack={onBack} />
+      <div className="p-6 flex-1 overflow-y-auto">
+        <p className="text-sm text-gray-600 mb-5 leading-relaxed">
+          Let's try once more. Please enter your <b>full name</b> exactly as on your PAN card, along with your PAN number.
+        </p>
+        <div className="space-y-5">
+          <div>
+            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">Full name (as per PAN)</label>
+            <input value={localName} onChange={(e) => setLocalName(e.target.value)}
+              placeholder="e.g. Rahul Kumar"
+              className="w-full border-b-2 pb-2 mt-1 text-lg outline-none"
+              style={{ borderColor: WA.accent }} />
+          </div>
+          <div>
+            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">PAN number</label>
+            <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().slice(0, 10))}
+              placeholder="ABCDE1234F"
+              className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none"
+              style={{ borderColor: WA.accent }} />
+          </div>
+        </div>
+        <p className="text-[11px] text-gray-500 mt-5 leading-relaxed">
+          We'll use these to re-check your credit bureau record.
+        </p>
+        <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-3">
+          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find these</div>
+          <img src={panCardRef} alt="PAN card reference" className="w-full rounded-lg" />
+          <div className="text-[11px] text-gray-500 mt-2 text-center">Copy your name and 10-character PAN exactly as shown on your PAN card.</div>
+        </div>
       </div>
-      <div className="p-6">
-        <button onClick={onContinue} disabled={pan.length !== 10}
+      <div className="p-6 pt-2">
+        <button onClick={() => { setName(localName.trim()); onContinue(); }} disabled={!valid}
           className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
           style={{ background: WA.accent }}>
-          Continue
+          Re-check bureau
         </button>
       </div>
     </div>
@@ -977,6 +1004,11 @@ function EditDetailsScreen({ user, name, setName, onBack, onContinue }:
         <p className="text-[11px] text-gray-500 mt-5 leading-relaxed">
           We'll use these to re-check your credit bureau record.
         </p>
+        <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-3">
+          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find these</div>
+          <img src={panCardRef} alt="PAN card reference" className="w-full rounded-lg" />
+          <div className="text-[11px] text-gray-500 mt-2 text-center">Copy your name and 10-character PAN exactly as shown on your PAN card.</div>
+        </div>
       </div>
       <div className="p-6 pt-2">
         <button onClick={() => { setName(localName.trim()); onContinue(); }} disabled={!valid}
