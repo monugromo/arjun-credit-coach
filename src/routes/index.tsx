@@ -414,8 +414,8 @@ function Index() {
         {screen === "bureau-validate" && user && (
           <BureauValidateScreen
             user={user} name={name} updated={bureauUpdated}
-            onYes={() => go("expired")}
-            onNotMe={() => go(((user.key === "ntc" || user.key === "ntc2") && bureauUpdated) ? "expired" : "panInput")}
+            onYes={() => goToPaywall()}
+            onNotMe={() => go(((user.key === "ntc" || user.key === "ntc2") && bureauUpdated) ? "paywall-loader" : "panInput")}
             onBack={() => go("name")}
           />
         )}
