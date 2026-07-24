@@ -447,8 +447,8 @@ function Index() {
             onContinue={() => go(user.phone === "9876500006" ? "pan-mobile-link" : "bureau-refetch")}
           />
         )}
-        {screen === "loading-journey" && (
-          <PaywallLoaderScreen onDone={() => go("expired")} />
+        {screen === "loading-journey" && user && (
+          <NTCChecklistScreen user={user} onDone={() => go("expired")} />
         )}
         {screen === "expired" && user && (
           <ExpiredScreen user={user} name={name} onLogout={logout}
