@@ -1000,12 +1000,11 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
             <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">{updated ? "Updated details — is this you?" : "Is this you?"}</p>
             <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="px-4 py-3 flex items-center gap-3" style={{ background: "#F1FBF4" }}>
-                <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold" style={{ background: WA.green }}>
-                  {displayName.charAt(0)}
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-white" style={{ background: WA.green }}>
+                  <User className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[11px] uppercase font-semibold text-emerald-700 tracking-wide">Bureau match</div>
-                  <div className="font-bold text-gray-900 truncate">{displayName}</div>
+                  <div className="text-sm uppercase font-bold text-emerald-700 tracking-wide">Bureau Match</div>
                 </div>
                 <BadgeCheck className="w-5 h-5 text-emerald-600" />
               </div>
