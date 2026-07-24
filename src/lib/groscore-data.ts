@@ -1,4 +1,4 @@
-export type DemoKey = "ntc" | "ntc2" | "ntc3" | "distressed" | "expired";
+export type DemoKey = "ntc" | "ntc2" | "distressed" | "expired";
 
 export interface DemoUser {
   key: DemoKey;
@@ -23,36 +23,16 @@ export const DEMOS: Record<string, DemoUser> = {
     hasScore: false,
   },
   "9876500002": {
-    key: "distressed",
-    phone: "9876500002",
-    name: "Sonu",
-    pan: "ABCPS5678F",
-    dob: "24/03/1992",
-    hasScore: true,
-    score: 413,
-    band: "Poor",
-  },
-  "9876500003": {
-    key: "expired",
-    phone: "9876500003",
-    name: "Darpan",
-    pan: "ABCPD9012F",
-    hasScore: true,
-    score: 612,
-    band: "Fair",
-    expired: true,
-  },
-  "9876500004": {
     key: "ntc",
-    phone: "9876500004",
+    phone: "9876500002",
     name: "Neha",
     pan: "ABCPN4455F",
     dob: "09/06/1997",
     hasScore: false,
   },
-  "9876500005": {
+  "9876500003": {
     key: "ntc2",
-    phone: "9876500005",
+    phone: "9876500003",
     name: "Aarav",
     pan: "ABCPA7788F",
     dob: "05/11/2000",
@@ -63,26 +43,25 @@ export const DEMOS: Record<string, DemoUser> = {
       dob: "05/11/2000",
     },
   },
-  "9876500006": {
-    key: "ntc3",
-    phone: "9876500006",
-    name: "Kavya",
-    pan: "ABCPK4321F",
-    dob: "18/07/1996",
-    hasScore: false,
-    updated: {
-      name: "Kavya Sharma",
-      pan: "KVYPS4321F",
-      dob: "18/07/1996",
-    },
+  "9876500004": {
+    key: "distressed",
+    phone: "9876500004",
+    name: "Sonu",
+    pan: "ABCPS5678F",
+    dob: "24/03/1992",
+    hasScore: true,
+    score: 413,
+    band: "Poor",
   },
-  "9876500007": {
-    key: "ntc",
-    phone: "9876500007",
-    name: "Ishaan",
-    pan: "ABCPI9911F",
-    dob: "22/02/1999",
-    hasScore: false,
+  "9876500005": {
+    key: "expired",
+    phone: "9876500005",
+    name: "Darpan",
+    pan: "ABCPD9012F",
+    hasScore: true,
+    score: 612,
+    band: "Fair",
+    expired: true,
   },
 };
 
