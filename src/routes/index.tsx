@@ -100,6 +100,7 @@ function Index() {
   const [typing, setTyping] = useState(false);
   const streamingRef = useRef(false);
   const [showCallPopup, setShowCallPopup] = useState(false);
+  const [bureauUpdated, setBureauUpdated] = useState(false);
 
   const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
   const typingDelay = (msg: Partial<ChatMsg>) => {
@@ -128,7 +129,7 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct) or 9876500005 (NTC · No history)"); return; }
+    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct), 9876500005 (NTC · No history) or 9876500006 (NTC · PAN re-fetch)"); return; }
     setUser(u);
     setName(u.name);
     go("otp");
@@ -160,7 +161,7 @@ function Index() {
     setScreen("landing"); setPhone(""); setOtp(""); setUser(null);
     setName(""); setChat([]); setTasks(distressedTasks);
     setReportUpdated(false); setTasksUpdated(false); setMenuOpen(false);
-    setChatPhase("intro"); setShowCallPopup(false);
+    setChatPhase("intro"); setShowCallPopup(false); setBureauUpdated(false);
   };
 
   const postCallChat = (accepted: boolean) => {
@@ -379,15 +380,18 @@ function Index() {
         )}
         {screen === "name" && (
           <NameScreen name={name} setName={setName} onBack={() => go("otp")}
-            onContinue={() => go(
-              user?.key === "ntc2" ? "ntc2-fetch"
-              : user?.key === "ntc" ? "bureau-validate"
-              : "fetch"
-            )} />
+            onContinue={() => {
+              if (user?.key === "ntc2") return go("ntc2-fetch");
+              if (user?.key === "ntc" || user?.key === "ntc3") {
+                setBureauUpdated(false);
+                return go("bureau-validate");
+              }
+              return go("fetch");
+            }} />
         )}
         {screen === "bureau-validate" && user && (
           <BureauValidateScreen
-            user={user} name={name}
+            user={user} name={name} updated={bureauUpdated}
             onYes={() => go("expired")}
             onNotMe={() => go("panInput")}
             onBack={() => go("name")}
@@ -398,6 +402,13 @@ function Index() {
             onFound={() => go("bureau-validate")}
             onNotFound={() => go("expired")}
           />
+        )}
+        {screen === "bureau-refetch" && user && (
+          <BureauRefetch onDone={() => {
+            setBureauUpdated(true);
+            if (user.updated) setName(user.updated.name);
+            go("bureau-validate");
+          }} />
         )}
         {screen === "ntc2-fetch" && user && (
           <Ntc2FetchScreen onDone={() => go("ntc2-nohistory")} />
@@ -431,7 +442,8 @@ function Index() {
         )}
         {screen === "panInput" && (
           <PanInputScreen onContinue={() => go(
-            user?.key === "ntc" ? "bureau-fetching"
+            user?.key === "ntc3" ? "bureau-refetch"
+            : user?.key === "ntc" ? "bureau-fetching"
             : user?.key === "ntc2" ? "payment"
             : "perm-all"
           )} />
@@ -628,7 +640,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         <div className="mt-6">
           <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
           <div className="flex flex-col gap-2">
-            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Priya · Direct to chat"], ["9876500005", "Aarav · NTC · No history"]].map(([p, label]) => (
+            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Priya · Direct to chat"], ["9876500005", "Aarav · NTC · No history"], ["9876500006", "Kavya · NTC · PAN re-fetch"]].map(([p, label]) => (
               <button key={p} onClick={() => setPhone(p)}
                 className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                 <span>
