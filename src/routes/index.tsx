@@ -98,7 +98,7 @@ type Screen =
   | "pan-mobile-link"
   | "bureau-validate" | "bureau-fetching" | "bureau-refetch"
   | "ntc2-fetch" | "ntc2-nohistory" | "ntc2-edit"
-  | "panValidate" | "expired" | "payment" | "payment-success"
+  | "panValidate" | "paywall-loader" | "expired" | "payment" | "payment-success"
   | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
   | "ntc-checklist"
   | "chat" | "call-incoming" | "call-active"
