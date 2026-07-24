@@ -413,9 +413,16 @@ function Index() {
         {screen === "ntc2-nohistory" && user && (
           <Ntc2NoHistoryScreen
             user={user} name={name}
-            onHasCredit={() => go("panInput")}
+            onHasCredit={() => go("ntc2-edit")}
             onNoCredit={() => go("expired")}
             onBack={() => go("name")}
+          />
+        )}
+        {screen === "ntc2-edit" && user && (
+          <EditDetailsScreen
+            user={user} name={name} setName={setName}
+            onBack={() => go("ntc2-nohistory")}
+            onContinue={() => go("bureau-refetch")}
           />
         )}
         {screen === "expired" && user && (
