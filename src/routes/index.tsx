@@ -444,13 +444,15 @@ function Index() {
             onNotFound={() => go("panInput")}
           />
         )}
-        {screen === "panInput" && (
-          <PanInputScreen onContinue={() => go(
-            user?.key === "ntc3" ? "bureau-refetch"
-            : user?.key === "ntc" ? "bureau-fetching"
-            : user?.key === "ntc2" ? "payment"
-            : "perm-all"
-          )} />
+        {screen === "panInput" && user && (
+          <PanInputScreen user={user} name={name} setName={setName}
+            onBack={() => go(user.key === "ntc2" ? "ntc2-nohistory" : "bureau-validate")}
+            onContinue={() => go(
+              user.key === "ntc3" ? "bureau-refetch"
+              : user.key === "ntc" ? "bureau-fetching"
+              : user.key === "ntc2" ? "bureau-refetch"
+              : "perm-all"
+            )} />
         )}
         {screen === "perm-all" && (
           <PermAllScreen
