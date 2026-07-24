@@ -572,21 +572,34 @@ function Landing({ onStart }: { onStart: () => void }) {
     <div className="flex-1 flex flex-col relative overflow-hidden bg-white">
       {/* Soft WhatsApp-green wash at top */}
       <div
-        className="absolute inset-x-0 top-0 h-[65%]"
+        className="absolute inset-x-0 top-0 h-[55%]"
         style={{
           background:
-            "radial-gradient(120% 90% at 50% 0%, #E7F8EE 0%, #F4FBF6 45%, #ffffff 85%)",
+            "radial-gradient(120% 80% at 50% 0%, #E7F8EE 0%, #F4FBF6 40%, #ffffff 80%)",
         }}
       />
 
-      {/* Center content: large logo + headline */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center">
-        <img
-          src={groLogo}
-          alt="GroScore"
-          className="w-56 h-auto mb-8"
-        />
-        <h1 className="text-[34px] font-extrabold leading-[1.1] tracking-[-0.02em]" style={{ color: WA.green }}>
+      {/* Top: logo */}
+      <div className="relative z-10 pt-10 px-6">
+        <img src={groLogo} alt="GroScore" className="w-36 h-auto" />
+      </div>
+
+      {/* Spacer pushes headline lower like reference */}
+      <div className="flex-1" />
+
+      {/* Headline block — left aligned */}
+      <div className="relative z-10 px-6">
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide uppercase mb-4"
+          style={{
+            background: "#E7F8EE",
+            color: WA.green,
+            border: `1px solid ${WA.accent}40`,
+          }}
+        >
+          <Sparkles className="w-3 h-3" /> AI Coach
+        </span>
+        <h1 className="text-[40px] font-extrabold leading-[1.05] tracking-[-0.02em]" style={{ color: WA.green }}>
           Your personal<br />credit coach
         </h1>
         <p className="mt-4 text-[15px] text-gray-600 leading-[1.55] max-w-[320px]">
@@ -595,7 +608,7 @@ function Landing({ onStart }: { onStart: () => void }) {
       </div>
 
       {/* Privacy row + CTA */}
-      <div className="relative z-10 px-6 pt-4 pb-8">
+      <div className="relative z-10 px-6 pt-6 pb-8">
         <div className="flex items-center gap-3 mb-5">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
