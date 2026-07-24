@@ -106,6 +106,7 @@ type Screen =
   | "profile" | "subscription" | "help";
 
 type ChatPhase = "intro" | "awaiting-consent" | "in-call" | "post-call";
+type JourneyVariant = "matched" | "linked" | "no-history" | "distressed";
 
 function Index() {
   const [screen, setScreen] = useState<Screen>("landing");
