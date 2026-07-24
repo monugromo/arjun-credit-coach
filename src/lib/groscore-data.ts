@@ -168,7 +168,7 @@ export const initialChat = (key: DemoKey, name?: string): ChatMsg[] => {
       id: "n1",
       from: "coach",
       kind: "text",
-      text: "Aapka onboarding complete ho gaya hai, Rahul!",
+      text: `Aapka onboarding complete ho gaya hai, ${name ?? "Rahul"}!`,
       time: t(20, 28),
     },
     {
