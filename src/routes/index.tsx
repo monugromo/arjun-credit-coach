@@ -393,7 +393,7 @@ function Index() {
           <BureauValidateScreen
             user={user} name={name} updated={bureauUpdated}
             onYes={() => go("expired")}
-            onNotMe={() => go("panInput")}
+            onNotMe={() => go(user.key === "ntc" && bureauUpdated ? "expired" : "panInput")}
             onBack={() => go("name")}
           />
         )}
@@ -449,7 +449,7 @@ function Index() {
             onBack={() => go(user.key === "ntc2" ? "ntc2-nohistory" : "bureau-validate")}
             onContinue={() => go(
               user.key === "ntc3" ? "bureau-refetch"
-              : user.key === "ntc" ? "bureau-fetching"
+              : user.key === "ntc" ? "bureau-refetch"
               : user.key === "ntc2" ? "bureau-refetch"
               : "perm-all"
             )} />
