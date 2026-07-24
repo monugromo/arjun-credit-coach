@@ -1487,6 +1487,17 @@ function PaymentSuccess({ onDone }: { onDone: () => void }) {
   );
 }
 
+function PaywallLoaderScreen({ onDone }: { onDone: () => void }) {
+  useEffect(() => { const t = setTimeout(onDone, 2000); return () => clearTimeout(t); }, [onDone]);
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center bg-white px-8 text-center">
+      <div className={UI.spinnerWrap} style={UI.spinnerStyle} />
+      <h2 className="mt-6 text-xl font-bold text-gray-900">No problem</h2>
+      <p className="text-gray-600 mt-2 text-base">Now let's build your credit score</p>
+    </div>
+  );
+}
+
 /* ====================== PERMISSIONS (WhatsApp style) ====================== */
 function PermAllScreen({ onAllow, onDeny }: { onAllow: () => void; onDeny: () => void }) {
   const items = [
