@@ -14,14 +14,6 @@ export interface DemoUser {
 }
 
 export const DEMOS: Record<string, DemoUser> = {
-  "9876500000": {
-    key: "ntc",
-    phone: "9876500000",
-    name: "Meera",
-    pan: "ABCPM0000F",
-    dob: "09/09/1997",
-    hasScore: false,
-  },
   "9876500001": {
     key: "ntc",
     phone: "9876500001",
@@ -30,7 +22,6 @@ export const DEMOS: Record<string, DemoUser> = {
     dob: "12/08/1998",
     hasScore: false,
   },
-
   "9876500002": {
     key: "distressed",
     phone: "9876500002",

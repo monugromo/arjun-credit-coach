@@ -129,7 +129,7 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500000 (Meera · NTC), 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct), 9876500005 (NTC · No history), 9876500006 (NTC · PAN re-fetch) or 9876500007 (Ishaan · NTC)"); return; }
+    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct), 9876500005 (NTC · No history), 9876500006 (NTC · PAN re-fetch) or 9876500007 (Ishaan · NTC)"); return; }
     setUser(u);
     setName(u.name);
     go("otp");
@@ -628,7 +628,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Enter your phone number" onBack={onBack} />
-      <div className="p-6 flex-1 overflow-y-auto min-h-0">
+      <div className="p-6 flex-1">
         <p className="text-sm text-gray-600 mb-6 leading-relaxed">
           GroScore will send an SMS to verify your phone number. Carrier charges may apply.
         </p>
@@ -646,7 +646,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         <div className="mt-6">
           <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
           <div className="flex flex-col gap-2">
-            {[["9876500000", "Meera · New to credit"], ["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Priya · Direct to chat"], ["9876500005", "Aarav · NTC · No history"], ["9876500006", "Kavya · NTC · PAN re-fetch"], ["9876500007", "Ishaan · New to credit"]].map(([p, label]) => (
+            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Priya · Direct to chat"], ["9876500005", "Aarav · NTC · No history"], ["9876500006", "Kavya · NTC · PAN re-fetch"], ["9876500007", "Ishaan · New to credit"]].map(([p, label]) => (
               <button key={p} onClick={() => setPhone(p)}
                 className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                 <span>
@@ -659,7 +659,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
           </div>
         </div>
       </div>
-      <div className="p-6 shrink-0">
+      <div className="p-6">
         <button onClick={onSubmit} disabled={phone.length !== 10}
           className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
           style={{ background: WA.accent }}>
@@ -684,7 +684,7 @@ function OtpScreen({ phone, otp, setOtp, onBack, onDone }: { phone: string; otp:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Verifying your number" onBack={onBack} />
-      <div className="p-6 flex-1 overflow-y-auto min-h-0">
+      <div className="p-6 flex-1">
         <p className="text-sm text-gray-600 mb-6">
           We sent a 6-digit code to <b>+91 {phone.slice(0, 5)} {phone.slice(5)}</b>
         </p>
@@ -715,7 +715,7 @@ function NameScreen({ name, setName, onBack, onContinue }: { name: string; setNa
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Your name (as in bureau)" onBack={onBack} />
-      <div className="p-6 flex-1 overflow-y-auto min-h-0">
+      <div className="p-6 flex-1">
         <p className="text-sm text-gray-600 mb-2">Enter your name <b>exactly as it appears in the credit bureau</b> — it helps us fetch accurate data on the first try.</p>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
           className="w-full border-b-2 pb-2 mt-4 text-xl outline-none bg-transparent"
@@ -726,7 +726,7 @@ function NameScreen({ name, setName, onBack, onContinue }: { name: string; setNa
           <div className="text-[11px] text-gray-500 mt-2 text-center">Use the same spelling as the "Name" field on your PAN card.</div>
         </div>
       </div>
-      <div className="p-6 shrink-0">
+      <div className="p-6">
         <button onClick={onContinue} disabled={!name.trim()}
           className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
           style={{ background: WA.accent }}>
@@ -1162,7 +1162,7 @@ function PanValidateScreen({ name, setName, defaultPan, onBack, onContinue }:
           Use my registered PAN
         </button>
       </div>
-      <div className="p-6 shrink-0">
+      <div className="p-6">
         <button onClick={submit} disabled={!panOk || !nameOk || checking}
           className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40 flex items-center justify-center gap-2"
           style={{ background: WA.accent }}>
@@ -1393,7 +1393,7 @@ function PermBlocked({ onRetry }: { onRetry: () => void }) {
           GroScore reads SMS for bills, sends reminders, and uses voice for coaching calls. These permissions are required to continue.
         </p>
       </div>
-      <div className="p-6 shrink-0">
+      <div className="p-6">
         <button onClick={onRetry}
           className="w-full text-white font-bold py-3.5 rounded-full"
           style={{ background: WA.accent }}>
