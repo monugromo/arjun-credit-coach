@@ -449,7 +449,7 @@ function Index() {
             onBack={() => go(user.key === "ntc2" ? "ntc2-nohistory" : "bureau-validate")}
             onContinue={() => go(
               user.key === "ntc3" ? "bureau-refetch"
-              : user.key === "ntc" ? "bureau-fetching"
+              : user.key === "ntc" ? "bureau-refetch"
               : user.key === "ntc2" ? "bureau-refetch"
               : "perm-all"
             )} />
