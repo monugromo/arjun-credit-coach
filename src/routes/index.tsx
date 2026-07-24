@@ -379,7 +379,11 @@ function Index() {
         )}
         {screen === "name" && (
           <NameScreen name={name} setName={setName} onBack={() => go("otp")}
-            onContinue={() => go(user?.key === "ntc" ? "bureau-validate" : "fetch")} />
+            onContinue={() => go(
+              user?.key === "ntc2" ? "ntc2-fetch"
+              : user?.key === "ntc" ? "bureau-validate"
+              : "fetch"
+            )} />
         )}
         {screen === "bureau-validate" && user && (
           <BureauValidateScreen
@@ -393,6 +397,17 @@ function Index() {
           <BureauFetching
             onFound={() => go("bureau-validate")}
             onNotFound={() => go("payment")}
+          />
+        )}
+        {screen === "ntc2-fetch" && user && (
+          <Ntc2FetchScreen onDone={() => go("ntc2-nohistory")} />
+        )}
+        {screen === "ntc2-nohistory" && user && (
+          <Ntc2NoHistoryScreen
+            user={user} name={name}
+            onHasCredit={() => go("panInput")}
+            onNoCredit={() => go("payment")}
+            onBack={() => go("name")}
           />
         )}
         {screen === "expired" && user && (
