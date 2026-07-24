@@ -581,11 +581,11 @@ function Landing({ onStart }: { onStart: () => void }) {
       />
 
       {/* Logo — vertical mark with wordmark */}
-      <div className="relative z-10 pt-10 px-6">
+      <div className="relative z-10 pt-16 px-6">
         <img src={groLogo} alt="GroScore" className="w-52 h-auto" />
       </div>
 
-      <div className="h-8" />
+      <div className="flex-1" />
 
       {/* Headline — dark green, left aligned */}
       <div className="relative z-10 px-6">
