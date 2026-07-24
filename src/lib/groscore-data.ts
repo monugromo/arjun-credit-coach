@@ -127,6 +127,14 @@ export const initialChat = (key: DemoKey): ChatMsg[] => {
       },
     ];
   }
+  if (key === "ntc2") {
+    return [
+      { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
+      { id: "a1", from: "coach", kind: "text", text: "Welcome to GroScore, Aarav! 👋", time: t(20, 28) },
+      { id: "a2", from: "coach", kind: "text", text: "Abhi aapka koi credit history nahi hai — bilkul fresh start. Chinta mat karo, hum mil ke banayenge 💚", time: t(20, 28) },
+      { id: "a3", from: "coach", kind: "text", text: "Main aapko 2 minute mein call karta hoon, pehla step samjha doonga.", time: t(20, 29) },
+    ];
+  }
   return [
     { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
     {
