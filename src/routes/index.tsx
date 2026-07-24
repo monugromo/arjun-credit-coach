@@ -74,6 +74,7 @@ const DOODLE_SVG = `
 const DOODLE_URL = `url("data:image/svg+xml;utf8,${DOODLE_SVG}")`;
 
 type Screen =
+  | "splash"
   | "landing" | "phone" | "otp" | "name" | "fetch" | "panInput"
   | "pan-mobile-link"
   | "bureau-validate" | "bureau-fetching" | "bureau-refetch"
@@ -88,7 +89,7 @@ type Screen =
 type ChatPhase = "intro" | "awaiting-consent" | "in-call" | "post-call";
 
 function Index() {
-  const [screen, setScreen] = useState<Screen>("landing");
+  const [screen, setScreen] = useState<Screen>("splash");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [user, setUser] = useState<DemoUser | null>(null);
