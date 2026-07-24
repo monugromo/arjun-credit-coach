@@ -601,7 +601,7 @@ function Landing({ onStart }: { onStart: () => void }) {
       <div className="flex-1" />
 
       {/* Privacy row + CTA */}
-      <div className="relative z-10 px-6 pt-6 pb-8">
+      <div className="relative z-10 px-6 pt-[75px] pb-8">
         <div className="flex items-center gap-3 mb-5">
           <div
             className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
