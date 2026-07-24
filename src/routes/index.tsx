@@ -74,6 +74,7 @@ const DOODLE_URL = `url("data:image/svg+xml;utf8,${DOODLE_SVG}")`;
 
 type Screen =
   | "landing" | "phone" | "otp" | "name" | "fetch" | "panInput"
+  | "pan-mobile-link"
   | "bureau-validate" | "bureau-fetching" | "bureau-refetch"
   | "ntc2-fetch" | "ntc2-nohistory" | "ntc2-edit"
   | "panValidate" | "expired" | "payment" | "payment-success"
