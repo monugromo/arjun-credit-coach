@@ -98,7 +98,7 @@ type Screen =
   | "pan-mobile-link"
   | "bureau-validate" | "bureau-fetching" | "bureau-refetch"
   | "ntc2-fetch" | "ntc2-nohistory" | "ntc2-edit"
-  | "panValidate" | "expired" | "payment" | "payment-success"
+  | "panValidate" | "paywall-loader" | "expired" | "payment" | "payment-success"
   | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
   | "ntc-checklist"
   | "chat" | "call-incoming" | "call-active"
@@ -148,6 +148,7 @@ function Index() {
   };
 
   const go = (s: Screen) => { setMenuOpen(false); setScreen(s); };
+  const goToPaywall = () => go("paywall-loader");
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
@@ -395,7 +396,7 @@ function Index() {
         {screen === "otp" && user && (
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
             onBack={() => go("phone")} onDone={() => {
-              if (user.expired) return go("expired");
+              if (user.expired) return goToPaywall();
               return go("name");
             }} />
         )}
@@ -413,8 +414,8 @@ function Index() {
         {screen === "bureau-validate" && user && (
           <BureauValidateScreen
             user={user} name={name} updated={bureauUpdated}
-            onYes={() => go("expired")}
-            onNotMe={() => go(((user.key === "ntc" || user.key === "ntc2") && bureauUpdated) ? "expired" : "panInput")}
+            onYes={() => goToPaywall()}
+            onNotMe={() => (((user.key === "ntc" || user.key === "ntc2") && bureauUpdated) ? goToPaywall() : go("panInput"))}
             onBack={() => go("name")}
           />
         )}
@@ -435,7 +436,7 @@ function Index() {
           <Ntc2NoHistoryScreen
             user={user} name={name}
             onHasCredit={() => go("ntc2-edit")}
-            onNoCredit={() => go("expired")}
+            onNoCredit={() => goToPaywall()}
             onBack={() => go("name")}
           />
         )}
@@ -445,6 +446,9 @@ function Index() {
             onBack={() => go("ntc2-nohistory")}
             onContinue={() => go(user.phone === "9876500006" ? "pan-mobile-link" : "bureau-refetch")}
           />
+        )}
+        {screen === "paywall-loader" && (
+          <PaywallLoaderScreen onDone={() => go("expired")} />
         )}
         {screen === "expired" && user && (
           <ExpiredScreen user={user} name={name} onLogout={logout}
@@ -478,7 +482,7 @@ function Index() {
           <PanMobileLinkScreen
             onBack={() => go(user.phone === "9876500006" ? "ntc2-edit" : "panInput")}
             onVerified={() => go("bureau-refetch")}
-            onSkip={() => go("expired")}
+            onSkip={() => goToPaywall()}
           />
         )}
         {screen === "perm-all" && (
@@ -1482,6 +1486,17 @@ function PaymentSuccess({ onDone }: { onDone: () => void }) {
       <h2 className="text-2xl font-bold text-gray-900">Payment successful</h2>
       <p className="text-gray-600 mt-2 text-sm">₹99 charged · Subscription active</p>
       <p className="text-gray-400 mt-6 text-xs">Taking you to Arjun…</p>
+    </div>
+  );
+}
+
+function PaywallLoaderScreen({ onDone }: { onDone: () => void }) {
+  useEffect(() => { const t = setTimeout(onDone, 2000); return () => clearTimeout(t); }, [onDone]);
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center bg-white px-8 text-center">
+      <div className={UI.spinnerWrap} style={UI.spinnerStyle} />
+      <h2 className="mt-6 text-xl font-bold text-gray-900">No problem</h2>
+      <p className="text-gray-600 mt-2 text-base">Now let's build your credit score</p>
     </div>
   );
 }
