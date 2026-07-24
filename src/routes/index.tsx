@@ -860,34 +860,34 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Re-check your details" onBack={onBack} />
-      <div className="p-6 flex-1 overflow-y-auto">
+      <div className={UI.body}>
         <p className="text-sm text-gray-600 mb-5 leading-relaxed">
           Please enter your <b>full name</b> and PAN number exactly as on your PAN card.
         </p>
         <div className="space-y-5">
           <div>
-            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">Full name (as per PAN)</label>
+            <label className={UI.eyebrow}>Full name (as per PAN)</label>
             <input value={localName} onChange={(e) => setLocalName(e.target.value)}
               placeholder="e.g. Rahul Kumar"
-              className="w-full border-b-2 pb-2 mt-1 text-lg outline-none"
+              className="w-full border-b-2 pb-2 mt-1 text-lg outline-none bg-transparent"
               style={{ borderColor: WA.accent }} />
           </div>
           <div>
-            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">PAN number</label>
+            <label className={UI.eyebrow}>PAN number</label>
             <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().slice(0, 10))}
               placeholder="ABCDE1234F"
-              className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none"
+              className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none bg-transparent"
               style={{ borderColor: WA.accent }} />
           </div>
         </div>
-        <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-3">
-          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find these</div>
+        <div className={`mt-6 ${UI.helperCard}`}>
+          <div className={`${UI.eyebrow} mb-2`}>Where to find these</div>
           <img src={panCardRefV2.url} alt="PAN card reference" className="w-full rounded-lg" />
         </div>
       </div>
-      <div className="p-6 pt-2">
+      <div className={UI.footer}>
         <button onClick={() => { setName(localName.trim()); onContinue(); }} disabled={!valid}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          className={UI.primaryBtn}
           style={{ background: WA.accent }}>
           Continue
         </button>
