@@ -43,12 +43,17 @@ export const DEMOS: Record<string, DemoUser> = {
     expired: true,
   },
   "9876500004": {
-    key: "ntc",
+    key: "ntc4",
     phone: "9876500004",
     name: "Neha",
     pan: "ABCPN4455F",
     dob: "09/06/1997",
     hasScore: false,
+    updated: {
+      name: "Neha Kapoor",
+      pan: "NKPPN4455F",
+      dob: "09/06/1997",
+    },
   },
   "9876500005": {
     key: "ntc2",
