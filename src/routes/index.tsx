@@ -1308,10 +1308,21 @@ function ExpiredScreen({ user, name, onRestart, onLogout }:
         <div className="w-12" />
       </div>
 
-      <div className="flex-1 px-6 pt-6 pb-4 flex flex-col items-center text-center">
-        <img src={groLogo} alt="GroScore" className="w-24 h-auto mb-3" />
-        <h1 className="text-3xl font-extrabold text-gray-900">Hey {displayName}!</h1>
-        <div className="w-16 h-px bg-gray-200 my-3" />
+      <div className="flex-1 px-6 pt-4 pb-4 flex flex-col items-center text-center">
+        <div className="relative mb-3">
+          <div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(16,185,129,0.25), transparent 70%)", transform: "scale(1.35)" }} />
+          <div className="relative w-24 h-24 rounded-full p-[3px]" style={{ background: "linear-gradient(135deg, #10B981, #059669)" }}>
+            <img src={arjunImg} alt="Arjun, your credit coach" className="w-full h-full rounded-full object-cover border-2 border-white" />
+          </div>
+          <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-white shadow-md flex items-center justify-center">
+            <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: WA.accent }}>
+              <Check className="w-3 h-3 text-white" strokeWidth={3} />
+            </div>
+          </div>
+        </div>
+        <p className="text-[11px] font-semibold tracking-wider text-emerald-700 uppercase mb-1">Arjun · Your Credit Coach</p>
+        <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight">Hey {displayName}!</h1>
+        <div className="w-12 h-px bg-gray-200 my-3" />
         <p className="text-gray-600 text-[15px] leading-relaxed max-w-xs">{subtitle}</p>
 
         <div className="mt-6 w-full rounded-2xl border border-emerald-100" style={{ background: "#F1FBF4" }}>
