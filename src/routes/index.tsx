@@ -755,20 +755,19 @@ function NameScreen({ name, setName, onBack, onContinue }: { name: string; setNa
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Enter Your Name" onBack={onBack} />
-      <div className="p-6 flex-1">
+      <div className={UI.body}>
         <p className="text-sm text-gray-600 mb-2">Enter your name <b>exactly as it appears in the PAN Card</b>.</p>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
-          className="w-full border-b-2 pb-2 mt-4 text-xl outline-none bg-transparent"
+          className="w-full border-b-2 pb-2 mt-4 text-lg outline-none bg-transparent"
           style={{ borderColor: WA.accent }} />
-        <div className="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-3">
-          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find your name</div>
+        <div className={`mt-8 ${UI.helperCard}`}>
+          <div className={`${UI.eyebrow} mb-2`}>Where to find your name</div>
           <img src={panCardRef} alt="PAN card reference" className="w-full rounded-lg" />
-          <div className="text-[11px] text-gray-500 mt-2 text-center">Use the same spelling as the "Name" field on your PAN card.</div>
         </div>
       </div>
-      <div className="p-6">
+      <div className={UI.footer}>
         <button onClick={onContinue} disabled={!name.trim()}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          className={UI.primaryBtn}
           style={{ background: WA.accent }}>
           Continue
         </button>
