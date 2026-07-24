@@ -14,6 +14,7 @@ import kabirImg from "@/assets/kabir.jpg";
 import groLogoAsset from "@/assets/groscore-vertical.png.asset.json";
 const groLogo = groLogoAsset.url;
 import panCardRef from "@/assets/pan-card-ref.png";
+import panCardRefV2 from "@/assets/pan-card-ref-v2.png.asset.json";
 import reportPreview from "@/assets/report-preview.jpg";
 import actionPlanPreview from "@/assets/action-plan-preview.jpg";
 import scoreProjection from "@/assets/score-projection.jpg";
