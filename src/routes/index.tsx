@@ -1733,23 +1733,53 @@ function _EmailPermImpl(onDone: () => void) {
 
 /* ====================== SCORE JOURNEY ====================== */
 /* ====================== NTC CHECKLIST ====================== */
-function NTCChecklistScreen({ user, onDone }: { user: DemoUser; onDone: () => void }) {
-  const isNTC = user.key === "ntc";
-  const steps = isNTC
-    ? [
+function NTCChecklistScreen({ user, variant = "matched", onDone }: { user: DemoUser; variant?: JourneyVariant; onDone: () => void }) {
+  const config: Record<JourneyVariant, { title: string; subtitle: string; steps: { icon: any; label: string }[] }> = {
+    matched: {
+      title: "We found your profile",
+      subtitle: "Arjun matched you with the bureau. Setting up your starter plan now.",
+      steps: [
+        { icon: Search, label: "Fetching bureau record" },
+        { icon: BadgeCheck, label: "Matching your profile" },
+        { icon: Wallet, label: "Preparing starter plan" },
+        { icon: CheckCircle2, label: "Arjun is ready to help" },
+      ],
+    },
+    linked: {
+      title: "We've verified your number",
+      subtitle: "Linked number confirmed. Pulling your bureau record and setting things up.",
+      steps: [
+        { icon: Phone, label: "Verifying linked number" },
+        { icon: Search, label: "Fetching bureau record" },
+        { icon: Wallet, label: "Preparing starter plan" },
+        { icon: CheckCircle2, label: "Arjun is ready to help" },
+      ],
+    },
+    "no-history": {
+      title: "No score? No problem.",
+      subtitle: "You're new to credit — a clean slate. We'll help you build it, step by step.",
+      steps: [
         { icon: Search, label: "Checking credit bureau" },
         { icon: UserPlus, label: "No score yet — that's okay" },
         { icon: Wallet, label: "Preparing your build-up plan" },
-        { icon: BadgeCheck, label: "Arjun is ready to help" },
-      ]
-    : [
+        { icon: CheckCircle2, label: "Arjun is ready to help" },
+      ],
+    },
+    distressed: {
+      title: "We've analyzed your report",
+      subtitle: "Arjun has your full picture now. Let's turn things around, one step at a time.",
+      steps: [
         { icon: Search, label: "Fetching credit report" },
         { icon: AlertTriangle, label: "Analyzing your 6 issues" },
         { icon: Wallet, label: "Preparing dispute plan" },
-        { icon: BadgeCheck, label: "Arjun is ready to help" },
-      ];
+        { icon: CheckCircle2, label: "Arjun is ready to help" },
+      ],
+    },
+  };
+  const { title, subtitle, steps } = config[variant];
+  void user;
 
-  const [done, setDone] = useState(0); // number of completed steps
+  const [done, setDone] = useState(0);
   const total = steps.length;
 
   useEffect(() => {
@@ -1764,10 +1794,6 @@ function NTCChecklistScreen({ user, onDone }: { user: DemoUser; onDone: () => vo
   const progress = done / total;
   const dash = 2 * Math.PI * 70;
 
-  const title = isNTC ? "No score? No problem." : "We've analyzed your report";
-  const subtitle = isNTC
-    ? "You're new to credit — that's a clean slate. We'll help you build it together, step by step."
-    : "Arjun has your full picture now. Let's turn things around, one step at a time.";
 
   return (
     <div className="flex-1 flex flex-col bg-white px-6 pt-6 pb-8 overflow-y-auto">
