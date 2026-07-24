@@ -913,8 +913,9 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
             We couldn't find your record
           </h2>
           <p className="text-sm text-gray-700 mt-2 leading-relaxed">
-            Your PAN is linked to <span className="font-bold text-gray-900">+91 98XXXX9289</span>. Verify that number with an OTP so we can pull your bureau record.
+            Your PAN is linked to <span className="font-bold text-gray-900">+91 98XXXX9289</span>.
           </p>
+
         </div>
 
         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Mobile number</label>
@@ -932,15 +933,7 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
           />
         </div>
 
-        {!otpSent ? (
-          <button
-            onClick={() => phoneValid && setOtpSent(true)}
-            disabled={!phoneValid}
-            className="w-full text-white font-bold py-3 rounded-full disabled:opacity-40"
-            style={{ background: WA.accent }}>
-            Send OTP
-          </button>
-        ) : (
+        {otpSent && (
           <>
             <div className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Enter OTP</div>
             <div className="flex gap-2 justify-between mb-3">
@@ -972,11 +965,14 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
       </div>
       <div className="p-6 pt-2 space-y-2.5">
         <button
-          onClick={onVerified}
-          disabled={!otpValid}
+          onClick={() => {
+            if (!otpSent) { if (phoneValid) setOtpSent(true); return; }
+            if (otpValid) onVerified();
+          }}
+          disabled={otpSent ? !otpValid : !phoneValid}
           className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
           style={{ background: WA.accent }}>
-          Verify & continue
+          {otpSent ? "Verify OTP" : "Send OTP"}
         </button>
         <button onClick={onSkip}
           className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
@@ -986,6 +982,7 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
     </div>
   );
 }
+
 
 /* ====================== BUREAU VALIDATE (card with 4 fields) ====================== */
 function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
