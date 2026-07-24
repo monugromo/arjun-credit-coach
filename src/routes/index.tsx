@@ -447,8 +447,8 @@ function Index() {
             onContinue={() => go(user.phone === "9876500006" ? "pan-mobile-link" : "bureau-refetch")}
           />
         )}
-        {screen === "loading-journey" && (
-          <PaywallLoaderScreen onDone={() => go("expired")} />
+        {screen === "loading-journey" && user && (
+          <NTCChecklistScreen user={user} onDone={() => go("expired")} />
         )}
         {screen === "expired" && user && (
           <ExpiredScreen user={user} name={name} onLogout={logout}
@@ -1490,61 +1490,6 @@ function PaymentSuccess({ onDone }: { onDone: () => void }) {
   );
 }
 
-function PaywallLoaderScreen({ onDone }: { onDone: () => void }) {
-  const [step, setStep] = useState(0);
-  useEffect(() => { const t = setTimeout(onDone, 2000); return () => clearTimeout(t); }, [onDone]);
-  useEffect(() => {
-    const timers = [setTimeout(() => setStep(1), 400), setTimeout(() => setStep(2), 900), setTimeout(() => setStep(3), 1400)];
-    return () => timers.forEach(clearTimeout);
-  }, []);
-  const steps = [
-    { label: "Profile checked", icon: User },
-    { label: "Plan ready", icon: FileText },
-    { label: "Coach assigned", icon: CheckCircle2 },
-  ];
-  return (
-    <div className="flex-1 flex flex-col items-center justify-center bg-white px-8 text-center">
-      <div className="relative mb-6">
-        <div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(16,185,129,0.22), transparent 70%)", transform: "scale(1.45)" }} />
-        <div className="relative w-20 h-20 rounded-full p-[3px]" style={{ background: "linear-gradient(135deg, #10B981, #059669)" }}>
-          <img src={kabirImg} alt="Arjun, your credit coach" className="w-full h-full rounded-full object-cover border-2 border-white" />
-        </div>
-        <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-white shadow-md flex items-center justify-center">
-          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: WA.accent }}>
-            <Sparkles className="w-3 h-3 text-white" />
-          </div>
-        </div>
-      </div>
-
-      <h2 className="text-xl font-bold text-gray-900">No problem</h2>
-      <p className="text-gray-600 mt-2 text-base">Now let's build your credit score</p>
-
-      <div className="mt-8 w-full max-w-xs">
-        {steps.map((s, i) => {
-          const Icon = s.icon;
-          const active = step > i;
-          const current = step === i + 1;
-          return (
-            <div key={s.label} className="flex items-center gap-4">
-              <div className="flex flex-col items-center">
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 ${current ? "animate-pulse" : ""}`}
-                  style={{ background: active || current ? WA.accent : "#E5E7EB", color: active || current ? "#fff" : "#9CA3AF" }}>
-                  {current ? <Loader2 className="w-4 h-4 animate-spin" /> : <Icon className="w-4 h-4" />}
-                </div>
-                {i < steps.length - 1 && (
-                  <div className="w-0.5 h-6 mt-1 transition-all duration-300" style={{ background: active ? WA.accent : "#E5E7EB" }} />
-                )}
-              </div>
-              <div className={`text-sm font-semibold transition-colors duration-300 ${active || current ? "text-gray-900" : "text-gray-400"}`}>
-                {s.label}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
 
 /* ====================== PERMISSIONS (WhatsApp style) ====================== */
 function PermAllScreen({ onAllow, onDeny }: { onAllow: () => void; onDeny: () => void }) {
