@@ -425,7 +425,7 @@ function Index() {
           <EditDetailsScreen
             user={user} name={name} setName={setName}
             onBack={() => go("ntc2-nohistory")}
-            onContinue={() => go("bureau-refetch")}
+            onContinue={() => go(user.phone === "9876500006" ? "pan-mobile-link" : "bureau-refetch")}
           />
         )}
         {screen === "expired" && user && (
@@ -458,8 +458,9 @@ function Index() {
         )}
         {screen === "pan-mobile-link" && user && (
           <PanMobileLinkScreen
-            onBack={() => go("panInput")}
-            onDone={() => go("bureau-refetch")}
+            onBack={() => go(user.phone === "9876500006" ? "ntc2-edit" : "panInput")}
+            onVerified={() => go("bureau-refetch")}
+            onSkip={() => go("expired")}
           />
         )}
         {screen === "perm-all" && (
