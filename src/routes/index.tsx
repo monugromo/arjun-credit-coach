@@ -130,7 +130,7 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500001 (Rahul · NTC), 9876500002 (Sonu · Distressed), 9876500003 (Darpan · Expired), 9876500004 (Neha · NTC), 9876500005 (Aarav · NTC · No history), 9876500006 (Kavya · NTC · PAN re-fetch) or 9876500007 (Ishaan · NTC)"); return; }
+    if (!u) { alert("Use demo phone 9876500001 (Rahul · NTC), 9876500002 (Neha · NTC), 9876500003 (Aarav · NTC · No history), 9876500004 (Sonu · Distressed) or 9876500005 (Darpan · Trial ended)"); return; }
     setUser(u);
     setName(u.name);
     go("otp");
@@ -363,7 +363,7 @@ function Index() {
     <div className="h-[100dvh] w-full bg-neutral-200 flex items-stretch sm:items-center justify-center overflow-hidden">
       <div className="relative w-full sm:max-w-[420px] h-[100dvh] sm:h-[min(900px,100dvh-3rem)] sm:my-6 bg-white overflow-hidden sm:rounded-[2.5rem] sm:shadow-2xl sm:border sm:border-black/10 flex flex-col">
         <DevNav current={screen} go={go} hasUser={!!user} loadDemo={(k) => {
-          const u = k === "ntc" ? DEMOS["9876500001"] : DEMOS["9876500002"];
+          const u = k === "ntc" ? DEMOS["9876500001"] : DEMOS["9876500004"];
           setUser(u); setName(u.name); setPhone(u.phone);
           startChatFlow(u);
         }} />
@@ -382,7 +382,7 @@ function Index() {
           <NameScreen name={name} setName={setName} onBack={() => go("otp")}
             onContinue={() => {
               if (user?.key === "ntc2") return go("ntc2-fetch");
-              if (user?.key === "ntc" || user?.key === "ntc3") {
+              if (user?.key === "ntc") {
                 setBureauUpdated(false);
                 return go("bureau-validate");
               }
@@ -448,8 +448,7 @@ function Index() {
           <PanInputScreen user={user} name={name} setName={setName}
             onBack={() => go(user.key === "ntc2" ? "ntc2-nohistory" : "bureau-validate")}
             onContinue={() => go(
-              user.key === "ntc3" ? "bureau-refetch"
-              : user.key === "ntc" ? "pan-mobile-link"
+              user.key === "ntc" ? "pan-mobile-link"
               : user.key === "ntc2" ? "bureau-refetch"
               : "perm-all"
             )} />
@@ -652,7 +651,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         <div className="mt-6">
           <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
           <div className="flex flex-col gap-2">
-            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Neha · New to credit"], ["9876500005", "Aarav · NTC · No history"], ["9876500006", "Kavya · NTC · PAN re-fetch"], ["9876500007", "Ishaan · New to credit"]].map(([p, label]) => (
+            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Neha · New to credit"], ["9876500003", "Aarav · NTC · No history"], ["9876500004", "Sonu · Score 413"], ["9876500005", "Darpan · Trial ended"]].map(([p, label]) => (
               <button key={p} onClick={() => setPhone(p)}
                 className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                 <span>
