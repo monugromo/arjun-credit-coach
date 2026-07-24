@@ -867,6 +867,87 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
   );
 }
 
+/* ====================== PAN → MOBILE LINK (verify OTP on linked number) ====================== */
+function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: () => void }) {
+  const [phase, setPhase] = useState<"intro" | "otp">("intro");
+  const [otp, setOtp] = useState("");
+  const [timer, setTimer] = useState(30);
+  useEffect(() => {
+    if (phase !== "otp") return;
+    setOtp("");
+    setTimer(30);
+    const t1 = setTimeout(() => setOtp("123456"), 1200);
+    const t2 = setTimeout(() => onDone(), 2600);
+    const iv = setInterval(() => setTimer((s) => (s > 0 ? s - 1 : 0)), 1000);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearInterval(iv); };
+  }, [phase, onDone]);
+
+  if (phase === "otp") {
+    const digits = otp.padEnd(6, " ").slice(0, 6).split("");
+    return (
+      <div className="flex-1 flex flex-col bg-white">
+        <WATopBar title="Verify linked number" onBack={() => setPhase("intro")} />
+        <div className="p-6 flex-1">
+          <p className="text-sm text-gray-600 mb-6">
+            We sent a 6-digit code to <b>+91 99xxxx9193</b> — the number linked to your PAN.
+          </p>
+          <div className="flex gap-2 justify-between">
+            {digits.map((d, i) => (
+              <div key={i}
+                className="w-12 h-14 rounded-xl border-2 flex items-center justify-center text-2xl font-bold text-gray-900"
+                style={{ borderColor: d.trim() ? WA.accent : "#E5E7EB", background: d.trim() ? "#E8F5E9" : undefined }}>
+                {d.trim()}
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 mt-6 text-sm text-gray-600">
+            <Sparkles className="w-4 h-4" style={{ color: WA.accent }} /> Detecting code from SMS…
+          </div>
+          <button className="mt-4 text-sm font-medium disabled:opacity-40" disabled={timer > 0} style={{ color: WA.green }}>
+            {timer > 0 ? `Resend code in ${timer}s` : "Resend code"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Verify linked number" onBack={onBack} />
+      <div className="p-6 flex-1 overflow-y-auto">
+        <div className="rounded-2xl border border-gray-200 p-5 mb-5" style={{ background: "#F1FBF4" }}>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3" style={{ background: "#DCF7E3" }}>
+            <Phone className="w-6 h-6 text-emerald-700" />
+          </div>
+          <div className="text-[11px] uppercase font-bold tracking-wider text-emerald-700 mb-1">PAN linked number</div>
+          <h2 className="text-lg font-bold text-gray-900 leading-snug">
+            Your PAN is linked to <span className="whitespace-nowrap">+91 99xxxx9193</span>
+          </h2>
+          <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+            Verify the OTP on this number so we can pull your bureau record accurately.
+          </p>
+        </div>
+        <ul className="space-y-2 text-sm text-gray-600">
+          <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> Takes less than 30 seconds</li>
+          <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> Improves bureau match accuracy</li>
+          <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> One-time · never charged</li>
+        </ul>
+      </div>
+      <div className="p-6 pt-2 space-y-2.5">
+        <button onClick={() => setPhase("otp")}
+          className="w-full text-white font-bold py-3.5 rounded-full"
+          style={{ background: WA.accent }}>
+          Send OTP & verify
+        </button>
+        <button onClick={onDone}
+          className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
+          I'll do it later
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ====================== BUREAU VALIDATE (card with 4 fields) ====================== */
 function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
   { user: DemoUser; name: string; updated?: boolean; onYes: () => void; onNotMe: () => void; onBack: () => void }) {
