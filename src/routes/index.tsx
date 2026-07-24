@@ -869,47 +869,23 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
 
 /* ====================== PAN → MOBILE LINK (verify OTP on linked number) ====================== */
 function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: () => void }) {
-  const [phase, setPhase] = useState<"intro" | "otp">("intro");
+  const [phone, setPhone] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(30);
+  const phoneValid = /^[6-9]\d{9}$/.test(phone);
+  const otpValid = otp.length === 6;
+
   useEffect(() => {
-    if (phase !== "otp") return;
+    if (!otpSent) return;
     setOtp("");
     setTimer(30);
     const t1 = setTimeout(() => setOtp("123456"), 1200);
-    const t2 = setTimeout(() => onDone(), 2600);
     const iv = setInterval(() => setTimer((s) => (s > 0 ? s - 1 : 0)), 1000);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearInterval(iv); };
-  }, [phase, onDone]);
+    return () => { clearTimeout(t1); clearInterval(iv); };
+  }, [otpSent]);
 
-  if (phase === "otp") {
-    const digits = otp.padEnd(6, " ").slice(0, 6).split("");
-    return (
-      <div className="flex-1 flex flex-col bg-white">
-        <WATopBar title="Verify linked number" onBack={() => setPhase("intro")} />
-        <div className="p-6 flex-1">
-          <p className="text-sm text-gray-600 mb-6">
-            We sent a 6-digit code to <b>+91 99xxxx9193</b> — the number linked to your PAN.
-          </p>
-          <div className="flex gap-2 justify-between">
-            {digits.map((d, i) => (
-              <div key={i}
-                className="w-12 h-14 rounded-xl border-2 flex items-center justify-center text-2xl font-bold text-gray-900"
-                style={{ borderColor: d.trim() ? WA.accent : "#E5E7EB", background: d.trim() ? "#E8F5E9" : undefined }}>
-                {d.trim()}
-              </div>
-            ))}
-          </div>
-          <div className="flex items-center gap-2 mt-6 text-sm text-gray-600">
-            <Sparkles className="w-4 h-4" style={{ color: WA.accent }} /> Detecting code from SMS…
-          </div>
-          <button className="mt-4 text-sm font-medium disabled:opacity-40" disabled={timer > 0} style={{ color: WA.green }}>
-            {timer > 0 ? `Resend code in ${timer}s` : "Resend code"}
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const digits = otp.padEnd(6, " ").slice(0, 6).split("");
 
   return (
     <div className="flex-1 flex flex-col bg-white">
@@ -921,23 +897,73 @@ function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: (
           </div>
           <div className="text-[11px] uppercase font-bold tracking-wider text-emerald-700 mb-1">PAN linked number</div>
           <h2 className="text-lg font-bold text-gray-900 leading-snug">
-            Your PAN is linked to <span className="whitespace-nowrap">+91 99xxxx9193</span>
+            Enter the mobile number linked to your PAN
           </h2>
           <p className="text-sm text-gray-600 mt-2 leading-relaxed">
-            Verify the OTP on this number so we can pull your bureau record accurately.
+            We'll send an OTP to verify so we can pull your bureau record accurately.
           </p>
         </div>
-        <ul className="space-y-2 text-sm text-gray-600">
+
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Mobile number</label>
+        <div className="flex items-center gap-2 border-2 rounded-xl px-3 py-3 mb-4"
+          style={{ borderColor: phoneValid ? WA.accent : "#E5E7EB" }}>
+          <span className="text-gray-700 font-semibold">+91</span>
+          <input
+            type="tel"
+            inputMode="numeric"
+            maxLength={10}
+            value={phone}
+            onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); setOtpSent(false); }}
+            placeholder="10-digit mobile"
+            className="flex-1 outline-none text-base text-gray-900 bg-transparent"
+          />
+        </div>
+
+        {!otpSent ? (
+          <button
+            onClick={() => phoneValid && setOtpSent(true)}
+            disabled={!phoneValid}
+            className="w-full text-white font-bold py-3 rounded-full disabled:opacity-40"
+            style={{ background: WA.accent }}>
+            Send OTP
+          </button>
+        ) : (
+          <>
+            <div className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Enter OTP</div>
+            <div className="flex gap-2 justify-between mb-3">
+              {digits.map((d, i) => (
+                <div key={i}
+                  className="w-11 h-13 py-3 rounded-xl border-2 flex items-center justify-center text-xl font-bold text-gray-900"
+                  style={{ borderColor: d.trim() ? WA.accent : "#E5E7EB", background: d.trim() ? "#E8F5E9" : undefined }}>
+                  {d.trim()}
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2 text-gray-600">
+                <Sparkles className="w-4 h-4" style={{ color: WA.accent }} /> Auto-detecting…
+              </div>
+              <button disabled={timer > 0} className="font-medium disabled:opacity-40" style={{ color: WA.green }}
+                onClick={() => { setTimer(30); setOtp(""); setTimeout(() => setOtp("123456"), 1200); }}>
+                {timer > 0 ? `Resend in ${timer}s` : "Resend"}
+              </button>
+            </div>
+          </>
+        )}
+
+        <ul className="space-y-2 text-sm text-gray-600 mt-6">
           <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> Takes less than 30 seconds</li>
           <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> Improves bureau match accuracy</li>
           <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> One-time · never charged</li>
         </ul>
       </div>
       <div className="p-6 pt-2 space-y-2.5">
-        <button onClick={() => setPhase("otp")}
-          className="w-full text-white font-bold py-3.5 rounded-full"
+        <button
+          onClick={onDone}
+          disabled={otpSent && !otpValid}
+          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
           style={{ background: WA.accent }}>
-          Send OTP & verify
+          Continue
         </button>
         <button onClick={onDone}
           className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
