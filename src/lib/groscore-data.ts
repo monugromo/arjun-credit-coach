@@ -93,7 +93,7 @@ export interface ChatMsg {
 const t = (h: number, m: number) =>
   `${h > 12 ? h - 12 : h}:${m.toString().padStart(2, "0")} ${h >= 12 ? "pm" : "am"}`;
 
-export const initialChat = (key: DemoKey): ChatMsg[] => {
+export const initialChat = (key: DemoKey, name?: string): ChatMsg[] => {
   if (key === "direct") {
     return [
       { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
