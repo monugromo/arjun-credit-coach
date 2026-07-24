@@ -45,6 +45,24 @@ const WA = {
   bg: "#ECE5DD",           // chat list bg (we use white per request)
 };
 
+// Shared onboarding style tokens (visual normalization; no copy/element changes)
+const UI = {
+  primaryBtn: "w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40",
+  secondaryBtn: "w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white",
+  eyebrow: "text-[11px] uppercase font-bold tracking-wider text-gray-500",
+  eyebrowAmber: "text-[11px] uppercase font-bold tracking-wider text-amber-700",
+  eyebrowEmerald: "text-[11px] uppercase font-bold tracking-wider text-emerald-700",
+  body: "p-5 flex-1 overflow-y-auto",
+  footer: "px-5 pb-6 pt-3",
+  spinnerWrap: "w-12 h-12 border-4 rounded-full animate-spin",
+  spinnerStyle: { borderColor: "#E5E7EB", borderTopColor: "#25D366" } as React.CSSProperties,
+  amberCard: "rounded-2xl border border-amber-100 p-5",
+  amberCardStyle: { background: "#FFFBEB" } as React.CSSProperties,
+  amberIcon: "w-11 h-11 rounded-full flex items-center justify-center shrink-0",
+  amberIconStyle: { background: "#FEF3C7" } as React.CSSProperties,
+  helperCard: "rounded-xl border border-gray-200 bg-gray-50 p-3",
+};
+
 // WhatsApp-style doodle SVG (light gray icons over white).
 const DOODLE_SVG = `
 <svg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'>
