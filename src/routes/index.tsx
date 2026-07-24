@@ -1180,9 +1180,6 @@ function Ntc2NoHistoryScreen({ user, name, onHasCredit, onNoCredit, onBack }:
             <div className="min-w-0">
               <div className="text-[11px] uppercase font-bold tracking-wider text-amber-700">Bureau result</div>
               <div className="font-bold text-gray-900 mt-0.5">Hi {displayName}, we couldn't find any credit record.</div>
-              <p className="text-sm text-gray-700 mt-1.5 leading-relaxed">
-                Iska matlab sirf itna hai ki bureau ke paas abhi aapka data nahi hai — koi problem nahi, hum yahin se shuru karenge.
-              </p>
             </div>
           </div>
         </div>
@@ -1192,18 +1189,17 @@ function Ntc2NoHistoryScreen({ user, name, onHasCredit, onNoCredit, onBack }:
           <h3 className="text-[17px] font-bold text-gray-900 leading-snug">
             Do you currently have any active loan or credit card?
           </h3>
-          <p className="text-xs text-gray-500 mt-1">Even one that's in your name but paid by family counts.</p>
 
           <div className="mt-4 space-y-2.5">
             {([
-              { key: "yes", title: "Yes, I have a loan or credit card", desc: "We'll re-check the bureau with your PAN to pull the record.", icon: BadgeCheck },
-              { key: "no", title: "No, nothing in my name yet", desc: "That's fine — your coach will help you build a score from scratch.", icon: UserPlus },
+              { key: "yes", title: "Yes, I have a loan or credit card", icon: BadgeCheck },
+              { key: "no", title: "No, nothing in my name yet", icon: UserPlus },
             ] as const).map((opt) => {
               const Icon = opt.icon;
               const active = choice === opt.key;
               return (
                 <button key={opt.key} onClick={() => setChoice(opt.key)}
-                  className="w-full text-left rounded-2xl border p-3.5 flex items-start gap-3 transition"
+                  className="w-full text-left rounded-2xl border p-3.5 flex items-center gap-3 transition"
                   style={{
                     borderColor: active ? WA.accent : "#E5E7EB",
                     background: active ? "#F1FBF4" : "#fff",
@@ -1214,9 +1210,8 @@ function Ntc2NoHistoryScreen({ user, name, onHasCredit, onNoCredit, onBack }:
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-gray-900 text-[15px]">{opt.title}</div>
-                    <div className="text-xs text-gray-600 mt-0.5 leading-relaxed">{opt.desc}</div>
                   </div>
-                  <div className="w-5 h-5 rounded-full border-2 shrink-0 mt-0.5 flex items-center justify-center"
+                  <div className="w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center"
                     style={{ borderColor: active ? WA.accent : "#D1D5DB", background: active ? WA.accent : "transparent" }}>
                     {active && <CheckCircle2 className="w-4 h-4 text-white" />}
                   </div>
@@ -1225,6 +1220,7 @@ function Ntc2NoHistoryScreen({ user, name, onHasCredit, onNoCredit, onBack }:
             })}
           </div>
         </div>
+
       </div>
       <div className="p-5 pt-2">
         <button
