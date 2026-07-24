@@ -449,10 +449,16 @@ function Index() {
             onBack={() => go(user.key === "ntc2" ? "ntc2-nohistory" : "bureau-validate")}
             onContinue={() => go(
               user.key === "ntc3" ? "bureau-refetch"
-              : user.key === "ntc" ? "bureau-refetch"
+              : user.key === "ntc" ? "pan-mobile-link"
               : user.key === "ntc2" ? "bureau-refetch"
               : "perm-all"
             )} />
+        )}
+        {screen === "pan-mobile-link" && user && (
+          <PanMobileLinkScreen
+            onBack={() => go("panInput")}
+            onDone={() => go("bureau-refetch")}
+          />
         )}
         {screen === "perm-all" && (
           <PermAllScreen
