@@ -1,4 +1,4 @@
-export type DemoKey = "ntc" | "ntc2" | "distressed" | "expired" | "direct";
+export type DemoKey = "ntc" | "ntc2" | "ntc3" | "distressed" | "expired" | "direct";
 
 export interface DemoUser {
   key: DemoKey;
@@ -10,6 +10,7 @@ export interface DemoUser {
   score?: number;
   band?: string;
   expired?: boolean;
+  updated?: { name: string; pan: string; dob: string };
 }
 
 export const DEMOS: Record<string, DemoUser> = {
@@ -57,6 +58,19 @@ export const DEMOS: Record<string, DemoUser> = {
     pan: "ABCPA7788F",
     dob: "05/11/2000",
     hasScore: false,
+  },
+  "9876500006": {
+    key: "ntc3",
+    phone: "9876500006",
+    name: "Kavya",
+    pan: "ABCPK4321F",
+    dob: "18/07/1996",
+    hasScore: false,
+    updated: {
+      name: "Kavya Sharma",
+      pan: "KVYPS4321F",
+      dob: "18/07/1996",
+    },
   },
 };
 
@@ -133,6 +147,14 @@ export const initialChat = (key: DemoKey): ChatMsg[] => {
       { id: "a1", from: "coach", kind: "text", text: "Welcome to GroScore, Aarav! 👋", time: t(20, 28) },
       { id: "a2", from: "coach", kind: "text", text: "Abhi aapka koi credit history nahi hai — bilkul fresh start. Chinta mat karo, hum mil ke banayenge 💚", time: t(20, 28) },
       { id: "a3", from: "coach", kind: "text", text: "Main aapko 2 minute mein call karta hoon, pehla step samjha doonga.", time: t(20, 29) },
+    ];
+  }
+  if (key === "ntc3") {
+    return [
+      { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
+      { id: "k1", from: "coach", kind: "text", text: "Welcome to GroScore, Kavya! 👋", time: t(20, 28) },
+      { id: "k2", from: "coach", kind: "text", text: "Aapki updated bureau details confirm ho gayi hain — ab hum credit journey shuru karte hain 💚", time: t(20, 28) },
+      { id: "k3", from: "coach", kind: "text", text: "Main aapko 2 minute mein call karta hoon, pehla step samjha doonga.", time: t(20, 29) },
     ];
   }
   return [

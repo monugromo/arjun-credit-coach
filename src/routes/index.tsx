@@ -74,7 +74,7 @@ const DOODLE_URL = `url("data:image/svg+xml;utf8,${DOODLE_SVG}")`;
 
 type Screen =
   | "landing" | "phone" | "otp" | "name" | "fetch" | "panInput"
-  | "bureau-validate" | "bureau-fetching"
+  | "bureau-validate" | "bureau-fetching" | "bureau-refetch"
   | "ntc2-fetch" | "ntc2-nohistory"
   | "panValidate" | "expired" | "payment" | "payment-success"
   | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
@@ -100,6 +100,7 @@ function Index() {
   const [typing, setTyping] = useState(false);
   const streamingRef = useRef(false);
   const [showCallPopup, setShowCallPopup] = useState(false);
+  const [bureauUpdated, setBureauUpdated] = useState(false);
 
   const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
   const typingDelay = (msg: Partial<ChatMsg>) => {
@@ -128,7 +129,7 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct) or 9876500005 (NTC · No history)"); return; }
+    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct), 9876500005 (NTC · No history) or 9876500006 (NTC · PAN re-fetch)"); return; }
     setUser(u);
     setName(u.name);
     go("otp");
@@ -160,7 +161,7 @@ function Index() {
     setScreen("landing"); setPhone(""); setOtp(""); setUser(null);
     setName(""); setChat([]); setTasks(distressedTasks);
     setReportUpdated(false); setTasksUpdated(false); setMenuOpen(false);
-    setChatPhase("intro"); setShowCallPopup(false);
+    setChatPhase("intro"); setShowCallPopup(false); setBureauUpdated(false);
   };
 
   const postCallChat = (accepted: boolean) => {
@@ -379,15 +380,18 @@ function Index() {
         )}
         {screen === "name" && (
           <NameScreen name={name} setName={setName} onBack={() => go("otp")}
-            onContinue={() => go(
-              user?.key === "ntc2" ? "ntc2-fetch"
-              : user?.key === "ntc" ? "bureau-validate"
-              : "fetch"
-            )} />
+            onContinue={() => {
+              if (user?.key === "ntc2") return go("ntc2-fetch");
+              if (user?.key === "ntc" || user?.key === "ntc3") {
+                setBureauUpdated(false);
+                return go("bureau-validate");
+              }
+              return go("fetch");
+            }} />
         )}
         {screen === "bureau-validate" && user && (
           <BureauValidateScreen
-            user={user} name={name}
+            user={user} name={name} updated={bureauUpdated}
             onYes={() => go("expired")}
             onNotMe={() => go("panInput")}
             onBack={() => go("name")}
@@ -398,6 +402,13 @@ function Index() {
             onFound={() => go("bureau-validate")}
             onNotFound={() => go("expired")}
           />
+        )}
+        {screen === "bureau-refetch" && user && (
+          <BureauRefetch onDone={() => {
+            setBureauUpdated(true);
+            if (user.updated) setName(user.updated.name);
+            go("bureau-validate");
+          }} />
         )}
         {screen === "ntc2-fetch" && user && (
           <Ntc2FetchScreen onDone={() => go("ntc2-nohistory")} />
@@ -431,7 +442,8 @@ function Index() {
         )}
         {screen === "panInput" && (
           <PanInputScreen onContinue={() => go(
-            user?.key === "ntc" ? "bureau-fetching"
+            user?.key === "ntc3" ? "bureau-refetch"
+            : user?.key === "ntc" ? "bureau-fetching"
             : user?.key === "ntc2" ? "payment"
             : "perm-all"
           )} />
@@ -628,7 +640,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         <div className="mt-6">
           <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
           <div className="flex flex-col gap-2">
-            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Priya · Direct to chat"], ["9876500005", "Aarav · NTC · No history"]].map(([p, label]) => (
+            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Priya · Direct to chat"], ["9876500005", "Aarav · NTC · No history"], ["9876500006", "Kavya · NTC · PAN re-fetch"]].map(([p, label]) => (
               <button key={p} onClick={() => setPhone(p)}
                 className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                 <span>
@@ -819,16 +831,17 @@ function PanInputScreen({ onContinue }: { onContinue: () => void }) {
 }
 
 /* ====================== BUREAU VALIDATE (card with 4 fields) ====================== */
-function BureauValidateScreen({ user, name, onYes, onNotMe, onBack }:
-  { user: DemoUser; name: string; onYes: () => void; onNotMe: () => void; onBack: () => void }) {
+function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
+  { user: DemoUser; name: string; updated?: boolean; onYes: () => void; onNotMe: () => void; onBack: () => void }) {
   const [loading, setLoading] = useState(true);
   useEffect(() => { const t = setTimeout(() => setLoading(false), 1400); return () => clearTimeout(t); }, []);
-  const displayName = (name || user.name).toUpperCase();
+  const src = updated && user.updated ? user.updated : { name: name || user.name, pan: user.pan, dob: user.dob || "—" };
+  const displayName = (src.name || user.name).toUpperCase();
   const rows: Array<{ label: string; value: string; icon: React.ComponentType<{ className?: string }> }> = [
     { label: "Name", value: displayName, icon: User },
     { label: "Mobile", value: `+91 ${user.phone.slice(0, 5)} ${user.phone.slice(5)}`, icon: Phone },
-    { label: "PAN", value: user.pan, icon: BadgeCheck },
-    { label: "Date of birth", value: user.dob || "—", icon: FileText },
+    { label: "PAN", value: src.pan, icon: BadgeCheck },
+    { label: "Date of birth", value: src.dob, icon: FileText },
   ];
   return (
     <div className="flex-1 flex flex-col bg-white">
@@ -836,12 +849,12 @@ function BureauValidateScreen({ user, name, onYes, onNotMe, onBack }:
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6">
           <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
-          <p className="text-gray-600 text-sm">Fetching your details from the bureau…</p>
+          <p className="text-gray-600 text-sm">{updated ? "Re-fetching with your new PAN…" : "Fetching your details from the bureau…"}</p>
         </div>
       ) : (
         <>
           <div className="p-5 flex-1 overflow-y-auto">
-            <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">Is this you?</p>
+            <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">{updated ? "Updated details — is this you?" : "Is this you?"}</p>
             <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="px-4 py-3 flex items-center gap-3" style={{ background: "#F1FBF4" }}>
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold" style={{ background: WA.green }}>
@@ -934,6 +947,42 @@ function BureauFetching({ onFound, onNotFound }: { onFound: () => void; onNotFou
     </div>
   );
 }
+
+/* ====================== BUREAU REFETCH (after "Not me" PAN entry — found updated details) ====================== */
+function BureauRefetch({ onDone }: { onDone: () => void }) {
+  const [phase, setPhase] = useState<"loading" | "found">("loading");
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase("found"), 1600);
+    const t2 = setTimeout(onDone, 2600);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [onDone]);
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Re-fetching from bureau" />
+      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
+        {phase === "loading" ? (
+          <>
+            <div className="w-14 h-14 border-4 rounded-full animate-spin mb-5" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+            <p className="text-gray-700 font-semibold">Looking up your credit record…</p>
+            <p className="text-gray-500 text-sm mt-1">Using your updated PAN.</p>
+          </>
+        ) : (
+          <>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ background: "#DCF7E3" }}>
+              <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">Updated details found</h2>
+            <p className="text-gray-600 text-sm mt-2 max-w-xs leading-relaxed">
+              We matched your new PAN with a bureau record. Please review the updated details on the next screen.
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
 
 /* ====================== NTC2: Bureau fetch (no history) ====================== */
 function Ntc2FetchScreen({ onDone }: { onDone: () => void }) {
