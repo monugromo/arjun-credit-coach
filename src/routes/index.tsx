@@ -581,19 +581,19 @@ function Landing({ onStart }: { onStart: () => void }) {
       />
 
       {/* Logo — vertical mark with wordmark, left aligned */}
-      <div className="relative z-10 pt-24 px-6">
+      <div className="relative z-10 pt-[132px] px-6">
         <img src={groLogo} alt="GroScore" className="w-56 h-auto" />
       </div>
 
       {/* Headline — dark green, left aligned, tight gap under logo */}
-      <div className="relative z-10 px-6 mt-10">
+      <div className="relative z-10 px-6 mt-5">
         <h1
           className="text-[38px] font-extrabold leading-[1.05] tracking-[-0.02em]"
           style={{ color: "#0B3B2E" }}
         >
           Your personal<br />credit coach
         </h1>
-        <p className="mt-5 text-[15px] text-gray-600 leading-[1.55] max-w-[340px]">
+        <p className="mt-4 text-[15px] text-gray-600 leading-[1.55] max-w-[340px]">
           Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
         </p>
       </div>
