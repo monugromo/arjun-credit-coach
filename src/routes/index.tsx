@@ -958,13 +958,14 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
 /* ====================== BUREAU FETCHING (after "Not me" PAN entry) ====================== */
 
 /* ====================== BUREAU REFETCH (after "Not me" PAN entry — found updated details) ====================== */
-function BureauRefetch({ onDone }: { onDone: () => void }) {
-  const [phase, setPhase] = useState<"loading" | "found">("loading");
+function BureauRefetch({ onDone, variant = "found" }: { onDone: () => void; variant?: "found" | "masked" }) {
+  const [phase, setPhase] = useState<"loading" | "done">("loading");
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("found"), 1600);
+    const t1 = setTimeout(() => setPhase("done"), 1600);
     const t2 = setTimeout(onDone, 2600);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [onDone]);
+  const isMasked = variant === "masked";
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Re-fetching from bureau" />
@@ -974,6 +975,16 @@ function BureauRefetch({ onDone }: { onDone: () => void }) {
             <div className="w-14 h-14 border-4 rounded-full animate-spin mb-5" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
             <p className="text-gray-700 font-semibold">Looking up your credit record…</p>
             <p className="text-gray-500 text-sm mt-1">Using your updated PAN.</p>
+          </>
+        ) : isMasked ? (
+          <>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ background: "#FEF3C7" }}>
+              <ShieldAlert className="w-8 h-8 text-amber-600" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">Extra verification needed</h2>
+            <p className="text-gray-600 text-sm mt-2 max-w-xs leading-relaxed">
+              Bureau found a partial match but needs to verify your mobile before sharing details.
+            </p>
           </>
         ) : (
           <>
@@ -986,6 +997,84 @@ function BureauRefetch({ onDone }: { onDone: () => void }) {
             </p>
           </>
         )}
+      </div>
+    </div>
+  );
+}
+
+/* ====================== BUREAU MASKED MOBILE (ntc4) ====================== */
+function BureauMaskedScreen({ user, onBack, onContinue }:
+  { user: DemoUser; onBack: () => void; onContinue: () => void }) {
+  const last4 = user.phone.slice(-4);
+  const masked = `+91 XXXXX X${last4.slice(1)}`;
+  const [entry, setEntry] = useState("");
+  const valid = entry.length === 10 && entry.endsWith(last4);
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Verify mobile with bureau" onBack={onBack} />
+      <div className="p-6 flex-1 overflow-y-auto">
+        <div className="rounded-2xl border p-4 mb-5" style={{ background: "#FEF9E7", borderColor: "#FCD34D" }}>
+          <div className="flex items-start gap-3">
+            <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div>
+              <div className="text-[11px] uppercase font-bold tracking-wider text-amber-700">Bureau result</div>
+              <div className="text-sm text-gray-800 mt-1 leading-relaxed">
+                We couldn't fetch your details directly. Bureau shared a masked mobile number linked to your PAN — please confirm.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 flex items-center gap-3 mb-6">
+          <Phone className="w-5 h-5 text-gray-500" />
+          <div>
+            <div className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">Mobile on bureau record</div>
+            <div className="font-bold text-gray-900 tracking-widest">{masked}</div>
+          </div>
+        </div>
+        <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">Enter full mobile number</label>
+        <input value={entry}
+          onChange={(e) => setEntry(e.target.value.replace(/\D/g, "").slice(0, 10))}
+          inputMode="numeric" placeholder="10-digit mobile"
+          className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none"
+          style={{ borderColor: WA.accent }} />
+        <p className="text-[11px] text-gray-500 mt-3 leading-relaxed">
+          We'll send an OTP to this number to verify it belongs to you before pulling your bureau data.
+        </p>
+      </div>
+      <div className="p-6 pt-2">
+        <button onClick={onContinue} disabled={!valid}
+          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          style={{ background: WA.accent }}>
+          Send OTP
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function BureauMaskedOtpScreen({ user, onBack, onDone }:
+  { user: DemoUser; onBack: () => void; onDone: () => void }) {
+  const [code, setCode] = useState("");
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Verify OTP" onBack={onBack} />
+      <div className="p-6 flex-1 overflow-y-auto">
+        <p className="text-sm text-gray-600 leading-relaxed">
+          Enter the 6-digit OTP sent to <b>+91 {user.phone.slice(0, 5)} {user.phone.slice(5)}</b> to verify your mobile with the bureau.
+        </p>
+        <input value={code}
+          onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+          inputMode="numeric" placeholder="••••••"
+          className="w-full border-b-2 pb-2 mt-6 text-2xl tracking-[0.5em] text-center outline-none"
+          style={{ borderColor: WA.accent }} />
+        <p className="text-[11px] text-gray-500 mt-3 text-center">Any 6-digit code works for the demo.</p>
+      </div>
+      <div className="p-6 pt-2">
+        <button onClick={onDone} disabled={code.length !== 6}
+          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          style={{ background: WA.accent }}>
+          Verify & fetch bureau
+        </button>
       </div>
     </div>
   );
