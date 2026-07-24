@@ -58,6 +58,11 @@ export const DEMOS: Record<string, DemoUser> = {
     pan: "ABCPA7788F",
     dob: "05/11/2000",
     hasScore: false,
+    updated: {
+      name: "Aarav Mehta",
+      pan: "AMHPA7788F",
+      dob: "05/11/2000",
+    },
   },
   "9876500006": {
     key: "ntc3",
