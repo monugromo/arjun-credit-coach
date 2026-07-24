@@ -581,12 +581,12 @@ function Landing({ onStart }: { onStart: () => void }) {
       />
 
       {/* Logo — vertical mark with wordmark, left aligned */}
-      <div className="relative z-10 pt-8 px-6">
+      <div className="relative z-10 pt-24 px-6">
         <img src={groLogo} alt="GroScore" className="w-56 h-auto" />
       </div>
 
       {/* Headline — dark green, left aligned, tight gap under logo */}
-      <div className="relative z-10 px-6 mt-4">
+      <div className="relative z-10 px-6 mt-10">
         <h1
           className="text-[38px] font-extrabold leading-[1.05] tracking-[-0.02em]"
           style={{ color: "#0B3B2E" }}
@@ -598,11 +598,11 @@ function Landing({ onStart }: { onStart: () => void }) {
         </p>
       </div>
 
-      <div className="flex-1 min-h-6" />
+      <div className="flex-1" />
 
       {/* Privacy row + CTA */}
-      <div className="relative z-10 px-6 pb-8">
-        <div className="flex items-center gap-3 mb-4">
+      <div className="relative z-10 px-6 pt-6 pb-8">
+        <div className="flex items-center gap-3 mb-5">
           <div
             className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
             style={{ background: "#E7F8EE", color: "#0B3B2E" }}
