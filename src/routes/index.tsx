@@ -1326,7 +1326,7 @@ function ExpiredScreen({ user, name, onRestart, onLogout }:
         <div className="relative mb-3">
           <div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(16,185,129,0.25), transparent 70%)", transform: "scale(1.35)" }} />
           <div className="relative w-24 h-24 rounded-full p-[3px]" style={{ background: "linear-gradient(135deg, #10B981, #059669)" }}>
-            <img src={arjunImg} alt="Arjun, your credit coach" className="w-full h-full rounded-full object-cover border-2 border-white" />
+            <img src={kabirImg} alt="Arjun, your credit coach" className="w-full h-full rounded-full object-cover border-2 border-white" />
           </div>
           <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-white shadow-md flex items-center justify-center">
             <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: WA.accent }}>
