@@ -106,6 +106,7 @@ type Screen =
   | "profile" | "subscription" | "help";
 
 type ChatPhase = "intro" | "awaiting-consent" | "in-call" | "post-call";
+type JourneyVariant = "matched" | "linked" | "no-history" | "distressed";
 
 function Index() {
   const [screen, setScreen] = useState<Screen>("landing");
@@ -123,6 +124,8 @@ function Index() {
   const streamingRef = useRef(false);
   const [showCallPopup, setShowCallPopup] = useState(false);
   const [bureauUpdated, setBureauUpdated] = useState(false);
+  const [mobileLinked, setMobileLinked] = useState(false);
+  const [journeyVariant, setJourneyVariant] = useState<JourneyVariant>("matched");
 
   const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
   const typingDelay = (msg: Partial<ChatMsg>) => {
@@ -148,7 +151,7 @@ function Index() {
   };
 
   const go = (s: Screen) => { setMenuOpen(false); setScreen(s); };
-  const goToPaywall = () => go("loading-journey");
+  const goToPaywall = (v: JourneyVariant = "matched") => { setJourneyVariant(v); go("loading-journey"); };
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
@@ -184,7 +187,7 @@ function Index() {
     setScreen("landing"); setPhone(""); setOtp(""); setUser(null);
     setName(""); setChat([]); setTasks(distressedTasks);
     setReportUpdated(false); setTasksUpdated(false); setMenuOpen(false);
-    setChatPhase("intro"); setShowCallPopup(false); setBureauUpdated(false);
+    setChatPhase("intro"); setShowCallPopup(false); setBureauUpdated(false); setMobileLinked(false);
   };
 
   const postCallChat = (accepted: boolean) => {
@@ -396,7 +399,7 @@ function Index() {
         {screen === "otp" && user && (
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
             onBack={() => go("phone")} onDone={() => {
-              if (user.expired) return goToPaywall();
+              if (user.expired) return goToPaywall("distressed");
               return go("name");
             }} />
         )}
@@ -414,8 +417,8 @@ function Index() {
         {screen === "bureau-validate" && user && (
           <BureauValidateScreen
             user={user} name={name} updated={bureauUpdated}
-            onYes={() => goToPaywall()}
-            onNotMe={() => (((user.key === "ntc" || user.key === "ntc2") && bureauUpdated) ? goToPaywall() : go("panInput"))}
+            onYes={() => goToPaywall(mobileLinked ? "linked" : "matched")}
+            onNotMe={() => (((user.key === "ntc" || user.key === "ntc2") && bureauUpdated) ? goToPaywall(mobileLinked ? "linked" : "matched") : go("panInput"))}
             onBack={() => go("name")}
           />
         )}
@@ -436,7 +439,7 @@ function Index() {
           <Ntc2NoHistoryScreen
             user={user} name={name}
             onHasCredit={() => go("ntc2-edit")}
-            onNoCredit={() => goToPaywall()}
+            onNoCredit={() => goToPaywall("no-history")}
             onBack={() => go("name")}
           />
         )}
@@ -448,7 +451,7 @@ function Index() {
           />
         )}
         {screen === "loading-journey" && user && (
-          <NTCChecklistScreen user={user} onDone={() => go("expired")} />
+          <NTCChecklistScreen user={user} variant={journeyVariant} onDone={() => go("expired")} />
         )}
         {screen === "expired" && user && (
           <ExpiredScreen user={user} name={name} onLogout={logout}
@@ -481,8 +484,8 @@ function Index() {
         {screen === "pan-mobile-link" && user && (
           <PanMobileLinkScreen
             onBack={() => go(user.phone === "9876500006" ? "ntc2-edit" : "panInput")}
-            onVerified={() => go("bureau-refetch")}
-            onSkip={() => goToPaywall()}
+            onVerified={() => { setMobileLinked(true); go("bureau-refetch"); }}
+            onSkip={() => goToPaywall("no-history")}
           />
         )}
         {screen === "perm-all" && (
@@ -1730,23 +1733,53 @@ function _EmailPermImpl(onDone: () => void) {
 
 /* ====================== SCORE JOURNEY ====================== */
 /* ====================== NTC CHECKLIST ====================== */
-function NTCChecklistScreen({ user, onDone }: { user: DemoUser; onDone: () => void }) {
-  const isNTC = user.key === "ntc";
-  const steps = isNTC
-    ? [
+function NTCChecklistScreen({ user, variant = "matched", onDone }: { user: DemoUser; variant?: JourneyVariant; onDone: () => void }) {
+  const config: Record<JourneyVariant, { title: string; subtitle: string; steps: { icon: any; label: string }[] }> = {
+    matched: {
+      title: "We found your profile",
+      subtitle: "Arjun matched you with the bureau. Setting up your starter plan now.",
+      steps: [
+        { icon: Search, label: "Fetching bureau record" },
+        { icon: BadgeCheck, label: "Matching your profile" },
+        { icon: Wallet, label: "Preparing starter plan" },
+        { icon: CheckCircle2, label: "Arjun is ready to help" },
+      ],
+    },
+    linked: {
+      title: "We've verified your number",
+      subtitle: "Linked number confirmed. Pulling your bureau record and setting things up.",
+      steps: [
+        { icon: Phone, label: "Verifying linked number" },
+        { icon: Search, label: "Fetching bureau record" },
+        { icon: Wallet, label: "Preparing starter plan" },
+        { icon: CheckCircle2, label: "Arjun is ready to help" },
+      ],
+    },
+    "no-history": {
+      title: "No score? No problem.",
+      subtitle: "You're new to credit — a clean slate. We'll help you build it, step by step.",
+      steps: [
         { icon: Search, label: "Checking credit bureau" },
         { icon: UserPlus, label: "No score yet — that's okay" },
         { icon: Wallet, label: "Preparing your build-up plan" },
-        { icon: BadgeCheck, label: "Arjun is ready to help" },
-      ]
-    : [
+        { icon: CheckCircle2, label: "Arjun is ready to help" },
+      ],
+    },
+    distressed: {
+      title: "We've analyzed your report",
+      subtitle: "Arjun has your full picture now. Let's turn things around, one step at a time.",
+      steps: [
         { icon: Search, label: "Fetching credit report" },
         { icon: AlertTriangle, label: "Analyzing your 6 issues" },
         { icon: Wallet, label: "Preparing dispute plan" },
-        { icon: BadgeCheck, label: "Arjun is ready to help" },
-      ];
+        { icon: CheckCircle2, label: "Arjun is ready to help" },
+      ],
+    },
+  };
+  const { title, subtitle, steps } = config[variant];
+  void user;
 
-  const [done, setDone] = useState(0); // number of completed steps
+  const [done, setDone] = useState(0);
   const total = steps.length;
 
   useEffect(() => {
@@ -1761,10 +1794,6 @@ function NTCChecklistScreen({ user, onDone }: { user: DemoUser; onDone: () => vo
   const progress = done / total;
   const dash = 2 * Math.PI * 70;
 
-  const title = isNTC ? "No score? No problem." : "We've analyzed your report";
-  const subtitle = isNTC
-    ? "You're new to credit — that's a clean slate. We'll help you build it together, step by step."
-    : "Arjun has your full picture now. Let's turn things around, one step at a time.";
 
   return (
     <div className="flex-1 flex flex-col bg-white px-6 pt-6 pb-8 overflow-y-auto">
