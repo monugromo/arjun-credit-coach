@@ -724,7 +724,7 @@ function OtpScreen({ phone, otp, setOtp, onBack, onDone }: { phone: string; otp:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Verifying your number" onBack={onBack} />
-      <div className="p-6 flex-1">
+      <div className={UI.body}>
         <p className="text-sm text-gray-600 mb-6">
           We sent a 6-digit code to <b>+91 {phone.slice(0, 5)} {phone.slice(5)}</b>
         </p>
