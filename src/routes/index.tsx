@@ -580,15 +580,13 @@ function Landing({ onStart }: { onStart: () => void }) {
         }}
       />
 
-      {/* Logo — vertical mark with wordmark */}
-      <div className="relative z-10 pt-16 px-6">
-        <img src={groLogo} alt="GroScore" className="w-52 h-auto" />
+      {/* Logo — vertical mark with wordmark, left aligned */}
+      <div className="relative z-10 pt-24 px-6">
+        <img src={groLogo} alt="GroScore" className="w-56 h-auto" />
       </div>
 
-      <div className="flex-1" />
-
-      {/* Headline — dark green, left aligned */}
-      <div className="relative z-10 px-6">
+      {/* Headline — dark green, left aligned, tight gap under logo */}
+      <div className="relative z-10 px-6 mt-10">
         <h1
           className="text-[38px] font-extrabold leading-[1.05] tracking-[-0.02em]"
           style={{ color: "#0B3B2E" }}
@@ -599,6 +597,8 @@ function Landing({ onStart }: { onStart: () => void }) {
           Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
         </p>
       </div>
+
+      <div className="flex-1" />
 
       {/* Privacy row + CTA */}
       <div className="relative z-10 px-6 pt-6 pb-8">
