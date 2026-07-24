@@ -133,7 +133,7 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500001 (Rahul · NTC), 9876500002 (Neha · NTC), 9876500003 (Aarav · NTC · No history), 9876500004 (Sonu · Distressed) or 9876500005 (Darpan · Trial ended)"); return; }
+    if (!u) { alert("Use demo phone 9876500001 (Rahul · NTC), 9876500002 (Neha · NTC), 9876500003 (Aarav · NTC · No history), 9876500004 (Sonu · Distressed), 9876500005 (Darpan · Trial ended) or 9876500006 (Vikram · NTC · No history)"); return; }
     setUser(u);
     setName(u.name);
     go("otp");
@@ -425,7 +425,7 @@ function Index() {
           <EditDetailsScreen
             user={user} name={name} setName={setName}
             onBack={() => go("ntc2-nohistory")}
-            onContinue={() => go("bureau-refetch")}
+            onContinue={() => go(user.phone === "9876500006" ? "pan-mobile-link" : "bureau-refetch")}
           />
         )}
         {screen === "expired" && user && (
@@ -458,8 +458,9 @@ function Index() {
         )}
         {screen === "pan-mobile-link" && user && (
           <PanMobileLinkScreen
-            onBack={() => go("panInput")}
-            onDone={() => go("bureau-refetch")}
+            onBack={() => go(user.phone === "9876500006" ? "ntc2-edit" : "panInput")}
+            onVerified={() => go("bureau-refetch")}
+            onSkip={() => go("expired")}
           />
         )}
         {screen === "perm-all" && (
@@ -667,7 +668,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         <div className="mt-6">
           <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
           <div className="flex flex-col gap-2">
-            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Neha · New to credit"], ["9876500003", "Aarav · NTC · No history"], ["9876500004", "Sonu · Score 413"], ["9876500005", "Darpan · Trial ended"]].map(([p, label]) => (
+            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Neha · New to credit"], ["9876500003", "Aarav · NTC · No history"], ["9876500004", "Sonu · Score 413"], ["9876500005", "Darpan · Trial ended"], ["9876500006", "Vikram · NTC · No history"]].map(([p, label]) => (
               <button key={p} onClick={() => setPhone(p)}
                 className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                 <span>
@@ -879,7 +880,8 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
 }
 
 /* ====================== PAN → MOBILE LINK (verify OTP on linked number) ====================== */
-function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: () => void }) {
+function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
+  { onBack: () => void; onVerified: () => void; onSkip: () => void }) {
   const [phone, setPhone] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
@@ -902,16 +904,16 @@ function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Verify linked number" onBack={onBack} />
       <div className="p-6 flex-1 overflow-y-auto">
-        <div className="rounded-2xl border border-gray-200 p-5 mb-5" style={{ background: "#F1FBF4" }}>
-          <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3" style={{ background: "#DCF7E3" }}>
-            <Phone className="w-6 h-6 text-emerald-700" />
+        <div className="rounded-2xl border border-amber-200 p-5 mb-5" style={{ background: "#FFF8EC" }}>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3" style={{ background: "#FDE9C2" }}>
+            <AlertTriangle className="w-6 h-6 text-amber-700" />
           </div>
-          <div className="text-[11px] uppercase font-bold tracking-wider text-emerald-700 mb-1">PAN linked number</div>
+          <div className="text-[11px] uppercase font-bold tracking-wider text-amber-700 mb-1">Bureau result</div>
           <h2 className="text-lg font-bold text-gray-900 leading-snug">
-            Enter the mobile number linked to your PAN
+            We couldn't find your record
           </h2>
-          <p className="text-sm text-gray-600 mt-2 leading-relaxed">
-            We'll send an OTP to verify so we can pull your bureau record accurately.
+          <p className="text-sm text-gray-700 mt-2 leading-relaxed">
+            Your PAN is linked to <span className="font-bold text-gray-900">+91 98XXXX9289</span>. Verify that number with an OTP so we can pull your bureau record.
           </p>
         </div>
 
@@ -925,7 +927,7 @@ function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: (
             maxLength={10}
             value={phone}
             onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); setOtpSent(false); }}
-            placeholder="10-digit mobile"
+            placeholder="Enter linked mobile number"
             className="flex-1 outline-none text-base text-gray-900 bg-transparent"
           />
         </div>
@@ -970,13 +972,13 @@ function PanMobileLinkScreen({ onBack, onDone }: { onBack: () => void; onDone: (
       </div>
       <div className="p-6 pt-2 space-y-2.5">
         <button
-          onClick={onDone}
-          disabled={otpSent && !otpValid}
+          onClick={onVerified}
+          disabled={!otpValid}
           className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
           style={{ background: WA.accent }}>
-          Continue
+          Verify & continue
         </button>
-        <button onClick={onDone}
+        <button onClick={onSkip}
           className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
           I'll do it later
         </button>
