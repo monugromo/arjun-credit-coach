@@ -579,38 +579,49 @@ function Landing({ onStart }: { onStart: () => void }) {
         }}
       />
 
-      {/* Content */}
-      <div className="flex-1 flex flex-col items-center px-8 relative z-10 pt-16">
-        {/* Logo */}
-        <img src={groLogo} alt="GroScore" className="w-44 h-auto" />
+      {/* Top: logo */}
+      <div className="relative z-10 pt-10 px-6">
+        <img src={groLogo} alt="GroScore" className="w-36 h-auto" />
+      </div>
 
-        {/* Feature pill */}
-        <div className="mt-8">
-          <span
-            className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] font-semibold tracking-wide uppercase"
-            style={{
-              background: "#E7F8EE",
-              color: WA.green,
-              border: `1px solid ${WA.accent}40`,
-            }}
-          >
-            <Sparkles className="w-3.5 h-3.5" /> AI Coach
-          </span>
-        </div>
+      {/* Spacer pushes headline lower like reference */}
+      <div className="flex-1" />
 
-        {/* Headline */}
-        <h1 className="mt-6 text-[34px] font-extrabold leading-[1.1] tracking-[-0.02em] text-center" style={{ color: WA.green }}>
+      {/* Headline block — left aligned */}
+      <div className="relative z-10 px-6">
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide uppercase mb-4"
+          style={{
+            background: "#E7F8EE",
+            color: WA.green,
+            border: `1px solid ${WA.accent}40`,
+          }}
+        >
+          <Sparkles className="w-3 h-3" /> AI Coach
+        </span>
+        <h1 className="text-[40px] font-extrabold leading-[1.05] tracking-[-0.02em]" style={{ color: WA.green }}>
           Your personal<br />credit coach
         </h1>
-
-        {/* Subhead */}
-        <p className="mt-4 text-[15px] text-gray-600 leading-[1.6] max-w-[300px] text-center">
+        <p className="mt-4 text-[15px] text-gray-600 leading-[1.55] max-w-[320px]">
           Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
         </p>
       </div>
 
-      {/* Bottom CTA — consistent with onboarding screens */}
-      <div className="relative px-6 pb-10 pt-6 z-10">
+      {/* Privacy row + CTA */}
+      <div className="relative z-10 px-6 pt-6 pb-8">
+        <div className="flex items-center gap-3 mb-5">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: "#E7F8EE", color: WA.green }}
+          >
+            <Lock className="w-4 h-4" />
+          </div>
+          <div>
+            <div className="text-[13px] font-semibold text-gray-900">Private &amp; secure</div>
+            <div className="text-[12px] text-gray-500">Your data stays confidential</div>
+          </div>
+        </div>
+
         <button
           onClick={onStart}
           className="w-full text-white font-bold py-3.5 rounded-full active:scale-[0.98] transition"
@@ -618,7 +629,7 @@ function Landing({ onStart }: { onStart: () => void }) {
         >
           Get Started
         </button>
-        <p className="text-center text-[11px] text-gray-400 mt-4 tracking-wide">
+        <p className="text-center text-[11px] text-gray-400 mt-3 tracking-wide">
           Trusted by 50,000+ users across India
         </p>
       </div>
