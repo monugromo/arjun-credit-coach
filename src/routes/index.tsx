@@ -1369,11 +1369,11 @@ function ExpiredScreen({ user, name, onRestart, onLogout }:
 
 function Row({ icon: Icon, text }: { icon: React.ComponentType<{ className?: string }>; text: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-4">
-      <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center shrink-0">
-        <Icon className="w-5 h-5 text-emerald-700" />
+    <div className="flex items-center gap-3 px-4 py-3.5">
+      <div className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center shrink-0">
+        <Icon className="w-4.5 h-4.5 text-emerald-700" />
       </div>
-      <div className="text-[14px] text-gray-800 leading-snug">{text}</div>
+      <div className="text-[13.5px] text-gray-800 leading-snug text-left flex-1">{text}</div>
     </div>
   );
 }
