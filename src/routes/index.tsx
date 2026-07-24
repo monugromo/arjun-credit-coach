@@ -129,7 +129,7 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct), 9876500005 (NTC · No history) or 9876500006 (NTC · PAN re-fetch)"); return; }
+    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct), 9876500005 (NTC · No history), 9876500006 (NTC · PAN re-fetch) or 9876500007 (Ishaan · NTC)"); return; }
     setUser(u);
     setName(u.name);
     go("otp");
@@ -150,7 +150,7 @@ function Index() {
     streamingRef.current = true;
     (async () => {
       await sleep(400);
-      await streamCoach(initialChat(user.key));
+      await streamCoach(initialChat(user.key, user.name));
       setChatPhase("awaiting-consent");
       if (user.key !== "direct") setShowCallPopup(true);
       streamingRef.current = false;
@@ -646,7 +646,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         <div className="mt-6">
           <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
           <div className="flex flex-col gap-2">
-            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Priya · Direct to chat"], ["9876500005", "Aarav · NTC · No history"], ["9876500006", "Kavya · NTC · PAN re-fetch"]].map(([p, label]) => (
+            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Sonu · Score 413"], ["9876500003", "Darpan · Trial ended"], ["9876500004", "Priya · Direct to chat"], ["9876500005", "Aarav · NTC · No history"], ["9876500006", "Kavya · NTC · PAN re-fetch"], ["9876500007", "Ishaan · New to credit"]].map(([p, label]) => (
               <button key={p} onClick={() => setPhone(p)}
                 className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                 <span>

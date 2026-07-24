@@ -77,6 +77,14 @@ export const DEMOS: Record<string, DemoUser> = {
       dob: "18/07/1996",
     },
   },
+  "9876500007": {
+    key: "ntc",
+    phone: "9876500007",
+    name: "Ishaan",
+    pan: "ABCPI9911F",
+    dob: "22/02/1999",
+    hasScore: false,
+  },
 };
 
 export const maskPan = (pan: string) => pan.slice(0, 3) + "xxxx" + pan.slice(-1);
@@ -93,7 +101,7 @@ export interface ChatMsg {
 const t = (h: number, m: number) =>
   `${h > 12 ? h - 12 : h}:${m.toString().padStart(2, "0")} ${h >= 12 ? "pm" : "am"}`;
 
-export const initialChat = (key: DemoKey): ChatMsg[] => {
+export const initialChat = (key: DemoKey, name?: string): ChatMsg[] => {
   if (key === "direct") {
     return [
       { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
@@ -168,7 +176,7 @@ export const initialChat = (key: DemoKey): ChatMsg[] => {
       id: "n1",
       from: "coach",
       kind: "text",
-      text: "Aapka onboarding complete ho gaya hai, Rahul!",
+      text: `Aapka onboarding complete ho gaya hai, ${name ?? "Rahul"}!`,
       time: t(20, 28),
     },
     {
