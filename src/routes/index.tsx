@@ -898,6 +898,13 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
     return () => { clearTimeout(t1); clearInterval(iv); };
   }, [otpSent]);
 
+  useEffect(() => {
+    if (otpSent && otpValid) {
+      const t = setTimeout(() => onVerified(), 500);
+      return () => clearTimeout(t);
+    }
+  }, [otpSent, otpValid, onVerified]);
+
   const digits = otp.padEnd(6, " ").slice(0, 6).split("");
 
   return (
@@ -964,16 +971,15 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
         </ul>
       </div>
       <div className="p-6 pt-2 space-y-2.5">
-        <button
-          onClick={() => {
-            if (!otpSent) { if (phoneValid) setOtpSent(true); return; }
-            if (otpValid) onVerified();
-          }}
-          disabled={otpSent ? !otpValid : !phoneValid}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
-          style={{ background: WA.accent }}>
-          {otpSent ? "Verify OTP" : "Send OTP"}
-        </button>
+        {!otpSent && (
+          <button
+            onClick={() => { if (phoneValid) setOtpSent(true); }}
+            disabled={!phoneValid}
+            className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+            style={{ background: WA.accent }}>
+            Send OTP
+          </button>
+        )}
         <button onClick={onSkip}
           className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
           I'll do it later
