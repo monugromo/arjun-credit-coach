@@ -12,7 +12,6 @@ import {
 import kabirImg from "@/assets/kabir.jpg";
 import arjunImg from "@/assets/arjun.jpg";
 import groLogo from "@/assets/GroScore.svg";
-import splashVideo from "@/assets/splash-logo.mp4.asset.json";
 import panCardRef from "@/assets/pan-card-ref.png";
 import reportPreview from "@/assets/report-preview.jpg";
 import actionPlanPreview from "@/assets/action-plan-preview.jpg";
@@ -75,7 +74,6 @@ const DOODLE_SVG = `
 const DOODLE_URL = `url("data:image/svg+xml;utf8,${DOODLE_SVG}")`;
 
 type Screen =
-  | "splash"
   | "landing" | "phone" | "otp" | "name" | "fetch" | "panInput"
   | "pan-mobile-link"
   | "bureau-validate" | "bureau-fetching" | "bureau-refetch"
@@ -90,7 +88,7 @@ type Screen =
 type ChatPhase = "intro" | "awaiting-consent" | "in-call" | "post-call";
 
 function Index() {
-  const [screen, setScreen] = useState<Screen>("splash");
+  const [screen, setScreen] = useState<Screen>("landing");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [user, setUser] = useState<DemoUser | null>(null);
@@ -370,7 +368,6 @@ function Index() {
           setUser(u); setName(u.name); setPhone(u.phone);
           startChatFlow(u);
         }} />
-        {screen === "splash" && <SplashScreen onDone={() => go("landing")} />}
         {screen === "landing" && <Landing onStart={() => go("phone")} />}
         {screen === "phone" && (
           <PhoneScreen phone={phone} setPhone={setPhone} onBack={() => go("landing")} onSubmit={onPhoneSubmit} />
@@ -570,86 +567,48 @@ const nowTime = () => {
 };
 
 /* ====================== LANDING ====================== */
-function SplashScreen({ onDone }: { onDone: () => void }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    const t = setTimeout(onDone, 4200); // safety fallback
-    return () => clearTimeout(t);
-  }, [onDone]);
-  return (
-    <div className="flex-1 flex items-center justify-center bg-white relative overflow-hidden">
-      <video
-        ref={videoRef}
-        src={splashVideo.url}
-        autoPlay
-        muted
-        playsInline
-        onEnded={onDone}
-        className="w-full h-full object-cover"
-      />
-    </div>
-  );
-}
-
 function Landing({ onStart }: { onStart: () => void }) {
   return (
-    <div className="flex-1 flex flex-col relative overflow-hidden" style={{ background: "linear-gradient(180deg, #F0FBF6 0%, #FFFFFF 55%, #F6F5FF 100%)" }}>
-      {/* Ambient decorative blobs */}
-      <div className="absolute -top-20 -right-16 w-72 h-72 rounded-full bg-[#01be87]/[0.12] blur-3xl" />
-      <div className="absolute top-1/2 -left-24 w-72 h-72 rounded-full bg-[#18186b]/[0.08] blur-3xl" />
-      <div className="absolute -bottom-24 right-1/4 w-80 h-80 rounded-full bg-[#01be87]/[0.08] blur-3xl" />
+    <div className="flex-1 flex flex-col relative overflow-hidden bg-[#f6faf8]">
+      {/* Decorative ambient blobs */}
+      <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[#01be87]/[0.07] blur-3xl" />
+      <div className="absolute top-1/3 -left-20 w-56 h-56 rounded-full bg-[#18186b]/[0.06] blur-3xl" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-40 rounded-full bg-[#01be87]/[0.04] blur-3xl" />
 
-      {/* Header brand */}
-      <div className="relative z-10 flex items-center justify-between px-6 pt-8">
-        <img src={groLogo} alt="GroScore" className="h-7 w-auto" />
-        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#01be87] bg-white/80 backdrop-blur border border-[#01be87]/20 rounded-full px-2.5 py-1 shadow-sm">
-          <Sparkles className="w-3 h-3" /> BETA
-        </span>
-      </div>
-
-      {/* Hero coach card */}
-      <div className="relative z-10 flex-1 flex flex-col items-center px-6 pt-10">
-        <div className="relative">
-          <div className="absolute inset-0 rounded-full blur-2xl" style={{ background: "radial-gradient(circle, rgba(1,190,135,0.45), transparent 65%)", transform: "scale(1.4)" }} />
-          <div className="relative w-32 h-32 rounded-full p-[3px]" style={{ background: "linear-gradient(135deg, #01be87, #18186b)" }}>
-            <img src={arjunImg} alt="Arjun, your credit coach" className="w-full h-full rounded-full object-cover border-4 border-white" />
-          </div>
-          <div className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center">
-            <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: WA.accent }}>
-              <BadgeCheck className="w-4 h-4 text-white" strokeWidth={2.5} />
-            </div>
-          </div>
+      {/* Content */}
+      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center relative z-10">
+        {/* Logo mark */}
+        <div className="mb-12">
+          <img src={groLogo} alt="GroScore" className="w-56 h-auto" />
         </div>
 
-        <p className="mt-5 text-[11px] font-bold tracking-[0.18em] text-[#01be87] uppercase">Meet Arjun · Your Credit Coach</p>
-
-        <h1 className="mt-3 text-center text-[34px] font-extrabold text-[#0a0a2e] leading-[1.05] tracking-[-0.02em]">
-          Better credit,<br />on WhatsApp.
+        {/* Headline */}
+        <h1 className="text-[32px] font-extrabold text-[#0a0a2e] leading-[1.1] tracking-[-0.02em]">
+          Your personal<br />credit coach
         </h1>
 
-        <p className="mt-4 text-center text-[15px] text-gray-500 leading-[1.6] max-w-[300px]">
-          A real coach + AI, working with you 24×7 to lift your score and unlock better loans.
+        {/* Subhead */}
+        <p className="mt-5 text-[15px] text-gray-500 leading-[1.65] max-w-[300px]">
+          Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
         </p>
 
-        {/* Trust chips */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-          <span className="inline-flex items-center gap-1.5 bg-white/90 backdrop-blur border border-gray-100 rounded-full px-3 py-1.5 text-[12px] font-semibold text-gray-700 shadow-sm">
-            <Lock className="w-3.5 h-3.5 text-[#01be87]" /> RBI-grade privacy
-          </span>
-          <span className="inline-flex items-center gap-1.5 bg-white/90 backdrop-blur border border-gray-100 rounded-full px-3 py-1.5 text-[12px] font-semibold text-gray-700 shadow-sm">
-            <TrendingUp className="w-3.5 h-3.5 text-[#01be87]" /> +80 pts avg lift
+        {/* Feature pills */}
+        <div className="mt-8 flex items-center gap-3">
+          <span className="inline-flex items-center gap-1.5 bg-white border border-[#01be87]/15 rounded-full px-3 py-1.5 text-[13px] font-medium text-[#01be87] shadow-sm">
+            <Sparkles className="w-3.5 h-3.5" /> AI Coach
           </span>
         </div>
       </div>
 
       {/* Bottom CTA */}
-      <div className="relative z-10 px-6 pb-10 pt-6">
+      <div className="relative px-8 pb-12 pt-4 z-10">
+        <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#01be87]/20 to-transparent" />
         <button
           onClick={onStart}
-          className="w-full text-white font-bold py-4 rounded-full text-base shadow-lg active:scale-[0.98] transition flex items-center justify-center gap-2"
-          style={{ background: WA.accent, boxShadow: "0 12px 30px -8px rgba(1,190,135,0.55)" }}
+          className="w-full text-white font-bold py-4 rounded-full text-base shadow-md active:scale-[0.98] transition"
+          style={{ background: WA.accent }}
         >
-          Get Started <ArrowRight className="w-4 h-4" />
+          Get Started
         </button>
         <p className="text-center text-[11px] text-gray-400 mt-4 tracking-wide">
           Trusted by 50,000+ users across India
