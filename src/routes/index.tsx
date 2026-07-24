@@ -696,19 +696,40 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         </div>
         <div className="mt-6">
           <div className={`${UI.eyebrow} mb-2`}>Demo accounts</div>
-          <div className="flex flex-col gap-2">
-            {[["9876500001", "Rahul · New to credit"], ["9876500002", "Neha · New to credit"], ["9876500003", "Aarav · NTC · No history"], ["9876500004", "Sonu · Score 413"], ["9876500005", "Darpan · Trial ended"], ["9876500006", "Vikram · NTC · No history"]].map(([p, label]) => (
-              <button key={p} onClick={() => setPhone(p)}
-                className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
-                <span>
-                  <div className="font-medium text-gray-900">+91 {p.slice(0, 5)} {p.slice(5)}</div>
-                  <div className="text-xs text-gray-500">{label}</div>
-                </span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-            ))}
+          <div className="flex flex-col gap-3">
+            <div>
+              <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">Bureau data found</div>
+              <div className="flex flex-col gap-2">
+                {[["9876500001", "001", "Rahul · New to credit"], ["9876500002", "002", "Neha · New to credit"], ["9876500006", "006", "Vikram · NTC · Linked-number fetch"]].map(([p, id, label]) => (
+                  <button key={p} onClick={() => setPhone(p)}
+                    className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
+                    <span>
+                      <div className="font-medium text-gray-900">#{id} · +91 {p.slice(0, 5)} {p.slice(5)}</div>
+                      <div className="text-xs text-gray-500">{label}</div>
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">No bureau data</div>
+              <div className="flex flex-col gap-2">
+                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"]].map(([p, id, label]) => (
+                  <button key={p} onClick={() => setPhone(p)}
+                    className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
+                    <span>
+                      <div className="font-medium text-gray-900">#{id} · +91 {p.slice(0, 5)} {p.slice(5)}</div>
+                      <div className="text-xs text-gray-500">{label}</div>
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
       <div className={UI.footer}>
         <button onClick={onSubmit} disabled={phone.length !== 10}
