@@ -151,7 +151,7 @@ function Index() {
   };
 
   const go = (s: Screen) => { setMenuOpen(false); setScreen(s); };
-  const goToPaywall = () => go("loading-journey");
+  const goToPaywall = (v: JourneyVariant = "matched") => { setJourneyVariant(v); go("loading-journey"); };
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
