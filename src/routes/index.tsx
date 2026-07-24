@@ -398,10 +398,7 @@ function Index() {
           />
         )}
         {screen === "bureau-fetching" && user && (
-          <BureauFetching
-            onFound={() => go("bureau-validate")}
-            onNotFound={() => go("expired")}
-          />
+          <Ntc2FetchScreen onDone={() => go("ntc2-nohistory")} />
         )}
         {screen === "bureau-refetch" && user && (
           <BureauRefetch onDone={() => {
