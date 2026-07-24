@@ -831,16 +831,17 @@ function PanInputScreen({ onContinue }: { onContinue: () => void }) {
 }
 
 /* ====================== BUREAU VALIDATE (card with 4 fields) ====================== */
-function BureauValidateScreen({ user, name, onYes, onNotMe, onBack }:
-  { user: DemoUser; name: string; onYes: () => void; onNotMe: () => void; onBack: () => void }) {
+function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
+  { user: DemoUser; name: string; updated?: boolean; onYes: () => void; onNotMe: () => void; onBack: () => void }) {
   const [loading, setLoading] = useState(true);
   useEffect(() => { const t = setTimeout(() => setLoading(false), 1400); return () => clearTimeout(t); }, []);
-  const displayName = (name || user.name).toUpperCase();
+  const src = updated && user.updated ? user.updated : { name: name || user.name, pan: user.pan, dob: user.dob || "—" };
+  const displayName = (src.name || user.name).toUpperCase();
   const rows: Array<{ label: string; value: string; icon: React.ComponentType<{ className?: string }> }> = [
     { label: "Name", value: displayName, icon: User },
     { label: "Mobile", value: `+91 ${user.phone.slice(0, 5)} ${user.phone.slice(5)}`, icon: Phone },
-    { label: "PAN", value: user.pan, icon: BadgeCheck },
-    { label: "Date of birth", value: user.dob || "—", icon: FileText },
+    { label: "PAN", value: src.pan, icon: BadgeCheck },
+    { label: "Date of birth", value: src.dob, icon: FileText },
   ];
   return (
     <div className="flex-1 flex flex-col bg-white">
