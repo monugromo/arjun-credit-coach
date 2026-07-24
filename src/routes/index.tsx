@@ -451,8 +451,8 @@ function Index() {
           <PanInputScreen user={user} name={name} setName={setName}
             onBack={() => go(user.key === "ntc2" ? "ntc2-nohistory" : "bureau-validate")}
             onContinue={() => go(
-              user.key === "ntc" ? "pan-mobile-link"
-              : user.key === "ntc2" ? "bureau-refetch"
+              user.key === "ntc2" ? "bureau-refetch"
+              : user.key === "ntc" ? "bureau-refetch"
               : "perm-all"
             )} />
         )}
