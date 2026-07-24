@@ -388,7 +388,7 @@ function Index() {
         {screen === "bureau-validate" && user && (
           <BureauValidateScreen
             user={user} name={name}
-            onYes={() => go("payment")}
+            onYes={() => go("expired")}
             onNotMe={() => go("panInput")}
             onBack={() => go("name")}
           />
@@ -396,7 +396,7 @@ function Index() {
         {screen === "bureau-fetching" && user && (
           <BureauFetching
             onFound={() => go("bureau-validate")}
-            onNotFound={() => go("payment")}
+            onNotFound={() => go("expired")}
           />
         )}
         {screen === "ntc2-fetch" && user && (
@@ -406,20 +406,16 @@ function Index() {
           <Ntc2NoHistoryScreen
             user={user} name={name}
             onHasCredit={() => go("panInput")}
-            onNoCredit={() => go("payment")}
+            onNoCredit={() => go("expired")}
             onBack={() => go("name")}
           />
         )}
         {screen === "expired" && user && (
-          <ExpiredScreen user={user} onLogout={logout}
+          <ExpiredScreen user={user} name={name} onLogout={logout}
             onRestart={() => go("payment")} />
         )}
         {screen === "payment" && user && (
-          <RazorpayScreen user={user} onBack={() => go(
-            user.key === "ntc" ? "bureau-validate"
-            : user.key === "ntc2" ? "ntc2-nohistory"
-            : "expired"
-          )}
+          <RazorpayScreen user={user} onBack={() => go("expired")}
             onSuccess={() => go("payment-success")} />
         )}
         {screen === "payment-success" && user && (
