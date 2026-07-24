@@ -381,7 +381,6 @@ function Index() {
         {screen === "name" && (
           <NameScreen name={name} setName={setName} onBack={() => go("otp")}
             onContinue={() => {
-              if (user?.key === "ntc2") return go("ntc2-fetch");
               if (user?.key === "ntc" || user?.key === "ntc3") {
                 setBureauUpdated(false);
                 return go("bureau-validate");
@@ -407,22 +406,12 @@ function Index() {
             go("bureau-validate");
           }} />
         )}
-        {screen === "ntc2-fetch" && user && (
-          <Ntc2FetchScreen onDone={() => go("ntc2-nohistory")} />
-        )}
         {screen === "ntc2-nohistory" && user && (
           <Ntc2NoHistoryScreen
             user={user} name={name}
-            onHasCredit={() => go("ntc2-edit")}
+            onHasCredit={() => go("panInput")}
             onNoCredit={() => go("expired")}
             onBack={() => go("name")}
-          />
-        )}
-        {screen === "ntc2-edit" && user && (
-          <EditDetailsScreen
-            user={user} name={name} setName={setName}
-            onBack={() => go("ntc2-nohistory")}
-            onContinue={() => go("bureau-refetch")}
           />
         )}
         {screen === "expired" && user && (
@@ -446,11 +435,10 @@ function Index() {
         )}
         {screen === "panInput" && user && (
           <PanInputScreen user={user} name={name} setName={setName}
-            onBack={() => go(user.key === "ntc2" ? "ntc2-nohistory" : "bureau-validate")}
+            onBack={() => go("bureau-validate")}
             onContinue={() => go(
               user.key === "ntc3" ? "bureau-refetch"
               : user.key === "ntc" ? "bureau-fetching"
-              : user.key === "ntc2" ? "bureau-refetch"
               : "perm-all"
             )} />
         )}
