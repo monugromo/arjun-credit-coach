@@ -945,6 +945,54 @@ function BureauRefetch({ onDone }: { onDone: () => void }) {
 }
 
 
+/* ====================== EDIT DETAILS (NTC2: user says they have a loan/CC) ====================== */
+function EditDetailsScreen({ user, name, setName, onBack, onContinue }:
+  { user: DemoUser; name: string; setName: (v: string) => void; onBack: () => void; onContinue: () => void }) {
+  const [localName, setLocalName] = useState(name || user.name);
+  const [pan, setPan] = useState(user.pan || "");
+  const valid = localName.trim().length >= 2 && pan.length === 10;
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Edit your details" onBack={onBack} />
+      <div className="p-6 flex-1 overflow-y-auto">
+        <p className="text-sm text-gray-600 mb-5 leading-relaxed">
+          Let's try once more. Please enter your <b>full name</b> exactly as on your PAN card, along with your PAN number.
+        </p>
+        <div className="space-y-5">
+          <div>
+            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">Full name (as per PAN)</label>
+            <input value={localName} onChange={(e) => setLocalName(e.target.value)}
+              placeholder="e.g. Aarav Mehta"
+              className="w-full border-b-2 pb-2 mt-1 text-lg outline-none"
+              style={{ borderColor: WA.accent }} />
+          </div>
+          <div>
+            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">PAN number</label>
+            <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().slice(0, 10))}
+              placeholder="ABCDE1234F"
+              className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none"
+              style={{ borderColor: WA.accent }} />
+          </div>
+        </div>
+        <p className="text-[11px] text-gray-500 mt-5 leading-relaxed">
+          We'll use these to re-check your credit bureau record.
+        </p>
+      </div>
+      <div className="p-6 pt-2">
+        <button onClick={() => { setName(localName.trim()); onContinue(); }} disabled={!valid}
+          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          style={{ background: WA.accent }}>
+          Re-check bureau
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+
 
 /* ====================== NTC2: Bureau fetch (no history) ====================== */
 function Ntc2FetchScreen({ onDone }: { onDone: () => void }) {
