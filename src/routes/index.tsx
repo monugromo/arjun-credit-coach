@@ -668,7 +668,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Enter your phone number" onBack={onBack} />
-      <div className="p-6 flex-1">
+      <div className={UI.body}>
         <p className="text-sm text-gray-600 mb-6 leading-relaxed">
           GroScore will send an SMS to verify your phone number. Carrier charges may apply.
         </p>
@@ -684,7 +684,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
           </div>
         </div>
         <div className="mt-6">
-          <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
+          <div className={`${UI.eyebrow} mb-2`}>Demo accounts</div>
           <div className="flex flex-col gap-2">
             {[["9876500001", "Rahul · New to credit"], ["9876500002", "Neha · New to credit"], ["9876500003", "Aarav · NTC · No history"], ["9876500004", "Sonu · Score 413"], ["9876500005", "Darpan · Trial ended"], ["9876500006", "Vikram · NTC · No history"]].map(([p, label]) => (
               <button key={p} onClick={() => setPhone(p)}
@@ -699,9 +699,9 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
           </div>
         </div>
       </div>
-      <div className="p-6">
+      <div className={UI.footer}>
         <button onClick={onSubmit} disabled={phone.length !== 10}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          className={UI.primaryBtn}
           style={{ background: WA.accent }}>
           Next
         </button>
