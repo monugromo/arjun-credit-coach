@@ -1193,21 +1193,21 @@ function Ntc2NoHistoryScreen({ user, name, onHasCredit, onNoCredit, onBack }:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="No credit history found" onBack={onBack} />
-      <div className="p-5 flex-1 overflow-y-auto">
-        <div className="rounded-2xl p-5 border border-amber-100" style={{ background: "#FFFBEB" }}>
+      <div className={UI.body}>
+        <div className={UI.amberCard} style={UI.amberCardStyle}>
           <div className="flex items-start gap-3">
-            <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style={{ background: "#FEF3C7" }}>
-              <AlertTriangle className="w-5 h-5 text-amber-600" />
+            <div className={UI.amberIcon} style={UI.amberIconStyle}>
+              <AlertTriangle className="w-5 h-5 text-amber-700" />
             </div>
             <div className="min-w-0">
-              <div className="text-[11px] uppercase font-bold tracking-wider text-amber-700">Bureau result</div>
+              <div className={UI.eyebrowAmber}>Bureau result</div>
               <div className="font-bold text-gray-900 mt-0.5">Hi {displayName}, we couldn't find any credit record.</div>
             </div>
           </div>
         </div>
 
         <div className="mt-6">
-          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Quick check</div>
+          <div className={`${UI.eyebrow} mb-2`}>Quick check</div>
           <h3 className="text-[17px] font-bold text-gray-900 leading-snug">
             Do you currently have any active loan or credit card?
           </h3>
