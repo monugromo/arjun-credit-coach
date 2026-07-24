@@ -1096,7 +1096,7 @@ function BureauRefetch({ onDone }: { onDone: () => void }) {
       <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
         {phase === "loading" ? (
           <>
-            <div className="w-14 h-14 border-4 rounded-full animate-spin mb-5" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+            <div className={`${UI.spinnerWrap} mb-5`} style={UI.spinnerStyle} />
             <p className="text-gray-700 font-semibold">Looking up your credit record…</p>
             <p className="text-gray-500 text-sm mt-1">Using your updated PAN.</p>
           </>
