@@ -1,4 +1,4 @@
-export type DemoKey = "ntc" | "ntc2" | "ntc3" | "distressed" | "expired" | "direct";
+export type DemoKey = "ntc" | "ntc3" | "distressed" | "expired" | "direct";
 
 export interface DemoUser {
   key: DemoKey;
