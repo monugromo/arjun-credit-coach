@@ -659,7 +659,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
           </div>
         </div>
       </div>
-      <div className="p-6">
+      <div className="p-6 shrink-0">
         <button onClick={onSubmit} disabled={phone.length !== 10}
           className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
           style={{ background: WA.accent }}>
@@ -726,7 +726,7 @@ function NameScreen({ name, setName, onBack, onContinue }: { name: string; setNa
           <div className="text-[11px] text-gray-500 mt-2 text-center">Use the same spelling as the "Name" field on your PAN card.</div>
         </div>
       </div>
-      <div className="p-6">
+      <div className="p-6 shrink-0">
         <button onClick={onContinue} disabled={!name.trim()}
           className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
           style={{ background: WA.accent }}>
@@ -1162,7 +1162,7 @@ function PanValidateScreen({ name, setName, defaultPan, onBack, onContinue }:
           Use my registered PAN
         </button>
       </div>
-      <div className="p-6">
+      <div className="p-6 shrink-0">
         <button onClick={submit} disabled={!panOk || !nameOk || checking}
           className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40 flex items-center justify-center gap-2"
           style={{ background: WA.accent }}>
@@ -1393,7 +1393,7 @@ function PermBlocked({ onRetry }: { onRetry: () => void }) {
           GroScore reads SMS for bills, sends reminders, and uses voice for coaching calls. These permissions are required to continue.
         </p>
       </div>
-      <div className="p-6">
+      <div className="p-6 shrink-0">
         <button onClick={onRetry}
           className="w-full text-white font-bold py-3.5 rounded-full"
           style={{ background: WA.accent }}>
