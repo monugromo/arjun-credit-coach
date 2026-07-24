@@ -128,7 +128,7 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired) or 9876500004 (Direct to chat)"); return; }
+    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct) or 9876500005 (NTC · No history)"); return; }
     setUser(u);
     setName(u.name);
     go("otp");
