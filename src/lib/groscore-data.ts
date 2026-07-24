@@ -1,4 +1,4 @@
-export type DemoKey = "ntc" | "ntc2" | "distressed" | "expired" | "direct";
+export type DemoKey = "ntc" | "ntc2" | "ntc3" | "distressed" | "expired" | "direct";
 
 export interface DemoUser {
   key: DemoKey;
@@ -10,6 +10,7 @@ export interface DemoUser {
   score?: number;
   band?: string;
   expired?: boolean;
+  updated?: { name: string; pan: string; dob: string };
 }
 
 export const DEMOS: Record<string, DemoUser> = {
