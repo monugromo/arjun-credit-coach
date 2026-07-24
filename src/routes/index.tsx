@@ -1307,16 +1307,17 @@ function ExpiredScreen({ user, name, onRestart, onLogout }:
 
   return (
     <div className="flex-1 flex flex-col bg-white overflow-y-auto">
-      <div className="flex items-center justify-between px-5 pt-5">
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 pt-5 pb-2">
         <button onClick={onLogout} className="text-sm text-gray-500 font-medium">Logout</button>
         <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: chip.bg, color: chip.color }}>
           <span className={`w-1.5 h-1.5 rounded-full ${chip.dot}`} /> {chip.label}
         </div>
-        <div className="w-12" />
       </div>
 
-      <div className="flex-1 px-6 pt-4 pb-4 flex flex-col items-center text-center">
-        <div className="relative mb-3">
+      {/* Coach + greeting */}
+      <div className="px-6 pt-4 pb-2 flex flex-col items-center text-center">
+        <div className="relative mb-4">
           <div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(16,185,129,0.25), transparent 70%)", transform: "scale(1.35)" }} />
           <div className="relative w-24 h-24 rounded-full p-[3px]" style={{ background: "linear-gradient(135deg, #10B981, #059669)" }}>
             <img src={kabirImg} alt="Arjun, your credit coach" className="w-full h-full rounded-full object-cover border-2 border-white" />
@@ -1327,12 +1328,13 @@ function ExpiredScreen({ user, name, onRestart, onLogout }:
             </div>
           </div>
         </div>
-        <p className="text-[11px] font-semibold tracking-wider text-emerald-700 uppercase mb-1">Arjun · Your Credit Coach</p>
         <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight">Hey {displayName}!</h1>
-        <div className="w-12 h-px bg-gray-200 my-3" />
-        <p className="text-gray-600 text-[15px] leading-relaxed max-w-xs">{subtitle}</p>
+        <p className="mt-3 text-gray-600 text-[15px] leading-relaxed max-w-xs">{subtitle}</p>
+      </div>
 
-        <div className="mt-6 w-full rounded-2xl border border-emerald-100" style={{ background: "#F1FBF4" }}>
+      {/* Benefits + price card */}
+      <div className="px-6 mt-5">
+        <div className="w-full rounded-2xl border border-emerald-100 overflow-hidden" style={{ background: "#F1FBF4" }}>
           <Row icon={FileText} text={isLapsed
             ? <><b>Credit report analyze</b> kiya hai aur dispute plan banaya hai</>
             : <>Personal <b>credit report + dispute plan</b> aapke liye tayar</>} />
@@ -1341,17 +1343,19 @@ function ExpiredScreen({ user, name, onRestart, onLogout }:
           <div className="h-px bg-white" />
           <Row icon={TrendingUp} text={<><b>24×7 support</b> + monthly progress tracking</>} />
           <div className="h-px bg-white" />
-          <div className="flex items-center justify-center gap-3 px-4 py-4">
-            <span className="text-gray-400 line-through text-lg">₹299</span>
+          <div className="flex items-center justify-center gap-2 px-4 py-4 flex-wrap">
+            <span className="text-gray-400 line-through text-base">₹299</span>
             <ArrowRight className="w-4 h-4 text-gray-400" />
-            <span className="text-3xl font-extrabold text-gray-900">₹99</span>
+            <span className="text-3xl font-extrabold text-gray-900 leading-none">₹99</span>
             <span className="text-gray-600 text-sm">/month</span>
-            <span className="ml-2 text-[11px] font-bold px-2 py-1 rounded-md" style={{ background: "#DCFCE7", color: "#166534" }}>67% OFF</span>
+            <span className="text-[10px] font-bold px-2 py-1 rounded-md" style={{ background: "#DCFCE7", color: "#166534" }}>67% OFF</span>
           </div>
         </div>
       </div>
 
-      <div className="px-6 pb-8">
+      <div className="flex-1" />
+
+      <div className="px-6 pb-8 pt-6">
         <button onClick={onRestart}
           className="w-full text-white font-bold py-4 rounded-full text-base shadow-md active:scale-[0.98] transition"
           style={{ background: WA.accent }}>
