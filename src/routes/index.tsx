@@ -129,7 +129,7 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500001 (NTC), 9876500002 (Distressed), 9876500003 (Expired), 9876500004 (Direct), 9876500005 (NTC · No history), 9876500006 (NTC · PAN re-fetch) or 9876500007 (Ishaan · NTC)"); return; }
+    if (!u) { alert("Use demo phone 9876500001 (Rahul · NTC), 9876500002 (Sonu · Distressed), 9876500003 (Darpan · Expired), 9876500004 (Neha · NTC), 9876500005 (Aarav · NTC · No history), 9876500006 (Kavya · NTC · PAN re-fetch) or 9876500007 (Ishaan · NTC)"); return; }
     setUser(u);
     setName(u.name);
     go("otp");
