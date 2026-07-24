@@ -382,7 +382,7 @@ function Index() {
           <NameScreen name={name} setName={setName} onBack={() => go("otp")}
             onContinue={() => {
               if (user?.key === "ntc2") return go("ntc2-fetch");
-              if (user?.key === "ntc" || user?.key === "ntc3") {
+              if (user?.key === "ntc") {
                 setBureauUpdated(false);
                 return go("bureau-validate");
               }
