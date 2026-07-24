@@ -1082,29 +1082,39 @@ function PanValidateScreen({ name, setName, defaultPan, onBack, onContinue }:
   );
 }
 
-/* ====================== EXPIRED PROFILE ====================== */
-function ExpiredScreen({ user, onRestart, onLogout }:
-  { user: DemoUser; onRestart: () => void; onLogout: () => void }) {
+/* ====================== PAYWALL (NEW + LAPSED) ====================== */
+function ExpiredScreen({ user, name, onRestart, onLogout }:
+  { user: DemoUser; name?: string; onRestart: () => void; onLogout: () => void }) {
+  const isLapsed = !!user.expired;
+  const displayName = (name && name.trim()) ? name.trim().split(" ")[0] : user.name;
+  const chip = isLapsed
+    ? { label: "Trial Ended", bg: "#FEE2E2", color: "#B91C1C", dot: "bg-red-600" }
+    : { label: "New Member", bg: "#DCFCE7", color: "#166534", dot: "bg-emerald-600" };
+  const subtitle = isLapsed
+    ? "Hum aapki credit journey already start kar chuke hain. Isse rukne na de."
+    : "Aapki credit journey shuru karne ke liye bas ek chhota sa step baaki hai.";
+  const cta = isLapsed ? "Restart Subscription" : "Start My Journey";
+
   return (
     <div className="flex-1 flex flex-col bg-white overflow-y-auto">
       <div className="flex items-center justify-between px-5 pt-5">
         <button onClick={onLogout} className="text-sm text-gray-500 font-medium">Logout</button>
-        <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: "#FEE2E2", color: "#B91C1C" }}>
-          <span className="w-1.5 h-1.5 rounded-full bg-red-600" /> Trial Ended
+        <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: chip.bg, color: chip.color }}>
+          <span className={`w-1.5 h-1.5 rounded-full ${chip.dot}`} /> {chip.label}
         </div>
         <div className="w-12" />
       </div>
 
       <div className="flex-1 px-6 pt-6 pb-4 flex flex-col items-center text-center">
         <img src={groLogo} alt="GroScore" className="w-24 h-auto mb-3" />
-        <h1 className="text-3xl font-extrabold text-gray-900">Hey {user.name}!</h1>
+        <h1 className="text-3xl font-extrabold text-gray-900">Hey {displayName}!</h1>
         <div className="w-16 h-px bg-gray-200 my-3" />
-        <p className="text-gray-600 text-[15px] leading-relaxed max-w-xs">
-          Hum aapki credit journey already start kar chuke hain. Isse rukne na de.
-        </p>
+        <p className="text-gray-600 text-[15px] leading-relaxed max-w-xs">{subtitle}</p>
 
         <div className="mt-6 w-full rounded-2xl border border-emerald-100" style={{ background: "#F1FBF4" }}>
-          <Row icon={FileText} text={<><b>Credit report analyze</b> kiya hai aur dispute plan banaya hai</>} />
+          <Row icon={FileText} text={isLapsed
+            ? <><b>Credit report analyze</b> kiya hai aur dispute plan banaya hai</>
+            : <>Personal <b>credit report + dispute plan</b> aapke liye tayar</>} />
           <div className="h-px bg-white" />
           <Row icon={User} text={<><b>Credit Coach</b> aapka score <b>750+</b> le jaane ko tayar hai</>} />
           <div className="h-px bg-white" />
@@ -1124,7 +1134,7 @@ function ExpiredScreen({ user, onRestart, onLogout }:
         <button onClick={onRestart}
           className="w-full text-white font-bold py-4 rounded-full text-base shadow-md active:scale-[0.98] transition"
           style={{ background: WA.accent }}>
-          Restart Subscription
+          {cta}
         </button>
         <p className="text-center text-gray-400 text-[11px] mt-3">Secure payment via Razorpay · Cancel anytime</p>
       </div>
