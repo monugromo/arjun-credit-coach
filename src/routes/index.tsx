@@ -363,7 +363,7 @@ function Index() {
     <div className="h-[100dvh] w-full bg-neutral-200 flex items-stretch sm:items-center justify-center overflow-hidden">
       <div className="relative w-full sm:max-w-[420px] h-[100dvh] sm:h-[min(900px,100dvh-3rem)] sm:my-6 bg-white overflow-hidden sm:rounded-[2.5rem] sm:shadow-2xl sm:border sm:border-black/10 flex flex-col">
         <DevNav current={screen} go={go} hasUser={!!user} loadDemo={(k) => {
-          const u = k === "ntc" ? DEMOS["9876500001"] : DEMOS["9876500002"];
+          const u = k === "ntc" ? DEMOS["9876500001"] : DEMOS["9876500004"];
           setUser(u); setName(u.name); setPhone(u.phone);
           startChatFlow(u);
         }} />
