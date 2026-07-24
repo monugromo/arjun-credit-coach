@@ -1071,7 +1071,7 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
             </button>
             <button onClick={onNotMe}
               className={UI.secondaryBtn}>
-              Not me
+              {updated ? "Update later" : "Not me"}
             </button>
           </div>
         </>
