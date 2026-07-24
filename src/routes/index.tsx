@@ -451,7 +451,7 @@ function Index() {
           />
         )}
         {screen === "loading-journey" && user && (
-          <NTCChecklistScreen user={user} onDone={() => go("expired")} />
+          <NTCChecklistScreen user={user} variant={journeyVariant} onDone={() => go("expired")} />
         )}
         {screen === "expired" && user && (
           <ExpiredScreen user={user} name={name} onLogout={logout}
