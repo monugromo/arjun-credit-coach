@@ -98,7 +98,7 @@ type Screen =
   | "pan-mobile-link"
   | "bureau-validate" | "bureau-fetching" | "bureau-refetch"
   | "ntc2-fetch" | "ntc2-nohistory" | "ntc2-edit"
-  | "panValidate" | "paywall-loader" | "expired" | "payment" | "payment-success"
+  | "panValidate" | "expired" | "payment" | "payment-success"
   | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
   | "ntc-checklist"
   | "chat" | "call-incoming" | "call-active"
@@ -148,7 +148,7 @@ function Index() {
   };
 
   const go = (s: Screen) => { setMenuOpen(false); setScreen(s); };
-  const goToPaywall = () => go("paywall-loader");
+  const goToPaywall = () => go("loading-journey");
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
@@ -447,7 +447,7 @@ function Index() {
             onContinue={() => go(user.phone === "9876500006" ? "pan-mobile-link" : "bureau-refetch")}
           />
         )}
-        {screen === "paywall-loader" && (
+        {screen === "loading-journey" && (
           <PaywallLoaderScreen onDone={() => go("expired")} />
         )}
         {screen === "expired" && user && (
