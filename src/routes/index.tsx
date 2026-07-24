@@ -10,7 +10,7 @@ import {
   Layers, Search, UserPlus, Wallet, BadgeCheck, Zap,
 } from "lucide-react";
 import kabirImg from "@/assets/kabir.jpg";
-import arjunImg from "@/assets/arjun.jpg";
+
 import groLogoAsset from "@/assets/groscore-vertical.png.asset.json";
 const groLogo = groLogoAsset.url;
 import panCardRef from "@/assets/pan-card-ref.png";
@@ -1326,7 +1326,7 @@ function ExpiredScreen({ user, name, onRestart, onLogout }:
         <div className="relative mb-3">
           <div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(16,185,129,0.25), transparent 70%)", transform: "scale(1.35)" }} />
           <div className="relative w-24 h-24 rounded-full p-[3px]" style={{ background: "linear-gradient(135deg, #10B981, #059669)" }}>
-            <img src={arjunImg} alt="Arjun, your credit coach" className="w-full h-full rounded-full object-cover border-2 border-white" />
+            <img src={kabirImg} alt="Arjun, your credit coach" className="w-full h-full rounded-full object-cover border-2 border-white" />
           </div>
           <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-white shadow-md flex items-center justify-center">
             <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: WA.accent }}>
@@ -3244,13 +3244,8 @@ function ArjunProfile({ user, tasks, onBack, openReport, openTasks }:
             className="h-52 w-full relative overflow-hidden flex flex-col items-center justify-center"
             style={{ background: "linear-gradient(160deg, #0a1f1a 0%, #14362c 40%, #0d201a 100%)" }}
           >
-            {/* Faint doodle watermarks */}
-            <img src={groLogo} alt="" className="absolute w-24 opacity-[0.05] top-3 left-3" style={{ filter: "brightness(0) invert(1)" }} />
-            <img src={groLogo} alt="" className="absolute w-20 opacity-[0.05] top-6 right-2" style={{ filter: "brightness(0) invert(1)" }} />
-            <img src={groLogo} alt="" className="absolute w-28 opacity-[0.05] bottom-2 left-4" style={{ filter: "brightness(0) invert(1)" }} />
-            <img src={groLogo} alt="" className="absolute w-24 opacity-[0.05] bottom-4 right-3" style={{ filter: "brightness(0) invert(1)" }} />
             {/* Foreground logo + tagline */}
-            <img src={groLogo} alt="GroScore" className="w-48 relative z-10" style={{ filter: "brightness(0) invert(1)" }} />
+            <img src={groLogo} alt="GroScore" className="w-40 relative z-10" style={{ filter: "brightness(0) invert(1)" }} />
             <p className="mt-2 text-white/85 text-[13px] relative z-10">Bharat ka apna financial dost</p>
           </div>
           <div className="absolute -bottom-12 left-1/2 -translate-x-1/2">
