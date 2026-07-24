@@ -141,14 +141,6 @@ export const initialChat = (key: DemoKey): ChatMsg[] => {
       { id: "k3", from: "coach", kind: "text", text: "Main aapko 2 minute mein call karta hoon, pehla step samjha doonga.", time: t(20, 29) },
     ];
   }
-  if (key === "ntc3") {
-    return [
-      { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
-      { id: "k1", from: "coach", kind: "text", text: "Welcome to GroScore, Kavya! 👋", time: t(20, 28) },
-      { id: "k2", from: "coach", kind: "text", text: "Aapki updated bureau details confirm ho gayi hain — ab hum credit journey shuru karte hain 💚", time: t(20, 28) },
-      { id: "k3", from: "coach", kind: "text", text: "Main aapko 2 minute mein call karta hoon, pehla step samjha doonga.", time: t(20, 29) },
-    ];
-  }
   return [
     { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
     {
