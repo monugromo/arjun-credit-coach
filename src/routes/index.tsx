@@ -393,7 +393,7 @@ function Index() {
           <BureauValidateScreen
             user={user} name={name} updated={bureauUpdated}
             onYes={() => go("expired")}
-            onNotMe={() => go("panInput")}
+            onNotMe={() => go(user.key === "ntc" && bureauUpdated ? "expired" : "panInput")}
             onBack={() => go("name")}
           />
         )}
