@@ -927,12 +927,12 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Verify linked number" onBack={onBack} />
-      <div className="p-6 flex-1 overflow-y-auto">
-        <div className="rounded-2xl border border-amber-200 p-5 mb-5" style={{ background: "#FFF8EC" }}>
-          <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3" style={{ background: "#FDE9C2" }}>
-            <AlertTriangle className="w-6 h-6 text-amber-700" />
+      <div className={UI.body}>
+        <div className={`${UI.amberCard} mb-5`} style={UI.amberCardStyle}>
+          <div className={`${UI.amberIcon} mb-3`} style={UI.amberIconStyle}>
+            <AlertTriangle className="w-5 h-5 text-amber-700" />
           </div>
-          <div className="text-[11px] uppercase font-bold tracking-wider text-amber-700 mb-1">Bureau result</div>
+          <div className={`${UI.eyebrowAmber} mb-1`}>Bureau result</div>
           <h2 className="text-lg font-bold text-gray-900 leading-snug">
             We couldn't find your record
           </h2>
@@ -942,9 +942,9 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
 
         </div>
 
-        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Mobile number</label>
-        <div className="flex items-center gap-2 border-2 rounded-xl px-3 py-3 mb-4"
-          style={{ borderColor: phoneValid ? WA.accent : "#E5E7EB" }}>
+        <label className={`${UI.eyebrow} block mb-2`}>Mobile number</label>
+        <div className="flex items-center gap-2 border-b-2 pb-2 mb-4"
+          style={{ borderColor: WA.accent }}>
           <span className="text-gray-700 font-semibold">+91</span>
           <input
             type="tel"
@@ -953,13 +953,13 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
             value={phone}
             onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); setOtpSent(false); }}
             placeholder="Enter linked mobile number"
-            className="flex-1 outline-none text-base text-gray-900 bg-transparent"
+            className="flex-1 outline-none text-lg text-gray-900 bg-transparent"
           />
         </div>
 
         {otpSent && (
           <>
-            <div className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Enter OTP</div>
+            <div className={`${UI.eyebrow} mb-2`}>Enter OTP</div>
             <div className="flex gap-2 justify-between mb-3">
               {digits.map((d, i) => (
                 <div key={i}
@@ -987,18 +987,18 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
           <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> One-time · never charged</li>
         </ul>
       </div>
-      <div className="p-6 pt-2 space-y-2.5">
+      <div className={`${UI.footer} space-y-2.5`}>
         {!otpSent && (
           <button
             onClick={() => { if (phoneValid) setOtpSent(true); }}
             disabled={!phoneValid}
-            className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+            className={UI.primaryBtn}
             style={{ background: WA.accent }}>
             Send OTP
           </button>
         )}
         <button onClick={onSkip}
-          className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
+          className={UI.secondaryBtn}>
           I'll do it later
         </button>
       </div>
