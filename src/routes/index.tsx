@@ -374,7 +374,6 @@ function Index() {
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
             onBack={() => go("phone")} onDone={() => {
               if (user.expired) return go("expired");
-              if (user.key === "direct") return startChatFlow(user);
               return go("name");
             }} />
         )}
