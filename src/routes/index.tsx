@@ -6,7 +6,7 @@ import {
   LogOut, Download, PhoneOff, Volume2, MicOff, Bell, MessageSquare,
   Mail, CheckCircle2, ArrowRight, Sparkles, ShieldAlert, Edit2,
   ChevronRight, Share,
-  CheckCheck, X, AlertTriangle, TrendingUp, Loader2, Briefcase, Award,
+  CheckCheck, Check, X, AlertTriangle, TrendingUp, Loader2, Briefcase, Award,
   Layers, Search, UserPlus, Wallet, BadgeCheck, Zap,
 } from "lucide-react";
 import kabirImg from "@/assets/kabir.jpg";
