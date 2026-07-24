@@ -939,6 +939,99 @@ function BureauFetching({ onFound, onNotFound }: { onFound: () => void; onNotFou
   );
 }
 
+/* ====================== NTC2: Bureau fetch (no history) ====================== */
+function Ntc2FetchScreen({ onDone }: { onDone: () => void }) {
+  useEffect(() => {
+    const t = setTimeout(onDone, 2000);
+    return () => clearTimeout(t);
+  }, [onDone]);
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Fetching from bureau" />
+      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
+        <div className="w-14 h-14 border-4 rounded-full animate-spin mb-5" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+        <p className="text-gray-700 font-semibold">Looking up your credit record…</p>
+        <p className="text-gray-500 text-sm mt-1">This usually takes a few seconds.</p>
+      </div>
+    </div>
+  );
+}
+
+/* ====================== NTC2: No credit history — confirm loan/CC ====================== */
+function Ntc2NoHistoryScreen({ user, name, onHasCredit, onNoCredit, onBack }:
+  { user: DemoUser; name: string; onHasCredit: () => void; onNoCredit: () => void; onBack: () => void }) {
+  const [choice, setChoice] = useState<"yes" | "no" | null>(null);
+  const displayName = (name || user.name).split(" ")[0];
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="No credit history found" onBack={onBack} />
+      <div className="p-5 flex-1 overflow-y-auto">
+        <div className="rounded-2xl p-5 border border-amber-100" style={{ background: "#FFFBEB" }}>
+          <div className="flex items-start gap-3">
+            <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style={{ background: "#FEF3C7" }}>
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="min-w-0">
+              <div className="text-[11px] uppercase font-bold tracking-wider text-amber-700">Bureau result</div>
+              <div className="font-bold text-gray-900 mt-0.5">Hi {displayName}, we couldn't find any credit record.</div>
+              <p className="text-sm text-gray-700 mt-1.5 leading-relaxed">
+                Iska matlab sirf itna hai ki bureau ke paas abhi aapka data nahi hai — koi problem nahi, hum yahin se shuru karenge.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Quick check</div>
+          <h3 className="text-[17px] font-bold text-gray-900 leading-snug">
+            Do you currently have any active loan or credit card?
+          </h3>
+          <p className="text-xs text-gray-500 mt-1">Even one that's in your name but paid by family counts.</p>
+
+          <div className="mt-4 space-y-2.5">
+            {([
+              { key: "yes", title: "Yes, I have a loan or credit card", desc: "We'll re-check the bureau with your PAN to pull the record.", icon: BadgeCheck },
+              { key: "no", title: "No, nothing in my name yet", desc: "That's fine — your coach will help you build a score from scratch.", icon: UserPlus },
+            ] as const).map((opt) => {
+              const Icon = opt.icon;
+              const active = choice === opt.key;
+              return (
+                <button key={opt.key} onClick={() => setChoice(opt.key)}
+                  className="w-full text-left rounded-2xl border p-3.5 flex items-start gap-3 transition"
+                  style={{
+                    borderColor: active ? WA.accent : "#E5E7EB",
+                    background: active ? "#F1FBF4" : "#fff",
+                  }}>
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                    style={{ background: active ? WA.accent : "#F3F4F6", color: active ? "#fff" : "#4B5563" }}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-gray-900 text-[15px]">{opt.title}</div>
+                    <div className="text-xs text-gray-600 mt-0.5 leading-relaxed">{opt.desc}</div>
+                  </div>
+                  <div className="w-5 h-5 rounded-full border-2 shrink-0 mt-0.5 flex items-center justify-center"
+                    style={{ borderColor: active ? WA.accent : "#D1D5DB", background: active ? WA.accent : "transparent" }}>
+                    {active && <CheckCircle2 className="w-4 h-4 text-white" />}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      <div className="p-5 pt-2">
+        <button
+          onClick={() => (choice === "yes" ? onHasCredit() : onNoCredit())}
+          disabled={!choice}
+          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          style={{ background: WA.accent }}>
+          Continue
+        </button>
+      </div>
+    </div>
+  );
+}
 
 
 /* ====================== PAN VALIDATE (name + PAN together) ====================== */
