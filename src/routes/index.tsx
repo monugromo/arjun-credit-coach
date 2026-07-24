@@ -719,9 +719,9 @@ function OtpScreen({ phone, otp, setOtp, onBack, onDone }: { phone: string; otp:
 function NameScreen({ name, setName, onBack, onContinue }: { name: string; setName: (s: string) => void; onBack: () => void; onContinue: () => void }) {
   return (
     <div className="flex-1 flex flex-col bg-white">
-      <WATopBar title="Your name (as in bureau)" onBack={onBack} />
+      <WATopBar title="Enter Your Name" onBack={onBack} />
       <div className="p-6 flex-1">
-        <p className="text-sm text-gray-600 mb-2">Enter your name <b>exactly as it appears in the credit bureau</b> — it helps us fetch accurate data on the first try.</p>
+        <p className="text-sm text-gray-600 mb-2">Enter your name <b>exactly as it appears in the PAN Card</b>.</p>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
           className="w-full border-b-2 pb-2 mt-4 text-xl outline-none bg-transparent"
           style={{ borderColor: WA.accent }} />
