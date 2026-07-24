@@ -45,6 +45,24 @@ const WA = {
   bg: "#ECE5DD",           // chat list bg (we use white per request)
 };
 
+// Shared onboarding style tokens (visual normalization; no copy/element changes)
+const UI = {
+  primaryBtn: "w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40",
+  secondaryBtn: "w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white",
+  eyebrow: "text-[11px] uppercase font-bold tracking-wider text-gray-500",
+  eyebrowAmber: "text-[11px] uppercase font-bold tracking-wider text-amber-700",
+  eyebrowEmerald: "text-[11px] uppercase font-bold tracking-wider text-emerald-700",
+  body: "p-5 flex-1 overflow-y-auto",
+  footer: "px-5 pb-6 pt-3",
+  spinnerWrap: "w-12 h-12 border-4 rounded-full animate-spin",
+  spinnerStyle: { borderColor: "#E5E7EB", borderTopColor: "#25D366" } as React.CSSProperties,
+  amberCard: "rounded-2xl border border-amber-100 p-5",
+  amberCardStyle: { background: "#FFFBEB" } as React.CSSProperties,
+  amberIcon: "w-11 h-11 rounded-full flex items-center justify-center shrink-0",
+  amberIconStyle: { background: "#FEF3C7" } as React.CSSProperties,
+  helperCard: "rounded-xl border border-gray-200 bg-gray-50 p-3",
+};
+
 // WhatsApp-style doodle SVG (light gray icons over white).
 const DOODLE_SVG = `
 <svg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'>
@@ -650,7 +668,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Enter your phone number" onBack={onBack} />
-      <div className="p-6 flex-1">
+      <div className={UI.body}>
         <p className="text-sm text-gray-600 mb-6 leading-relaxed">
           GroScore will send an SMS to verify your phone number. Carrier charges may apply.
         </p>
@@ -666,7 +684,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
           </div>
         </div>
         <div className="mt-6">
-          <div className="text-[11px] uppercase text-gray-500 font-semibold mb-2">Demo accounts</div>
+          <div className={`${UI.eyebrow} mb-2`}>Demo accounts</div>
           <div className="flex flex-col gap-2">
             {[["9876500001", "Rahul · New to credit"], ["9876500002", "Neha · New to credit"], ["9876500003", "Aarav · NTC · No history"], ["9876500004", "Sonu · Score 413"], ["9876500005", "Darpan · Trial ended"], ["9876500006", "Vikram · NTC · No history"]].map(([p, label]) => (
               <button key={p} onClick={() => setPhone(p)}
@@ -681,9 +699,9 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
           </div>
         </div>
       </div>
-      <div className="p-6">
+      <div className={UI.footer}>
         <button onClick={onSubmit} disabled={phone.length !== 10}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          className={UI.primaryBtn}
           style={{ background: WA.accent }}>
           Next
         </button>
@@ -706,7 +724,7 @@ function OtpScreen({ phone, otp, setOtp, onBack, onDone }: { phone: string; otp:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Verifying your number" onBack={onBack} />
-      <div className="p-6 flex-1">
+      <div className={UI.body}>
         <p className="text-sm text-gray-600 mb-6">
           We sent a 6-digit code to <b>+91 {phone.slice(0, 5)} {phone.slice(5)}</b>
         </p>
@@ -737,20 +755,19 @@ function NameScreen({ name, setName, onBack, onContinue }: { name: string; setNa
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Enter Your Name" onBack={onBack} />
-      <div className="p-6 flex-1">
+      <div className={UI.body}>
         <p className="text-sm text-gray-600 mb-2">Enter your name <b>exactly as it appears in the PAN Card</b>.</p>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
-          className="w-full border-b-2 pb-2 mt-4 text-xl outline-none bg-transparent"
+          className="w-full border-b-2 pb-2 mt-4 text-lg outline-none bg-transparent"
           style={{ borderColor: WA.accent }} />
-        <div className="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-3">
-          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find your name</div>
+        <div className={`mt-8 ${UI.helperCard}`}>
+          <div className={`${UI.eyebrow} mb-2`}>Where to find your name</div>
           <img src={panCardRef} alt="PAN card reference" className="w-full rounded-lg" />
-          <div className="text-[11px] text-gray-500 mt-2 text-center">Use the same spelling as the "Name" field on your PAN card.</div>
         </div>
       </div>
-      <div className="p-6">
+      <div className={UI.footer}>
         <button onClick={onContinue} disabled={!name.trim()}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          className={UI.primaryBtn}
           style={{ background: WA.accent }}>
           Continue
         </button>
@@ -773,12 +790,12 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
       <div className="p-5 flex-1 flex flex-col">
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-4">
-            <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
-            <p className="text-gray-600">Fetching your credit profile…</p>
+            <div className={UI.spinnerWrap} style={UI.spinnerStyle} />
+            <p className="text-gray-700 font-semibold">Fetching your credit profile…</p>
           </div>
         ) : (
           <>
-            <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">Is this you?</p>
+            <p className={`${UI.eyebrow} mb-3`}>Is this you?</p>
 
             {/* PAN card (real reference image with user data overlay) */}
             <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200">
@@ -823,7 +840,7 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
 
             <div className="mt-auto pt-6">
               <button onClick={onConfirm}
-                className="w-full text-white font-bold py-3.5 rounded-full"
+                className={UI.primaryBtn}
                 style={{ background: WA.accent }}>
                 Yes, that's me
               </button>
@@ -843,34 +860,34 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Re-check your details" onBack={onBack} />
-      <div className="p-6 flex-1 overflow-y-auto">
+      <div className={UI.body}>
         <p className="text-sm text-gray-600 mb-5 leading-relaxed">
           Please enter your <b>full name</b> and PAN number exactly as on your PAN card.
         </p>
         <div className="space-y-5">
           <div>
-            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">Full name (as per PAN)</label>
+            <label className={UI.eyebrow}>Full name (as per PAN)</label>
             <input value={localName} onChange={(e) => setLocalName(e.target.value)}
               placeholder="e.g. Rahul Kumar"
-              className="w-full border-b-2 pb-2 mt-1 text-lg outline-none"
+              className="w-full border-b-2 pb-2 mt-1 text-lg outline-none bg-transparent"
               style={{ borderColor: WA.accent }} />
           </div>
           <div>
-            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">PAN number</label>
+            <label className={UI.eyebrow}>PAN number</label>
             <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().slice(0, 10))}
               placeholder="ABCDE1234F"
-              className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none"
+              className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none bg-transparent"
               style={{ borderColor: WA.accent }} />
           </div>
         </div>
-        <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-3">
-          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find these</div>
+        <div className={`mt-6 ${UI.helperCard}`}>
+          <div className={`${UI.eyebrow} mb-2`}>Where to find these</div>
           <img src={panCardRefV2.url} alt="PAN card reference" className="w-full rounded-lg" />
         </div>
       </div>
-      <div className="p-6 pt-2">
+      <div className={UI.footer}>
         <button onClick={() => { setName(localName.trim()); onContinue(); }} disabled={!valid}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          className={UI.primaryBtn}
           style={{ background: WA.accent }}>
           Continue
         </button>
@@ -910,12 +927,12 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Verify linked number" onBack={onBack} />
-      <div className="p-6 flex-1 overflow-y-auto">
-        <div className="rounded-2xl border border-amber-200 p-5 mb-5" style={{ background: "#FFF8EC" }}>
-          <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3" style={{ background: "#FDE9C2" }}>
-            <AlertTriangle className="w-6 h-6 text-amber-700" />
+      <div className={UI.body}>
+        <div className={`${UI.amberCard} mb-5`} style={UI.amberCardStyle}>
+          <div className={`${UI.amberIcon} mb-3`} style={UI.amberIconStyle}>
+            <AlertTriangle className="w-5 h-5 text-amber-700" />
           </div>
-          <div className="text-[11px] uppercase font-bold tracking-wider text-amber-700 mb-1">Bureau result</div>
+          <div className={`${UI.eyebrowAmber} mb-1`}>Bureau result</div>
           <h2 className="text-lg font-bold text-gray-900 leading-snug">
             We couldn't find your record
           </h2>
@@ -925,9 +942,9 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
 
         </div>
 
-        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Mobile number</label>
-        <div className="flex items-center gap-2 border-2 rounded-xl px-3 py-3 mb-4"
-          style={{ borderColor: phoneValid ? WA.accent : "#E5E7EB" }}>
+        <label className={`${UI.eyebrow} block mb-2`}>Mobile number</label>
+        <div className="flex items-center gap-2 border-b-2 pb-2 mb-4"
+          style={{ borderColor: WA.accent }}>
           <span className="text-gray-700 font-semibold">+91</span>
           <input
             type="tel"
@@ -936,13 +953,13 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
             value={phone}
             onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); setOtpSent(false); }}
             placeholder="Enter linked mobile number"
-            className="flex-1 outline-none text-base text-gray-900 bg-transparent"
+            className="flex-1 outline-none text-lg text-gray-900 bg-transparent"
           />
         </div>
 
         {otpSent && (
           <>
-            <div className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Enter OTP</div>
+            <div className={`${UI.eyebrow} mb-2`}>Enter OTP</div>
             <div className="flex gap-2 justify-between mb-3">
               {digits.map((d, i) => (
                 <div key={i}
@@ -970,18 +987,18 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
           <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> One-time · never charged</li>
         </ul>
       </div>
-      <div className="p-6 pt-2 space-y-2.5">
+      <div className={`${UI.footer} space-y-2.5`}>
         {!otpSent && (
           <button
             onClick={() => { if (phoneValid) setOtpSent(true); }}
             disabled={!phoneValid}
-            className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+            className={UI.primaryBtn}
             style={{ background: WA.accent }}>
             Send OTP
           </button>
         )}
         <button onClick={onSkip}
-          className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
+          className={UI.secondaryBtn}>
           I'll do it later
         </button>
       </div>
@@ -1008,20 +1025,20 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
       <WATopBar title="Confirm your identity" onBack={onBack} />
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6">
-          <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
-          <p className="text-gray-600 text-sm">{updated ? "Re-fetching with your new PAN…" : "Fetching your details from the bureau…"}</p>
+          <div className={UI.spinnerWrap} style={UI.spinnerStyle} />
+          <p className="text-gray-700 font-semibold">{updated ? "Re-fetching with your new PAN…" : "Fetching your details from the bureau…"}</p>
         </div>
       ) : (
         <>
-          <div className="p-5 flex-1 overflow-y-auto">
-            <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">{updated ? "Updated details — is this you?" : "Is this you?"}</p>
+          <div className={UI.body}>
+            <p className={`${UI.eyebrow} mb-3`}>{updated ? "Updated details — is this you?" : "Is this you?"}</p>
             <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="px-4 py-3 flex items-center gap-3" style={{ background: "#F1FBF4" }}>
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-white" style={{ background: WA.green }}>
                   <User className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm uppercase font-bold text-emerald-700 tracking-wide">Bureau Match</div>
+                  <div className={UI.eyebrowEmerald}>Bureau Match</div>
                 </div>
                 <BadgeCheck className="w-5 h-5 text-emerald-600" />
               </div>
@@ -1034,7 +1051,7 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
                         <Icon className="w-4 h-4 text-gray-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">{r.label}</div>
+                        <div className={UI.eyebrow}>{r.label}</div>
                         <div className="font-semibold text-gray-900 text-[15px] truncate">{r.value}</div>
                       </div>
                     </div>
@@ -1046,14 +1063,14 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
               These details came from your credit bureau record. Please confirm before we proceed.
             </p>
           </div>
-          <div className="p-5 pt-2 space-y-2.5">
+          <div className={`${UI.footer} space-y-2.5`}>
             <button onClick={onYes}
-              className="w-full text-white font-bold py-3.5 rounded-full"
+              className={UI.primaryBtn}
               style={{ background: WA.accent }}>
               Yes, that's me
             </button>
             <button onClick={onNotMe}
-              className="w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white">
+              className={UI.secondaryBtn}>
               Not me
             </button>
           </div>
@@ -1079,7 +1096,7 @@ function BureauRefetch({ onDone }: { onDone: () => void }) {
       <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
         {phase === "loading" ? (
           <>
-            <div className="w-14 h-14 border-4 rounded-full animate-spin mb-5" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+            <div className={`${UI.spinnerWrap} mb-5`} style={UI.spinnerStyle} />
             <p className="text-gray-700 font-semibold">Looking up your credit record…</p>
             <p className="text-gray-500 text-sm mt-1">Using your updated PAN.</p>
           </>
@@ -1109,34 +1126,34 @@ function EditDetailsScreen({ user, name, setName, onBack, onContinue }:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Edit your details" onBack={onBack} />
-      <div className="p-6 flex-1 overflow-y-auto">
+      <div className={UI.body}>
         <p className="text-sm text-gray-600 mb-5 leading-relaxed">
           Please enter your <b>full name</b> and PAN number exactly as on your PAN card.
         </p>
         <div className="space-y-5">
           <div>
-            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">Full name (as per PAN)</label>
+            <label className={UI.eyebrow}>Full name (as per PAN)</label>
             <input value={localName} onChange={(e) => setLocalName(e.target.value)}
               placeholder="e.g. Aarav Mehta"
-              className="w-full border-b-2 pb-2 mt-1 text-lg outline-none"
+              className="w-full border-b-2 pb-2 mt-1 text-lg outline-none bg-transparent"
               style={{ borderColor: WA.accent }} />
           </div>
           <div>
-            <label className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">PAN number</label>
+            <label className={UI.eyebrow}>PAN number</label>
             <input value={pan} onChange={(e) => setPan(e.target.value.toUpperCase().slice(0, 10))}
               placeholder="ABCDE1234F"
-              className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none"
+              className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none bg-transparent"
               style={{ borderColor: WA.accent }} />
           </div>
         </div>
-        <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-3">
-          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find these</div>
+        <div className={`mt-6 ${UI.helperCard}`}>
+          <div className={`${UI.eyebrow} mb-2`}>Where to find these</div>
           <img src={panCardRefV2.url} alt="PAN card reference" className="w-full rounded-lg" />
         </div>
       </div>
-      <div className="p-6 pt-2">
+      <div className={UI.footer}>
         <button onClick={() => { setName(localName.trim()); onContinue(); }} disabled={!valid}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          className={UI.primaryBtn}
           style={{ background: WA.accent }}>
           Continue
         </button>
@@ -1160,7 +1177,7 @@ function Ntc2FetchScreen({ onDone }: { onDone: () => void }) {
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="Fetching from bureau" />
       <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
-        <div className="w-14 h-14 border-4 rounded-full animate-spin mb-5" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+        <div className={`${UI.spinnerWrap} mb-5`} style={UI.spinnerStyle} />
         <p className="text-gray-700 font-semibold">Looking up your credit record…</p>
         <p className="text-gray-500 text-sm mt-1">This usually takes a few seconds.</p>
       </div>
@@ -1176,21 +1193,21 @@ function Ntc2NoHistoryScreen({ user, name, onHasCredit, onNoCredit, onBack }:
   return (
     <div className="flex-1 flex flex-col bg-white">
       <WATopBar title="No credit history found" onBack={onBack} />
-      <div className="p-5 flex-1 overflow-y-auto">
-        <div className="rounded-2xl p-5 border border-amber-100" style={{ background: "#FFFBEB" }}>
+      <div className={UI.body}>
+        <div className={UI.amberCard} style={UI.amberCardStyle}>
           <div className="flex items-start gap-3">
-            <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style={{ background: "#FEF3C7" }}>
-              <AlertTriangle className="w-5 h-5 text-amber-600" />
+            <div className={UI.amberIcon} style={UI.amberIconStyle}>
+              <AlertTriangle className="w-5 h-5 text-amber-700" />
             </div>
             <div className="min-w-0">
-              <div className="text-[11px] uppercase font-bold tracking-wider text-amber-700">Bureau result</div>
+              <div className={UI.eyebrowAmber}>Bureau result</div>
               <div className="font-bold text-gray-900 mt-0.5">Hi {displayName}, we couldn't find any credit record.</div>
             </div>
           </div>
         </div>
 
         <div className="mt-6">
-          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Quick check</div>
+          <div className={`${UI.eyebrow} mb-2`}>Quick check</div>
           <h3 className="text-[17px] font-bold text-gray-900 leading-snug">
             Do you currently have any active loan or credit card?
           </h3>
@@ -1227,11 +1244,11 @@ function Ntc2NoHistoryScreen({ user, name, onHasCredit, onNoCredit, onBack }:
         </div>
 
       </div>
-      <div className="p-5 pt-2">
+      <div className={UI.footer}>
         <button
           onClick={() => (choice === "yes" ? onHasCredit() : onNoCredit())}
           disabled={!choice}
-          className="w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40"
+          className={UI.primaryBtn}
           style={{ background: WA.accent }}>
           Continue
         </button>

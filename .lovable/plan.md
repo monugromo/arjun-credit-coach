@@ -1,53 +1,46 @@
 
 ## Goal
 
-When the user first lands on the chat screen (right after onboarding), show a modal popup with their mini credit profile + reassurance copy. The popup offers two actions:
+Pure design consistency pass across the onboarding screens (Landing → Phone → OTP → Name → PAN → Bureau Validate → No-history → Edit → Verify linked number → Paywall → Razorpay). No copy, no icons, no new/removed elements — only visual normalization so every screen feels like the same product.
 
-- **Ask our finance expert** → starts the existing call flow, which after the call triggers the existing auto‑message flow (unchanged).
-- **Cancel** → just closes the popup.
+## Inconsistencies observed
 
-Works for both demo users: NTC (Rahul) and Credit-score / Distressed (Sonu). Nothing else in the app changes.
+Screens compared: `Landing`, `PhoneScreen`, `OtpScreen`, `NameScreen`, `PanCardScreen`, `PanInputScreen`, `EditDetailsScreen`, `PanMobileLinkScreen`, `BureauValidateScreen`, `BureauRefetch`, `Ntc2FetchScreen`, `Ntc2NoHistoryScreen`, `ExpiredScreen`.
 
-## What appears in the popup
+1. **Body / footer padding drifts** between `p-6` (Phone, Name, PanInput, EditDetails, PanMobileLink) and `p-5` (PanCard, BureauValidate, Ntc2NoHistory, ExpiredScreen).
+2. **Primary CTA styling drifts**: onboarding uses `py-3.5 rounded-full`, `ExpiredScreen` uses `py-4 shadow-md`, Razorpay uses `rounded-lg`. Onboarding secondary buttons use two slightly different border colors (`border-gray-300` vs the ring inside disabled state).
+3. **Input styles are mixed**: underline `border-b-2` on Name / PanInput / EditDetails, boxed `border-2 rounded-xl` on PanMobileLink phone field. All onboarding text inputs should share one shape.
+4. **Eyebrow labels drift**: `text-xs uppercase font-semibold tracking-wide` on BureauValidate ("Is this you?") vs `text-[11px] uppercase font-bold tracking-wider` on Ntc2NoHistory / PanMobileLink / PanInput / EditDetails.
+5. **Amber alert cards differ**: Ntc2NoHistory uses `bg #FFFBEB / border-amber-100 / icon bg #FEF3C7 / icon w-11 h-11`, PanMobileLink uses `bg #FFF8EC / border-amber-200 / icon bg #FDE9C2 / icon w-12 h-12`. Same component role, different look.
+6. **Bureau-match card eyebrow** is `text-sm uppercase font-bold` — noticeably larger than every other eyebrow in the flow.
+7. **Loading spinners** vary in size (`w-12` in PanCard/BureauValidate, `w-14` in BureauRefetch/Ntc2Fetch) with the same visual role.
+8. **Footer padding** mixes `p-6 pt-2`, `p-5 pt-2`, `p-6` — creates uneven bottom safe-area across the flow.
+9. **"Where to find" helper card**: NameScreen has a small caption under the image; PanInput / EditDetails omit it — asymmetric with the same block.
 
-Header: user avatar/initial + name + phone.
+## Changes (visual only)
 
-Mini credit profile card (same numbers already used elsewhere in the app):
+Introduce local shared style constants at the top of `src/routes/index.tsx` (near the existing `WA` tokens) and apply them across the onboarding screens listed above. No new components, no changed markup structure, no text edits.
 
-- **Distressed (Sonu, 9876500002)** — Score `413`, band `Poor`, `3 loans · 0 cards · 5 enquiries`, small "6 issues to fix" chip.
-- **NTC (Rahul, 9876500001)** — Score `—`, band `No score yet`, `0 loans · 0 cards · 0 enquiries`, small "No credit history" chip.
-
-Reassurance line (as requested, same copy for both):
-> "It's okay, you are not rejected for a loan. Your score is just less. We will help you build it."
-
-Buttons:
-- Primary: **Ask our finance expert** (phone icon)
-- Secondary: **Cancel**
-
-## Behavior change on the landing chat screen
-
-Current flow (`src/routes/index.tsx`, `useEffect` around lines 141–161):
-1. Enter chat → Kabir auto-streams intro messages → auto navigates to `call-incoming`.
-
-New flow:
-1. Enter chat → Kabir auto-streams the same intro messages (unchanged).
-2. Instead of auto‑navigating to `call-incoming`, open the new popup (state: `showCallPopup = true`).
-3. **Ask our finance expert** → close popup, `setChatPhase("awaiting-consent")`, `go("call-incoming")` (this reuses the existing `IncomingCall` → `ActiveCall` → `postCallChat` path, so the existing auto messages after the call fire exactly as they do today).
-4. **Cancel** → close popup only. Chat stays where it is; no other side effects. (The user can re-open by tapping the existing header call icon if they want — no new entry points added.)
-
-Nothing else in the chat, post-call streaming, tasks, report screens, or landing/onboarding is touched.
-
-## Technical details
-
-- **New component** `MiniProfilePopup` in `src/routes/index.tsx` (kept local to match the file's existing pattern of co-located components). Props: `user: DemoUser`, `onCall: () => void`, `onCancel: () => void`. Renders as a centered modal with a dark scrim (`fixed inset-0 z-50`), rounded card, uses existing tokens (`WA.green`, gray palette) and `lucide-react` icons already imported (`Phone`, `X`, `TrendingDown`/`UserPlus`).
-- **Content branching** inside the component on `user.key === "ntc"` vs `"distressed"` — reuse numbers already present in `KabirProfile` / `CreditReport` (score `413`, `NTC`, counts `3/0/5` vs `0/0/0`, `distressedFactors` count for the "issues" chip).
-- **State**: add `const [showCallPopup, setShowCallPopup] = useState(false)` in the main `App` component.
-- **Trigger**: in the intro `useEffect`, replace `setScreen("call-incoming")` with `setShowCallPopup(true)` (keep `setChatPhase("awaiting-consent")` so we stay in the correct phase).
-- **Reset**: clear `showCallPopup` in `logout()` alongside the other resets.
-- **Render**: mount `{showCallPopup && user && <MiniProfilePopup ... />}` alongside the existing screen switch so it overlays the chat.
-- No changes to `IncomingCall`, `ActiveCall`, `postCallChat`, or any chat message content — the automatic post-call messages continue to fire from the existing code path.
+- **Spacing**: standardize onboarding body to `p-5` and footer button area to `px-5 pb-6 pt-3` on every WATopBar screen (Phone, OTP, Name, PanCard, PanInput, EditDetails, PanMobileLink, BureauValidate, Ntc2NoHistory). ExpiredScreen keeps its own hero layout but adopts the same horizontal padding (`px-5`).
+- **Primary CTA**: single class token — `w-full text-white font-bold py-3.5 rounded-full disabled:opacity-40` with `background: WA.accent`. Apply everywhere in onboarding. ExpiredScreen keeps `shadow-md` (hero emphasis) but drops `py-4` → `py-3.5` to match. Razorpay is a separate skin (Razorpay-branded) — untouched.
+- **Secondary CTA**: single token — `w-full font-semibold py-3.5 rounded-full border border-gray-300 text-gray-700 bg-white`. Apply on BureauValidate "Not me" and PanMobileLink "I'll do it later".
+- **Inputs**: standardize on the underline pattern already used by Name/PanInput/EditDetails (`w-full border-b-2 pb-2 text-lg outline-none bg-transparent`, `borderColor: WA.accent`). Convert the PanMobileLink phone field to the same underline shape (keep the `+91` prefix inline).
+- **Eyebrow label**: single token — `text-[11px] uppercase font-bold tracking-wider text-gray-500` (amber variant uses `text-amber-700`, emerald variant uses `text-emerald-700`). Applies to "Is this you?", "Bureau result", "Bureau Match", "Where to find", "Quick check", "Payment methods"-style labels inside onboarding (Razorpay's own eyebrow untouched).
+- **Amber alert card**: unify to `bg #FFFBEB / border border-amber-100 / rounded-2xl p-5`, icon bubble `w-11 h-11 rounded-full bg #FEF3C7` with `AlertTriangle w-5 h-5 text-amber-700`. Apply to Ntc2NoHistory and PanMobileLink.
+- **Loading spinner**: single size `w-12 h-12 border-4`, `borderColor: #E5E7EB`, `borderTopColor: WA.accent`, with body copy `text-gray-700 font-semibold` + subcopy `text-gray-500 text-sm`. Apply to PanCard, BureauValidate, BureauRefetch, Ntc2Fetch.
+- **"Where to find" helper card**: same shell in Name, PanInput, EditDetails — `rounded-xl border border-gray-200 bg-gray-50 p-3`, eyebrow token, image `w-full rounded-lg`, no caption line (removes the extra caption from NameScreen to match the other two). Image sources unchanged (NameScreen keeps `panCardRef`, recheck screens keep `panCardRefV2` per prior instructions).
+- **Bureau Match card header**: switch the "BUREAU MATCH" label to the eyebrow token so it matches every other eyebrow in the flow; layout unchanged.
 
 ## Out of scope
 
-- No changes to landing, phone/OTP, PAN, permissions, NTC checklist, chat messages, report, tasks, profile, or subscription screens.
-- No new routes, no new data, no design-token changes.
+- No copy changes.
+- No new or removed elements/icons/screens.
+- No routing changes.
+- No changes to Razorpay checkout skin, chat screen, report, tasks, profile, subscription, help.
+- No changes to onboarding routing or business logic.
+
+## Technical notes
+
+- All edits are inside `src/routes/index.tsx`.
+- Add three small local constants near `WA`: `PRIMARY_BTN`, `SECONDARY_BTN`, `EYEBROW` class strings. Use `style={{ background: WA.accent }}` alongside `PRIMARY_BTN` as today.
+- Apply edits screen-by-screen; verify build after the batch and visually re-check Landing → Paywall in the preview.
