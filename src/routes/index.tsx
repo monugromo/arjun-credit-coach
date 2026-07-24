@@ -415,7 +415,7 @@ function Index() {
           <BureauValidateScreen
             user={user} name={name} updated={bureauUpdated}
             onYes={() => goToPaywall()}
-            onNotMe={() => go(((user.key === "ntc" || user.key === "ntc2") && bureauUpdated) ? "paywall-loader" : "panInput")}
+            onNotMe={() => (((user.key === "ntc" || user.key === "ntc2") && bureauUpdated) ? goToPaywall() : go("panInput"))}
             onBack={() => go("name")}
           />
         )}
