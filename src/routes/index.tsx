@@ -898,6 +898,13 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
     return () => { clearTimeout(t1); clearInterval(iv); };
   }, [otpSent]);
 
+  useEffect(() => {
+    if (otpSent && otpValid) {
+      const t = setTimeout(() => onVerified(), 500);
+      return () => clearTimeout(t);
+    }
+  }, [otpSent, otpValid, onVerified]);
+
   const digits = otp.padEnd(6, " ").slice(0, 6).split("");
 
   return (
