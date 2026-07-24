@@ -447,6 +447,9 @@ function Index() {
             onContinue={() => go(user.phone === "9876500006" ? "pan-mobile-link" : "bureau-refetch")}
           />
         )}
+        {screen === "paywall-loader" && (
+          <PaywallLoaderScreen onDone={() => go("expired")} />
+        )}
         {screen === "expired" && user && (
           <ExpiredScreen user={user} name={name} onLogout={logout}
             onRestart={() => go("payment")} />
