@@ -401,7 +401,27 @@ function Index() {
           <Ntc2FetchScreen onDone={() => go("ntc2-nohistory")} />
         )}
         {screen === "bureau-refetch" && user && (
-          <BureauRefetch onDone={() => {
+          <BureauRefetch
+            variant={user.key === "ntc4" ? "masked" : "found"}
+            onDone={() => {
+              if (user.key === "ntc4") return go("bureau-masked");
+              setBureauUpdated(true);
+              if (user.updated) setName(user.updated.name);
+              go("bureau-validate");
+            }} />
+        )}
+        {screen === "bureau-masked" && user && (
+          <BureauMaskedScreen user={user}
+            onBack={() => go("panInput")}
+            onContinue={() => go("bureau-masked-otp")} />
+        )}
+        {screen === "bureau-masked-otp" && user && (
+          <BureauMaskedOtpScreen user={user}
+            onBack={() => go("bureau-masked")}
+            onDone={() => go("bureau-masked-fetch")} />
+        )}
+        {screen === "bureau-masked-fetch" && user && (
+          <BureauRefetch variant="found" onDone={() => {
             setBureauUpdated(true);
             if (user.updated) setName(user.updated.name);
             go("bureau-validate");
