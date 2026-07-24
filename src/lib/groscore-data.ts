@@ -51,19 +51,6 @@ export const DEMOS: Record<string, DemoUser> = {
     score: 748,
     band: "Good",
   },
-  "9876500005": {
-    key: "ntc2",
-    phone: "9876500005",
-    name: "Aarav",
-    pan: "ABCPA7788F",
-    dob: "05/11/2000",
-    hasScore: false,
-    updated: {
-      name: "Aarav Mehta",
-      pan: "AMHPA7788F",
-      dob: "05/11/2000",
-    },
-  },
   "9876500006": {
     key: "ntc3",
     phone: "9876500006",
