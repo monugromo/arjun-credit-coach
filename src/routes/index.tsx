@@ -399,7 +399,7 @@ function Index() {
         {screen === "otp" && user && (
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
             onBack={() => go("phone")} onDone={() => {
-              if (user.expired) return goToPaywall();
+              if (user.expired) return goToPaywall("distressed");
               return go("name");
             }} />
         )}
