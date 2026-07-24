@@ -948,6 +948,42 @@ function BureauFetching({ onFound, onNotFound }: { onFound: () => void; onNotFou
   );
 }
 
+/* ====================== BUREAU REFETCH (after "Not me" PAN entry — found updated details) ====================== */
+function BureauRefetch({ onDone }: { onDone: () => void }) {
+  const [phase, setPhase] = useState<"loading" | "found">("loading");
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase("found"), 1600);
+    const t2 = setTimeout(onDone, 2600);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [onDone]);
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      <WATopBar title="Re-fetching from bureau" />
+      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
+        {phase === "loading" ? (
+          <>
+            <div className="w-14 h-14 border-4 rounded-full animate-spin mb-5" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
+            <p className="text-gray-700 font-semibold">Looking up your credit record…</p>
+            <p className="text-gray-500 text-sm mt-1">Using your updated PAN.</p>
+          </>
+        ) : (
+          <>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ background: "#DCF7E3" }}>
+              <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">Updated details found</h2>
+            <p className="text-gray-600 text-sm mt-2 max-w-xs leading-relaxed">
+              We matched your new PAN with a bureau record. Please review the updated details on the next screen.
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
+
 /* ====================== NTC2: Bureau fetch (no history) ====================== */
 function Ntc2FetchScreen({ onDone }: { onDone: () => void }) {
   useEffect(() => {
