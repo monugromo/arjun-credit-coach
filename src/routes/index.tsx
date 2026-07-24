@@ -1004,6 +1004,11 @@ function EditDetailsScreen({ user, name, setName, onBack, onContinue }:
         <p className="text-[11px] text-gray-500 mt-5 leading-relaxed">
           We'll use these to re-check your credit bureau record.
         </p>
+        <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-3">
+          <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-2">Where to find these</div>
+          <img src={panCardRef} alt="PAN card reference" className="w-full rounded-lg" />
+          <div className="text-[11px] text-gray-500 mt-2 text-center">Copy your name and 10-character PAN exactly as shown on your PAN card.</div>
+        </div>
       </div>
       <div className="p-6 pt-2">
         <button onClick={() => { setName(localName.trim()); onContinue(); }} disabled={!valid}
