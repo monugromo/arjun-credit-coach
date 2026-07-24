@@ -3493,6 +3493,7 @@ const ALL_SCREENS: Array<{ key: Screen; label: string; section: string }> = [
   { key: "name", label: "4. Name", section: "Onboarding" },
   { key: "fetch", label: "5. PAN card confirm", section: "Onboarding" },
   { key: "panInput", label: "5b. PAN manual entry", section: "Onboarding" },
+  { key: "pan-mobile-link", label: "5c. PAN → linked mobile OTP", section: "Onboarding" },
   { key: "perm-all", label: "6a. Permissions (SMS · Phone · Notif · Mic)", section: "Permissions" },
   { key: "perm-blocked", label: "6b. Permissions blocked", section: "Permissions" },
   { key: "perm-email-intro", label: "6c. Gmail intro", section: "Permissions" },
