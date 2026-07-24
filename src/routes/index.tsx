@@ -790,12 +790,12 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
       <div className="p-5 flex-1 flex flex-col">
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-4">
-            <div className="w-12 h-12 border-4 rounded-full animate-spin" style={{ borderColor: "#E5E7EB", borderTopColor: WA.accent }} />
-            <p className="text-gray-600">Fetching your credit profile…</p>
+            <div className={UI.spinnerWrap} style={UI.spinnerStyle} />
+            <p className="text-gray-700 font-semibold">Fetching your credit profile…</p>
           </div>
         ) : (
           <>
-            <p className="text-xs uppercase font-semibold text-gray-500 tracking-wide mb-3">Is this you?</p>
+            <p className={`${UI.eyebrow} mb-3`}>Is this you?</p>
 
             {/* PAN card (real reference image with user data overlay) */}
             <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200">
