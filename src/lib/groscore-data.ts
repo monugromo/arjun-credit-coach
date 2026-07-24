@@ -50,6 +50,14 @@ export const DEMOS: Record<string, DemoUser> = {
     score: 748,
     band: "Good",
   },
+  "9876500005": {
+    key: "ntc2",
+    phone: "9876500005",
+    name: "Aarav",
+    pan: "ABCPA7788F",
+    dob: "05/11/2000",
+    hasScore: false,
+  },
 };
 
 export const maskPan = (pan: string) => pan.slice(0, 3) + "xxxx" + pan.slice(-1);
