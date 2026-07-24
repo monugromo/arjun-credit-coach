@@ -148,6 +148,7 @@ function Index() {
   };
 
   const go = (s: Screen) => { setMenuOpen(false); setScreen(s); };
+  const goToPaywall = () => go("paywall-loader");
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
