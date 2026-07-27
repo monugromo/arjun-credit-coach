@@ -888,9 +888,20 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
   { user: DemoUser; name: string; setName: (v: string) => void; onBack: () => void; onContinue: () => void }) {
   const [localName, setLocalName] = useState(name || user.name);
   const [pan, setPan] = useState("");
-  const valid = localName.trim().length >= 2 && pan.length === 10;
+  const [phone, setPhone] = useState(user.phone);
+  const [sheet, setSheet] = useState(false);
+  const phoneChanged = phone !== user.phone;
+  const phoneValid = /^[6-9]\d{9}$/.test(phone);
+  const valid = localName.trim().length >= 2 && pan.length === 10 && phoneValid;
+
+  const proceed = () => {
+    setName(localName.trim());
+    if (phoneChanged) setSheet(true);
+    else onContinue();
+  };
+
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white relative">
       <WATopBar title="Re-check your details" onBack={onBack} />
       <div className={UI.body}>
         <p className="text-sm text-gray-600 mb-5 leading-relaxed">
@@ -911,6 +922,21 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
               className="w-full border-b-2 pb-2 mt-1 text-lg tracking-widest outline-none bg-transparent"
               style={{ borderColor: WA.accent }} />
           </div>
+          <div>
+            <label className={UI.eyebrow}>Mobile number</label>
+            <div className="flex items-center gap-2 border-b-2 pb-2 mt-1"
+              style={{ borderColor: WA.accent }}>
+              <span className="text-gray-700 font-semibold">+91</span>
+              <input value={phone} type="tel" inputMode="numeric" maxLength={10}
+                onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                className="flex-1 text-lg tracking-wide outline-none bg-transparent" />
+            </div>
+            {phoneChanged && (
+              <p className="text-xs text-amber-700 mt-2">
+                New number — we'll verify it with an OTP.
+              </p>
+            )}
+          </div>
         </div>
         <div className={`mt-6 ${UI.helperCard}`}>
           <div className={`${UI.eyebrow} mb-2`}>Where to find these</div>
@@ -918,15 +944,71 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
         </div>
       </div>
       <div className={UI.footer}>
-        <button onClick={() => { setName(localName.trim()); onContinue(); }} disabled={!valid}
+        <button onClick={proceed} disabled={!valid}
           className={UI.primaryBtn}
           style={{ background: WA.accent }}>
           Continue
         </button>
       </div>
+      {sheet && (
+        <OtpSheet phone={phone} onClose={() => setSheet(false)} onVerified={onContinue} />
+      )}
     </div>
   );
 }
+
+/* ====================== OTP BOTTOM SHEET ====================== */
+function OtpSheet({ phone, onClose, onVerified }:
+  { phone: string; onClose: () => void; onVerified: () => void }) {
+  const [otp, setOtp] = useState("");
+  const [timer, setTimer] = useState(30);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setOtp("123456"), 1200);
+    const iv = setInterval(() => setTimer((s) => (s > 0 ? s - 1 : 0)), 1000);
+    return () => { clearTimeout(t1); clearInterval(iv); };
+  }, []);
+
+  useEffect(() => {
+    if (otp.length === 6) {
+      const t = setTimeout(() => onVerified(), 600);
+      return () => clearTimeout(t);
+    }
+  }, [otp, onVerified]);
+
+  const digits = otp.padEnd(6, " ").slice(0, 6).split("");
+
+  return (
+    <div className="absolute inset-0 z-50 flex flex-col justify-end">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative bg-white rounded-t-3xl p-5 pb-8 animate-in slide-in-from-bottom duration-200">
+        <div className="w-10 h-1 rounded-full bg-gray-300 mx-auto mb-4" />
+        <h3 className="text-lg font-bold text-gray-900">Verify your number</h3>
+        <p className="text-sm text-gray-600 mt-1">
+          OTP sent to <span className="font-semibold text-gray-900">+91 {phone}</span>
+        </p>
+        <div className="relative mt-5">
+          <input autoFocus type="tel" inputMode="numeric" maxLength={6} value={otp.trim()}
+            onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            className="absolute inset-0 w-full h-full opacity-0" />
+          <div className="flex gap-2 justify-between pointer-events-none">
+            {digits.map((d, i) => (
+              <div key={i}
+                className="flex-1 h-12 rounded-xl border-2 flex items-center justify-center text-lg font-bold text-gray-900"
+                style={{ borderColor: d.trim() ? WA.accent : "#E5E7EB" }}>
+                {d.trim()}
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="text-xs text-gray-500 mt-4">
+          {timer > 0 ? `Resend OTP in ${timer}s` : "Resend OTP"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 
 /* ====================== PAN → MOBILE LINK (verify OTP on linked number) ====================== */
 function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
