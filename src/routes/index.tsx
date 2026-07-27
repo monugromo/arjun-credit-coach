@@ -980,16 +980,19 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
 
 
 /* ====================== OTP BOTTOM SHEET ====================== */
-function OtpSheet({ phone, onClose, onVerified }:
-  { phone: string; onClose: () => void; onVerified: () => void }) {
+function OtpSheet({ phone, title, onClose, onVerified }:
+  { phone: string; title?: string; onClose: () => void; onVerified: () => void }) {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(30);
+  const [sending, setSending] = useState(true);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setOtp("123456"), 1200);
+    const t0 = setTimeout(() => setSending(false), 900);
+    const t1 = setTimeout(() => setOtp("123456"), 2100);
     const iv = setInterval(() => setTimer((s) => (s > 0 ? s - 1 : 0)), 1000);
-    return () => { clearTimeout(t1); clearInterval(iv); };
+    return () => { clearTimeout(t0); clearTimeout(t1); clearInterval(iv); };
   }, []);
+
 
   useEffect(() => {
     if (otp.length === 6) {
