@@ -896,15 +896,17 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
   const [pan, setPan] = useState("");
   const [phone, setPhone] = useState(user.phone);
   const [sheet, setSheet] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
   const phoneChanged = phone !== user.phone;
   const phoneValid = /^[6-9]\d{9}$/.test(phone);
-  const valid = localName.trim().length >= 2 && pan.length === 10 && phoneValid;
+  const needsVerify = phoneChanged && !phoneVerified;
+  const valid = localName.trim().length >= 2 && pan.length === 10 && phoneValid && !needsVerify;
 
   const proceed = () => {
     setName(localName.trim());
-    if (phoneChanged) setSheet(true);
-    else onContinue();
+    onContinue();
   };
+
 
   return (
     <div className="flex-1 flex flex-col bg-white relative">
@@ -934,12 +936,24 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
               style={{ borderColor: WA.accent }}>
               <span className="text-gray-700 font-semibold">+91</span>
               <input value={phone} type="tel" inputMode="numeric" maxLength={10}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); setPhoneVerified(false); }}
                 className="flex-1 text-lg tracking-wide outline-none bg-transparent" />
+              {needsVerify && phoneValid && (
+                <button onClick={() => setSheet(true)}
+                  className="text-xs font-bold px-3 py-1.5 rounded-full text-white shrink-0"
+                  style={{ background: WA.accent }}>
+                  Verify OTP
+                </button>
+              )}
+              {phoneChanged && phoneVerified && (
+                <span className="text-xs font-bold text-emerald-600 shrink-0 flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Verified
+                </span>
+              )}
             </div>
-            {phoneChanged && (
+            {needsVerify && (
               <p className="text-xs text-amber-700 mt-2">
-                New number — we'll verify it with an OTP.
+                New number — verify it with an OTP to continue.
               </p>
             )}
           </div>
@@ -957,23 +971,28 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
         </button>
       </div>
       {sheet && (
-        <OtpSheet phone={phone} onClose={() => setSheet(false)} onVerified={onContinue} />
+        <OtpSheet phone={phone} onClose={() => setSheet(false)}
+          onVerified={() => { setPhoneVerified(true); setSheet(false); }} />
       )}
     </div>
   );
 }
 
+
 /* ====================== OTP BOTTOM SHEET ====================== */
-function OtpSheet({ phone, onClose, onVerified }:
-  { phone: string; onClose: () => void; onVerified: () => void }) {
+function OtpSheet({ phone, title, onClose, onVerified }:
+  { phone: string; title?: string; onClose: () => void; onVerified: () => void }) {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(30);
+  const [sending, setSending] = useState(true);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setOtp("123456"), 1200);
+    const t0 = setTimeout(() => setSending(false), 900);
+    const t1 = setTimeout(() => setOtp("123456"), 2100);
     const iv = setInterval(() => setTimer((s) => (s > 0 ? s - 1 : 0)), 1000);
-    return () => { clearTimeout(t1); clearInterval(iv); };
+    return () => { clearTimeout(t0); clearTimeout(t1); clearInterval(iv); };
   }, []);
+
 
   useEffect(() => {
     if (otp.length === 6) {
@@ -989,27 +1008,37 @@ function OtpSheet({ phone, onClose, onVerified }:
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-white rounded-t-3xl p-5 pb-8 animate-in slide-in-from-bottom duration-200">
         <div className="w-10 h-1 rounded-full bg-gray-300 mx-auto mb-4" />
-        <h3 className="text-lg font-bold text-gray-900">Verify your number</h3>
+        <h3 className="text-lg font-bold text-gray-900">{title || "Verify your number"}</h3>
         <p className="text-sm text-gray-600 mt-1">
-          OTP sent to <span className="font-semibold text-gray-900">+91 {phone}</span>
+          {sending ? "Sending OTP to " : "OTP sent to "}
+          <span className="font-semibold text-gray-900">+91 {phone}</span>
         </p>
-        <div className="relative mt-5">
-          <input autoFocus type="tel" inputMode="numeric" maxLength={6} value={otp.trim()}
-            onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-            className="absolute inset-0 w-full h-full opacity-0" />
-          <div className="flex gap-2 justify-between pointer-events-none">
-            {digits.map((d, i) => (
-              <div key={i}
-                className="flex-1 h-12 rounded-xl border-2 flex items-center justify-center text-lg font-bold text-gray-900"
-                style={{ borderColor: d.trim() ? WA.accent : "#E5E7EB" }}>
-                {d.trim()}
-              </div>
-            ))}
+        {sending ? (
+          <div className="flex items-center gap-2 mt-6 mb-2 text-sm text-gray-500">
+            <Loader2 className="w-4 h-4 animate-spin" style={{ color: WA.accent }} /> Please wait…
           </div>
-        </div>
-        <p className="text-xs text-gray-500 mt-4">
-          {timer > 0 ? `Resend OTP in ${timer}s` : "Resend OTP"}
-        </p>
+        ) : (
+          <>
+            <div className="relative mt-5">
+              <input autoFocus type="tel" inputMode="numeric" maxLength={6} value={otp.trim()}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                className="absolute inset-0 w-full h-full opacity-0" />
+              <div className="flex gap-2 justify-between pointer-events-none">
+                {digits.map((d, i) => (
+                  <div key={i}
+                    className="flex-1 h-12 rounded-xl border-2 flex items-center justify-center text-lg font-bold text-gray-900"
+                    style={{ borderColor: d.trim() ? WA.accent : "#E5E7EB" }}>
+                    {d.trim()}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-4">
+              {timer > 0 ? `Resend OTP in ${timer}s` : "Resend OTP"}
+            </p>
+          </>
+        )}
+
       </div>
     </div>
   );
@@ -1020,29 +1049,9 @@ function OtpSheet({ phone, onClose, onVerified }:
 function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
   { onBack: () => void; onVerified: () => void; onSkip: () => void }) {
   const [phone, setPhone] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [timer, setTimer] = useState(30);
+  const [sheet, setSheet] = useState(false);
   const phoneValid = /^[6-9]\d{9}$/.test(phone);
-  const otpValid = otp.length === 6;
 
-  useEffect(() => {
-    if (!otpSent) return;
-    setOtp("");
-    setTimer(30);
-    const t1 = setTimeout(() => setOtp("123456"), 1200);
-    const iv = setInterval(() => setTimer((s) => (s > 0 ? s - 1 : 0)), 1000);
-    return () => { clearTimeout(t1); clearInterval(iv); };
-  }, [otpSent]);
-
-  useEffect(() => {
-    if (otpSent && otpValid) {
-      const t = setTimeout(() => onVerified(), 500);
-      return () => clearTimeout(t);
-    }
-  }, [otpSent, otpValid, onVerified]);
-
-  const digits = otp.padEnd(6, " ").slice(0, 6).split("");
 
   return (
     <div className="flex-1 flex flex-col bg-white">
@@ -1071,35 +1080,18 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
             inputMode="numeric"
             maxLength={10}
             value={phone}
-            onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); setOtpSent(false); }}
+            onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
             placeholder="Enter linked mobile number"
             className="flex-1 outline-none text-lg text-gray-900 bg-transparent"
           />
+          {phoneValid && (
+            <button onClick={() => setSheet(true)}
+              className="text-xs font-bold px-3 py-1.5 rounded-full text-white shrink-0"
+              style={{ background: WA.accent }}>
+              Verify OTP
+            </button>
+          )}
         </div>
-
-        {otpSent && (
-          <>
-            <div className={`${UI.eyebrow} mb-2`}>Enter OTP</div>
-            <div className="flex gap-2 justify-between mb-3">
-              {digits.map((d, i) => (
-                <div key={i}
-                  className="w-11 h-13 py-3 rounded-xl border-2 flex items-center justify-center text-xl font-bold text-gray-900"
-                  style={{ borderColor: d.trim() ? WA.accent : "#E5E7EB", background: d.trim() ? "#E8F5E9" : undefined }}>
-                  {d.trim()}
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2 text-gray-600">
-                <Sparkles className="w-4 h-4" style={{ color: WA.accent }} /> Auto-detecting…
-              </div>
-              <button disabled={timer > 0} className="font-medium disabled:opacity-40" style={{ color: WA.green }}
-                onClick={() => { setTimer(30); setOtp(""); setTimeout(() => setOtp("123456"), 1200); }}>
-                {timer > 0 ? `Resend in ${timer}s` : "Resend"}
-              </button>
-            </div>
-          </>
-        )}
 
         <ul className="space-y-2 text-sm text-gray-600 mt-6">
           <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> Takes less than 30 seconds</li>
@@ -1108,23 +1100,26 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
         </ul>
       </div>
       <div className={`${UI.footer} space-y-2.5`}>
-        {!otpSent && (
-          <button
-            onClick={() => { if (phoneValid) setOtpSent(true); }}
-            disabled={!phoneValid}
-            className={UI.primaryBtn}
-            style={{ background: WA.accent }}>
-            Send OTP
-          </button>
-        )}
+        <button
+          onClick={() => { if (phoneValid) setSheet(true); }}
+          disabled={!phoneValid}
+          className={UI.primaryBtn}
+          style={{ background: WA.accent }}>
+          Send OTP
+        </button>
         <button onClick={onSkip}
           className={UI.secondaryBtn}>
           I'll do it later
         </button>
       </div>
+      {sheet && (
+        <OtpSheet phone={phone} title="Verify linked number"
+          onClose={() => setSheet(false)} onVerified={onVerified} />
+      )}
     </div>
   );
 }
+
 
 
 /* ====================== BUREAU VALIDATE (card with 4 fields) ====================== */
