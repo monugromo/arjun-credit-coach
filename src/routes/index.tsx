@@ -433,7 +433,7 @@ function Index() {
           <BureauRefetch onDone={() => {
             setBureauUpdated(true);
             if (user.updated) setName(user.updated.name);
-            go("bureau-validate");
+            goToPaywall(mobileLinked ? "linked" : "matched");
           }} />
         )}
         {screen === "ntc2-fetch" && user && (
