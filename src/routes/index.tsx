@@ -732,6 +732,12 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
 
       </div>
       <div className={UI.footer}>
+        <p className="text-[11px] text-center text-gray-500 mb-4 leading-relaxed px-2">
+          By signing up, I agree to the{" "}
+          <span className="text-emerald-700 font-medium">Terms & Conditions</span>{" "}
+          and{" "}
+          <span className="text-emerald-700 font-medium">Privacy Policy</span>.
+        </p>
         <button onClick={onSubmit} disabled={phone.length !== 10}
           className={UI.primaryBtn}
           style={{ background: WA.accent }}>
