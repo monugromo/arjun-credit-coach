@@ -1008,27 +1008,37 @@ function OtpSheet({ phone, title, onClose, onVerified }:
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-white rounded-t-3xl p-5 pb-8 animate-in slide-in-from-bottom duration-200">
         <div className="w-10 h-1 rounded-full bg-gray-300 mx-auto mb-4" />
-        <h3 className="text-lg font-bold text-gray-900">Verify your number</h3>
+        <h3 className="text-lg font-bold text-gray-900">{title || "Verify your number"}</h3>
         <p className="text-sm text-gray-600 mt-1">
-          OTP sent to <span className="font-semibold text-gray-900">+91 {phone}</span>
+          {sending ? "Sending OTP to " : "OTP sent to "}
+          <span className="font-semibold text-gray-900">+91 {phone}</span>
         </p>
-        <div className="relative mt-5">
-          <input autoFocus type="tel" inputMode="numeric" maxLength={6} value={otp.trim()}
-            onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-            className="absolute inset-0 w-full h-full opacity-0" />
-          <div className="flex gap-2 justify-between pointer-events-none">
-            {digits.map((d, i) => (
-              <div key={i}
-                className="flex-1 h-12 rounded-xl border-2 flex items-center justify-center text-lg font-bold text-gray-900"
-                style={{ borderColor: d.trim() ? WA.accent : "#E5E7EB" }}>
-                {d.trim()}
-              </div>
-            ))}
+        {sending ? (
+          <div className="flex items-center gap-2 mt-6 mb-2 text-sm text-gray-500">
+            <Loader2 className="w-4 h-4 animate-spin" style={{ color: WA.accent }} /> Please wait…
           </div>
-        </div>
-        <p className="text-xs text-gray-500 mt-4">
-          {timer > 0 ? `Resend OTP in ${timer}s` : "Resend OTP"}
-        </p>
+        ) : (
+          <>
+            <div className="relative mt-5">
+              <input autoFocus type="tel" inputMode="numeric" maxLength={6} value={otp.trim()}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                className="absolute inset-0 w-full h-full opacity-0" />
+              <div className="flex gap-2 justify-between pointer-events-none">
+                {digits.map((d, i) => (
+                  <div key={i}
+                    className="flex-1 h-12 rounded-xl border-2 flex items-center justify-center text-lg font-bold text-gray-900"
+                    style={{ borderColor: d.trim() ? WA.accent : "#E5E7EB" }}>
+                    {d.trim()}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-4">
+              {timer > 0 ? `Resend OTP in ${timer}s` : "Resend OTP"}
+            </p>
+          </>
+        )}
+
       </div>
     </div>
   );
