@@ -1049,29 +1049,9 @@ function OtpSheet({ phone, title, onClose, onVerified }:
 function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
   { onBack: () => void; onVerified: () => void; onSkip: () => void }) {
   const [phone, setPhone] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [timer, setTimer] = useState(30);
+  const [sheet, setSheet] = useState(false);
   const phoneValid = /^[6-9]\d{9}$/.test(phone);
-  const otpValid = otp.length === 6;
 
-  useEffect(() => {
-    if (!otpSent) return;
-    setOtp("");
-    setTimer(30);
-    const t1 = setTimeout(() => setOtp("123456"), 1200);
-    const iv = setInterval(() => setTimer((s) => (s > 0 ? s - 1 : 0)), 1000);
-    return () => { clearTimeout(t1); clearInterval(iv); };
-  }, [otpSent]);
-
-  useEffect(() => {
-    if (otpSent && otpValid) {
-      const t = setTimeout(() => onVerified(), 500);
-      return () => clearTimeout(t);
-    }
-  }, [otpSent, otpValid, onVerified]);
-
-  const digits = otp.padEnd(6, " ").slice(0, 6).split("");
 
   return (
     <div className="flex-1 flex flex-col bg-white">
