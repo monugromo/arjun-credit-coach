@@ -936,12 +936,24 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
               style={{ borderColor: WA.accent }}>
               <span className="text-gray-700 font-semibold">+91</span>
               <input value={phone} type="tel" inputMode="numeric" maxLength={10}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); setPhoneVerified(false); }}
                 className="flex-1 text-lg tracking-wide outline-none bg-transparent" />
+              {needsVerify && phoneValid && (
+                <button onClick={() => setSheet(true)}
+                  className="text-xs font-bold px-3 py-1.5 rounded-full text-white shrink-0"
+                  style={{ background: WA.accent }}>
+                  Verify OTP
+                </button>
+              )}
+              {phoneChanged && phoneVerified && (
+                <span className="text-xs font-bold text-emerald-600 shrink-0 flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Verified
+                </span>
+              )}
             </div>
-            {phoneChanged && (
+            {needsVerify && (
               <p className="text-xs text-amber-700 mt-2">
-                New number — we'll verify it with an OTP.
+                New number — verify it with an OTP to continue.
               </p>
             )}
           </div>
@@ -959,11 +971,13 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
         </button>
       </div>
       {sheet && (
-        <OtpSheet phone={phone} onClose={() => setSheet(false)} onVerified={onContinue} />
+        <OtpSheet phone={phone} onClose={() => setSheet(false)}
+          onVerified={() => { setPhoneVerified(true); setSheet(false); }} />
       )}
     </div>
   );
 }
+
 
 /* ====================== OTP BOTTOM SHEET ====================== */
 function OtpSheet({ phone, onClose, onVerified }:
