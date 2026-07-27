@@ -733,7 +733,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         </div>
 
       </div>
-      <div className={UI.footer}>
+      <div className="mt-auto px-5 pb-8 pt-3">
         <p className="text-[11px] text-center text-gray-500 mb-4 leading-relaxed px-2">
           By signing up, I agree to the{" "}
           <span className="text-emerald-700 font-medium">Terms & Conditions</span>{" "}
@@ -746,6 +746,8 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
           Next
         </button>
       </div>
+      </div>
+
     </div>
   );
 }
