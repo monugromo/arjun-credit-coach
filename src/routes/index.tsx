@@ -677,9 +677,11 @@ function WATopBar({ title, onBack, right }: { title: string; onBack?: () => void
 /* ====================== PHONE ====================== */
 function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; setPhone: (s: string) => void; onBack: () => void; onSubmit: () => void }) {
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 min-h-0 flex flex-col bg-white">
       <WATopBar title="Enter your phone number" onBack={onBack} />
-      <div className={UI.body}>
+      <div className="flex-1 min-h-0 overflow-y-auto flex flex-col">
+      <div className="p-5">
+
         <p className="text-sm text-gray-600 mb-6 leading-relaxed">
           GroScore will send an SMS to verify your phone number. Carrier charges may apply.
         </p>
