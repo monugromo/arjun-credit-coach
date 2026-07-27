@@ -896,15 +896,17 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
   const [pan, setPan] = useState("");
   const [phone, setPhone] = useState(user.phone);
   const [sheet, setSheet] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
   const phoneChanged = phone !== user.phone;
   const phoneValid = /^[6-9]\d{9}$/.test(phone);
-  const valid = localName.trim().length >= 2 && pan.length === 10 && phoneValid;
+  const needsVerify = phoneChanged && !phoneVerified;
+  const valid = localName.trim().length >= 2 && pan.length === 10 && phoneValid && !needsVerify;
 
   const proceed = () => {
     setName(localName.trim());
-    if (phoneChanged) setSheet(true);
-    else onContinue();
+    onContinue();
   };
+
 
   return (
     <div className="flex-1 flex flex-col bg-white relative">
