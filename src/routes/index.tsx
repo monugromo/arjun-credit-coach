@@ -1080,35 +1080,18 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
             inputMode="numeric"
             maxLength={10}
             value={phone}
-            onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); setOtpSent(false); }}
+            onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
             placeholder="Enter linked mobile number"
             className="flex-1 outline-none text-lg text-gray-900 bg-transparent"
           />
+          {phoneValid && (
+            <button onClick={() => setSheet(true)}
+              className="text-xs font-bold px-3 py-1.5 rounded-full text-white shrink-0"
+              style={{ background: WA.accent }}>
+              Verify OTP
+            </button>
+          )}
         </div>
-
-        {otpSent && (
-          <>
-            <div className={`${UI.eyebrow} mb-2`}>Enter OTP</div>
-            <div className="flex gap-2 justify-between mb-3">
-              {digits.map((d, i) => (
-                <div key={i}
-                  className="w-11 h-13 py-3 rounded-xl border-2 flex items-center justify-center text-xl font-bold text-gray-900"
-                  style={{ borderColor: d.trim() ? WA.accent : "#E5E7EB", background: d.trim() ? "#E8F5E9" : undefined }}>
-                  {d.trim()}
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2 text-gray-600">
-                <Sparkles className="w-4 h-4" style={{ color: WA.accent }} /> Auto-detecting…
-              </div>
-              <button disabled={timer > 0} className="font-medium disabled:opacity-40" style={{ color: WA.green }}
-                onClick={() => { setTimer(30); setOtp(""); setTimeout(() => setOtp("123456"), 1200); }}>
-                {timer > 0 ? `Resend in ${timer}s` : "Resend"}
-              </button>
-            </div>
-          </>
-        )}
 
         <ul className="space-y-2 text-sm text-gray-600 mt-6">
           <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> Takes less than 30 seconds</li>
@@ -1117,23 +1100,26 @@ function PanMobileLinkScreen({ onBack, onVerified, onSkip }:
         </ul>
       </div>
       <div className={`${UI.footer} space-y-2.5`}>
-        {!otpSent && (
-          <button
-            onClick={() => { if (phoneValid) setOtpSent(true); }}
-            disabled={!phoneValid}
-            className={UI.primaryBtn}
-            style={{ background: WA.accent }}>
-            Send OTP
-          </button>
-        )}
+        <button
+          onClick={() => { if (phoneValid) setSheet(true); }}
+          disabled={!phoneValid}
+          className={UI.primaryBtn}
+          style={{ background: WA.accent }}>
+          Send OTP
+        </button>
         <button onClick={onSkip}
           className={UI.secondaryBtn}>
           I'll do it later
         </button>
       </div>
+      {sheet && (
+        <OtpSheet phone={phone} title="Verify linked number"
+          onClose={() => setSheet(false)} onVerified={onVerified} />
+      )}
     </div>
   );
 }
+
 
 
 /* ====================== BUREAU VALIDATE (card with 4 fields) ====================== */
