@@ -695,6 +695,9 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
               inputMode="numeric" placeholder="phone number"
               className="w-full outline-none text-lg tracking-wider bg-transparent" />
           </div>
+          <p className="text-xs text-gray-500 leading-relaxed">
+            Enter the phone number which is linked to your PAN / Aadhaar number.
+          </p>
         </div>
         <div className="mt-6">
           <div className={`${UI.eyebrow} mb-2`}>Demo accounts</div>
