@@ -958,8 +958,11 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
                 </span>
               )}
             </div>
+            <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+              Enter the phone number which is linked to your PAN / Aadhaar number.
+            </p>
             {needsVerify && (
-              <p className="text-xs text-amber-700 mt-2">
+              <p className="text-xs text-amber-700 mt-1">
                 New number — verify it with an OTP to continue.
               </p>
             )}
