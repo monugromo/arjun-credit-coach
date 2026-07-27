@@ -1189,7 +1189,7 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
               Yes, that's me
             </button>
             <button onClick={onNotMe}
-              className={UI.secondaryBtn}>
+              className="w-full font-semibold py-2 text-[15px] text-gray-500 underline underline-offset-4 bg-transparent">
               {updated ? "Update later" : "Not me"}
             </button>
           </div>
