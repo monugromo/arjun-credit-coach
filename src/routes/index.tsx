@@ -433,7 +433,7 @@ function Index() {
           <BureauRefetch onDone={() => {
             setBureauUpdated(true);
             if (user.updated) setName(user.updated.name);
-            go("bureau-validate");
+            goToPaywall(mobileLinked ? "linked" : "matched");
           }} />
         )}
         {screen === "ntc2-fetch" && user && (
@@ -695,6 +695,9 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
               inputMode="numeric" placeholder="phone number"
               className="w-full outline-none text-lg tracking-wider bg-transparent" />
           </div>
+          <p className="text-xs text-gray-500 leading-relaxed">
+            Enter the phone number which is linked to your PAN / Aadhaar number.
+          </p>
         </div>
         <div className="mt-6">
           <div className={`${UI.eyebrow} mb-2`}>Demo accounts</div>
@@ -955,8 +958,11 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
                 </span>
               )}
             </div>
+            <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+              Enter the phone number which is linked to your PAN / Aadhaar number.
+            </p>
             {needsVerify && (
-              <p className="text-xs text-amber-700 mt-2">
+              <p className="text-xs text-amber-700 mt-1">
                 New number — verify it with an OTP to continue.
               </p>
             )}
@@ -1189,7 +1195,7 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
               Yes, that's me
             </button>
             <button onClick={onNotMe}
-              className={UI.secondaryBtn}>
+              className="w-full font-semibold py-2 text-[15px] text-gray-500 underline underline-offset-4 bg-transparent">
               {updated ? "Update later" : "Not me"}
             </button>
           </div>
