@@ -52,8 +52,8 @@ const UI = {
   eyebrow: "text-[11px] uppercase font-bold tracking-wider text-gray-500",
   eyebrowAmber: "text-[11px] uppercase font-bold tracking-wider text-amber-700",
   eyebrowEmerald: "text-[11px] uppercase font-bold tracking-wider text-emerald-700",
-  body: "p-5 flex-1 overflow-y-auto",
-  footer: "px-5 pb-8 pt-3",
+  body: "p-5 flex-1 min-h-0 overflow-y-auto",
+  footer: "px-5 pb-8 pt-3 shrink-0 bg-white",
   spinnerWrap: "w-12 h-12 border-4 rounded-full animate-spin",
   spinnerStyle: { borderColor: "#E5E7EB", borderTopColor: "#25D366" } as React.CSSProperties,
   amberCard: "rounded-2xl border border-amber-100 p-5",
@@ -677,9 +677,11 @@ function WATopBar({ title, onBack, right }: { title: string; onBack?: () => void
 /* ====================== PHONE ====================== */
 function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; setPhone: (s: string) => void; onBack: () => void; onSubmit: () => void }) {
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 min-h-0 flex flex-col bg-white">
       <WATopBar title="Enter your phone number" onBack={onBack} />
-      <div className={UI.body}>
+      <div className="flex-1 min-h-0 overflow-y-auto flex flex-col">
+      <div className="p-5">
+
         <p className="text-sm text-gray-600 mb-6 leading-relaxed">
           GroScore will send an SMS to verify your phone number. Carrier charges may apply.
         </p>
@@ -731,7 +733,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
         </div>
 
       </div>
-      <div className={UI.footer}>
+      <div className="mt-auto px-5 pb-8 pt-3">
         <p className="text-[11px] text-center text-gray-500 mb-4 leading-relaxed px-2">
           By signing up, I agree to the{" "}
           <span className="text-emerald-700 font-medium">Terms & Conditions</span>{" "}
@@ -744,6 +746,8 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
           Next
         </button>
       </div>
+      </div>
+
     </div>
   );
 }
