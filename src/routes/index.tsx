@@ -612,19 +612,21 @@ function Landing({ onStart }: { onStart: () => void }) {
       />
 
       {/* Logo — vertical mark with wordmark, left aligned */}
-      <div className="relative z-10 pt-[132px] px-6">
-        <img src={groLogo} alt="GroScore" className="w-56 h-auto" />
+      <div className="relative z-10 pt-16 px-6">
+        {/* -ml offsets the logo's internal left whitespace so the wordmark
+            optically aligns with the headline below */}
+        <img src={groLogo} alt="GroScore" className="w-40 h-auto -ml-1" />
       </div>
 
       {/* Headline — dark green, left aligned, tight gap under logo */}
-      <div className="relative z-10 px-6 mt-5">
+      <div className="relative z-10 px-6 mt-7">
         <h1
-          className="text-[38px] font-extrabold leading-[1.05] tracking-[-0.02em]"
+          className="text-[34px] font-extrabold leading-[1.1] tracking-[-0.025em]"
           style={{ color: "#0B3B2E" }}
         >
           Your personal<br />credit coach
         </h1>
-        <p className="mt-4 text-[15px] text-gray-600 leading-[1.55] max-w-[340px]">
+        <p className="mt-3.5 text-[15px] text-gray-500 leading-[1.6] max-w-[300px]">
           Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
         </p>
       </div>
@@ -632,7 +634,8 @@ function Landing({ onStart }: { onStart: () => void }) {
       <div className="flex-1" />
 
       {/* Privacy row + CTA */}
-      <div className="relative z-10 px-6 pt-[75px] pb-8">
+      <div className="relative z-10 px-6 pb-8">
+
         <div className="flex items-center gap-3 mb-5">
           <div
             className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
