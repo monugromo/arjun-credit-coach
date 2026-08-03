@@ -442,7 +442,7 @@ function Index() {
         {screen === "ntc2-nohistory" && user && (
           <Ntc2NoHistoryScreen
             user={user} name={name}
-            onHasCredit={() => go("ntc2-edit")}
+            onHasCredit={() => go(user.phone === "9876500003" ? "panInput" : "ntc2-edit")}
             onNoCredit={() => goToPaywall("no-history")}
             onBack={() => go("name")}
           />
