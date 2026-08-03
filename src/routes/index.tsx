@@ -602,48 +602,42 @@ const nowTime = () => {
 function Landing({ onStart }: { onStart: () => void }) {
   return (
     <div className="flex-1 flex flex-col relative overflow-hidden bg-white">
-      {/* Soft green wash at top */}
+      {/* Soft green wash at top, now larger and centered to frame the logo */}
       <div
-        className="absolute inset-x-0 top-0 h-[45%]"
+        className="absolute inset-x-0 top-0 h-[60%]"
         style={{
           background:
-            "radial-gradient(120% 80% at 50% 0%, #E7F8EE 0%, #F4FBF6 45%, #ffffff 85%)",
+            "radial-gradient(140% 100% at 50% 0%, #E7F8EE 0%, #F4FBF6 55%, #ffffff 95%)",
         }}
       />
 
-      {/* Logo — vertical mark with wordmark, left aligned */}
-      <div className="relative z-10 pt-16 px-6">
-        {/* -ml offsets the logo's internal left whitespace so the wordmark
-            optically aligns with the headline below */}
-        <img src={groLogo} alt="GroScore" className="w-40 h-auto -ml-1" />
-      </div>
+      {/* Centered hero: logo + text treated as one vertical lockup */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center">
+        <img
+          src={groLogo}
+          alt="GroScore"
+          className="w-44 h-auto mb-7"
+        />
 
-      {/* Headline — dark green, left aligned, tight gap under logo */}
-      <div className="relative z-10 px-6 mt-7">
-        <h1
-          className="text-[34px] font-extrabold leading-[1.1] tracking-[-0.025em]"
-          style={{ color: "#0B3B2E" }}
-        >
+        <h1 className="text-[32px] font-extrabold leading-[1.12] tracking-[-0.025em] text-primary-deep">
           Your personal<br />credit coach
         </h1>
-        <p className="mt-3.5 text-[15px] text-gray-500 leading-[1.6] max-w-[300px]">
+
+        <p className="mt-4 text-[15px] text-muted-foreground leading-[1.6] max-w-[280px]">
           Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
         </p>
       </div>
 
-      <div className="flex-1" />
-
       {/* Privacy row + CTA */}
-      <div className="relative z-10 px-6 pb-8">
-
-        <div className="flex items-center gap-3 mb-5">
+      <div className="relative z-10 px-6 pb-8 w-full">
+        <div className="flex items-center justify-center gap-3 mb-5">
           <div
             className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
             style={{ background: "#E7F8EE", color: "#0B3B2E" }}
           >
             <Lock className="w-4 h-4" />
           </div>
-          <div>
+          <div className="text-left">
             <div className="text-[14px] font-bold text-gray-900">Private &amp; secure</div>
             <div className="text-[12px] text-gray-500">Your data stays confidential</div>
           </div>
@@ -651,8 +645,7 @@ function Landing({ onStart }: { onStart: () => void }) {
 
         <button
           onClick={onStart}
-          className="w-full text-white font-bold py-3.5 rounded-full active:scale-[0.98] transition"
-          style={{ background: WA.accent }}
+          className="w-full text-white font-bold py-3.5 rounded-full active:scale-[0.98] transition bg-primary"
         >
           Get Started
         </button>
