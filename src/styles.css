@@ -19,6 +19,8 @@
  */
 
 @theme inline {
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -71,16 +73,16 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.955 0.018 85);
+  --background: oklch(0.975 0.008 165);
   --foreground: oklch(0.18 0.01 270);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.18 0.01 270);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.01 270);
-  --primary: oklch(0.62 0.17 145);
+  --primary: oklch(0.42 0.095 174);
   --primary-foreground: oklch(1 0 0);
-  --primary-deep: oklch(0.42 0.13 150);
-  --primary-soft: oklch(0.94 0.06 145);
+  --primary-deep: oklch(0.38 0.085 174);
+  --primary-soft: oklch(0.95 0.035 165);
   --cream: oklch(0.955 0.018 85);
   --bubble: oklch(1 0 0);
   --bubble-out: oklch(0.94 0.08 145);
@@ -156,8 +158,7 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-      "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    font-family: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 }

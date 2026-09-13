@@ -7,3 +7,4 @@
 - [x] Add recommendation, issue-bound, time-bound, and NTC chat hand-offs.
 - [x] Add five dev-only lender personas.
 - [x] Verify both journeys in the browser and confirm a clean build.
+- [x] Redesign Loan / CC in English with concise, information-led offer cards.

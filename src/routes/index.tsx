@@ -307,29 +307,29 @@ function Index() {
     setChatPhase("post-call");
     (async () => {
       if (kind === "recommend") {
-        setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: "Kaunsa sabse sahi rahega?", time: nowTime() }]);
-        await streamCoach([{ id: "loan-rec" + Date.now(), from: "coach", kind: "text", text: "Aapke liye Moneyview sabse strong hai — approval chance sabse zyada aur paisa 24 ghante mein. Ek baar mein ek hi apply karein, warna enquiries score girati hain." }]);
+        setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: "Which offer is best for me?", time: nowTime() }]);
+        await streamCoach([{ id: "loan-rec" + Date.now(), from: "coach", kind: "text", text: "Moneyview is your strongest match. It has the highest approval chance and may disburse within 24 hours. Apply to one lender at a time to limit credit enquiries." }]);
         return;
       }
       if (kind === "time") {
         await streamCoach([
-          { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: `${lender} ko 12 mahine ki credit history chahiye. Aapke 8 mahine hain.` },
-          { id: "loan-time2" + Date.now(), from: "coach", kind: "text", text: "Aapki report mein kuch kharab nahi hai — file bas nayi hai." },
-          { id: "loan-time3" + Date.now(), from: "coach", kind: "text", text: "January ke aas-paas Prefr aur Tez dono khul jayenge. Main bata doonga." },
+          { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: `${lender} requires 12 months of credit history. You currently have 8 months.` },
+          { id: "loan-time2" + Date.now(), from: "coach", kind: "text", text: "There is nothing negative on your report. Your credit file is simply new." },
+          { id: "loan-time3" + Date.now(), from: "coach", kind: "text", text: "Prefr and Tez may become available around January. I’ll keep track for you." },
         ]);
         return;
       }
       if (kind === "ntc") {
         await streamCoach([
-          { id: "loan-ntc1" + Date.now(), from: "coach", kind: "text", text: "Aapka credit record abhi naya hai — pehle score banana best rahega." },
-          { id: "loan-ntc2" + Date.now(), from: "coach", kind: "text", text: "Main aapko secured card aur on-time payment ka simple plan bana deta hoon." },
+          { id: "loan-ntc1" + Date.now(), from: "coach", kind: "text", text: "You do not have a credit record yet. Building a score is the best first step." },
+          { id: "loan-ntc2" + Date.now(), from: "coach", kind: "text", text: "I can create a simple plan using a secured card and on-time payments." },
         ]);
         return;
       }
       await streamCoach([
-        { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `${lender} ko 650 score chahiye. Aap abhi 612 par hain — lagbhag 40 points door.` },
-        { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Aapka score 3 cheezon se dabaa hua hai: Hari & Co ka ₹13,583 overdue, 2023 ka ek written-off account, aur credit card ka 94% use." },
-        { id: "loan-lock3" + Date.now(), from: "coach", kind: "text", text: "Sabse pehle overdue se shuru karte hain — wahi sabse bhaari hai. Hari & Co ko email draft kar doon?" },
+        { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `${lender} requires a 650 score. You are at 612 — about 40 points away.` },
+        { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Three issues are affecting your score: a ₹13,583 overdue with Hari & Co, one written-off account from 2023, and 94% card utilisation." },
+        { id: "loan-lock3" + Date.now(), from: "coach", kind: "text", text: "Start with the overdue balance because it has the highest impact. Should I draft an email to Hari & Co?" },
         { id: "loan-quick" + Date.now(), from: "coach", kind: "loanQuickReplies" },
       ]);
     })();
@@ -337,7 +337,7 @@ function Index() {
 
   const handleLoanQuickReply = (option: string) => {
     setChat((c) => [...c, { id: "loan-reply" + Date.now(), from: "user", kind: "text", text: option, time: nowTime() }]);
-    void streamCoach([{ id: "loan-answer" + Date.now(), from: "coach", kind: "text", text: option === "Haan, draft karo" ? "Bilkul — Hari & Co ke liye clear email draft taiyaar kar raha hoon." : "Pehle card usage 30% ke neeche laayein, phir written-off account ko dispute karenge." }]);
+    void streamCoach([{ id: "loan-answer" + Date.now(), from: "coach", kind: "text", text: option === "Draft the email" ? "I’m preparing a clear email for Hari & Co." : "First, bring card utilisation below 30%. Then we can address the written-off account." }]);
   };
 
   // Task action — user taps a task; jump to chat and stream Arjun's guidance + drafts
@@ -2668,7 +2668,7 @@ function Bubble({ m, tasks, onAcceptCall, onDeclineCall, onPickFd, onTaskAction,
   if (m.kind === "loanQuickReplies") {
     return (
       <div className="flex flex-wrap justify-start gap-2 py-1">
-        {["Haan, draft karo", "Baaki ke baare mein batao"].map((option) => (
+        {["Draft the email", "Explain the other issues"].map((option) => (
           <button key={option} onClick={() => onLoanQuickReply?.(option)} className="rounded-full border bg-white px-3 py-2 text-xs font-semibold shadow-sm" style={{ borderColor: WA.green, color: WA.green }}>
             {option}
           </button>
