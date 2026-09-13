@@ -149,9 +149,9 @@ function PersonaToggle({ persona, onChange }: { persona: Persona; onChange: (p: 
   return <div className="absolute right-14 top-2 z-30"><Button aria-label="Change mock persona" variant="secondary" size="sm" onClick={() => onChange(personas[(personas.indexOf(persona) + 1) % personas.length])} className="h-7 bg-foreground/80 px-2 text-[10px] font-bold text-background hover:bg-foreground">{labels[persona]}</Button></div>;
 }
 
-function IntroPage({ onStart, resume }: { onStart: () => void; resume: boolean }) {
+function IntroPage({ onStart, resume, inactive = false }: { onStart: () => void; resume: boolean; inactive?: boolean }) {
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-5">
+    <div aria-hidden={inactive} className={`flex-1 overflow-y-auto px-4 py-5 ${inactive ? "pointer-events-none" : ""}`}>
       <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
         <div className="px-5 pb-5 pt-6">
           <div className="flex items-start justify-between gap-4">
@@ -282,7 +282,7 @@ export function LoanOffersScreen({ state, setState, onChat }: { user: DemoUser; 
 
   if (state.step === "checking") return <div className="flex flex-1 flex-col items-center justify-center bg-background px-8 text-center"><Loader2 className="h-11 w-11 animate-spin text-primary" /><h2 className="font-display mt-5 text-xl font-bold text-foreground">Checking lender matches</h2><div className="mt-5 flex gap-2">{INTRO_LENDERS.slice(0, 4).map((lender) => <LenderLogo key={lender.name} name={lender.name} logo={lender.logo} muted size="sm" />)}</div></div>;
 
-  if (state.step !== "offers") return <div className="relative flex min-h-0 flex-1 flex-col bg-background"><AppHeader /><PersonaToggle persona={state.persona} onChange={(persona) => update({ persona })} /><IntroPage onStart={startQuestions} resume={state.step !== "intro"} />{questionSheetOpen && <QuestionSheet state={state} update={update} onClose={() => setQuestionSheetOpen(false)} />}</div>;
+  if (state.step !== "offers") return <div className="relative flex min-h-0 flex-1 flex-col bg-background"><AppHeader /><PersonaToggle persona={state.persona} onChange={(persona) => update({ persona })} /><IntroPage onStart={startQuestions} resume={state.step !== "intro"} inactive={questionSheetOpen} />{questionSheetOpen && <QuestionSheet state={state} update={update} onClose={() => setQuestionSheetOpen(false)} />}</div>;
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col bg-background">
