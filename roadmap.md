@@ -8,3 +8,7 @@
 - [x] Add five dev-only lender personas.
 - [x] Verify both journeys in the browser and confirm a clean build.
 - [x] Redesign Loan / CC in English with concise, information-led offer cards.
+- [ ] Rebuild Loan / CC as a continuous sheet-based journey.
+- [ ] Replace placeholder lender initials with lender wordmarks.
+- [ ] Simplify both loan login chat greetings to “Hi Kabir”.
+- [ ] Verify mobile keyboard and both loan journeys.
