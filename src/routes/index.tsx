@@ -6,7 +6,7 @@ import {
   LogOut, Download, PhoneOff, Volume2, MicOff, Bell, MessageSquare,
   Mail, CheckCircle2, ArrowRight, Sparkles, ShieldAlert, Edit2,
   ChevronRight, Share,
-  CheckCheck, Check, X, AlertTriangle, TrendingUp, Loader2, Briefcase, Award,
+  CheckCheck, Check, X, AlertTriangle, TrendingUp, Loader2, Briefcase, Award, CreditCard,
   Layers, Search, UserPlus, Wallet, BadgeCheck, Zap,
 } from "lucide-react";
 import kabirImg from "@/assets/kabir.jpg";
@@ -20,7 +20,7 @@ import actionPlanPreview from "@/assets/action-plan-preview.jpg";
 import scoreProjection from "@/assets/score-projection.jpg";
 import {
   DEMOS, maskPan, distressedTasks, ntcTasks, distressedFactors,
-  fdCards, updatesFeed, initialChat, type DemoUser, type ChatMsg, type FdCard,
+  fdCards, updatesFeed, initialChat, loanAccounts, type DemoUser, type ChatMsg, type FdCard,
 } from "@/lib/groscore-data";
 
 export const Route = createFileRoute("/")({
@@ -102,7 +102,7 @@ type Screen =
   | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
   | "ntc-checklist"
   | "chat" | "call-incoming" | "call-active"
-  | "report" | "tasks" | "arjun-profile"
+  | "report" | "tasks" | "loans" | "arjun-profile"
   | "profile" | "subscription" | "help";
 
 type ChatPhase = "intro" | "awaiting-consent" | "in-call" | "post-call";
@@ -403,6 +403,7 @@ function Index() {
         {screen === "otp" && user && (
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
             onBack={() => go("phone")} onDone={() => {
+              if (user.key === "loan") return startChatFlow(user);
               if (user.expired) return goToPaywall("distressed");
               return go("name");
             }} />
@@ -571,9 +572,24 @@ function Index() {
             openTasks={() => go("tasks")}
           />
         )}
+        {screen === "loans" && user && (
+          <LoansScreen user={user} />
+        )}
         {screen === "profile" && user && <Profile user={user} onBack={() => go("chat")} />}
         {screen === "subscription" && <Subscription onBack={() => go("chat")} />}
         {screen === "help" && <Help onBack={() => go("chat")} />}
+        {user && ["chat", "report", "tasks", "loans"].includes(screen) && (
+          <BottomNav
+            current={screen}
+            go={(s2) => {
+              if (s2 === "report") setReportUpdated(false);
+              if (s2 === "tasks") setTasksUpdated(false);
+              go(s2);
+            }}
+            reportDot={reportUpdated}
+            taskCount={tasks.filter((t) => t.status === "todo").length}
+          />
+        )}
         {showCallPopup && user && (
           <MiniProfilePopup
             user={user}
@@ -723,7 +739,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
             <div>
               <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">No bureau data</div>
               <div className="flex flex-col gap-2">
-                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"]].map(([p, id, label]) => (
+                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"], ["9876500007", "007", "Meera · Loans & cards · direct login"]].map(([p, id, label]) => (
                   <button key={p} onClick={() => setPhone(p)}
                     className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                     <span>
@@ -3700,6 +3716,112 @@ function Help({ onBack }: { onBack: () => void }) {
   );
 }
 
+/* ====================== BOTTOM NAV ====================== */
+function BottomNav({ current, go, reportDot, taskCount }:
+  { current: Screen; go: (s: Screen) => void; reportDot: boolean; taskCount: number }) {
+  const items: Array<{ key: Screen; label: string; icon: typeof MessageCircle; badge?: number; dot?: boolean }> = [
+    { key: "chat", label: "Chat", icon: MessageCircle },
+    { key: "report", label: "Report", icon: FileText, dot: reportDot },
+    { key: "tasks", label: "Tasks", icon: CheckCircle2, badge: taskCount },
+    { key: "loans", label: "Loan / CC", icon: CreditCard },
+  ];
+  return (
+    <div className="shrink-0 grid grid-cols-4 bg-white border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
+      {items.map((it) => {
+        const active = current === it.key;
+        const Icon = it.icon;
+        return (
+          <button key={it.key} onClick={() => go(it.key)}
+            className="py-2 flex flex-col items-center gap-1 active:bg-gray-50">
+            <span className="relative">
+              <Icon className="w-[22px] h-[22px]" style={{ color: active ? WA.green : "#9CA3AF" }} />
+              {!!it.badge && it.badge > 0 && (
+                <span className="absolute -top-1.5 -right-2 min-w-[16px] h-[16px] px-1 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center">{it.badge}</span>
+              )}
+              {it.dot && <span className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-red-500" />}
+            </span>
+            <span className="text-[11px] font-semibold" style={{ color: active ? WA.green : "#9CA3AF" }}>{it.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ====================== LOAN / CC ====================== */
+function LoansScreen({ user }: { user: DemoUser }) {
+  const [tab, setTab] = useState<"all" | "loan" | "card">("all");
+  const list = loanAccounts.filter((a) => tab === "all" || a.type === tab);
+  const fmt = (n: number) => "₹" + n.toLocaleString("en-IN");
+  const totalLoan = loanAccounts.filter((a) => a.type === "loan").reduce((s, a) => s + a.amount, 0);
+  const totalCard = loanAccounts.filter((a) => a.type === "card").reduce((s, a) => s + a.amount, 0);
+  const toneChip = (t: "ok" | "amber" | "danger") =>
+    t === "danger" ? { bg: "#FEE2E2", c: "#B91C1C" } : t === "amber" ? { bg: "#FEF3C7", c: "#B45309" } : { bg: "#DCFCE7", c: "#166534" };
+
+  return (
+    <div className="flex-1 min-h-0 flex flex-col" style={{ background: "#F6F7F8" }}>
+      <div className="flex items-center gap-3 px-4 h-14 text-white shrink-0" style={{ background: WA.green }}>
+        <h1 className="font-semibold text-[17px] flex-1">Loan / CC</h1>
+        <span className="text-[12px] text-white/80">{user.name}</span>
+      </div>
+      <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-3">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white rounded-2xl p-3 shadow-sm">
+            <div className="text-[12px] text-gray-500">Loan outstanding</div>
+            <div className="text-[20px] font-extrabold text-gray-900 mt-0.5">{fmt(totalLoan)}</div>
+          </div>
+          <div className="bg-white rounded-2xl p-3 shadow-sm">
+            <div className="text-[12px] text-gray-500">Card balance</div>
+            <div className="text-[20px] font-extrabold text-gray-900 mt-0.5">{fmt(totalCard)}</div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-full p-1 shadow-sm grid grid-cols-3 gap-1">
+          {([
+            { k: "all", label: "All" },
+            { k: "loan", label: "Loans" },
+            { k: "card", label: "Cards" },
+          ] as const).map((t) => {
+            const active = tab === t.k;
+            return (
+              <button key={t.k} onClick={() => setTab(t.k)}
+                className={`py-2.5 rounded-full text-[13px] font-semibold transition ${active ? "text-white" : "text-gray-700"}`}
+                style={active ? { background: WA.green } : undefined}>
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="space-y-2.5">
+          {list.map((a) => {
+            const chip = toneChip(a.tone);
+            return (
+              <div key={a.id} className="bg-white rounded-2xl p-4 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-[15px] shrink-0" style={{ background: a.color }}>{a.initial}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-gray-900 text-[14px] truncate">{a.name}</div>
+                    <div className="text-[12px] text-gray-500 truncate">{a.lender}</div>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-full shrink-0" style={{ background: chip.bg, color: chip.c }}>{a.status}</span>
+                </div>
+                <div className="mt-3 flex items-end justify-between">
+                  <div>
+                    <div className="text-[11px] text-gray-500">{a.amountLabel}</div>
+                    <div className="text-[17px] font-extrabold text-gray-900">{fmt(a.amount)}</div>
+                  </div>
+                  <div className="text-[11px] text-gray-500 text-right">{a.sub}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ====================== DEV NAV ====================== */
 const ALL_SCREENS: Array<{ key: Screen; label: string; section: string }> = [
   { key: "landing", label: "1. Landing", section: "Onboarding" },
@@ -3723,6 +3845,7 @@ const ALL_SCREENS: Array<{ key: Screen; label: string; section: string }> = [
   { key: "call-active", label: "9. Active call", section: "Calls" },
   { key: "report", label: "10. Credit Report", section: "Main" },
   { key: "tasks", label: "11. Tasks", section: "Main" },
+  { key: "loans", label: "11b. Loan / CC", section: "Main" },
   { key: "arjun-profile", label: "12. Arjun profile", section: "Main" },
   { key: "profile", label: "13. My Profile", section: "Menu" },
   { key: "subscription", label: "14. Manage Subscription", section: "Menu" },
@@ -3733,7 +3856,7 @@ function DevNav({ current, go, hasUser, loadDemo }:
   { current: Screen; go: (s: Screen) => void; hasUser: boolean; loadDemo: (k: "ntc" | "distressed") => void }) {
   const [open, setOpen] = useState(false);
   const needsUser = (s: Screen) =>
-    ["chat", "report", "tasks", "arjun-profile", "profile", "call-incoming", "call-active"].includes(s);
+    ["chat", "report", "tasks", "loans", "arjun-profile", "profile", "call-incoming", "call-active"].includes(s);
   return (
     <>
       <button onClick={() => setOpen((v) => !v)}

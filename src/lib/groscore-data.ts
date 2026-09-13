@@ -1,4 +1,4 @@
-export type DemoKey = "ntc" | "ntc2" | "distressed" | "expired";
+export type DemoKey = "ntc" | "ntc2" | "distressed" | "expired" | "loan";
 
 export interface DemoUser {
   key: DemoKey;
@@ -76,9 +76,60 @@ export const DEMOS: Record<string, DemoUser> = {
       dob: "18/02/1999",
     },
   },
+  "9876500007": {
+    key: "loan",
+    phone: "9876500007",
+    name: "Meera",
+    pan: "ABCPM2211F",
+    dob: "14/07/1994",
+    hasScore: true,
+    score: 706,
+    band: "Good",
+  },
 };
 
 export const maskPan = (pan: string) => pan.slice(0, 3) + "xxxx" + pan.slice(-1);
+
+export interface LoanAccount {
+  id: string;
+  type: "loan" | "card";
+  name: string;
+  lender: string;
+  initial: string;
+  color: string;
+  amount: number;
+  amountLabel: string;
+  sub: string;
+  status: string;
+  tone: "ok" | "amber" | "danger";
+}
+
+export const loanAccounts: LoanAccount[] = [
+  {
+    id: "l1", type: "loan", name: "Personal Loan", lender: "HDFC Bank", initial: "H", color: "#DC2626",
+    amount: 210000, amountLabel: "Outstanding", sub: "EMI ₹8,420 · due 5th", status: "On time", tone: "ok",
+  },
+  {
+    id: "l2", type: "loan", name: "Auto Loan", lender: "ICICI Bank", initial: "I", color: "#B62025",
+    amount: 228000, amountLabel: "Outstanding", sub: "EMI ₹12,800 · due 10th", status: "1 DPD", tone: "amber",
+  },
+  {
+    id: "l3", type: "loan", name: "Consumer Loan", lender: "Bajaj Finserv", initial: "B", color: "#1E3A8A",
+    amount: 42000, amountLabel: "Outstanding", sub: "EMI ₹3,200 · due 2nd", status: "On time", tone: "ok",
+  },
+  {
+    id: "c1", type: "card", name: "Credit Card ••4521", lender: "HDFC Bank", initial: "H", color: "#DC2626",
+    amount: 128000, amountLabel: "Used of ₹1,50,000", sub: "85% utilisation · bill 18th", status: "High usage", tone: "danger",
+  },
+  {
+    id: "c2", type: "card", name: "Credit Card ••9289", lender: "Axis Bank", initial: "A", color: "#8B1E3F",
+    amount: 72000, amountLabel: "Used of ₹1,20,000", sub: "60% utilisation · bill 22nd", status: "Watch", tone: "amber",
+  },
+  {
+    id: "c3", type: "card", name: "Credit Card ••1102", lender: "SBI Card", initial: "S", color: "#1E3A8A",
+    amount: 24000, amountLabel: "Used of ₹80,000", sub: "30% utilisation · bill 27th", status: "Healthy", tone: "ok",
+  },
+];
 
 export interface ChatMsg {
   id: string;
@@ -117,6 +168,14 @@ export const initialChat = (key: DemoKey, name?: string): ChatMsg[] => {
         text: "Report milte hi dekh lena, aur bataana agar kuch samajh na aaye.",
         time: t(20, 29),
       },
+    ];
+  }
+  if (key === "loan") {
+    return [
+      { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
+      { id: "l1", from: "coach", kind: "text", text: `Welcome back, ${name ?? "Meera"}! 👋`, time: t(20, 28) },
+      { id: "l2", from: "coach", kind: "text", text: "Aapke 3 loans aur 3 credit cards main track kar raha hoon — 'Loan / CC' tab mein sab dikh jayega.", time: t(20, 28) },
+      { id: "l3", from: "coach", kind: "text", text: "Koi bhi EMI ya card bill ka sawaal ho, yahin pooch lena 💚", time: t(20, 29) },
     ];
   }
   if (key === "ntc2") {
