@@ -170,6 +170,14 @@ export const initialChat = (key: DemoKey, name?: string): ChatMsg[] => {
       },
     ];
   }
+  if (key === "loan") {
+    return [
+      { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
+      { id: "l1", from: "coach", kind: "text", text: `Welcome back, ${name ?? "Meera"}! 👋`, time: t(20, 28) },
+      { id: "l2", from: "coach", kind: "text", text: "Aapke 3 loans aur 3 credit cards main track kar raha hoon — 'Loan / CC' tab mein sab dikh jayega.", time: t(20, 28) },
+      { id: "l3", from: "coach", kind: "text", text: "Koi bhi EMI ya card bill ka sawaal ho, yahin pooch lena 💚", time: t(20, 29) },
+    ];
+  }
   if (key === "ntc2") {
     return [
       { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
