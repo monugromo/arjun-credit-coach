@@ -619,7 +619,7 @@ function Index() {
           />
         )}
         {screen === "loans" && user && (
-          <LoanOffersScreen user={user} state={loanJourney} setState={setLoanJourney} onChat={triggerLoanChat} />
+          <LoanOffersScreen user={user} state={loanJourney} setState={setLoanJourney} onChat={triggerLoanChat} onBack={() => go("chat")} />
         )}
         {screen === "profile" && user && <Profile user={user} onBack={() => go("chat")} />}
         {screen === "subscription" && <Subscription onBack={() => go("chat")} />}
@@ -3782,7 +3782,7 @@ function BottomNav({ current, go, reportDot, taskCount }:
     { key: "chat", label: "Chat", icon: MessageCircle },
     { key: "report", label: "Report", icon: FileText, dot: reportDot },
     { key: "tasks", label: "Tasks", icon: CheckCircle2, badge: taskCount },
-    { key: "loans", label: "Loan / CC", icon: CreditCard },
+    { key: "loans", label: "Loan", icon: CreditCard },
   ];
   return (
     <div className="shrink-0 grid grid-cols-4 bg-white border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
@@ -3830,7 +3830,7 @@ const ALL_SCREENS: Array<{ key: Screen; label: string; section: string }> = [
   { key: "call-active", label: "9. Active call", section: "Calls" },
   { key: "report", label: "10. Credit Report", section: "Main" },
   { key: "tasks", label: "11. Tasks", section: "Main" },
-  { key: "loans", label: "11b. Loan / CC", section: "Main" },
+  { key: "loans", label: "11b. Loan", section: "Main" },
   { key: "arjun-profile", label: "12. Arjun profile", section: "Main" },
   { key: "profile", label: "13. My Profile", section: "Menu" },
   { key: "subscription", label: "14. Manage Subscription", section: "Menu" },
