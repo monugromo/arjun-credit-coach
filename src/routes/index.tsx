@@ -432,9 +432,9 @@ function Index() {
   return (
     <div className="h-[100dvh] w-full bg-neutral-200 flex items-stretch sm:items-center justify-center overflow-hidden">
       <div className="relative w-full sm:max-w-[420px] h-[100dvh] sm:h-[min(900px,100dvh-3rem)] sm:my-6 bg-white overflow-hidden sm:rounded-[2.5rem] sm:shadow-2xl sm:border sm:border-black/10 flex flex-col">
-        <div className="absolute top-2 right-2 z-[100] pointer-events-none select-none px-2 py-1 rounded-md bg-black/70 text-white text-[10px] font-mono tracking-wide shadow">
+        {screen !== "loans" && <div className="absolute top-2 right-2 z-[100] pointer-events-none select-none px-2 py-1 rounded-md bg-black/70 text-white text-[10px] font-mono tracking-wide shadow">
           {screen}
-        </div>
+        </div>}
         <DevNav current={screen} go={go} hasUser={!!user} loadDemo={(k) => {
           const u = k === "ntc" ? DEMOS["9876500001"] : DEMOS["9876500004"];
           setUser(u); setName(u.name); setPhone(u.phone);
@@ -619,7 +619,7 @@ function Index() {
           />
         )}
         {screen === "loans" && user && (
-          <LoanOffersScreen user={user} state={loanJourney} setState={setLoanJourney} onChat={triggerLoanChat} />
+          <LoanOffersScreen user={user} state={loanJourney} setState={setLoanJourney} onChat={triggerLoanChat} onBack={() => go("chat")} />
         )}
         {screen === "profile" && user && <Profile user={user} onBack={() => go("chat")} />}
         {screen === "subscription" && <Subscription onBack={() => go("chat")} />}
@@ -3782,7 +3782,7 @@ function BottomNav({ current, go, reportDot, taskCount }:
     { key: "chat", label: "Chat", icon: MessageCircle },
     { key: "report", label: "Report", icon: FileText, dot: reportDot },
     { key: "tasks", label: "Tasks", icon: CheckCircle2, badge: taskCount },
-    { key: "loans", label: "Loan / CC", icon: CreditCard },
+    { key: "loans", label: "Loan", icon: CreditCard },
   ];
   return (
     <div className="shrink-0 grid grid-cols-4 bg-white border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
@@ -3830,7 +3830,7 @@ const ALL_SCREENS: Array<{ key: Screen; label: string; section: string }> = [
   { key: "call-active", label: "9. Active call", section: "Calls" },
   { key: "report", label: "10. Credit Report", section: "Main" },
   { key: "tasks", label: "11. Tasks", section: "Main" },
-  { key: "loans", label: "11b. Loan / CC", section: "Main" },
+  { key: "loans", label: "11b. Loan", section: "Main" },
   { key: "arjun-profile", label: "12. Arjun profile", section: "Main" },
   { key: "profile", label: "13. My Profile", section: "Menu" },
   { key: "subscription", label: "14. Manage Subscription", section: "Menu" },
