@@ -251,11 +251,12 @@ function LockMark() {
 }
 
 function PersonaToggle({ persona, onChange }: { persona: Persona; onChange: (p: Persona) => void }) {
+  const personas: Persona[] = ["rejected", "prime", "thin", "ntc", "zero"];
   return (
     <div className="absolute right-2 top-2 z-30">
-      <select aria-label="Mock persona" value={persona} onChange={(e) => onChange(e.target.value as Persona)} className="rounded-md border border-white/30 bg-black/70 px-2 py-1 text-[10px] font-bold text-white outline-none">
-        <option value="rejected">Rejected</option><option value="prime">Prime</option><option value="thin">Thin file</option><option value="ntc">NTC</option><option value="zero">Zero</option>
-      </select>
+      <button aria-label="Change mock persona" onClick={() => onChange(personas[(personas.indexOf(persona) + 1) % personas.length])} className="rounded-md border border-white/30 bg-black/70 px-2 py-1 text-[10px] font-bold capitalize text-white">
+        {persona === "thin" ? "Thin file" : persona}
+      </button>
     </div>
   );
 }

@@ -301,6 +301,45 @@ function Index() {
     })();
   };
 
+  const triggerLoanChat = (kind: "recommend" | "issues" | "time" | "ntc", lender = "Moneyview") => {
+    go("chat");
+    setShowCallPopup(false);
+    setChatPhase("post-call");
+    (async () => {
+      if (kind === "recommend") {
+        setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: "Kaunsa sabse sahi rahega?", time: nowTime() }]);
+        await streamCoach([{ id: "loan-rec" + Date.now(), from: "coach", kind: "text", text: "Aapke liye Moneyview sabse strong hai — approval chance sabse zyada aur paisa 24 ghante mein. Ek baar mein ek hi apply karein, warna enquiries score girati hain." }]);
+        return;
+      }
+      if (kind === "time") {
+        await streamCoach([
+          { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: `${lender} ko 12 mahine ki credit history chahiye. Aapke 8 mahine hain.` },
+          { id: "loan-time2" + Date.now(), from: "coach", kind: "text", text: "Aapki report mein kuch kharab nahi hai — file bas nayi hai." },
+          { id: "loan-time3" + Date.now(), from: "coach", kind: "text", text: "January ke aas-paas Prefr aur Tez dono khul jayenge. Main bata doonga." },
+        ]);
+        return;
+      }
+      if (kind === "ntc") {
+        await streamCoach([
+          { id: "loan-ntc1" + Date.now(), from: "coach", kind: "text", text: "Aapka credit record abhi naya hai — pehle score banana best rahega." },
+          { id: "loan-ntc2" + Date.now(), from: "coach", kind: "text", text: "Main aapko secured card aur on-time payment ka simple plan bana deta hoon." },
+        ]);
+        return;
+      }
+      await streamCoach([
+        { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `${lender} ko 650 score chahiye. Aap abhi 612 par hain — lagbhag 40 points door.` },
+        { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Aapka score 3 cheezon se dabaa hua hai: Hari & Co ka ₹13,583 overdue, 2023 ka ek written-off account, aur credit card ka 94% use." },
+        { id: "loan-lock3" + Date.now(), from: "coach", kind: "text", text: "Sabse pehle overdue se shuru karte hain — wahi sabse bhaari hai. Hari & Co ko email draft kar doon?" },
+        { id: "loan-quick" + Date.now(), from: "coach", kind: "loanQuickReplies" },
+      ]);
+    })();
+  };
+
+  const handleLoanQuickReply = (option: string) => {
+    setChat((c) => [...c, { id: "loan-reply" + Date.now(), from: "user", kind: "text", text: option, time: nowTime() }]);
+    void streamCoach([{ id: "loan-answer" + Date.now(), from: "coach", kind: "text", text: option === "Haan, draft karo" ? "Bilkul — Hari & Co ke liye clear email draft taiyaar kar raha hoon." : "Pehle card usage 30% ke neeche laayein, phir written-off account ko dispute karenge." }]);
+  };
+
   // Task action — user taps a task; jump to chat and stream Arjun's guidance + drafts
   const triggerTaskFlow = (taskId: string) => {
     if (!user) return;
@@ -545,6 +584,7 @@ function Index() {
             onPickFd={triggerFdDetails}
             onCallbackSelect={handleCallbackSelect}
             onBuildCredit={triggerNtcBuild}
+            onLoanQuickReply={handleLoanQuickReply}
             onMenu={(k) => {
               if (k === "logout") logout();
               else if (k === "profile") go("profile");
@@ -2083,9 +2123,10 @@ function ChatScreen(props: {
   onPickFd: (card: FdCard) => void;
   onCallbackSelect: (opt: string) => void;
   onBuildCredit: () => void;
+  onLoanQuickReply: (option: string) => void;
 }) {
   const { user, chat, setChat, chatPhase, setChatPhase, menuOpen, setMenuOpen,
-    onAcceptCall, onDeclineCall, openHeader, openCall, openReport, openTasks, tasks, onMenu, typing, onTaskAction, onPickFd, onCallbackSelect, onBuildCredit } = props;
+    onAcceptCall, onDeclineCall, openHeader, openCall, openReport, openTasks, tasks, onMenu, typing, onTaskAction, onPickFd, onCallbackSelect, onBuildCredit, onLoanQuickReply } = props;
   const [draft, setDraft] = useState("");
   const [quickOpen, setQuickOpen] = useState(false);
   const [sheet, setSheet] = useState<null | "report" | "tasks" | "updates" | "savings">(null);
@@ -2238,6 +2279,7 @@ function ChatScreen(props: {
               onPickFd(card);
             }}
             onCallbackSelect={onCallbackSelect}
+            onLoanQuickReply={onLoanQuickReply}
           />
         ))}
         {typing && (
@@ -2556,8 +2598,8 @@ function MenuItem({ icon: Icon, label, onClick }: { icon: React.ComponentType<{ 
   );
 }
 
-function Bubble({ m, tasks, onAcceptCall, onDeclineCall, onPickFd, onTaskAction, onCallbackSelect }:
-  { m: ChatMsg; tasks: { id: string; title: string; impact: number; desc: string; status: string }[]; onAcceptCall: () => void; onDeclineCall: () => void; onPickFd: (card: FdCard) => void; onTaskAction: (id: string) => void; onCallbackSelect?: (opt: string) => void }) {
+function Bubble({ m, tasks, onAcceptCall, onDeclineCall, onPickFd, onTaskAction, onCallbackSelect, onLoanQuickReply }:
+  { m: ChatMsg; tasks: { id: string; title: string; impact: number; desc: string; status: string }[]; onAcceptCall: () => void; onDeclineCall: () => void; onPickFd: (card: FdCard) => void; onTaskAction: (id: string) => void; onCallbackSelect?: (opt: string) => void; onLoanQuickReply?: (opt: string) => void }) {
   if (m.from === "system") {
     if (m.kind === "callLog") {
       return (
@@ -2620,6 +2662,17 @@ function Bubble({ m, tasks, onAcceptCall, onDeclineCall, onPickFd, onTaskAction,
           </div>
           <div className="text-[10px] text-gray-500 text-right mt-1.5">{m.time}</div>
         </div>
+      </div>
+    );
+  }
+  if (m.kind === "loanQuickReplies") {
+    return (
+      <div className="flex flex-wrap justify-start gap-2 py-1">
+        {["Haan, draft karo", "Baaki ke baare mein batao"].map((option) => (
+          <button key={option} onClick={() => onLoanQuickReply?.(option)} className="rounded-full border bg-white px-3 py-2 text-xs font-semibold shadow-sm" style={{ borderColor: WA.green, color: WA.green }}>
+            {option}
+          </button>
+        ))}
       </div>
     );
   }
