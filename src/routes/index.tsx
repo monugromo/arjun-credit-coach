@@ -312,6 +312,7 @@ function Index() {
         return;
       }
       if (kind === "time") {
+        setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `I want to apply for this ${lender} loan.`, time: nowTime() }]);
         await streamCoach([
           { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: `${lender} requires 12 months of credit history. You currently have 8 months.` },
           { id: "loan-time2" + Date.now(), from: "coach", kind: "text", text: "There is nothing negative on your report. Your credit file is simply new." },
@@ -326,6 +327,7 @@ function Index() {
         ]);
         return;
       }
+      setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `I want to apply for this ${lender} loan.`, time: nowTime() }]);
       await streamCoach([
         { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `${lender} requires a 650 score. You are at 612 — about 40 points away.` },
         { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Three issues are affecting your score: a ₹13,583 overdue with Hari & Co, one written-off account from 2023, and 94% card utilisation." },

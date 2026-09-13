@@ -12,3 +12,4 @@
 - [x] Replace placeholder lender initials with lender wordmarks.
 - [x] Simplify both loan login chat greetings to “Hi Kabir”.
 - [x] Verify mobile keyboard and both loan journeys.
+- [x] Compact loan cards, restore eligibility headings, and add locked-loan chat openers.

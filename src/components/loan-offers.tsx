@@ -225,32 +225,34 @@ function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offe
   const [details, setDetails] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
   return (
-    <article className={`relative overflow-hidden rounded-2xl border bg-card shadow-sm ${featured ? "border-primary/35" : "border-border"}`}>
-      <div className={`h-1.5 w-full ${featured ? "bg-primary" : "bg-border"}`} />
-      <div className="flex items-center gap-3 px-4 pb-4 pt-5">
-        <LenderLogo name={offer.lender} logo={offer.logo} />
+    <article className={`relative overflow-hidden rounded-xl border bg-card shadow-sm ${featured ? "border-primary/35" : "border-border"}`}>
+      <div className={`h-1 w-full ${featured ? "bg-primary" : "bg-border"}`} />
+      <div className="flex items-center gap-3 px-4 py-3">
+        <LenderLogo name={offer.lender} logo={offer.logo} size="sm" />
         <div className="min-w-0 flex-1"><h4 className="font-display truncate text-base font-bold text-foreground">{offer.lender}</h4><p className="text-xs text-muted-foreground">{offer.product}</p></div>
         {featured && <div className="rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-bold text-primary-deep">BEST MATCH</div>}
         {offer.options && <Button variant="secondary" size="sm" onClick={() => setOptionsOpen((open) => !open)} className="h-7 px-2 text-[10px]">{offer.options.length} options<ChevronDown className={optionsOpen ? "rotate-180" : ""} /></Button>}
       </div>
       {optionsOpen && offer.options && <div className="border-y border-border bg-muted px-4 py-2">{offer.options.map((option) => <div key={option} className="py-1 text-xs text-muted-foreground">{option}</div>)}</div>}
-      <div className="grid grid-cols-2 gap-x-5 gap-y-5 border-y border-border bg-muted/25 px-4 py-5">
-        <div className="col-span-2"><p className="text-[11px] font-medium text-muted-foreground">Loan amount</p><p className="font-display mt-1 text-2xl font-bold text-foreground">{offer.amount}</p></div>
-        <div><p className="text-[11px] text-muted-foreground">Interest from</p><p className="font-display mt-1 text-base font-bold text-foreground">{offer.rate}</p></div>
-        <div><p className="text-[11px] text-muted-foreground">Disbursal</p><p className="mt-1 text-sm font-semibold text-foreground">{offer.speed}</p></div>
-        <div className="col-span-2"><p className="mb-2 text-[11px] text-muted-foreground">Approval chance</p><ApprovalBars count={offer.chance} label={offer.chanceLabel} /></div>
+      <div className="grid grid-cols-[1.35fr_.65fr] gap-3 border-y border-border bg-muted/25 px-4 py-3">
+        <div><p className="text-[11px] font-medium text-muted-foreground">You may get</p><p className="font-display mt-0.5 text-lg font-bold text-foreground">{offer.amount}</p></div>
+        <div><p className="text-[11px] text-muted-foreground">Interest from</p><p className="font-display mt-0.5 text-sm font-bold text-foreground">{offer.rate}</p></div>
+        <div className="col-span-2 grid grid-cols-[1.35fr_.65fr] items-end gap-3">
+          <div><p className="mb-1.5 text-[11px] text-muted-foreground">Approval chance</p><ApprovalBars count={offer.chance} label={offer.chanceLabel} /></div>
+          <div><p className="text-[11px] text-muted-foreground">Disbursal</p><p className="mt-0.5 text-xs font-semibold text-foreground">{offer.speed}</p></div>
+        </div>
       </div>
       {details && <div className="border-b border-border px-4 py-3 text-xs text-muted-foreground">Final rate and fees are confirmed by the lender before you submit.</div>}
-      <div className="p-4">
+      <div className="px-4 py-3">
         {applied ? <div className="flex h-11 items-center justify-between rounded-lg bg-muted px-3 text-sm text-muted-foreground"><span className="font-semibold">Applied</span><Button variant="link" onClick={onUndo} className="h-auto px-0 text-xs">Undo</Button></div> : <div className="grid grid-cols-[.8fr_1.2fr] gap-2"><Button variant="outline" onClick={() => setDetails((open) => !open)}>Details</Button><Button onClick={onApply} className="h-11 bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Apply now</Button></div>}
-        <Button variant="ghost" onClick={onInfo} className="mt-2 h-8 w-full justify-center px-0 text-[11px] font-normal text-muted-foreground hover:bg-transparent"><Info />1 credit enquiry on application</Button>
+        <Button variant="ghost" onClick={onInfo} className="mt-1 h-7 w-full justify-center px-0 text-[11px] font-normal text-muted-foreground hover:bg-transparent"><Info />1 credit enquiry on application</Button>
       </div>
     </article>
   );
 }
 
 function LockedCard({ offer, onClick }: { offer: LockedOffer; onClick: () => void }) {
-  return <Button variant="ghost" onClick={onClick} className="h-auto w-full justify-start rounded-lg border border-border bg-card p-4 text-left shadow-none hover:bg-muted/50"><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className="truncate text-sm font-bold text-foreground">{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-border"><span className="block h-full rounded-full bg-amber" style={{ width: `${offer.progress}%` }} /></span><span className="mt-1.5 block text-xs font-semibold text-foreground">{offer.distance}</span></span><span className="text-xs font-semibold text-primary">View plan</span></Button>;
+  return <Button variant="ghost" onClick={onClick} className="h-auto w-full justify-start rounded-lg border border-border bg-card px-3 py-3 text-left shadow-none hover:bg-muted/50"><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className="truncate text-sm font-bold text-foreground">{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className="mt-1.5 block h-1 overflow-hidden rounded-full bg-border"><span className="block h-full rounded-full bg-amber" style={{ width: `${offer.progress}%` }} /></span><span className="mt-1 block text-[11px] font-semibold text-foreground">{offer.distance}</span></span><span className="ml-3 shrink-0 text-xs font-semibold text-primary">View plan</span></Button>;
 }
 
 function InAppBrowser({ offer, onClose }: { offer: Offer; onClose: () => void }) {
@@ -290,9 +292,9 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <AppHeader onBack={onBack} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {state.persona === "ntc" ? <NTCOffers onChat={() => onChat("ntc")} /> : <>
-          <header className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Your loan offers</h2><Button variant="link" onClick={() => setSheet("amount")} className="h-auto px-0 text-sm font-semibold">₹50,000</Button></header>
+          <header className="mb-4 flex items-start justify-between gap-3"><div><h2 className="font-display text-xl font-bold text-foreground">Loans you may be eligible for</h2><p className="mt-0.5 text-xs text-muted-foreground">Best approval chances shown first</p></div><Button variant="link" onClick={() => setSheet("amount")} className="h-auto shrink-0 px-0 text-sm font-semibold">₹50,000</Button></header>
           {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} onUndo={() => update({ applied: state.applied.filter((id) => id !== offer.id) })} />)}</div>{available.length > 3 && !showAll && <Button variant="link" onClick={() => setShowAll(true)} className="h-12 w-full">Show 6 more<ChevronDown /></Button>}<Button variant="outline" onClick={() => onChat("recommend")} className="mt-3 h-12 w-full justify-between rounded-lg bg-card"><span className="flex items-center gap-2"><MessageCircle className="text-primary" />Ask Arjun to compare</span><ArrowRight /></Button></section> : <div className="rounded-lg border border-border bg-card p-5 shadow-sm"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3><Button onClick={() => onChat("issues", "Moneyview")} className="mt-5 h-11 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">See what to improve</Button></div>}
-          {locked.length > 0 && <section className="mt-7"><div className="space-y-2">{locked.slice(0, 5).map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div></section>}
+          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans within reach</h3><p className="mt-0.5 text-xs text-muted-foreground">See what to improve before you apply</p></header><div className="space-y-2">{locked.slice(0, 5).map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div></section>}
         </>}
       </div>
       {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{["₹25,000", "₹50,000", "₹1,00,000"].map((amount) => <Button key={amount} variant={amount === "₹50,000" ? "default" : "outline"} onClick={() => setSheet(null)} className={amount === "₹50,000" ? "bg-primary-deep text-primary-foreground" : ""}>{amount}</Button>)}</div></Sheet>}
