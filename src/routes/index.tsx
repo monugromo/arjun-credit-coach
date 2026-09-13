@@ -20,8 +20,9 @@ import actionPlanPreview from "@/assets/action-plan-preview.jpg";
 import scoreProjection from "@/assets/score-projection.jpg";
 import {
   DEMOS, maskPan, distressedTasks, ntcTasks, distressedFactors,
-  fdCards, updatesFeed, initialChat, loanAccounts, type DemoUser, type ChatMsg, type FdCard,
+  fdCards, updatesFeed, initialChat, type DemoUser, type ChatMsg, type FdCard,
 } from "@/lib/groscore-data";
+import { LoanOffersScreen, createLoanJourneyState, type LoanJourneyState } from "@/components/loan-offers";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +31,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Get loan-ready with Arjun, your personal credit coach." },
       { property: "og:title", content: "GroScore" },
       { property: "og:description", content: "Your personal credit coach." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Index,
@@ -126,6 +129,7 @@ function Index() {
   const [bureauUpdated, setBureauUpdated] = useState(false);
   const [mobileLinked, setMobileLinked] = useState(false);
   const [journeyVariant, setJourneyVariant] = useState<JourneyVariant>("matched");
+  const [loanJourney, setLoanJourney] = useState<LoanJourneyState>(() => createLoanJourneyState(false));
 
   const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
   const typingDelay = (msg: Partial<ChatMsg>) => {
@@ -155,9 +159,10 @@ function Index() {
 
   const onPhoneSubmit = () => {
     const u = DEMOS[phone];
-    if (!u) { alert("Use demo phone 9876500001 (Rahul · NTC), 9876500002 (Neha · NTC), 9876500003 (Aarav · NTC · No history), 9876500004 (Sonu · Distressed), 9876500005 (Darpan · Trial ended) or 9876500006 (Vikram · NTC · No history)"); return; }
+    if (!u) { alert("Please choose one of the demo accounts shown below."); return; }
     setUser(u);
     setName(u.name);
+    if (u.loanJourney) setLoanJourney(createLoanJourneyState(u.loanJourney === "first"));
     go("otp");
   };
 
@@ -177,8 +182,8 @@ function Index() {
     (async () => {
       await sleep(400);
       await streamCoach(initialChat(user.key, user.name));
-      setChatPhase("awaiting-consent");
-      setShowCallPopup(true);
+      setChatPhase(user.key === "loan" ? "post-call" : "awaiting-consent");
+      setShowCallPopup(user.key !== "loan");
       streamingRef.current = false;
     })();
   }, [screen, user, chatPhase, chat.length]);
@@ -188,6 +193,7 @@ function Index() {
     setName(""); setChat([]); setTasks(distressedTasks);
     setReportUpdated(false); setTasksUpdated(false); setMenuOpen(false);
     setChatPhase("intro"); setShowCallPopup(false); setBureauUpdated(false); setMobileLinked(false);
+    setLoanJourney(createLoanJourneyState(false));
   };
 
   const postCallChat = (accepted: boolean) => {
@@ -293,6 +299,45 @@ function Index() {
         { id: "nbfd" + Date.now(), from: "coach", kind: "fdCarousel" },
       ]);
     })();
+  };
+
+  const triggerLoanChat = (kind: "recommend" | "issues" | "time" | "ntc", lender = "Moneyview") => {
+    go("chat");
+    setShowCallPopup(false);
+    setChatPhase("post-call");
+    (async () => {
+      if (kind === "recommend") {
+        setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: "Kaunsa sabse sahi rahega?", time: nowTime() }]);
+        await streamCoach([{ id: "loan-rec" + Date.now(), from: "coach", kind: "text", text: "Aapke liye Moneyview sabse strong hai — approval chance sabse zyada aur paisa 24 ghante mein. Ek baar mein ek hi apply karein, warna enquiries score girati hain." }]);
+        return;
+      }
+      if (kind === "time") {
+        await streamCoach([
+          { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: `${lender} ko 12 mahine ki credit history chahiye. Aapke 8 mahine hain.` },
+          { id: "loan-time2" + Date.now(), from: "coach", kind: "text", text: "Aapki report mein kuch kharab nahi hai — file bas nayi hai." },
+          { id: "loan-time3" + Date.now(), from: "coach", kind: "text", text: "January ke aas-paas Prefr aur Tez dono khul jayenge. Main bata doonga." },
+        ]);
+        return;
+      }
+      if (kind === "ntc") {
+        await streamCoach([
+          { id: "loan-ntc1" + Date.now(), from: "coach", kind: "text", text: "Aapka credit record abhi naya hai — pehle score banana best rahega." },
+          { id: "loan-ntc2" + Date.now(), from: "coach", kind: "text", text: "Main aapko secured card aur on-time payment ka simple plan bana deta hoon." },
+        ]);
+        return;
+      }
+      await streamCoach([
+        { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `${lender} ko 650 score chahiye. Aap abhi 612 par hain — lagbhag 40 points door.` },
+        { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Aapka score 3 cheezon se dabaa hua hai: Hari & Co ka ₹13,583 overdue, 2023 ka ek written-off account, aur credit card ka 94% use." },
+        { id: "loan-lock3" + Date.now(), from: "coach", kind: "text", text: "Sabse pehle overdue se shuru karte hain — wahi sabse bhaari hai. Hari & Co ko email draft kar doon?" },
+        { id: "loan-quick" + Date.now(), from: "coach", kind: "loanQuickReplies" },
+      ]);
+    })();
+  };
+
+  const handleLoanQuickReply = (option: string) => {
+    setChat((c) => [...c, { id: "loan-reply" + Date.now(), from: "user", kind: "text", text: option, time: nowTime() }]);
+    void streamCoach([{ id: "loan-answer" + Date.now(), from: "coach", kind: "text", text: option === "Haan, draft karo" ? "Bilkul — Hari & Co ke liye clear email draft taiyaar kar raha hoon." : "Pehle card usage 30% ke neeche laayein, phir written-off account ko dispute karenge." }]);
   };
 
   // Task action — user taps a task; jump to chat and stream Arjun's guidance + drafts
@@ -539,6 +584,7 @@ function Index() {
             onPickFd={triggerFdDetails}
             onCallbackSelect={handleCallbackSelect}
             onBuildCredit={triggerNtcBuild}
+            onLoanQuickReply={handleLoanQuickReply}
             onMenu={(k) => {
               if (k === "logout") logout();
               else if (k === "profile") go("profile");
@@ -573,7 +619,7 @@ function Index() {
           />
         )}
         {screen === "loans" && user && (
-          <LoansScreen user={user} />
+          <LoanOffersScreen user={user} state={loanJourney} setState={setLoanJourney} onChat={triggerLoanChat} />
         )}
         {screen === "profile" && user && <Profile user={user} onBack={() => go("chat")} />}
         {screen === "subscription" && <Subscription onBack={() => go("chat")} />}
@@ -739,7 +785,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
             <div>
               <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">No bureau data</div>
               <div className="flex flex-col gap-2">
-                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"], ["9876500007", "007", "Meera · Loans & cards · direct login"]].map(([p, id, label]) => (
+                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"], ["9876500007", "007", "Meera · Loan offers · returning"], ["9876500008", "008", "Kabir · Loan offers · first visit"]].map(([p, id, label]) => (
                   <button key={p} onClick={() => setPhone(p)}
                     className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                     <span>
@@ -2077,9 +2123,10 @@ function ChatScreen(props: {
   onPickFd: (card: FdCard) => void;
   onCallbackSelect: (opt: string) => void;
   onBuildCredit: () => void;
+  onLoanQuickReply: (option: string) => void;
 }) {
   const { user, chat, setChat, chatPhase, setChatPhase, menuOpen, setMenuOpen,
-    onAcceptCall, onDeclineCall, openHeader, openCall, openReport, openTasks, tasks, onMenu, typing, onTaskAction, onPickFd, onCallbackSelect, onBuildCredit } = props;
+    onAcceptCall, onDeclineCall, openHeader, openCall, openReport, openTasks, tasks, onMenu, typing, onTaskAction, onPickFd, onCallbackSelect, onBuildCredit, onLoanQuickReply } = props;
   const [draft, setDraft] = useState("");
   const [quickOpen, setQuickOpen] = useState(false);
   const [sheet, setSheet] = useState<null | "report" | "tasks" | "updates" | "savings">(null);
@@ -2232,6 +2279,7 @@ function ChatScreen(props: {
               onPickFd(card);
             }}
             onCallbackSelect={onCallbackSelect}
+            onLoanQuickReply={onLoanQuickReply}
           />
         ))}
         {typing && (
@@ -2550,8 +2598,8 @@ function MenuItem({ icon: Icon, label, onClick }: { icon: React.ComponentType<{ 
   );
 }
 
-function Bubble({ m, tasks, onAcceptCall, onDeclineCall, onPickFd, onTaskAction, onCallbackSelect }:
-  { m: ChatMsg; tasks: { id: string; title: string; impact: number; desc: string; status: string }[]; onAcceptCall: () => void; onDeclineCall: () => void; onPickFd: (card: FdCard) => void; onTaskAction: (id: string) => void; onCallbackSelect?: (opt: string) => void }) {
+function Bubble({ m, tasks, onAcceptCall, onDeclineCall, onPickFd, onTaskAction, onCallbackSelect, onLoanQuickReply }:
+  { m: ChatMsg; tasks: { id: string; title: string; impact: number; desc: string; status: string }[]; onAcceptCall: () => void; onDeclineCall: () => void; onPickFd: (card: FdCard) => void; onTaskAction: (id: string) => void; onCallbackSelect?: (opt: string) => void; onLoanQuickReply?: (opt: string) => void }) {
   if (m.from === "system") {
     if (m.kind === "callLog") {
       return (
@@ -2614,6 +2662,17 @@ function Bubble({ m, tasks, onAcceptCall, onDeclineCall, onPickFd, onTaskAction,
           </div>
           <div className="text-[10px] text-gray-500 text-right mt-1.5">{m.time}</div>
         </div>
+      </div>
+    );
+  }
+  if (m.kind === "loanQuickReplies") {
+    return (
+      <div className="flex flex-wrap justify-start gap-2 py-1">
+        {["Haan, draft karo", "Baaki ke baare mein batao"].map((option) => (
+          <button key={option} onClick={() => onLoanQuickReply?.(option)} className="rounded-full border bg-white px-3 py-2 text-xs font-semibold shadow-sm" style={{ borderColor: WA.green, color: WA.green }}>
+            {option}
+          </button>
+        ))}
       </div>
     );
   }
@@ -3744,80 +3803,6 @@ function BottomNav({ current, go, reportDot, taskCount }:
           </button>
         );
       })}
-    </div>
-  );
-}
-
-/* ====================== LOAN / CC ====================== */
-function LoansScreen({ user }: { user: DemoUser }) {
-  const [tab, setTab] = useState<"all" | "loan" | "card">("all");
-  const list = loanAccounts.filter((a) => tab === "all" || a.type === tab);
-  const fmt = (n: number) => "₹" + n.toLocaleString("en-IN");
-  const totalLoan = loanAccounts.filter((a) => a.type === "loan").reduce((s, a) => s + a.amount, 0);
-  const totalCard = loanAccounts.filter((a) => a.type === "card").reduce((s, a) => s + a.amount, 0);
-  const toneChip = (t: "ok" | "amber" | "danger") =>
-    t === "danger" ? { bg: "#FEE2E2", c: "#B91C1C" } : t === "amber" ? { bg: "#FEF3C7", c: "#B45309" } : { bg: "#DCFCE7", c: "#166534" };
-
-  return (
-    <div className="flex-1 min-h-0 flex flex-col" style={{ background: "#F6F7F8" }}>
-      <div className="flex items-center gap-3 px-4 h-14 text-white shrink-0" style={{ background: WA.green }}>
-        <h1 className="font-semibold text-[17px] flex-1">Loan / CC</h1>
-        <span className="text-[12px] text-white/80">{user.name}</span>
-      </div>
-      <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-3">
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white rounded-2xl p-3 shadow-sm">
-            <div className="text-[12px] text-gray-500">Loan outstanding</div>
-            <div className="text-[20px] font-extrabold text-gray-900 mt-0.5">{fmt(totalLoan)}</div>
-          </div>
-          <div className="bg-white rounded-2xl p-3 shadow-sm">
-            <div className="text-[12px] text-gray-500">Card balance</div>
-            <div className="text-[20px] font-extrabold text-gray-900 mt-0.5">{fmt(totalCard)}</div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-full p-1 shadow-sm grid grid-cols-3 gap-1">
-          {([
-            { k: "all", label: "All" },
-            { k: "loan", label: "Loans" },
-            { k: "card", label: "Cards" },
-          ] as const).map((t) => {
-            const active = tab === t.k;
-            return (
-              <button key={t.k} onClick={() => setTab(t.k)}
-                className={`py-2.5 rounded-full text-[13px] font-semibold transition ${active ? "text-white" : "text-gray-700"}`}
-                style={active ? { background: WA.green } : undefined}>
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="space-y-2.5">
-          {list.map((a) => {
-            const chip = toneChip(a.tone);
-            return (
-              <div key={a.id} className="bg-white rounded-2xl p-4 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-[15px] shrink-0" style={{ background: a.color }}>{a.initial}</div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-gray-900 text-[14px] truncate">{a.name}</div>
-                    <div className="text-[12px] text-gray-500 truncate">{a.lender}</div>
-                  </div>
-                  <span className="text-[10px] font-bold px-2 py-1 rounded-full shrink-0" style={{ background: chip.bg, color: chip.c }}>{a.status}</span>
-                </div>
-                <div className="mt-3 flex items-end justify-between">
-                  <div>
-                    <div className="text-[11px] text-gray-500">{a.amountLabel}</div>
-                    <div className="text-[17px] font-extrabold text-gray-900">{fmt(a.amount)}</div>
-                  </div>
-                  <div className="text-[11px] text-gray-500 text-right">{a.sub}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 }
