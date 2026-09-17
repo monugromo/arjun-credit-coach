@@ -59,6 +59,7 @@ type Offer = {
   rate: string;
   speed: string;
   options?: string[];
+  channel: "App based" | "Web based";
 };
 
 type LockedOffer = {
@@ -72,15 +73,15 @@ type LockedOffer = {
 };
 
 const AVAILABLE: Offer[] = [
-  { id: "moneyview", lender: "Moneyview", product: "Personal loan", logo: moneyviewLogo, approvalTime: "Less than 24hr", amount: "up to ₹60,000", rate: "14% p.a.", speed: "Within 24 hours" },
-  { id: "tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, approvalTime: "Instantly", amount: "up to ₹50,000", rate: "16% p.a.", speed: "1–2 business days", options: ["Instant personal loan", "Flexi personal loan"] },
-  { id: "ram", lender: "Ram Fincorp", product: "Personal loan", logo: ramLogo, approvalTime: "Less than 48hr", amount: "up to ₹45,000", rate: "18% p.a.", speed: "Within 48 hours" },
-  { id: "kreditbee", lender: "KreditBee", product: "Personal loan", logo: kreditbeeLogo, approvalTime: "Less than 48hr", amount: "up to ₹35,000", rate: "19% p.a.", speed: "1–2 business days" },
-  { id: "kissht", lender: "Kissht", product: "Consumer loan", logo: kisshtLogo, approvalTime: "Less than 48hr", amount: "up to ₹30,000", rate: "20% p.a.", speed: "Within 48 hours" },
-  { id: "bharatpe", lender: "BharatPe", product: "Business loan", logo: bharatpeLogo, approvalTime: "Less than 24hr", amount: "up to ₹55,000", rate: "18% p.a.", speed: "2–3 business days" },
-  { id: "zype", lender: "Zype", product: "Personal loan", approvalTime: "Instantly", amount: "up to ₹40,000", rate: "21% p.a.", speed: "Within 48 hours" },
-  { id: "lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, approvalTime: "Less than 48hr", amount: "up to ₹25,000", rate: "22% p.a.", speed: "2–3 business days" },
-  { id: "creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, approvalTime: "Less than 24hr", amount: "up to ₹30,000", rate: "24% p.a.", speed: "Within 48 hours" },
+  { id: "moneyview", lender: "Moneyview", product: "Personal loan", logo: moneyviewLogo, approvalTime: "Less than 24hr", amount: "up to ₹60,000", rate: "14% p.a.", speed: "Within 24 hours", channel: "App based" },
+  { id: "tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, approvalTime: "Instantly", amount: "up to ₹50,000", rate: "16% p.a.", speed: "1–2 business days", options: ["Instant personal loan", "Flexi personal loan"], channel: "Web based" },
+  { id: "ram", lender: "Ram Fincorp", product: "Personal loan", logo: ramLogo, approvalTime: "Less than 48hr", amount: "up to ₹45,000", rate: "18% p.a.", speed: "Within 48 hours", channel: "Web based" },
+  { id: "kreditbee", lender: "KreditBee", product: "Personal loan", logo: kreditbeeLogo, approvalTime: "Less than 48hr", amount: "up to ₹35,000", rate: "19% p.a.", speed: "1–2 business days", channel: "App based" },
+  { id: "kissht", lender: "Kissht", product: "Consumer loan", logo: kisshtLogo, approvalTime: "Less than 48hr", amount: "up to ₹30,000", rate: "20% p.a.", speed: "Within 48 hours", channel: "Web based" },
+  { id: "bharatpe", lender: "BharatPe", product: "Business loan", logo: bharatpeLogo, approvalTime: "Less than 24hr", amount: "up to ₹55,000", rate: "18% p.a.", speed: "2–3 business days", channel: "App based" },
+  { id: "zype", lender: "Zype", product: "Personal loan", approvalTime: "Instantly", amount: "up to ₹40,000", rate: "21% p.a.", speed: "Within 48 hours", channel: "App based" },
+  { id: "lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, approvalTime: "Less than 48hr", amount: "up to ₹25,000", rate: "22% p.a.", speed: "2–3 business days", channel: "App based" },
+  { id: "creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, approvalTime: "Less than 24hr", amount: "up to ₹30,000", rate: "24% p.a.", speed: "Within 48 hours", channel: "Web based" },
 ];
 
 const LOCKED_ISSUES: LockedOffer[] = [
@@ -206,7 +207,7 @@ function DateWheel({ value, onChange }: { value: string; onChange: (value: strin
 function QuestionPage({ state, update }: { state: LoanJourneyState; update: (patch: Partial<LoanJourneyState>) => void }) {
   const detailsValid = Boolean(state.work && state.income && state.loanAmount && (state.work !== "Salaried" || state.salaryMode));
   const locationValid = state.pincode.length === 6 && /^\d{4}-\d{2}-\d{2}$/.test(state.dob);
-  return <div key={state.step} className="flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-slide_260ms_ease-out]"><div className="flex-1 overflow-y-auto px-5 pb-5 pt-6"><h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">Add your details for best offers</h2>{state.step === "details" ? <div className="mt-6 space-y-4"><InlineSelect label="Select Employment type" value={state.work} options={[{ label: "Salaried" }, { label: "Self-employed" }, { label: "Student" }, { label: "Other" }]} onChange={(work) => update({ work: work as WorkType, salaryMode: work === "Salaried" ? state.salaryMode : "" })} /><AmountField id="monthly-income" label="Monthly income" value={state.income} onChange={(income) => update({ income })} />{state.work === "Salaried" && <InlineSelect label="How do you get paid?" value={state.salaryMode} options={[{ label: "Bank transfer" }, { label: "Cash" }, { label: "Cheque" }]} onChange={(salaryMode) => update({ salaryMode: salaryMode as SalaryMode })} />}<AmountField id="loan-amount" label="Loan amount" value={state.loanAmount} onChange={(loanAmount) => update({ loanAmount })} /></div> : <div className="mt-6 space-y-5"><FormField label="Pincode"><PincodeInput value={state.pincode} onChange={(pincode) => update({ pincode })} /></FormField><DateWheel value={state.dob} onChange={(dob) => update({ dob })} /></div>}</div><div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3"><Button type="button" disabled={state.step === "details" ? !detailsValid : !locationValid} onClick={() => update({ step: state.step === "details" ? "location" : "checking" })} className="mx-auto h-[54px] w-full max-w-[361px] rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground hover:bg-primary-deep/90">Continue</Button></div></div>;
+  return <div key={state.step} className="flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-slide_260ms_ease-out]"><div className="flex-1 overflow-y-auto px-5 pb-5 pt-6"><h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">Add your details for best offers</h2>{state.step === "details" ? <div className="mt-6 space-y-4"><InlineSelect label="Select Employment type" value={state.work} options={[{ label: "Salaried" }, { label: "Self-employed" }, { label: "Student" }, { label: "Other" }]} onChange={(work) => update({ work: work as WorkType, salaryMode: work === "Salaried" ? state.salaryMode : "" })} /><AmountField id="monthly-income" label="New monthly income" value={state.income} onChange={(income) => update({ income })} />{state.work === "Salaried" && <InlineSelect label="How do you get paid?" value={state.salaryMode} options={[{ label: "Bank transfer" }, { label: "Cash" }, { label: "Cheque" }]} onChange={(salaryMode) => update({ salaryMode: salaryMode as SalaryMode })} />}<AmountField id="loan-amount" label="Loan amount" value={state.loanAmount} onChange={(loanAmount) => update({ loanAmount })} /></div> : <div className="mt-6 space-y-5"><FormField label="Pincode"><PincodeInput value={state.pincode} onChange={(pincode) => update({ pincode })} /></FormField><DateWheel value={state.dob} onChange={(dob) => update({ dob })} /></div>}</div><div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3"><Button type="button" disabled={state.step === "details" ? !detailsValid : !locationValid} onClick={() => update({ step: state.step === "details" ? "location" : "checking" })} className="mx-auto h-[54px] w-full max-w-[361px] rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground hover:bg-primary-deep/90">Continue</Button></div></div>;
 }
 
 function PincodeInput({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -230,7 +231,13 @@ function OfferCard({ offer, featured, applied, onInfo, onApply }: { offer: Offer
     <article className={`overflow-hidden rounded-lg border bg-card ${featured ? "border-primary/40" : "border-border"}`}>
       <div className="flex min-h-16 items-center gap-3 border-b border-border px-4 py-3">
         <LenderLogo name={offer.lender} logo={offer.logo} size="sm" />
-        <h4 className="min-w-0 flex-1 font-display text-base font-semibold text-foreground">{offer.lender} {offer.product}</h4>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <h4 className="font-display text-base font-semibold text-foreground">{offer.lender}</h4>
+            <span className="inline-flex shrink-0 items-center rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-primary-deep">{offer.channel}</span>
+          </div>
+          <p className="text-xs text-muted-foreground">{offer.product}</p>
+        </div>
       </div>
       <div className="grid grid-cols-2 px-4 py-4">
         <div className="min-w-0 border-r border-dashed border-border pr-3">
