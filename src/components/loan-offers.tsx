@@ -19,7 +19,7 @@ import clickpeLogo from "@/assets/lenders/clickpe.png";
 import jupiterLogo from "@/assets/lenders/jupiter.png";
 
 export type Persona = "rejected" | "prime" | "thin" | "ntc" | "zero";
-type WorkType = "Salaried" | "Self-employed" | "Student" | "";
+type WorkType = "Salaried" | "Self-employed" | "Student" | "Other" | "";
 type SalaryMode = "Bank transfer" | "Cash" | "Cheque" | "";
 type Step = "intro" | "details" | "location" | "checking" | "offers";
 
@@ -100,12 +100,12 @@ const LOCKED_TIME: LockedOffer[] = [
 ];
 
 const INTRO_LENDERS = [
-  { name: "Moneyview", logo: moneyviewLogo },
-  { name: "Tez Credit", logo: tezLogo },
-  { name: "Ram Fincorp", logo: ramLogo },
-  { name: "KreditBee", logo: kreditbeeLogo },
-  { name: "BharatPe", logo: bharatpeLogo },
   { name: "HDFC Bank", logo: hdfcLogo },
+  { name: "BharatPe", logo: bharatpeLogo },
+  { name: "Moneyview", logo: moneyviewLogo },
+  { name: "mPokket", logo: mpokketLogo },
+  { name: "Kissht", logo: kisshtLogo },
+  { name: "KreditBee", logo: kreditbeeLogo },
 ];
 
 const NTC_LENDERS = [
@@ -133,7 +133,7 @@ function Sheet({ title, subtitle, children, onClose }: { title: string; subtitle
 }
 
 function AppHeader({ onBack }: { onBack: () => void }) {
-  return <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border bg-card px-3"><Button aria-label="Back to chat" size="icon" variant="ghost" onClick={onBack} className="text-foreground hover:bg-muted"><ChevronLeft /></Button><h1 className="font-display text-[18px] font-semibold text-foreground">Loans</h1></header>;
+  return <header className="flex h-14 shrink-0 items-center gap-2 bg-primary-deep px-3 text-primary-foreground"><Button aria-label="Back to chat" size="icon" variant="ghost" onClick={onBack} className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"><ChevronLeft /></Button><h1 className="font-display text-[18px] font-semibold">Loan</h1></header>;
 }
 
 function LenderLogo({ name, logo, muted = false, size = "md" }: { name: string; logo?: string; muted?: boolean; size?: "sm" | "md" }) {
@@ -153,15 +153,14 @@ function PersonaToggle({ persona, onChange }: { persona: Persona; onChange: (p: 
 
 function IntroPage({ onStart }: { onStart: () => void }) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col bg-background">
+    <div className="flex min-h-0 flex-1 flex-col bg-card">
       <div className="flex-1 overflow-y-auto px-5 pb-8 pt-8">
         <div className="mx-auto max-w-sm">
-          <p className="text-xs font-semibold uppercase text-primary-deep">30+ lending partners</p>
-          <h2 className="font-display mt-2 max-w-xs text-[30px] font-bold leading-tight text-foreground">Find the right loan for you</h2>
-          <div className="mt-8 grid grid-cols-3 gap-3">
+          <h2 className="font-display max-w-xs text-[30px] font-bold leading-tight text-foreground">Find the right loan for you</h2>
+          <div className="mt-7 grid grid-cols-3 gap-3">
             {INTRO_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-border bg-card px-2 py-3"><img src={lender.logo} alt={`${lender.name} logo`} className="h-7 max-w-full object-contain grayscale" /><span className="text-center text-[11px] font-medium leading-tight text-muted-foreground">{lender.name}</span></div>)}
           </div>
-          <p className="mt-5 text-center text-sm text-muted-foreground">Compare options across personal, consumer and business loans.</p>
+          <p className="mt-5 text-center text-sm font-medium text-muted-foreground">Compare offers from 30+ more lenders</p>
         </div>
       </div>
       <div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3 shadow-[0_-8px_24px_-20px_var(--foreground)]">
@@ -172,7 +171,7 @@ function IntroPage({ onStart }: { onStart: () => void }) {
 }
 
 function FormField({ label, children }: { label: string; children: React.ReactNode }) {
-  return <fieldset className="rounded-lg border border-input bg-card px-4 pb-3 pt-2"><legend className="px-1 text-sm font-medium text-muted-foreground">{label}</legend>{children}</fieldset>;
+  return <fieldset className="min-h-[72px] rounded-lg border border-input bg-card px-4 pb-3 pt-2"><legend className="px-1 text-sm font-medium text-muted-foreground">{label}</legend>{children}</fieldset>;
 }
 
 function InlineSelect({ label, value, options, onChange }: { label: string; value: string; options: Array<{ label: string; note?: string }>; onChange: (value: string) => void }) {
@@ -207,7 +206,7 @@ function QuestionPage({ state, update }: { state: LoanJourneyState; update: (pat
   const detailsValid = Boolean(state.work && state.income && state.loanAmount && (state.work !== "Salaried" || state.salaryMode));
   const locationValid = state.pincode.length === 6 && /^\d{4}-\d{2}-\d{2}$/.test(state.dob);
   const isDetails = state.step === "details";
-  return <div key={state.step} className="flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-slide_260ms_ease-out]"><div className="flex-1 overflow-y-auto px-5 pb-5 pt-6"><div className="mb-6 flex items-start justify-between gap-3"><div><h2 className="font-display text-2xl font-bold text-foreground">{isDetails ? "Tell us what you need" : "Almost done"}</h2><p className="mt-1 text-sm text-muted-foreground">{isDetails ? "We’ll use this to find suitable loan offers." : "Add your details to check lender availability."}</p></div><span className="shrink-0 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">{isDetails ? "1 of 2" : "2 of 2"}</span></div>{isDetails ? <div className="space-y-4"><InlineSelect label="What do you do?" value={state.work} options={[{ label: "Salaried", note: "Fixed monthly salary" }, { label: "Self-employed", note: "Business, shop or freelance" }, { label: "Student" }]} onChange={(work) => update({ work: work as WorkType, salaryMode: work === "Salaried" ? state.salaryMode : "" })} /><AmountField id="monthly-income" label="Monthly income" value={state.income} onChange={(income) => update({ income })} />{state.work === "Salaried" && <InlineSelect label="How do you get paid?" value={state.salaryMode} options={[{ label: "Bank transfer" }, { label: "Cash" }, { label: "Cheque" }]} onChange={(salaryMode) => update({ salaryMode: salaryMode as SalaryMode })} />}<AmountField id="loan-amount" label="How much do you need?" value={state.loanAmount} onChange={(loanAmount) => update({ loanAmount })} /></div> : <div className="space-y-5"><FormField label="Pincode"><PincodeInput value={state.pincode} onChange={(pincode) => update({ pincode })} /></FormField><DateWheel value={state.dob} onChange={(dob) => update({ dob })} /></div>}</div><div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3"><Button type="button" disabled={isDetails ? !detailsValid : !locationValid} onClick={() => update({ step: isDetails ? "location" : "checking" })} className="h-12 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue</Button></div></div>;
+  return <div key={state.step} className="flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-slide_260ms_ease-out]"><div className="flex-1 overflow-y-auto px-5 pb-5 pt-6"><div className="mb-6 flex items-start justify-between gap-3"><div><h2 className="font-display text-2xl font-bold text-foreground">{isDetails ? "Tell us what you need" : "Almost done"}</h2><p className="mt-1 text-sm text-muted-foreground">{isDetails ? "We’ll use this to find suitable loan offers." : "Add your details to check lender availability."}</p></div><span className="shrink-0 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">{isDetails ? "1 of 2" : "2 of 2"}</span></div>{isDetails ? <div className="space-y-4"><InlineSelect label="What do you do?" value={state.work} options={[{ label: "Salaried" }, { label: "Self-employed" }, { label: "Student" }, { label: "Other" }]} onChange={(work) => update({ work: work as WorkType, salaryMode: work === "Salaried" ? state.salaryMode : "" })} /><AmountField id="monthly-income" label="Monthly income" value={state.income} onChange={(income) => update({ income })} />{state.work === "Salaried" && <InlineSelect label="How do you get paid?" value={state.salaryMode} options={[{ label: "Bank transfer" }, { label: "Cash" }, { label: "Cheque" }]} onChange={(salaryMode) => update({ salaryMode: salaryMode as SalaryMode })} />}<AmountField id="loan-amount" label="Loan amount" value={state.loanAmount} onChange={(loanAmount) => update({ loanAmount })} /></div> : <div className="space-y-5"><FormField label="Pincode"><PincodeInput value={state.pincode} onChange={(pincode) => update({ pincode })} /></FormField><DateWheel value={state.dob} onChange={(dob) => update({ dob })} /></div>}</div><div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3"><Button type="button" disabled={isDetails ? !detailsValid : !locationValid} onClick={() => update({ step: isDetails ? "location" : "checking" })} className="h-12 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue</Button></div></div>;
 }
 
 function PincodeInput({ value, onChange }: { value: string; onChange: (value: string) => void }) {
