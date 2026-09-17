@@ -299,6 +299,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const [showAllLocked, setShowAllLocked] = useState(false);
   const [showApplications, setShowApplications] = useState(false);
   const [editingDetails, setEditingDetails] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
