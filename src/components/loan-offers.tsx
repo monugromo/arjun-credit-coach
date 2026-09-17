@@ -325,7 +325,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const visibleLocked = showAllLocked ? locked : locked.slice(0, 5);
   const unlocksFrozen = unlockTaps >= 3;
   const startQuestions = () => update({ step: "details" });
-  const openApply = (offer: Offer) => { scrollTop.current = scrollRef.current?.scrollTop ?? 0; setSelectedOffer(offer); setBrowserOffer(offer); };
+  const openApply = (offer: Offer) => { scrollTop.current = scrollRef.current?.scrollTop ?? 0; setBrowserOffer(offer); };
   const handleUnlockTap = (offer: LockedOffer) => { if (unlocksFrozen) return; setUnlockTaps((count) => count + 1); onChat(offer.reason, offer.lender); };
   const closeBrowser = () => { if (browserOffer) update({ applied: Array.from(new Set([...state.applied, browserOffer.id])) }); setBrowserOffer(null); requestAnimationFrame(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollTop.current; }); };
 
