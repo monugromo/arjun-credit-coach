@@ -280,7 +280,7 @@ type ApplicationStatus = Exclude<ApplicationFilter, "All">;
 
 const SAMPLE_APPLICATIONS: Array<{ offer: Offer; status: ApplicationStatus }> = [
   { offer: AVAILABLE[3], status: "In review" },
-  { offer: { id: "hdfc-approved", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, approvalTime: "Less than 24hr", amount: "₹50,000", rate: "15% p.a.", speed: "Within 24 hours" }, status: "Approved" },
+  { offer: { id: "hdfc-approved", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, approvalTime: "Less than 24hr", amount: "₹50,000", rate: "15% p.a.", speed: "Within 24 hours", channel: "App based" }, status: "Approved" },
   { offer: AVAILABLE[5], status: "Approved" },
   { offer: AVAILABLE[4], status: "Disbursed" },
   { offer: AVAILABLE[7], status: "Disbursed" },
