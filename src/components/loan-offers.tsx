@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, ChevronDown, ChevronLeft, Info, Loader2, LocateFixed, LockKeyhole, MessageCircle, ShieldCheck, X } from "lucide-react";
 import type { DemoUser } from "@/lib/groscore-data";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ import jupiterLogo from "@/assets/lenders/jupiter.png";
 export type Persona = "rejected" | "prime" | "thin" | "ntc" | "zero";
 type WorkType = "Salaried" | "Self-employed" | "Student" | "";
 type SalaryMode = "Bank transfer" | "Cash" | "Cheque" | "";
-type Step = "intro" | "work" | "income" | "salary" | "pincode" | "dob" | "checking" | "offers";
+type Step = "intro" | "details" | "location" | "checking" | "offers";
 
 type LoanStateSetter = (next: LoanJourneyState | ((current: LoanJourneyState) => LoanJourneyState)) => void;
 
@@ -31,6 +31,7 @@ export interface LoanJourneyState {
   work: WorkType;
   income: string;
   salaryMode: SalaryMode;
+  loanAmount: string;
   pincode: string;
   dob: string;
   applied: string[];
@@ -42,6 +43,7 @@ export const createLoanJourneyState = (firstVisit: boolean): LoanJourneyState =>
   work: "",
   income: "",
   salaryMode: "",
+  loanAmount: "",
   pincode: "",
   dob: "",
   applied: [],
@@ -163,7 +165,7 @@ function IntroPage({ onStart, resume, inactive = false }: { onStart: () => void;
           </div>
         </div>
         <div className="border-t border-border bg-muted/50 px-5 py-4">
-          <div className="mb-3 flex items-center justify-between text-sm"><span className="text-muted-foreground">Takes about 30 seconds</span><span className="font-semibold text-foreground">4 details</span></div>
+           <div className="mb-3 flex items-center justify-between text-sm"><span className="text-muted-foreground">Takes about 30 seconds</span><span className="font-semibold text-foreground">6 questions</span></div>
           <Button onClick={onStart} className="h-12 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">{resume ? "Continue" : "View my offers"}<ArrowRight /></Button>
         </div>
       </div>
@@ -171,43 +173,42 @@ function IntroPage({ onStart, resume, inactive = false }: { onStart: () => void;
   );
 }
 
-function QuestionSheet({ state, update, onClose }: { state: LoanJourneyState; update: (patch: Partial<LoanJourneyState>) => void; onClose: () => void }) {
-  const [picker, setPicker] = useState<"work" | "salary" | null>(null);
-  const order = useMemo<Step[]>(() => state.work === "Salaried" ? ["work", "income", "salary", "pincode", ...(state.persona === "ntc" ? ["dob" as Step] : [])] : ["work", "income", "pincode", ...(state.persona === "ntc" ? ["dob" as Step] : [])], [state.work, state.persona]);
-  const current = Math.max(0, order.indexOf(state.step));
-  const isValid = (state.step === "work" && Boolean(state.work)) || (state.step === "income" && Boolean(state.income)) || (state.step === "salary" && Boolean(state.salaryMode)) || (state.step === "pincode" && state.pincode.length === 6) || (state.step === "dob" && Boolean(state.dob));
-  const titles: Partial<Record<Step, string>> = { work: "What do you do?", income: "Monthly income", salary: "How do you receive your salary?", pincode: "Your pincode", dob: "Date of birth" };
-  const back = () => { if (picker) return setPicker(null); if (current <= 0) return onClose(); update({ step: order[current - 1] }); };
-  const next = () => { const nextStep = order[current + 1]; update({ step: nextStep ?? "checking" }); };
-
-  return (
-    <Sheet title={picker ? (picker === "work" ? "Employment type" : "Salary method") : (titles[state.step] ?? "Your details")} subtitle={picker ? undefined : `${current + 1} of ${order.length}`} onClose={onClose}>
-      <div className="mt-5">
-        {picker === "work" && <ChoiceList value={state.work} options={[{ label: "Salaried", note: "Fixed monthly salary" }, { label: "Self-employed", note: "Business, shop or freelance" }, { label: "Student" }]} onPick={(value) => { update({ work: value as WorkType, salaryMode: value === "Salaried" ? state.salaryMode : "" }); setPicker(null); }} />}
-        {picker === "salary" && <ChoiceList value={state.salaryMode} options={[{ label: "Bank transfer" }, { label: "Cash" }, { label: "Cheque" }]} onPick={(value) => { update({ salaryMode: value as SalaryMode }); setPicker(null); }} />}
-        {!picker && state.step === "work" && <SelectField value={state.work} placeholder="Select employment type" onClick={() => setPicker("work")} />}
-        {!picker && state.step === "income" && <IncomeInput value={state.income} onChange={(income) => update({ income })} />}
-        {!picker && state.step === "salary" && <SelectField value={state.salaryMode} placeholder="Select salary method" onClick={() => setPicker("salary")} />}
-        {!picker && state.step === "pincode" && <PincodeInput value={state.pincode} onChange={(pincode) => update({ pincode })} />}
-        {!picker && state.step === "dob" && <input autoFocus type="date" value={state.dob} onChange={(event) => update({ dob: event.target.value })} className="h-14 w-full rounded-lg border border-input bg-background px-4 text-lg text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/15" />}
-      </div>
-      {!picker && <div className="mt-7 flex gap-2"><Button variant="outline" size="icon" aria-label="Previous question" className="h-12 w-12 shrink-0" onClick={back}><ChevronLeft /></Button><Button disabled={!isValid} onClick={next} className="h-12 flex-1 bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue</Button></div>}
-    </Sheet>
-  );
+function FormField({ label, children }: { label: string; children: React.ReactNode }) {
+  return <fieldset className="rounded-lg border border-input bg-card px-4 pb-3 pt-2"><legend className="px-1 text-sm font-medium text-muted-foreground">{label}</legend>{children}</fieldset>;
 }
 
-function ChoiceList({ value, options, onPick }: { value: string; options: Array<{ label: string; note?: string }>; onPick: (value: string) => void }) {
-  return <div className="space-y-2">{options.map((option) => <Button key={option.label} variant="outline" onClick={() => onPick(option.label)} className="h-auto min-h-14 w-full justify-start rounded-lg px-4 text-left"><span className="flex-1"><span className="block font-semibold text-foreground">{option.label}</span>{option.note && <span className="mt-0.5 block text-xs font-normal text-muted-foreground">{option.note}</span>}</span>{value === option.label && <Check className="text-primary" />}</Button>)}</div>;
+function InlineSelect({ label, value, options, onChange }: { label: string; value: string; options: Array<{ label: string; note?: string }>; onChange: (value: string) => void }) {
+  const [open, setOpen] = useState(false);
+  return <div className="relative"><FormField label={label}><Button type="button" variant="ghost" onClick={() => setOpen((current) => !current)} className="h-10 w-full justify-between px-0 text-base hover:bg-transparent"><span className={value ? "text-foreground" : "text-muted-foreground"}>{value || "Select"}</span><ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} /></Button></FormField>{open && <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-20 overflow-hidden rounded-lg border border-border bg-popover shadow-lg">{options.map((option) => <Button type="button" key={option.label} variant="ghost" onClick={() => { onChange(option.label); setOpen(false); }} className="h-auto min-h-12 w-full justify-start rounded-none border-b border-border px-4 py-2 text-left last:border-b-0"><span className="flex-1"><span className="block text-sm font-semibold text-popover-foreground">{option.label}</span>{option.note && <span className="block text-xs font-normal text-muted-foreground">{option.note}</span>}</span>{value === option.label && <Check className="h-4 w-4 text-primary" />}</Button>)}</div>}</div>;
 }
 
-function SelectField({ value, placeholder, onClick }: { value: string; placeholder: string; onClick: () => void }) {
-  return <Button variant="outline" onClick={onClick} className="h-14 w-full justify-between rounded-lg px-4 text-base"><span className={value ? "text-foreground" : "text-muted-foreground"}>{value || placeholder}</span><ChevronDown /></Button>;
-}
-
-function IncomeInput({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+function AmountField({ id, label, value, onChange, autoFocus = false }: { id: string; label: string; value: string; onChange: (value: string) => void; autoFocus?: boolean }) {
   const ref = useRef<HTMLInputElement>(null);
-  useEffect(() => { const timer = window.setTimeout(() => ref.current?.focus(), 180); return () => window.clearTimeout(timer); }, []);
-  return <div><label htmlFor="monthly-income" className="text-sm font-medium text-muted-foreground">Amount after deductions</label><div className="mt-2 flex h-16 items-center rounded-lg border border-input bg-background px-4 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15"><span className="font-display text-2xl font-bold text-foreground">₹</span><input ref={ref} id="monthly-income" inputMode="numeric" pattern="[0-9]*" autoComplete="off" value={value ? Number(value).toLocaleString("en-IN") : ""} onChange={(event) => onChange(event.target.value.replace(/\D/g, "").slice(0, 8))} placeholder="0" className="min-w-0 flex-1 bg-transparent px-2 font-display text-3xl font-bold text-foreground outline-none placeholder:text-muted-foreground/50" /></div></div>;
+  useEffect(() => { if (!autoFocus) return; const timer = window.setTimeout(() => ref.current?.focus(), 180); return () => window.clearTimeout(timer); }, [autoFocus]);
+  return <FormField label={label}><div className="flex h-10 items-center"><span className="font-display text-xl font-semibold text-foreground">₹</span><input ref={ref} id={id} inputMode="numeric" pattern="[0-9]*" autoComplete="off" value={value ? Number(value).toLocaleString("en-IN") : ""} onChange={(event) => onChange(event.target.value.replace(/\D/g, "").slice(0, 8))} placeholder="0" className="min-w-0 flex-1 bg-transparent px-2 font-display text-[32px] font-semibold leading-none text-foreground outline-none placeholder:text-muted-foreground/50" /></div></FormField>;
+}
+
+function DateWheel({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const initial = value.split("-");
+  const yearNow = new Date().getFullYear();
+  const year = initial[0] || String(yearNow - 25);
+  const month = initial[1] || "01";
+  const day = initial[2] || "01";
+  const change = (part: "year" | "month" | "day", next: string) => {
+    const date = { year, month, day, [part]: next };
+    const maxDay = new Date(Number(date.year), Number(date.month), 0).getDate();
+    const safeDay = String(Math.min(Number(date.day), maxDay)).padStart(2, "0");
+    onChange(`${date.year}-${date.month}-${safeDay}`);
+  };
+  const selectClass = "h-28 flex-1 appearance-none bg-transparent px-2 text-center text-lg font-semibold text-foreground outline-none";
+  return <FormField label="Date of birth"><p className="mb-2 text-xs text-muted-foreground">Aapka credit record nahi mila, isliye ye chahiye.</p><div className="relative flex divide-x divide-border overflow-hidden rounded-lg border border-border bg-background"><select aria-label="Birth day" size={3} value={day} onChange={(event) => change("day", event.target.value)} className={selectClass}>{Array.from({ length: 31 }, (_, index) => String(index + 1).padStart(2, "0")).map((item) => <option key={item}>{item}</option>)}</select><select aria-label="Birth month" size={3} value={month} onChange={(event) => change("month", event.target.value)} className={selectClass}>{Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0")).map((item) => <option key={item} value={item}>{new Date(2000, Number(item) - 1).toLocaleString("en", { month: "short" })}</option>)}</select><select aria-label="Birth year" size={3} value={year} onChange={(event) => change("year", event.target.value)} className={selectClass}>{Array.from({ length: 63 }, (_, index) => String(yearNow - 18 - index)).map((item) => <option key={item}>{item}</option>)}</select></div></FormField>;
+}
+
+function QuestionPage({ state, update, onIntro }: { state: LoanJourneyState; update: (patch: Partial<LoanJourneyState>) => void; onIntro: () => void }) {
+  const detailsValid = Boolean(state.work && state.income && state.loanAmount && (state.work !== "Salaried" || state.salaryMode));
+  const locationValid = state.pincode.length === 6 && (state.persona !== "ntc" || Boolean(state.dob));
+  const isDetails = state.step === "details";
+  return <div className="flex min-h-0 flex-1 flex-col bg-background"><div className="flex-1 overflow-y-auto px-5 pb-5 pt-6"><div className="mb-6 flex items-start justify-between gap-3"><div><h2 className="font-display text-2xl font-bold text-foreground">{isDetails ? "Tell us what you need" : "Almost done"}</h2><p className="mt-1 text-sm text-muted-foreground">{isDetails ? "We’ll use this to find suitable loan offers." : "Add your location to check lender availability."}</p></div><span className="shrink-0 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">{isDetails ? "1 of 2" : "2 of 2"}</span></div>{isDetails ? <div className="space-y-4"><InlineSelect label="What do you do?" value={state.work} options={[{ label: "Salaried", note: "Fixed monthly salary" }, { label: "Self-employed", note: "Business, shop or freelance" }, { label: "Student" }]} onChange={(work) => update({ work: work as WorkType, salaryMode: work === "Salaried" ? state.salaryMode : "" })} /><AmountField id="monthly-income" label="Monthly income" value={state.income} onChange={(income) => update({ income })} />{state.work === "Salaried" && <InlineSelect label="How do you get paid?" value={state.salaryMode} options={[{ label: "Bank transfer" }, { label: "Cash" }, { label: "Cheque" }]} onChange={(salaryMode) => update({ salaryMode: salaryMode as SalaryMode })} />}<AmountField id="loan-amount" label="How much do you need?" value={state.loanAmount} onChange={(loanAmount) => update({ loanAmount })} /></div> : <div className="space-y-5"><FormField label="Pincode"><PincodeInput value={state.pincode} onChange={(pincode) => update({ pincode })} /></FormField>{state.persona === "ntc" && <DateWheel value={state.dob} onChange={(dob) => update({ dob })} />}</div>}</div><div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3"><div className="flex gap-2"><Button type="button" variant="outline" size="icon" aria-label="Previous page" className="h-12 w-12 shrink-0" onClick={() => isDetails ? onIntro() : update({ step: "details" })}><ChevronLeft /></Button><Button type="button" disabled={isDetails ? !detailsValid : !locationValid} onClick={() => update({ step: isDetails ? "location" : "checking" })} className="h-12 flex-1 bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue<ArrowRight /></Button></div></div></div>;
 }
 
 function PincodeInput({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -264,7 +265,6 @@ function NTCOffers({ onChat }: { onChat: () => void }) {
 }
 
 export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: DemoUser; state: LoanJourneyState; setState: LoanStateSetter; onChat: (kind: "recommend" | "issues" | "time" | "ntc", lender?: string) => void; onBack: () => void }) {
-  const [questionSheetOpen, setQuestionSheetOpen] = useState(!["intro", "checking", "offers"].includes(state.step));
   const [sheet, setSheet] = useState<"amount" | "info" | "apply" | null>(null);
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
@@ -273,19 +273,21 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const scrollTop = useRef(0);
   const update = (patch: Partial<LoanJourneyState>) => setState((current) => ({ ...current, ...patch }));
 
-  useEffect(() => { if (state.step !== "checking") return; setQuestionSheetOpen(false); const timer = window.setTimeout(() => setState((current) => ({ ...current, step: "offers" })), 2000); return () => window.clearTimeout(timer); }, [state.step, setState]);
+  useEffect(() => { if (state.step !== "checking") return; const timer = window.setTimeout(() => setState((current) => ({ ...current, step: "offers" })), 2000); return () => window.clearTimeout(timer); }, [state.step, setState]);
 
   const available = state.persona === "prime" ? AVAILABLE : state.persona === "thin" ? AVAILABLE.slice(0, 1) : state.persona === "zero" || state.persona === "ntc" ? [] : AVAILABLE.slice(0, 3);
   const locked = state.persona === "prime" || state.persona === "ntc" ? [] : state.persona === "thin" ? LOCKED_TIME : LOCKED_ISSUES;
   const visibleAvailable = showAll ? available.slice(0, 9) : available.slice(0, 3);
-  const startQuestions = () => { if (state.step === "intro") update({ step: "work" }); setQuestionSheetOpen(true); };
+  const startQuestions = () => update({ step: "details" });
   const openApply = (offer: Offer) => { setSelectedOffer(offer); setSheet("apply"); };
   const confirmApply = () => { if (!selectedOffer) return; scrollTop.current = scrollRef.current?.scrollTop ?? 0; setSheet(null); setBrowserOffer(selectedOffer); };
   const closeBrowser = () => { if (browserOffer) update({ applied: Array.from(new Set([...state.applied, browserOffer.id])) }); setBrowserOffer(null); requestAnimationFrame(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollTop.current; }); };
 
   if (state.step === "checking") return <div className="flex flex-1 flex-col items-center justify-center bg-background px-8 text-center"><Loader2 className="h-11 w-11 animate-spin text-primary" /><h2 className="font-display mt-5 text-xl font-bold text-foreground">Checking lender matches</h2><div className="mt-5 flex gap-2">{INTRO_LENDERS.slice(0, 4).map((lender) => <LenderLogo key={lender.name} name={lender.name} logo={lender.logo} muted size="sm" />)}</div></div>;
 
-  if (state.step !== "offers") return <div className="relative flex min-h-0 flex-1 flex-col bg-background"><AppHeader onBack={onBack} /><IntroPage onStart={startQuestions} resume={state.step !== "intro"} inactive={questionSheetOpen} />{questionSheetOpen && <QuestionSheet state={state} update={update} onClose={() => setQuestionSheetOpen(false)} />}</div>;
+  if (state.step === "intro") return <div className="relative flex min-h-0 flex-1 flex-col bg-background"><AppHeader onBack={onBack} /><IntroPage onStart={startQuestions} resume={false} /></div>;
+
+  if (state.step === "details" || state.step === "location") return <div className="relative flex min-h-0 flex-1 flex-col bg-background"><AppHeader onBack={onBack} /><QuestionPage state={state} update={update} onIntro={() => update({ step: "intro" })} /></div>;
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col bg-background">
