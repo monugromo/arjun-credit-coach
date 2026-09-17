@@ -162,3 +162,16 @@
     -webkit-font-smoothing: antialiased;
   }
 }
+
+@keyframes loan-page-flip {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateY(4deg) translateX(14px);
+    transform-origin: left center;
+  }
+  to {
+    opacity: 1;
+    transform: perspective(900px) rotateY(0) translateX(0);
+    transform-origin: left center;
+  }
+}
