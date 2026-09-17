@@ -54,8 +54,7 @@ type Offer = {
   lender: string;
   product: string;
   logo?: string;
-  chance: 3 | 4 | 5;
-  chanceLabel: "Fair" | "Good" | "High";
+  approvalTime: string;
   amount: string;
   rate: string;
   speed: string;
