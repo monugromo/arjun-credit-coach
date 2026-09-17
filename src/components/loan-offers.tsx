@@ -72,15 +72,15 @@ type LockedOffer = {
 };
 
 const AVAILABLE: Offer[] = [
-  { id: "moneyview", lender: "Moneyview", product: "Personal loan", logo: moneyviewLogo, approvalTime: "24hr", amount: "₹40,000–₹60,000", rate: "14% p.a.", speed: "Within 24 hours" },
-  { id: "tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, approvalTime: "Instantly", amount: "₹30,000–₹50,000", rate: "16% p.a.", speed: "1–2 business days", options: ["Instant personal loan", "Flexi personal loan"] },
-  { id: "ram", lender: "Ram Fincorp", product: "Personal loan", logo: ramLogo, approvalTime: "48hr", amount: "₹25,000–₹45,000", rate: "18% p.a.", speed: "Within 48 hours" },
-  { id: "kreditbee", lender: "KreditBee", product: "Personal loan", logo: kreditbeeLogo, approvalTime: "48hr", amount: "₹20,000–₹35,000", rate: "19% p.a.", speed: "1–2 business days" },
-  { id: "kissht", lender: "Kissht", product: "Consumer loan", logo: kisshtLogo, approvalTime: "48hr", amount: "Check amount", rate: "20% p.a.", speed: "Within 48 hours" },
-  { id: "bharatpe", lender: "BharatPe", product: "Business loan", logo: bharatpeLogo, approvalTime: "24hr", amount: "₹35,000–₹55,000", rate: "18% p.a.", speed: "2–3 business days" },
-  { id: "zype", lender: "Zype", product: "Personal loan", approvalTime: "Instantly", amount: "₹20,000–₹40,000", rate: "21% p.a.", speed: "Within 48 hours" },
-  { id: "lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, approvalTime: "48hr", amount: "Check amount", rate: "22% p.a.", speed: "2–3 business days" },
-  { id: "creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, approvalTime: "24hr", amount: "₹15,000–₹30,000", rate: "24% p.a.", speed: "Within 48 hours" },
+  { id: "moneyview", lender: "Moneyview", product: "Personal loan", logo: moneyviewLogo, approvalTime: "Less than 24hr", amount: "up to ₹60,000", rate: "14% p.a.", speed: "Within 24 hours" },
+  { id: "tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, approvalTime: "Instantly", amount: "up to ₹50,000", rate: "16% p.a.", speed: "1–2 business days", options: ["Instant personal loan", "Flexi personal loan"] },
+  { id: "ram", lender: "Ram Fincorp", product: "Personal loan", logo: ramLogo, approvalTime: "Less than 48hr", amount: "up to ₹45,000", rate: "18% p.a.", speed: "Within 48 hours" },
+  { id: "kreditbee", lender: "KreditBee", product: "Personal loan", logo: kreditbeeLogo, approvalTime: "Less than 48hr", amount: "up to ₹35,000", rate: "19% p.a.", speed: "1–2 business days" },
+  { id: "kissht", lender: "Kissht", product: "Consumer loan", logo: kisshtLogo, approvalTime: "Less than 48hr", amount: "up to ₹30,000", rate: "20% p.a.", speed: "Within 48 hours" },
+  { id: "bharatpe", lender: "BharatPe", product: "Business loan", logo: bharatpeLogo, approvalTime: "Less than 24hr", amount: "up to ₹55,000", rate: "18% p.a.", speed: "2–3 business days" },
+  { id: "zype", lender: "Zype", product: "Personal loan", approvalTime: "Instantly", amount: "up to ₹40,000", rate: "21% p.a.", speed: "Within 48 hours" },
+  { id: "lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, approvalTime: "Less than 48hr", amount: "up to ₹25,000", rate: "22% p.a.", speed: "2–3 business days" },
+  { id: "creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, approvalTime: "Less than 24hr", amount: "up to ₹30,000", rate: "24% p.a.", speed: "Within 48 hours" },
 ];
 
 const LOCKED_ISSUES: LockedOffer[] = [
