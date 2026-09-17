@@ -3778,7 +3778,7 @@ function BottomNav({ current, go, reportDot, taskCount }:
     { key: "chat", label: "Chat", icon: MessageCircle },
     { key: "report", label: "Report", icon: FileText, dot: reportDot },
     { key: "tasks", label: "Tasks", icon: CheckCircle2, badge: taskCount },
-    { key: "loans", label: "Loan", icon: CreditCard },
+    { key: "loans", label: "Loans", icon: CreditCard },
   ];
   return (
     <div className="shrink-0 grid grid-cols-4 bg-white border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
