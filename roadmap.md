@@ -17,3 +17,4 @@
 - [x] Align the loan form styling, add required DOB wheels, simplify CTAs, and smooth page transitions.
 - [x] Redesign the fresh-loan intro, move its action into thumb reach, and simplify transitions.
 - [x] Restore loan styling consistency and correct lenders, labels, and work options.
+- [x] Rebuild loan offer cards in the supplied compact details-and-features layout.
