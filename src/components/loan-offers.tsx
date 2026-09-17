@@ -214,8 +214,11 @@ function PincodeInput({ value, onChange }: { value: string; onChange: (value: st
   return <div><Button variant="link" onClick={() => onChange("110001")} className="mb-4 h-auto px-0"><LocateFixed />Use my location</Button><div className="relative" onClick={() => ref.current?.focus()}><input ref={ref} aria-label="Pincode" inputMode="numeric" pattern="[0-9]*" autoComplete="postal-code" value={value} onChange={(event) => onChange(event.target.value.replace(/\D/g, "").slice(0, 6))} className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0" /><div className="flex gap-2">{digits.map((digit, index) => <span key={index} className={`flex h-12 flex-1 items-center justify-center rounded-lg border text-base font-semibold text-foreground ${digit.trim() ? "border-primary bg-primary-soft" : "border-input bg-background"}`}>{digit}</span>)}</div></div></div>;
 }
 
-function ApprovalBars({ count, label }: { count: number; label: string }) {
-  return <div className="flex items-center gap-2"><div className="flex flex-1 gap-1" aria-label={`${label} approval chance`}>{[0, 1, 2, 3, 4].map((index) => <span key={index} className={`h-1.5 flex-1 rounded-full ${index < count ? "bg-primary" : "bg-border"}`} />)}</div><div className="shrink-0 text-xs font-semibold text-primary-deep">{label}</div></div>;
+function monthlyRate(rate: string) {
+  const match = rate.match(/(\d+(?:\.\d+)?)/);
+  if (!match) return rate;
+  const monthly = (parseFloat(match[1]) / 12).toFixed(1);
+  return `${monthly}% p.m.`;
 }
 
 function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offer: Offer; featured: boolean; applied: boolean; onInfo: () => void; onApply: () => void; onUndo: () => void }) {
