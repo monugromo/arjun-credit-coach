@@ -159,11 +159,10 @@ function IntroPage({ onStart }: { onStart: () => void }) {
       <div className="flex-1 overflow-y-auto px-5 pb-8 pt-8">
         <div className="mx-auto max-w-sm">
           <h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">Find the right loan for you</h2>
-          <p className="mt-2 text-sm text-muted-foreground">Compare offers from 30+ lenders</p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-5">
-            {INTRO_LENDERS.map((lender) => <div key={lender.name} className="flex flex-col items-center gap-2 opacity-60 grayscale"><img src={lender.logo} alt={`${lender.name} logo`} className="h-8 max-w-[72px] object-contain" /><span className="text-center text-[10px] leading-tight text-muted-foreground">{lender.name}</span></div>)}
+          <div className="mt-7 grid grid-cols-3 gap-3">
+            {INTRO_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-border bg-card px-2 py-3"><img src={lender.logo} alt={`${lender.name} logo`} className="h-7 max-w-full object-contain grayscale" /><span className="text-center text-[11px] font-medium leading-tight text-muted-foreground">{lender.name}</span></div>)}
           </div>
-          <p className="mt-8 text-center text-xs text-muted-foreground">Our lending partners</p>
+          <p className="mt-5 text-center text-sm font-medium text-muted-foreground">Compare offers from 30+ lenders</p>
         </div>
       </div>
       <div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3">
