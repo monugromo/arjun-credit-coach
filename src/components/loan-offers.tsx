@@ -232,8 +232,8 @@ function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offe
       </div>
       <div className="grid grid-cols-[1.1fr_1.35fr_1fr] px-4 py-4">
         <div className="min-w-0 border-r border-dashed border-border pr-3">
-          <p className="text-sm text-muted-foreground">Approval rate</p>
-          <div className="mt-2"><ApprovalBars count={offer.chance} label={offer.chanceLabel} /></div>
+          <p className="text-sm text-muted-foreground">Approval time</p>
+          <p className="mt-1 text-base font-semibold leading-5 text-foreground">{offer.approvalTime}</p>
         </div>
         <div className="min-w-0 px-3">
           <p className="text-sm text-muted-foreground">Loan amount</p>
@@ -241,7 +241,7 @@ function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offe
         </div>
         <div className="min-w-0 pl-2">
           <p className="text-sm text-muted-foreground">Interest rate</p>
-          <p className="mt-1 text-base font-semibold leading-5 text-foreground">from {offer.rate}</p>
+          <p className="mt-1 truncate text-base font-semibold leading-5 text-foreground">from {monthlyRate(offer.rate)}</p>
         </div>
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pb-4">
