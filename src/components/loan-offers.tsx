@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronDown, ChevronLeft, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, ChevronUp, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
 import type { DemoUser } from "@/lib/groscore-data";
 import { Button } from "@/components/ui/button";
 import moneyviewLogo from "@/assets/lenders/moneyview.png";
@@ -267,7 +267,7 @@ function LockedCard({ offer, onClick }: { offer: LockedOffer; onClick: () => voi
   return <Button variant="ghost" onClick={onClick} className="h-auto w-full justify-start rounded-lg border border-border bg-card px-3 py-3 text-left shadow-none hover:bg-muted/50"><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className="truncate text-sm font-bold text-foreground">{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className="mt-1.5 block text-xs font-semibold text-foreground">{offer.distance}</span></span></Button>;
 }
 
-type ApplicationFilter = "All" | "In review" | "Approved" | "Disbursed";
+type ApplicationFilter = "All" | "In review" | "Approved" | "Disbursed" | "Rejected";
 
 type ApplicationStatus = Exclude<ApplicationFilter, "All">;
 
@@ -277,15 +277,17 @@ const SAMPLE_APPLICATIONS: Array<{ offer: Offer; status: ApplicationStatus }> = 
   { offer: AVAILABLE[5], status: "Approved" },
   { offer: AVAILABLE[4], status: "Disbursed" },
   { offer: AVAILABLE[7], status: "Disbursed" },
+  { offer: AVAILABLE[1], status: "Rejected" },
+  { offer: AVAILABLE[6], status: "Rejected" },
 ];
 
-function ApplicationsScreen({ applied, onBack, onUndo }: { applied: string[]; onBack: () => void; onUndo: (id: string) => void }) {
+function ApplicationsScreen({ applied, onBack }: { applied: string[]; onBack: () => void }) {
   const [filter, setFilter] = useState<ApplicationFilter>("All");
-  const liveApplications = AVAILABLE.filter((offer) => applied.includes(offer.id)).map((offer) => ({ offer, status: "In review" as const, canUndo: true }));
-  const sampleApplications = SAMPLE_APPLICATIONS.filter(({ offer }) => !liveApplications.some((item) => item.offer.id === offer.id)).map((item) => ({ ...item, canUndo: false }));
+  const liveApplications = AVAILABLE.filter((offer) => applied.includes(offer.id)).map((offer) => ({ offer, status: "In review" as const }));
+  const sampleApplications = SAMPLE_APPLICATIONS.filter(({ offer }) => !liveApplications.some((item) => item.offer.id === offer.id));
   const applications = [...liveApplications, ...sampleApplications];
   const visible = filter === "All" ? applications : applications.filter((item) => item.status === filter);
-  return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={onBack} /><div className="flex-1 overflow-y-auto px-4 pb-6 pt-5"><h2 className="font-display text-xl font-bold text-foreground">Your applications</h2><div className="mt-4 flex gap-2 overflow-x-auto pb-1">{(["All", "In review", "Approved", "Disbursed"] as ApplicationFilter[]).map((item) => <Button key={item} variant={filter === item ? "default" : "outline"} onClick={() => setFilter(item)} className={`h-9 shrink-0 rounded-full px-4 shadow-none ${filter === item ? "bg-primary-deep text-primary-foreground hover:bg-primary-deep/90" : "bg-card"}`}>{item}</Button>)}</div>{visible.length > 0 ? <div className="mt-4 space-y-3">{visible.map(({ offer, status, canUndo }) => <article key={`${offer.id}-${status}`} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3"><LenderLogo name={offer.lender} logo={offer.logo} size="sm" /><div className="min-w-0 flex-1"><h3 className="truncate text-sm font-bold text-foreground">{offer.lender}</h3><p className="text-xs text-muted-foreground">{offer.product} · {offer.amount}</p></div><div className="text-right"><p className="whitespace-nowrap text-sm font-semibold text-primary-deep">{status}</p>{canUndo && <Button variant="link" onClick={() => onUndo(offer.id)} className="h-auto px-0 text-xs">Undo</Button>}</div></article>)}</div> : <div className="mt-8 rounded-lg border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">No {filter === "All" ? "applications" : filter.toLowerCase() + " applications"} yet</div>}</div></div>;
+  return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={onBack} /><div className="flex-1 overflow-y-auto px-4 pb-6 pt-5"><h2 className="font-display text-xl font-bold text-foreground">Your applications</h2><div className="mt-4 flex gap-2 overflow-x-auto pb-1">{(["All", "In review", "Approved", "Disbursed", "Rejected"] as ApplicationFilter[]).map((item) => <Button key={item} variant={filter === item ? "default" : "outline"} onClick={() => setFilter(item)} className={`h-9 shrink-0 rounded-full px-4 shadow-none ${filter === item ? "bg-primary-deep text-primary-foreground hover:bg-primary-deep/90" : "bg-card"}`}>{item}</Button>)}</div>{visible.length > 0 ? <div className="mt-4 space-y-3">{visible.map(({ offer, status }) => <article key={`${offer.id}-${status}`} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3"><LenderLogo name={offer.lender} logo={offer.logo} size="sm" /><div className="min-w-0 flex-1"><h3 className="truncate text-sm font-bold text-foreground">{offer.lender}</h3><p className="text-xs text-muted-foreground">{offer.product} · {offer.amount}</p></div><p className={`whitespace-nowrap text-sm font-semibold ${status === "Rejected" ? "text-destructive" : "text-primary-deep"}`}>{status}</p></article>)}</div> : <div className="mt-8 rounded-lg border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">No {filter === "All" ? "applications" : filter.toLowerCase() + " applications"} yet</div>}</div></div>;
 }
 
 function InAppBrowser({ offer, onClose }: { offer: Offer; onClose: () => void }) {
@@ -325,7 +327,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
 
   if (state.step === "details" || state.step === "location") return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={() => { if (state.step === "location") { update({ step: "details" }); return; } update({ step: editingDetails ? "offers" : "intro" }); setEditingDetails(false); }} /><QuestionPage state={state} update={update} /></div>;
 
-  if (showApplications) return <ApplicationsScreen applied={state.applied} onBack={() => setShowApplications(false)} onUndo={(id) => update({ applied: state.applied.filter((appliedId) => appliedId !== id) })} />;
+  if (showApplications) return <ApplicationsScreen applied={state.applied} onBack={() => setShowApplications(false)} />;
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-slide_260ms_ease-out]">
@@ -333,8 +335,8 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {state.persona === "ntc" ? <NTCOffers onChat={() => onChat("ntc")} /> : <>
           <header className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2><Button variant="outline" onClick={() => setShowApplications(true)} className="h-9 shrink-0 rounded-lg bg-card px-3 text-sm font-semibold shadow-none">Applications</Button></header>
-          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && !showAll && <Button variant="outline" onClick={() => setShowAll(true)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">View more<ChevronDown /></Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3></div>}
-          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div>{locked.length > 5 && !showAllLocked && <Button variant="outline" onClick={() => setShowAllLocked(true)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">View more<ChevronDown /></Button>}</section>}
+          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3></div>}
+          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div>{locked.length > 5 && <Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section>}
         </>}
       </div>
       {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{[{ label: "₹25,000", value: "25000" }, { label: "₹50,000", value: "50000" }, { label: "₹1,00,000", value: "100000" }].map((option) => <Button key={option.label} variant={option.value === (state.loanAmount || "50000") ? "default" : "outline"} onClick={() => { update({ loanAmount: option.value }); setSheet(null); }} className={option.value === (state.loanAmount || "50000") ? "bg-primary-deep text-primary-foreground" : ""}>{option.label}</Button>)}</div></Sheet>}
