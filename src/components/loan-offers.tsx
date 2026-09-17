@@ -224,7 +224,7 @@ function monthlyRate(rate: string) {
   return `${monthly}% p.m.`;
 }
 
-function OfferCard({ offer, featured, applied, onInfo, onApply }: { offer: Offer; featured: boolean; applied: boolean; onInfo: () => void; onApply: () => void }) {
+function OfferCard({ offer, featured, applied, onApply }: { offer: Offer; featured: boolean; applied: boolean; onApply: () => void }) {
   const [details, setDetails] = useState(false);
   const [detailTab, setDetailTab] = useState<"details" | "features">("details");
   return (
@@ -249,7 +249,7 @@ function OfferCard({ offer, featured, applied, onInfo, onApply }: { offer: Offer
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pb-4">
         <Button variant="ghost" onClick={() => setDetails((open) => !open)} className="h-11 justify-start px-0 text-base font-semibold text-primary hover:bg-transparent hover:text-primary-deep">Offer details<ChevronDown className={`transition-transform ${details ? "rotate-180" : ""}`} /></Button>
-        {applied ? <div className="flex h-11 min-w-36 items-center justify-center rounded-md bg-primary-soft px-4 text-sm font-semibold text-primary-deep">In review</div> : <Button onClick={onApply} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>}
+        <Button onClick={onApply} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">{applied ? "Continue" : "Apply now"}</Button>
       </div>
       {details && <div className="border-t border-border bg-muted/40 px-4 pb-4">
         <div className="grid grid-cols-2 border-b border-border">
@@ -262,7 +262,7 @@ function OfferCard({ offer, featured, applied, onInfo, onApply }: { offer: Offer
           <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Loan amount</dt><dd className="text-right font-semibold text-foreground">{offer.amount}</dd></div>
           {offer.options && <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Available options</dt><dd className="text-right font-semibold text-foreground">{offer.options.join(", ")}</dd></div>}
         </dl> : <ul className="space-y-3 pt-4 text-sm text-foreground"><li className="flex gap-2"><span aria-hidden="true">•</span>100% digital application</li><li className="flex gap-2"><span aria-hidden="true">•</span>No collateral required</li><li className="flex gap-2"><span aria-hidden="true">•</span>Fast lender decision</li></ul>}
-        <Button variant="ghost" onClick={onInfo} className="mt-3 h-8 w-full justify-start px-0 text-xs font-normal text-muted-foreground hover:bg-transparent"><Info />1 credit enquiry on application</Button>
+        
       </div>}
     </article>
   );
