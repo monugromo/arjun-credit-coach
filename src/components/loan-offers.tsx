@@ -88,6 +88,8 @@ const LOCKED_ISSUES: LockedOffer[] = [
   { id: "lock-hdfc", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, distance: "Just a few points away", progress: 49, reason: "issues" },
   { id: "lock-kissht", lender: "Kissht", product: "Personal loan", logo: kisshtLogo, distance: "Just a few points away", progress: 44, reason: "issues" },
   { id: "lock-creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, distance: "Just a few points away", progress: 37, reason: "issues" },
+  { id: "lock-lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, distance: "Just a few points away", progress: 35, reason: "issues" },
+  { id: "lock-zype", lender: "Zype", product: "Personal loan", distance: "Just a few points away", progress: 42, reason: "issues" },
 ];
 
 const LOCKED_TIME: LockedOffer[] = [
