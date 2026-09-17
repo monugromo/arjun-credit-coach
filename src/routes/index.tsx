@@ -437,12 +437,6 @@ function Index() {
         {screen !== "loans" && <div className="absolute top-2 right-2 z-[100] pointer-events-none select-none px-2 py-1 rounded-md bg-black/70 text-white text-[10px] font-mono tracking-wide shadow">
           {screen}
         </div>}
-        <DevNav current={screen} go={go} hasUser={!!user} loadDemo={(k) => {
-          const u = k === "ntc" ? DEMOS["9876500001"] : DEMOS["9876500004"];
-          setUser(u); setName(u.name); setPhone(u.phone);
-          startChatFlow(u);
-        }} />
-
         {screen === "landing" && <Landing onStart={() => go("phone")} />}
         {screen === "phone" && (
           <PhoneScreen phone={phone} setPhone={setPhone} onBack={() => go("landing")} onSubmit={onPhoneSubmit} />
