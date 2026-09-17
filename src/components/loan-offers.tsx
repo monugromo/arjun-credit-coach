@@ -156,7 +156,7 @@ function IntroPage({ onStart }: { onStart: () => void }) {
     <div className="flex min-h-0 flex-1 flex-col bg-card">
       <div className="flex-1 overflow-y-auto px-5 pb-8 pt-8">
         <div className="mx-auto max-w-sm">
-          <h2 className="font-display text-2xl font-bold leading-tight text-foreground">Find the right loan for you</h2>
+          <h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">Find the right loan for you</h2>
           <div className="mt-7 grid grid-cols-3 gap-3">
             {INTRO_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-border bg-card px-2 py-3"><img src={lender.logo} alt={`${lender.name} logo`} className="h-7 max-w-full object-contain grayscale" /><span className="text-center text-[11px] font-medium leading-tight text-muted-foreground">{lender.name}</span></div>)}
           </div>
@@ -164,7 +164,7 @@ function IntroPage({ onStart }: { onStart: () => void }) {
         </div>
       </div>
       <div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3">
-        <Button onClick={onStart} className="h-14 w-full rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground hover:bg-primary-deep/90">View my offers</Button>
+        <Button onClick={onStart} className="mx-auto h-[54px] w-full max-w-[361px] rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground hover:bg-primary-deep/90">View my offers</Button>
       </div>
     </div>
   );
