@@ -328,6 +328,8 @@ function Index() {
         return;
       }
       setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `I want to apply for this ${lender} loan.`, time: nowTime() }]);
+      await streamCoach([{ id: "loan-lock0" + Date.now(), from: "coach", kind: "text", text: `Let me check with ${lender}, please wait…` }]);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       await streamCoach([
         { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `Aapka score abhi ${user?.score ?? 612} hai. ${lender} ke liye thoda aur score chahiye — kuch issues fix karke yeh loan unlock ho sakta hai.` },
         { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Three issues are affecting your score: a ₹13,583 overdue with Hari & Co, one written-off account from 2023, and 94% card utilisation." },

@@ -224,7 +224,7 @@ function monthlyRate(rate: string) {
   return `${monthly}% p.m.`;
 }
 
-function OfferCard({ offer, featured, applied, onInfo, onApply }: { offer: Offer; featured: boolean; applied: boolean; onInfo: () => void; onApply: () => void }) {
+function OfferCard({ offer, featured, applied, onApply }: { offer: Offer; featured: boolean; applied: boolean; onApply: () => void }) {
   const [details, setDetails] = useState(false);
   const [detailTab, setDetailTab] = useState<"details" | "features">("details");
   return (
@@ -249,7 +249,7 @@ function OfferCard({ offer, featured, applied, onInfo, onApply }: { offer: Offer
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pb-4">
         <Button variant="ghost" onClick={() => setDetails((open) => !open)} className="h-11 justify-start px-0 text-base font-semibold text-primary hover:bg-transparent hover:text-primary-deep">Offer details<ChevronDown className={`transition-transform ${details ? "rotate-180" : ""}`} /></Button>
-        {applied ? <div className="flex h-11 min-w-36 items-center justify-center rounded-md bg-primary-soft px-4 text-sm font-semibold text-primary-deep">In review</div> : <Button onClick={onApply} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>}
+        <Button onClick={onApply} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">{applied ? "Continue" : "Apply now"}</Button>
       </div>
       {details && <div className="border-t border-border bg-muted/40 px-4 pb-4">
         <div className="grid grid-cols-2 border-b border-border">
@@ -262,14 +262,14 @@ function OfferCard({ offer, featured, applied, onInfo, onApply }: { offer: Offer
           <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Loan amount</dt><dd className="text-right font-semibold text-foreground">{offer.amount}</dd></div>
           {offer.options && <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Available options</dt><dd className="text-right font-semibold text-foreground">{offer.options.join(", ")}</dd></div>}
         </dl> : <ul className="space-y-3 pt-4 text-sm text-foreground"><li className="flex gap-2"><span aria-hidden="true">•</span>100% digital application</li><li className="flex gap-2"><span aria-hidden="true">•</span>No collateral required</li><li className="flex gap-2"><span aria-hidden="true">•</span>Fast lender decision</li></ul>}
-        <Button variant="ghost" onClick={onInfo} className="mt-3 h-8 w-full justify-start px-0 text-xs font-normal text-muted-foreground hover:bg-transparent"><Info />1 credit enquiry on application</Button>
+        
       </div>}
     </article>
   );
 }
 
-function LockedCard({ offer, onClick }: { offer: LockedOffer; onClick: () => void }) {
-  return <Button variant="ghost" onClick={onClick} className="h-auto w-full justify-start rounded-lg border border-border bg-card px-3 py-3 text-left shadow-none hover:bg-muted/50"><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className="truncate text-sm font-bold text-foreground">{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className="mt-1.5 block text-xs font-semibold text-foreground">{offer.distance}</span></span></Button>;
+function LockedCard({ offer, onClick, frozen }: { offer: LockedOffer; onClick: () => void; frozen?: boolean }) {
+  return <Button variant="ghost" disabled={frozen} onClick={onClick} className="h-auto w-full justify-start rounded-lg border border-border bg-card px-3 py-3 text-left shadow-none hover:bg-muted/50 disabled:opacity-60"><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className="truncate text-sm font-bold text-foreground">{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className="mt-1.5 block text-xs font-semibold text-foreground">{frozen ? "Checking with lenders — please wait" : offer.distance}</span></span></Button>;
 }
 
 type ApplicationFilter = "All" | "In review" | "Approved" | "Disbursed" | "Rejected";
@@ -304,26 +304,29 @@ function NTCOffers({ onChat }: { onChat: () => void }) {
 }
 
 export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: DemoUser; state: LoanJourneyState; setState: LoanStateSetter; onChat: (kind: "recommend" | "issues" | "time" | "ntc", lender?: string) => void; onBack: () => void }) {
-  const [sheet, setSheet] = useState<"amount" | "info" | "apply" | null>(null);
-  const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
+  const [sheet, setSheet] = useState<"amount" | null>(null);
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
   const [showAll, setShowAll] = useState(false);
   const [showAllLocked, setShowAllLocked] = useState(false);
   const [showApplications, setShowApplications] = useState(false);
   const [editingDetails, setEditingDetails] = useState(false);
+  const [unlockTaps, setUnlockTaps] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollTop = useRef(0);
   const update = (patch: Partial<LoanJourneyState>) => setState((current) => ({ ...current, ...patch }));
 
   useEffect(() => { if (state.step !== "checking") return; const timer = window.setTimeout(() => setState((current) => ({ ...current, step: "offers" })), 2000); return () => window.clearTimeout(timer); }, [state.step, setState]);
 
+  useEffect(() => { if (unlockTaps < 3) return; const timer = window.setTimeout(() => setUnlockTaps(0), 30000); return () => window.clearTimeout(timer); }, [unlockTaps]);
+
   const available = state.persona === "prime" ? AVAILABLE : state.persona === "thin" ? AVAILABLE.slice(0, 1) : state.persona === "zero" || state.persona === "ntc" ? [] : AVAILABLE;
   const locked = state.persona === "prime" || state.persona === "ntc" ? [] : state.persona === "thin" ? LOCKED_TIME : LOCKED_ISSUES;
   const visibleAvailable = showAll ? available : available.slice(0, 4);
   const visibleLocked = showAllLocked ? locked : locked.slice(0, 5);
+  const unlocksFrozen = unlockTaps >= 3;
   const startQuestions = () => update({ step: "details" });
-  const openApply = (offer: Offer) => { setSelectedOffer(offer); setSheet("apply"); };
-  const confirmApply = () => { if (!selectedOffer) return; scrollTop.current = scrollRef.current?.scrollTop ?? 0; setSheet(null); setBrowserOffer(selectedOffer); };
+  const openApply = (offer: Offer) => { scrollTop.current = scrollRef.current?.scrollTop ?? 0; setBrowserOffer(offer); };
+  const handleUnlockTap = (offer: LockedOffer) => { if (unlocksFrozen) return; setUnlockTaps((count) => count + 1); onChat(offer.reason, offer.lender); };
   const closeBrowser = () => { if (browserOffer) update({ applied: Array.from(new Set([...state.applied, browserOffer.id])) }); setBrowserOffer(null); requestAnimationFrame(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollTop.current; }); };
 
   if (state.step === "checking") return <div className="flex flex-1 flex-col items-center justify-center bg-card px-8 text-center motion-safe:animate-[loan-page-slide_260ms_ease-out]"><Loader2 className="h-11 w-11 animate-spin text-primary" /><h2 className="font-display mt-5 text-xl font-bold text-foreground">Checking lender matches</h2><div className="mt-5 flex gap-2">{INTRO_LENDERS.slice(0, 4).map((lender) => <LenderLogo key={lender.name} name={lender.name} logo={lender.logo} muted size="sm" />)}</div></div>;
@@ -340,13 +343,11 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {state.persona === "ntc" ? <NTCOffers onChat={() => onChat("ntc")} /> : <>
           <header className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2><Button variant="outline" onClick={() => setShowApplications(true)} className="h-9 shrink-0 rounded-lg bg-card px-3 text-sm font-semibold shadow-none">Applications</Button></header>
-          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3></div>}
-          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div>{locked.length > 5 && <Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section>}
+          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3></div>}
+          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} frozen={unlocksFrozen} onClick={() => handleUnlockTap(offer)} />)}</div>{unlocksFrozen && <p className="mt-2 text-xs text-muted-foreground">You’ve checked 3 lenders. Please wait a moment before checking more.</p>}<Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button></section>}
         </>}
       </div>
       {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{[{ label: "₹25,000", value: "25000" }, { label: "₹50,000", value: "50000" }, { label: "₹1,00,000", value: "100000" }].map((option) => <Button key={option.label} variant={option.value === (state.loanAmount || "50000") ? "default" : "outline"} onClick={() => { update({ loanAmount: option.value }); setSheet(null); }} className={option.value === (state.loanAmount || "50000") ? "bg-primary-deep text-primary-foreground" : ""}>{option.label}</Button>)}</div></Sheet>}
-      {sheet === "info" && <Sheet title="Credit enquiry" onClose={() => setSheet(null)}><p className="mt-2 text-sm text-muted-foreground">An application adds one enquiry to your credit report.</p></Sheet>}
-      {sheet === "apply" && selectedOffer && <Sheet title={`Apply with ${selectedOffer.lender}?`} subtitle="This adds one credit enquiry." onClose={() => setSheet(null)}><Button onClick={confirmApply} className="mt-5 h-11 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue to {selectedOffer.lender}</Button><Button onClick={() => setSheet(null)} variant="ghost" className="mt-2 h-11 w-full">Not now</Button></Sheet>}
       {browserOffer && <InAppBrowser offer={browserOffer} onClose={closeBrowser} />}
     </div>
   );
