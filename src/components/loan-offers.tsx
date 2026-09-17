@@ -304,8 +304,7 @@ function NTCOffers({ onChat }: { onChat: () => void }) {
 }
 
 export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: DemoUser; state: LoanJourneyState; setState: LoanStateSetter; onChat: (kind: "recommend" | "issues" | "time" | "ntc", lender?: string) => void; onBack: () => void }) {
-  const [sheet, setSheet] = useState<"amount" | "info" | "apply" | null>(null);
-  const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
+  const [sheet, setSheet] = useState<"amount" | null>(null);
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
   const [showAll, setShowAll] = useState(false);
   const [showAllLocked, setShowAllLocked] = useState(false);
