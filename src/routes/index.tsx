@@ -129,7 +129,7 @@ function Index() {
   const [bureauUpdated, setBureauUpdated] = useState(false);
   const [mobileLinked, setMobileLinked] = useState(false);
   const [journeyVariant, setJourneyVariant] = useState<JourneyVariant>("matched");
-  const [loanJourney, setLoanJourney] = useState<LoanJourneyState>(() => createLoanJourneyState(false));
+  const [loanJourney, setLoanJourney] = useState<LoanJourneyState>(() => createLoanJourneyState());
 
   const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
   const typingDelay = (msg: Partial<ChatMsg>) => {
@@ -162,7 +162,7 @@ function Index() {
     if (!u) { alert("Please choose one of the demo accounts shown below."); return; }
     setUser(u);
     setName(u.name);
-    if (u.loanJourney) setLoanJourney(createLoanJourneyState(u.loanJourney === "first"));
+    if (u.loanJourney) setLoanJourney(createLoanJourneyState());
     go("otp");
   };
 
@@ -193,7 +193,7 @@ function Index() {
     setName(""); setChat([]); setTasks(distressedTasks);
     setReportUpdated(false); setTasksUpdated(false); setMenuOpen(false);
     setChatPhase("intro"); setShowCallPopup(false); setBureauUpdated(false); setMobileLinked(false);
-    setLoanJourney(createLoanJourneyState(false));
+    setLoanJourney(createLoanJourneyState());
   };
 
   const postCallChat = (accepted: boolean) => {
