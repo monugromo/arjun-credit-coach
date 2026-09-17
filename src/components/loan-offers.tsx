@@ -230,16 +230,12 @@ function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offe
         <LenderLogo name={offer.lender} logo={offer.logo} size="sm" />
         <h4 className="min-w-0 flex-1 font-display text-base font-semibold text-foreground">{offer.lender} {offer.product}</h4>
       </div>
-      <div className="grid grid-cols-3 px-4 py-4">
+      <div className="grid grid-cols-2 px-4 py-4">
         <div className="min-w-0 border-r border-dashed border-border pr-3">
-          <p className="text-sm text-muted-foreground">Approval time</p>
-          <p className="mt-1 whitespace-nowrap text-base font-semibold leading-5 text-foreground">{offer.approvalTime}</p>
-        </div>
-        <div className="min-w-0 px-3">
           <p className="text-sm text-muted-foreground">Loan amount</p>
           <p className="mt-1 text-base font-semibold leading-5 text-foreground">{offer.amount}</p>
         </div>
-        <div className="min-w-0 pl-2">
+        <div className="min-w-0 pl-3">
           <p className="text-sm text-muted-foreground">Interest rate</p>
           <p className="mt-1 whitespace-nowrap text-base font-semibold leading-5 text-foreground">from {monthlyRate(offer.rate)}</p>
         </div>
