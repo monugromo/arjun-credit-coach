@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronDown, ChevronLeft, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, ChevronUp, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
 import type { DemoUser } from "@/lib/groscore-data";
 import { Button } from "@/components/ui/button";
 import moneyviewLogo from "@/assets/lenders/moneyview.png";
@@ -327,7 +327,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
 
   if (state.step === "details" || state.step === "location") return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={() => { if (state.step === "location") { update({ step: "details" }); return; } update({ step: editingDetails ? "offers" : "intro" }); setEditingDetails(false); }} /><QuestionPage state={state} update={update} /></div>;
 
-  if (showApplications) return <ApplicationsScreen applied={state.applied} onBack={() => setShowApplications(false)} onUndo={(id) => update({ applied: state.applied.filter((appliedId) => appliedId !== id) })} />;
+  if (showApplications) return <ApplicationsScreen applied={state.applied} onBack={() => setShowApplications(false)} />;
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-slide_260ms_ease-out]">
