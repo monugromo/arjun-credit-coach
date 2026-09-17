@@ -311,19 +311,23 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const [showAllLocked, setShowAllLocked] = useState(false);
   const [showApplications, setShowApplications] = useState(false);
   const [editingDetails, setEditingDetails] = useState(false);
+  const [unlockTaps, setUnlockTaps] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollTop = useRef(0);
   const update = (patch: Partial<LoanJourneyState>) => setState((current) => ({ ...current, ...patch }));
 
   useEffect(() => { if (state.step !== "checking") return; const timer = window.setTimeout(() => setState((current) => ({ ...current, step: "offers" })), 2000); return () => window.clearTimeout(timer); }, [state.step, setState]);
 
+  useEffect(() => { if (unlockTaps < 3) return; const timer = window.setTimeout(() => setUnlockTaps(0), 30000); return () => window.clearTimeout(timer); }, [unlockTaps]);
+
   const available = state.persona === "prime" ? AVAILABLE : state.persona === "thin" ? AVAILABLE.slice(0, 1) : state.persona === "zero" || state.persona === "ntc" ? [] : AVAILABLE;
   const locked = state.persona === "prime" || state.persona === "ntc" ? [] : state.persona === "thin" ? LOCKED_TIME : LOCKED_ISSUES;
   const visibleAvailable = showAll ? available : available.slice(0, 4);
   const visibleLocked = showAllLocked ? locked : locked.slice(0, 5);
+  const unlocksFrozen = unlockTaps >= 3;
   const startQuestions = () => update({ step: "details" });
-  const openApply = (offer: Offer) => { setSelectedOffer(offer); setSheet("apply"); };
-  const confirmApply = () => { if (!selectedOffer) return; scrollTop.current = scrollRef.current?.scrollTop ?? 0; setSheet(null); setBrowserOffer(selectedOffer); };
+  const openApply = (offer: Offer) => { scrollTop.current = scrollRef.current?.scrollTop ?? 0; setSelectedOffer(offer); setBrowserOffer(offer); };
+  const handleUnlockTap = (offer: LockedOffer) => { if (unlocksFrozen) return; setUnlockTaps((count) => count + 1); onChat(offer.reason, offer.lender); };
   const closeBrowser = () => { if (browserOffer) update({ applied: Array.from(new Set([...state.applied, browserOffer.id])) }); setBrowserOffer(null); requestAnimationFrame(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollTop.current; }); };
 
   if (state.step === "checking") return <div className="flex flex-1 flex-col items-center justify-center bg-card px-8 text-center motion-safe:animate-[loan-page-slide_260ms_ease-out]"><Loader2 className="h-11 w-11 animate-spin text-primary" /><h2 className="font-display mt-5 text-xl font-bold text-foreground">Checking lender matches</h2><div className="mt-5 flex gap-2">{INTRO_LENDERS.slice(0, 4).map((lender) => <LenderLogo key={lender.name} name={lender.name} logo={lender.logo} muted size="sm" />)}</div></div>;
