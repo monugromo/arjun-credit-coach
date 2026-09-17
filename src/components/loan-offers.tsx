@@ -288,6 +288,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
   const [showAll, setShowAll] = useState(false);
   const [showApplications, setShowApplications] = useState(false);
+  const [editingDetails, setEditingDetails] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollTop = useRef(0);
   const update = (patch: Partial<LoanJourneyState>) => setState((current) => ({ ...current, ...patch }));
@@ -306,13 +307,13 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
 
   if (state.step === "intro") return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={onBack} /><div className="flex min-h-0 flex-1 motion-safe:animate-[loan-page-slide_260ms_ease-out]"><IntroPage onStart={startQuestions} /></div></div>;
 
-  if (state.step === "details" || state.step === "location") return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={() => update({ step: state.step === "location" ? "details" : "intro" })} /><QuestionPage state={state} update={update} /></div>;
+  if (state.step === "details" || state.step === "location") return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={() => { if (state.step === "location") { update({ step: "details" }); return; } update({ step: editingDetails ? "offers" : "intro" }); setEditingDetails(false); }} /><QuestionPage state={state} update={update} /></div>;
 
   if (showApplications) return <ApplicationsScreen applied={state.applied} onBack={() => setShowApplications(false)} onUndo={(id) => update({ applied: state.applied.filter((appliedId) => appliedId !== id) })} />;
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-slide_260ms_ease-out]">
-      <AppHeader onBack={onBack} onEdit={() => update({ step: "details" })} />
+      <AppHeader onBack={onBack} onEdit={() => { setEditingDetails(true); update({ step: "details" }); }} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {state.persona === "ntc" ? <NTCOffers onChat={() => onChat("ntc")} /> : <>
           <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2></header>
