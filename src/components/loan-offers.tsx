@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Check, ChevronDown, ChevronLeft, Info, Loader2, LocateFixed, LockKeyhole, MessageCircle, ShieldCheck, X } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, Info, Loader2, LocateFixed, LockKeyhole, MessageCircle, ShieldCheck, X } from "lucide-react";
 import type { DemoUser } from "@/lib/groscore-data";
 import { Button } from "@/components/ui/button";
 import moneyviewLogo from "@/assets/lenders/moneyview.png";
@@ -151,22 +151,18 @@ function PersonaToggle({ persona, onChange }: { persona: Persona; onChange: (p: 
   return <div className="absolute right-14 top-2 z-30"><Button aria-label="Change mock persona" variant="secondary" size="sm" onClick={() => onChange(personas[(personas.indexOf(persona) + 1) % personas.length])} className="h-7 bg-foreground/80 px-2 text-[10px] font-bold text-background hover:bg-foreground">{labels[persona]}</Button></div>;
 }
 
-function IntroPage({ onStart, resume, inactive = false }: { onStart: () => void; resume: boolean; inactive?: boolean }) {
+function IntroPage({ onStart }: { onStart: () => void }) {
   return (
-    <div aria-hidden={inactive} className={`flex-1 overflow-y-auto px-4 py-5 ${inactive ? "pointer-events-none" : ""}`}>
+    <div className="flex-1 overflow-y-auto bg-card px-4 py-5">
       <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
         <div className="px-5 pb-5 pt-6">
-          <div className="flex items-start justify-between gap-4">
-            <div><p className="text-xs font-semibold text-primary">PERSONALISED MATCHES</p><h2 className="font-display mt-2 text-2xl font-bold text-foreground">Find the right loan</h2><p className="mt-1 text-sm text-muted-foreground">Compare offers from 55+ lenders.</p></div>
-            <ShieldCheck className="h-7 w-7 text-primary" />
-          </div>
+          <div><h2 className="font-display text-2xl font-bold text-foreground">Find the right loan</h2><p className="mt-1 text-sm text-muted-foreground">Compare offers from 55+ lenders.</p></div>
           <div className="mt-6 grid grid-cols-3 gap-2">
-            {INTRO_LENDERS.map((lender) => <div key={lender.name} className="flex h-14 items-center justify-center rounded-lg border border-border bg-background px-3"><img src={lender.logo} alt={`${lender.name} logo`} className="max-h-8 max-w-full object-contain grayscale" /></div>)}
+            {INTRO_LENDERS.map((lender) => <div key={lender.name} className="flex h-14 items-center justify-center rounded-lg border border-border bg-card px-3"><img src={lender.logo} alt={`${lender.name} logo`} className="max-h-8 max-w-full object-contain grayscale" /></div>)}
           </div>
         </div>
-        <div className="border-t border-border bg-muted/50 px-5 py-4">
-           <div className="mb-3 flex items-center justify-between text-sm"><span className="text-muted-foreground">Takes about 30 seconds</span><span className="font-semibold text-foreground">6 questions</span></div>
-          <Button onClick={onStart} className="h-12 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">{resume ? "Continue" : "View my offers"}<ArrowRight /></Button>
+        <div className="border-t border-border bg-card px-5 py-4">
+          <Button onClick={onStart} className="h-12 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">View my offers</Button>
         </div>
       </div>
     </div>
@@ -191,24 +187,25 @@ function AmountField({ id, label, value, onChange, autoFocus = false }: { id: st
 function DateWheel({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   const initial = value.split("-");
   const yearNow = new Date().getFullYear();
-  const year = initial[0] || String(yearNow - 25);
-  const month = initial[1] || "01";
-  const day = initial[2] || "01";
+  const year = initial[0] || "";
+  const month = initial[1] || "";
+  const day = initial[2] || "";
   const change = (part: "year" | "month" | "day", next: string) => {
     const date = { year, month, day, [part]: next };
+    if (!date.year || !date.month || !date.day) { onChange(`${date.year}-${date.month}-${date.day}`); return; }
     const maxDay = new Date(Number(date.year), Number(date.month), 0).getDate();
     const safeDay = String(Math.min(Number(date.day), maxDay)).padStart(2, "0");
     onChange(`${date.year}-${date.month}-${safeDay}`);
   };
-  const selectClass = "h-28 flex-1 appearance-none bg-transparent px-2 text-center text-lg font-semibold text-foreground outline-none";
-  return <FormField label="Date of birth"><p className="mb-2 text-xs text-muted-foreground">Aapka credit record nahi mila, isliye ye chahiye.</p><div className="relative flex divide-x divide-border overflow-hidden rounded-lg border border-border bg-background"><select aria-label="Birth day" size={3} value={day} onChange={(event) => change("day", event.target.value)} className={selectClass}>{Array.from({ length: 31 }, (_, index) => String(index + 1).padStart(2, "0")).map((item) => <option key={item}>{item}</option>)}</select><select aria-label="Birth month" size={3} value={month} onChange={(event) => change("month", event.target.value)} className={selectClass}>{Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0")).map((item) => <option key={item} value={item}>{new Date(2000, Number(item) - 1).toLocaleString("en", { month: "short" })}</option>)}</select><select aria-label="Birth year" size={3} value={year} onChange={(event) => change("year", event.target.value)} className={selectClass}>{Array.from({ length: 63 }, (_, index) => String(yearNow - 18 - index)).map((item) => <option key={item}>{item}</option>)}</select></div></FormField>;
+  const selectClass = "h-14 min-w-0 flex-1 appearance-none bg-card px-2 text-center text-lg font-semibold text-foreground outline-none";
+  return <FormField label="Date of birth"><p className="mb-3 text-xs text-muted-foreground">Select your exact date of birth.</p><div className="grid grid-cols-3 divide-x divide-border overflow-hidden rounded-lg border border-border bg-card"><select aria-label="Birth day" value={day} onChange={(event) => change("day", event.target.value)} className={selectClass}><option value="">DD</option>{Array.from({ length: 31 }, (_, index) => String(index + 1).padStart(2, "0")).map((item) => <option key={item}>{item}</option>)}</select><select aria-label="Birth month" value={month} onChange={(event) => change("month", event.target.value)} className={selectClass}><option value="">MM</option>{Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0")).map((item) => <option key={item} value={item}>{item}</option>)}</select><select aria-label="Birth year" value={year} onChange={(event) => change("year", event.target.value)} className={selectClass}><option value="">YYYY</option>{Array.from({ length: 83 }, (_, index) => String(yearNow - 18 - index)).map((item) => <option key={item}>{item}</option>)}</select></div></FormField>;
 }
 
-function QuestionPage({ state, update, onIntro }: { state: LoanJourneyState; update: (patch: Partial<LoanJourneyState>) => void; onIntro: () => void }) {
+function QuestionPage({ state, update }: { state: LoanJourneyState; update: (patch: Partial<LoanJourneyState>) => void }) {
   const detailsValid = Boolean(state.work && state.income && state.loanAmount && (state.work !== "Salaried" || state.salaryMode));
-  const locationValid = state.pincode.length === 6 && (state.persona !== "ntc" || Boolean(state.dob));
+  const locationValid = state.pincode.length === 6 && /^\d{4}-\d{2}-\d{2}$/.test(state.dob);
   const isDetails = state.step === "details";
-  return <div className="flex min-h-0 flex-1 flex-col bg-background"><div className="flex-1 overflow-y-auto px-5 pb-5 pt-6"><div className="mb-6 flex items-start justify-between gap-3"><div><h2 className="font-display text-2xl font-bold text-foreground">{isDetails ? "Tell us what you need" : "Almost done"}</h2><p className="mt-1 text-sm text-muted-foreground">{isDetails ? "We’ll use this to find suitable loan offers." : "Add your location to check lender availability."}</p></div><span className="shrink-0 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">{isDetails ? "1 of 2" : "2 of 2"}</span></div>{isDetails ? <div className="space-y-4"><InlineSelect label="What do you do?" value={state.work} options={[{ label: "Salaried", note: "Fixed monthly salary" }, { label: "Self-employed", note: "Business, shop or freelance" }, { label: "Student" }]} onChange={(work) => update({ work: work as WorkType, salaryMode: work === "Salaried" ? state.salaryMode : "" })} /><AmountField id="monthly-income" label="Monthly income" value={state.income} onChange={(income) => update({ income })} />{state.work === "Salaried" && <InlineSelect label="How do you get paid?" value={state.salaryMode} options={[{ label: "Bank transfer" }, { label: "Cash" }, { label: "Cheque" }]} onChange={(salaryMode) => update({ salaryMode: salaryMode as SalaryMode })} />}<AmountField id="loan-amount" label="How much do you need?" value={state.loanAmount} onChange={(loanAmount) => update({ loanAmount })} /></div> : <div className="space-y-5"><FormField label="Pincode"><PincodeInput value={state.pincode} onChange={(pincode) => update({ pincode })} /></FormField>{state.persona === "ntc" && <DateWheel value={state.dob} onChange={(dob) => update({ dob })} />}</div>}</div><div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3"><div className="flex gap-2"><Button type="button" variant="outline" size="icon" aria-label="Previous page" className="h-12 w-12 shrink-0" onClick={() => isDetails ? onIntro() : update({ step: "details" })}><ChevronLeft /></Button><Button type="button" disabled={isDetails ? !detailsValid : !locationValid} onClick={() => update({ step: isDetails ? "location" : "checking" })} className="h-12 flex-1 bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue<ArrowRight /></Button></div></div></div>;
+  return <div key={state.step} className="flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-flip_280ms_ease-out]"><div className="flex-1 overflow-y-auto px-5 pb-5 pt-6"><div className="mb-6 flex items-start justify-between gap-3"><div><h2 className="font-display text-2xl font-bold text-foreground">{isDetails ? "Tell us what you need" : "Almost done"}</h2><p className="mt-1 text-sm text-muted-foreground">{isDetails ? "We’ll use this to find suitable loan offers." : "Add your details to check lender availability."}</p></div><span className="shrink-0 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">{isDetails ? "1 of 2" : "2 of 2"}</span></div>{isDetails ? <div className="space-y-4"><InlineSelect label="What do you do?" value={state.work} options={[{ label: "Salaried", note: "Fixed monthly salary" }, { label: "Self-employed", note: "Business, shop or freelance" }, { label: "Student" }]} onChange={(work) => update({ work: work as WorkType, salaryMode: work === "Salaried" ? state.salaryMode : "" })} /><AmountField id="monthly-income" label="Monthly income" value={state.income} onChange={(income) => update({ income })} />{state.work === "Salaried" && <InlineSelect label="How do you get paid?" value={state.salaryMode} options={[{ label: "Bank transfer" }, { label: "Cash" }, { label: "Cheque" }]} onChange={(salaryMode) => update({ salaryMode: salaryMode as SalaryMode })} />}<AmountField id="loan-amount" label="How much do you need?" value={state.loanAmount} onChange={(loanAmount) => update({ loanAmount })} /></div> : <div className="space-y-5"><FormField label="Pincode"><PincodeInput value={state.pincode} onChange={(pincode) => update({ pincode })} /></FormField><DateWheel value={state.dob} onChange={(dob) => update({ dob })} /></div>}</div><div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3"><Button type="button" disabled={isDetails ? !detailsValid : !locationValid} onClick={() => update({ step: isDetails ? "location" : "checking" })} className="h-12 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue</Button></div></div>;
 }
 
 function PincodeInput({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -283,19 +280,19 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const confirmApply = () => { if (!selectedOffer) return; scrollTop.current = scrollRef.current?.scrollTop ?? 0; setSheet(null); setBrowserOffer(selectedOffer); };
   const closeBrowser = () => { if (browserOffer) update({ applied: Array.from(new Set([...state.applied, browserOffer.id])) }); setBrowserOffer(null); requestAnimationFrame(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollTop.current; }); };
 
-  if (state.step === "checking") return <div className="flex flex-1 flex-col items-center justify-center bg-background px-8 text-center"><Loader2 className="h-11 w-11 animate-spin text-primary" /><h2 className="font-display mt-5 text-xl font-bold text-foreground">Checking lender matches</h2><div className="mt-5 flex gap-2">{INTRO_LENDERS.slice(0, 4).map((lender) => <LenderLogo key={lender.name} name={lender.name} logo={lender.logo} muted size="sm" />)}</div></div>;
+  if (state.step === "checking") return <div className="flex flex-1 flex-col items-center justify-center bg-card px-8 text-center motion-safe:animate-[loan-page-flip_280ms_ease-out]"><Loader2 className="h-11 w-11 animate-spin text-primary" /><h2 className="font-display mt-5 text-xl font-bold text-foreground">Checking lender matches</h2><div className="mt-5 flex gap-2">{INTRO_LENDERS.slice(0, 4).map((lender) => <LenderLogo key={lender.name} name={lender.name} logo={lender.logo} muted size="sm" />)}</div></div>;
 
-  if (state.step === "intro") return <div className="relative flex min-h-0 flex-1 flex-col bg-background"><AppHeader onBack={onBack} /><IntroPage onStart={startQuestions} resume={false} /></div>;
+  if (state.step === "intro") return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={onBack} /><div className="flex min-h-0 flex-1 motion-safe:animate-[loan-page-flip_280ms_ease-out]"><IntroPage onStart={startQuestions} /></div></div>;
 
-  if (state.step === "details" || state.step === "location") return <div className="relative flex min-h-0 flex-1 flex-col bg-background"><AppHeader onBack={onBack} /><QuestionPage state={state} update={update} onIntro={() => update({ step: "intro" })} /></div>;
+  if (state.step === "details" || state.step === "location") return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={() => update({ step: state.step === "location" ? "details" : "intro" })} /><QuestionPage state={state} update={update} /></div>;
 
   return (
-    <div className="relative flex min-h-0 flex-1 flex-col bg-background">
+    <div className="relative flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-flip_280ms_ease-out]">
       <AppHeader onBack={onBack} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {state.persona === "ntc" ? <NTCOffers onChat={() => onChat("ntc")} /> : <>
           <header className="mb-4 flex items-start justify-between gap-3"><div><h2 className="font-display text-xl font-bold text-foreground">Loans you may be eligible for</h2><p className="mt-0.5 text-xs text-muted-foreground">Best approval chances shown first</p></div><Button variant="link" onClick={() => setSheet("amount")} className="h-auto shrink-0 px-0 text-sm font-semibold">₹50,000</Button></header>
-          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} onUndo={() => update({ applied: state.applied.filter((id) => id !== offer.id) })} />)}</div>{available.length > 3 && !showAll && <Button variant="link" onClick={() => setShowAll(true)} className="h-12 w-full">Show 6 more<ChevronDown /></Button>}<Button variant="outline" onClick={() => onChat("recommend")} className="mt-3 h-12 w-full justify-between rounded-lg bg-card"><span className="flex items-center gap-2"><MessageCircle className="text-primary" />Ask Arjun to compare</span><ArrowRight /></Button></section> : <div className="rounded-lg border border-border bg-card p-5 shadow-sm"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3><Button onClick={() => onChat("issues", "Moneyview")} className="mt-5 h-11 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">See what to improve</Button></div>}
+          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} onUndo={() => update({ applied: state.applied.filter((id) => id !== offer.id) })} />)}</div>{available.length > 3 && !showAll && <Button variant="link" onClick={() => setShowAll(true)} className="h-12 w-full">Show 6 more<ChevronDown /></Button>}<Button variant="outline" onClick={() => onChat("recommend")} className="mt-3 h-12 w-full rounded-lg bg-card"><MessageCircle className="text-primary" />Ask Arjun to compare</Button></section> : <div className="rounded-lg border border-border bg-card p-5 shadow-sm"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3><Button onClick={() => onChat("issues", "Moneyview")} className="mt-5 h-11 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">See what to improve</Button></div>}
           {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans within reach</h3><p className="mt-0.5 text-xs text-muted-foreground">See what to improve before you apply</p></header><div className="space-y-2">{locked.slice(0, 5).map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div></section>}
         </>}
       </div>
