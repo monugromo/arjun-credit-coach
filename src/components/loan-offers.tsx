@@ -229,15 +229,13 @@ function OfferCard({ offer, featured, applied, onInfo, onApply }: { offer: Offer
   const [detailTab, setDetailTab] = useState<"details" | "features">("details");
   return (
     <article className={`overflow-hidden rounded-lg border bg-card ${featured ? "border-primary/40" : "border-border"}`}>
-      <div className="flex min-h-16 items-center gap-3 border-b border-border px-4 py-3">
+      <div className="relative flex min-h-16 items-center gap-3 border-b border-border px-4 py-3">
         <LenderLogo name={offer.lender} logo={offer.logo} size="sm" />
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <h4 className="font-display text-base font-semibold text-foreground">{offer.lender}</h4>
-            <span className="inline-flex shrink-0 items-center rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-primary-deep">{offer.channel}</span>
-          </div>
+        <div className="min-w-0 flex-1 pr-20">
+          <h4 className="font-display text-base font-semibold text-foreground">{offer.lender}</h4>
           <p className="text-xs text-muted-foreground">{offer.product}</p>
         </div>
+        <span className="absolute right-4 top-3 inline-flex shrink-0 items-center rounded-full border border-border bg-transparent px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">{offer.channel}</span>
       </div>
       <div className="grid grid-cols-2 px-4 py-4">
         <div className="min-w-0 border-r border-dashed border-border pr-3">
