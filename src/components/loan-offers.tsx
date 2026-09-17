@@ -182,7 +182,7 @@ function InlineSelect({ label, value, options, onChange }: { label: string; valu
 function AmountField({ id, label, value, onChange, autoFocus = false }: { id: string; label: string; value: string; onChange: (value: string) => void; autoFocus?: boolean }) {
   const ref = useRef<HTMLInputElement>(null);
   useEffect(() => { if (!autoFocus) return; const timer = window.setTimeout(() => ref.current?.focus(), 180); return () => window.clearTimeout(timer); }, [autoFocus]);
-  return <FormField label={label}><div className="flex h-10 items-center"><span className="font-display text-xl font-semibold text-foreground">₹</span><input ref={ref} id={id} inputMode="numeric" pattern="[0-9]*" autoComplete="off" value={value ? Number(value).toLocaleString("en-IN") : ""} onChange={(event) => onChange(event.target.value.replace(/\D/g, "").slice(0, 8))} placeholder="0" className="min-w-0 flex-1 bg-transparent px-2 font-display text-[32px] font-semibold leading-none text-foreground outline-none placeholder:text-muted-foreground/50" /></div></FormField>;
+  return <FormField label={label}><div className="flex h-10 items-center"><span className="text-base font-semibold text-foreground">₹</span><input ref={ref} id={id} inputMode="numeric" pattern="[0-9]*" autoComplete="off" value={value ? Number(value).toLocaleString("en-IN") : ""} onChange={(event) => onChange(event.target.value.replace(/\D/g, "").slice(0, 8))} placeholder="0" className="min-w-0 flex-1 bg-transparent px-2 text-base font-semibold text-foreground outline-none placeholder:text-muted-foreground/50" /></div></FormField>;
 }
 
 function DateWheel({ value, onChange }: { value: string; onChange: (value: string) => void }) {
