@@ -88,6 +88,8 @@ const LOCKED_ISSUES: LockedOffer[] = [
   { id: "lock-hdfc", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, distance: "Just a few points away", progress: 49, reason: "issues" },
   { id: "lock-kissht", lender: "Kissht", product: "Personal loan", logo: kisshtLogo, distance: "Just a few points away", progress: 44, reason: "issues" },
   { id: "lock-creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, distance: "Just a few points away", progress: 37, reason: "issues" },
+  { id: "lock-lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, distance: "Just a few points away", progress: 35, reason: "issues" },
+  { id: "lock-zype", lender: "Zype", product: "Personal loan", distance: "Just a few points away", progress: 42, reason: "issues" },
 ];
 
 const LOCKED_TIME: LockedOffer[] = [
@@ -299,6 +301,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const [showAllLocked, setShowAllLocked] = useState(false);
   const [showApplications, setShowApplications] = useState(false);
   const [editingDetails, setEditingDetails] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -307,9 +310,10 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
 
   useEffect(() => { if (state.step !== "checking") return; const timer = window.setTimeout(() => setState((current) => ({ ...current, step: "offers" })), 2000); return () => window.clearTimeout(timer); }, [state.step, setState]);
 
-  const available = state.persona === "prime" ? AVAILABLE : state.persona === "thin" ? AVAILABLE.slice(0, 1) : state.persona === "zero" || state.persona === "ntc" ? [] : AVAILABLE.slice(0, 3);
+  const available = state.persona === "prime" ? AVAILABLE : state.persona === "thin" ? AVAILABLE.slice(0, 1) : state.persona === "zero" || state.persona === "ntc" ? [] : AVAILABLE;
   const locked = state.persona === "prime" || state.persona === "ntc" ? [] : state.persona === "thin" ? LOCKED_TIME : LOCKED_ISSUES;
-  const visibleAvailable = showAll ? available.slice(0, 9) : available.slice(0, 3);
+  const visibleAvailable = showAll ? available : available.slice(0, 4);
+  const visibleLocked = showAllLocked ? locked : locked.slice(0, 5);
   const startQuestions = () => update({ step: "details" });
   const openApply = (offer: Offer) => { setSelectedOffer(offer); setSheet("apply"); };
   const confirmApply = () => { if (!selectedOffer) return; scrollTop.current = scrollRef.current?.scrollTop ?? 0; setSheet(null); setBrowserOffer(selectedOffer); };
@@ -329,8 +333,8 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {state.persona === "ntc" ? <NTCOffers onChat={() => onChat("ntc")} /> : <>
           <header className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2><Button variant="outline" onClick={() => setShowApplications(true)} className="h-9 shrink-0 rounded-lg bg-card px-3 text-sm font-semibold shadow-none">Applications</Button></header>
-          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} />)}</div>{available.length > 3 && !showAll && <Button variant="link" onClick={() => setShowAll(true)} className="h-12 w-full">Show 6 more<ChevronDown /></Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3></div>}
-          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Almost eligible</h3></header><div className="space-y-2">{locked.slice(0, 5).map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div></section>}
+          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && !showAll && <Button variant="outline" onClick={() => setShowAll(true)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">View more<ChevronDown /></Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3></div>}
+          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div>{locked.length > 5 && !showAllLocked && <Button variant="outline" onClick={() => setShowAllLocked(true)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">View more<ChevronDown /></Button>}</section>}
         </>}
       </div>
       {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{[{ label: "₹25,000", value: "25000" }, { label: "₹50,000", value: "50000" }, { label: "₹1,00,000", value: "100000" }].map((option) => <Button key={option.label} variant={option.value === (state.loanAmount || "50000") ? "default" : "outline"} onClick={() => { update({ loanAmount: option.value }); setSheet(null); }} className={option.value === (state.loanAmount || "50000") ? "bg-primary-deep text-primary-foreground" : ""}>{option.label}</Button>)}</div></Sheet>}

@@ -20,3 +20,4 @@
 - [x] Rebuild loan offer cards in the supplied compact details-and-features layout.
 - [x] Add application filters, editable loan details, and simplified almost-eligible cards.
 - [x] Move application tracking above loan offers and add sample applications across every status.
+- [x] Show 4 offers with a "View more" expander, rename section to "Loans you can unlock", and show 5 unlockable loans with a "View more" expander.
