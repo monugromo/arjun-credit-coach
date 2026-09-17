@@ -54,8 +54,7 @@ type Offer = {
   lender: string;
   product: string;
   logo?: string;
-  chance: 3 | 4 | 5;
-  chanceLabel: "Fair" | "Good" | "High";
+  approvalTime: string;
   amount: string;
   rate: string;
   speed: string;
@@ -73,15 +72,15 @@ type LockedOffer = {
 };
 
 const AVAILABLE: Offer[] = [
-  { id: "moneyview", lender: "Moneyview", product: "Personal loan", logo: moneyviewLogo, chance: 5, chanceLabel: "High", amount: "₹40,000–₹60,000", rate: "14% p.a.", speed: "Within 24 hours" },
-  { id: "tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, chance: 4, chanceLabel: "Good", amount: "₹30,000–₹50,000", rate: "16% p.a.", speed: "1–2 business days", options: ["Instant personal loan", "Flexi personal loan"] },
-  { id: "ram", lender: "Ram Fincorp", product: "Personal loan", logo: ramLogo, chance: 4, chanceLabel: "Good", amount: "₹25,000–₹45,000", rate: "18% p.a.", speed: "Within 48 hours" },
-  { id: "kreditbee", lender: "KreditBee", product: "Personal loan", logo: kreditbeeLogo, chance: 3, chanceLabel: "Fair", amount: "₹20,000–₹35,000", rate: "19% p.a.", speed: "1–2 business days" },
-  { id: "kissht", lender: "Kissht", product: "Consumer loan", logo: kisshtLogo, chance: 3, chanceLabel: "Fair", amount: "Check amount", rate: "20% p.a.", speed: "Within 48 hours" },
-  { id: "bharatpe", lender: "BharatPe", product: "Business loan", logo: bharatpeLogo, chance: 3, chanceLabel: "Fair", amount: "₹35,000–₹55,000", rate: "18% p.a.", speed: "2–3 business days" },
-  { id: "zype", lender: "Zype", product: "Personal loan", chance: 3, chanceLabel: "Fair", amount: "₹20,000–₹40,000", rate: "21% p.a.", speed: "Within 48 hours" },
-  { id: "lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, chance: 3, chanceLabel: "Fair", amount: "Check amount", rate: "22% p.a.", speed: "2–3 business days" },
-  { id: "creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, chance: 3, chanceLabel: "Fair", amount: "₹15,000–₹30,000", rate: "24% p.a.", speed: "Within 48 hours" },
+  { id: "moneyview", lender: "Moneyview", product: "Personal loan", logo: moneyviewLogo, approvalTime: "24hr", amount: "₹40,000–₹60,000", rate: "14% p.a.", speed: "Within 24 hours" },
+  { id: "tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, approvalTime: "Instantly", amount: "₹30,000–₹50,000", rate: "16% p.a.", speed: "1–2 business days", options: ["Instant personal loan", "Flexi personal loan"] },
+  { id: "ram", lender: "Ram Fincorp", product: "Personal loan", logo: ramLogo, approvalTime: "48hr", amount: "₹25,000–₹45,000", rate: "18% p.a.", speed: "Within 48 hours" },
+  { id: "kreditbee", lender: "KreditBee", product: "Personal loan", logo: kreditbeeLogo, approvalTime: "48hr", amount: "₹20,000–₹35,000", rate: "19% p.a.", speed: "1–2 business days" },
+  { id: "kissht", lender: "Kissht", product: "Consumer loan", logo: kisshtLogo, approvalTime: "48hr", amount: "Check amount", rate: "20% p.a.", speed: "Within 48 hours" },
+  { id: "bharatpe", lender: "BharatPe", product: "Business loan", logo: bharatpeLogo, approvalTime: "24hr", amount: "₹35,000–₹55,000", rate: "18% p.a.", speed: "2–3 business days" },
+  { id: "zype", lender: "Zype", product: "Personal loan", approvalTime: "Instantly", amount: "₹20,000–₹40,000", rate: "21% p.a.", speed: "Within 48 hours" },
+  { id: "lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, approvalTime: "48hr", amount: "Check amount", rate: "22% p.a.", speed: "2–3 business days" },
+  { id: "creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, approvalTime: "24hr", amount: "₹15,000–₹30,000", rate: "24% p.a.", speed: "Within 48 hours" },
 ];
 
 const LOCKED_ISSUES: LockedOffer[] = [
@@ -215,8 +214,11 @@ function PincodeInput({ value, onChange }: { value: string; onChange: (value: st
   return <div><Button variant="link" onClick={() => onChange("110001")} className="mb-4 h-auto px-0"><LocateFixed />Use my location</Button><div className="relative" onClick={() => ref.current?.focus()}><input ref={ref} aria-label="Pincode" inputMode="numeric" pattern="[0-9]*" autoComplete="postal-code" value={value} onChange={(event) => onChange(event.target.value.replace(/\D/g, "").slice(0, 6))} className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0" /><div className="flex gap-2">{digits.map((digit, index) => <span key={index} className={`flex h-12 flex-1 items-center justify-center rounded-lg border text-base font-semibold text-foreground ${digit.trim() ? "border-primary bg-primary-soft" : "border-input bg-background"}`}>{digit}</span>)}</div></div></div>;
 }
 
-function ApprovalBars({ count, label }: { count: number; label: string }) {
-  return <div className="flex items-center gap-2"><div className="flex flex-1 gap-1" aria-label={`${label} approval chance`}>{[0, 1, 2, 3, 4].map((index) => <span key={index} className={`h-1.5 flex-1 rounded-full ${index < count ? "bg-primary" : "bg-border"}`} />)}</div><div className="shrink-0 text-xs font-semibold text-primary-deep">{label}</div></div>;
+function monthlyRate(rate: string) {
+  const match = rate.match(/(\d+(?:\.\d+)?)/);
+  if (!match) return rate;
+  const monthly = (parseFloat(match[1]) / 12).toFixed(1);
+  return `${monthly}% p.m.`;
 }
 
 function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offer: Offer; featured: boolean; applied: boolean; onInfo: () => void; onApply: () => void; onUndo: () => void }) {
@@ -228,10 +230,10 @@ function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offe
         <LenderLogo name={offer.lender} logo={offer.logo} size="sm" />
         <h4 className="min-w-0 flex-1 font-display text-base font-semibold text-foreground">{offer.lender} {offer.product}</h4>
       </div>
-      <div className="grid grid-cols-[1.1fr_1.35fr_1fr] px-4 py-4">
+      <div className="grid grid-cols-3 px-4 py-4">
         <div className="min-w-0 border-r border-dashed border-border pr-3">
-          <p className="text-sm text-muted-foreground">Approval rate</p>
-          <div className="mt-2"><ApprovalBars count={offer.chance} label={offer.chanceLabel} /></div>
+          <p className="text-sm text-muted-foreground">Approval time</p>
+          <p className="mt-1 whitespace-nowrap text-base font-semibold leading-5 text-foreground">{offer.approvalTime}</p>
         </div>
         <div className="min-w-0 px-3">
           <p className="text-sm text-muted-foreground">Loan amount</p>
@@ -239,7 +241,7 @@ function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offe
         </div>
         <div className="min-w-0 pl-2">
           <p className="text-sm text-muted-foreground">Interest rate</p>
-          <p className="mt-1 text-base font-semibold leading-5 text-foreground">from {offer.rate}</p>
+          <p className="mt-1 whitespace-nowrap text-base font-semibold leading-5 text-foreground">from {monthlyRate(offer.rate)}</p>
         </div>
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pb-4">
@@ -305,12 +307,12 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <AppHeader onBack={onBack} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {state.persona === "ntc" ? <NTCOffers onChat={() => onChat("ntc")} /> : <>
-          <header className="mb-4 flex items-start justify-between gap-3"><div><h2 className="font-display text-xl font-bold text-foreground">Loans you may be eligible for</h2><p className="mt-0.5 text-xs text-muted-foreground">Best approval chances shown first</p></div><Button variant="link" onClick={() => setSheet("amount")} className="h-auto shrink-0 px-0 text-sm font-semibold">₹50,000</Button></header>
+          <header className="mb-4 flex items-start justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loans you may be eligible for</h2><Button variant="link" onClick={() => setSheet("amount")} className="h-auto shrink-0 px-0 text-sm font-semibold">₹{Number(state.loanAmount || 50000).toLocaleString("en-IN")}</Button></header>
           {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} onUndo={() => update({ applied: state.applied.filter((id) => id !== offer.id) })} />)}</div>{available.length > 3 && !showAll && <Button variant="link" onClick={() => setShowAll(true)} className="h-12 w-full">Show 6 more<ChevronDown /></Button>}<Button variant="outline" onClick={() => onChat("recommend")} className="mt-3 h-12 w-full rounded-lg bg-card"><MessageCircle className="text-primary" />Ask Arjun to compare</Button></section> : <div className="rounded-lg border border-border bg-card p-5 shadow-sm"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3><Button onClick={() => onChat("issues", "Moneyview")} className="mt-5 h-11 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">See what to improve</Button></div>}
           {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans within reach</h3><p className="mt-0.5 text-xs text-muted-foreground">See what to improve before you apply</p></header><div className="space-y-2">{locked.slice(0, 5).map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div></section>}
         </>}
       </div>
-      {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{["₹25,000", "₹50,000", "₹1,00,000"].map((amount) => <Button key={amount} variant={amount === "₹50,000" ? "default" : "outline"} onClick={() => setSheet(null)} className={amount === "₹50,000" ? "bg-primary-deep text-primary-foreground" : ""}>{amount}</Button>)}</div></Sheet>}
+      {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{[{ label: "₹25,000", value: "25000" }, { label: "₹50,000", value: "50000" }, { label: "₹1,00,000", value: "100000" }].map((option) => <Button key={option.label} variant={option.value === (state.loanAmount || "50000") ? "default" : "outline"} onClick={() => { update({ loanAmount: option.value }); setSheet(null); }} className={option.value === (state.loanAmount || "50000") ? "bg-primary-deep text-primary-foreground" : ""}>{option.label}</Button>)}</div></Sheet>}
       {sheet === "info" && <Sheet title="Credit enquiry" onClose={() => setSheet(null)}><p className="mt-2 text-sm text-muted-foreground">An application adds one enquiry to your credit report.</p></Sheet>}
       {sheet === "apply" && selectedOffer && <Sheet title={`Apply with ${selectedOffer.lender}?`} subtitle="This adds one credit enquiry." onClose={() => setSheet(null)}><Button onClick={confirmApply} className="mt-5 h-11 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue to {selectedOffer.lender}</Button><Button onClick={() => setSheet(null)} variant="ghost" className="mt-2 h-11 w-full">Not now</Button></Sheet>}
       {browserOffer && <InAppBrowser offer={browserOffer} onClose={closeBrowser} />}
