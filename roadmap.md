@@ -13,4 +13,4 @@
 - [x] Simplify both loan login chat greetings to “Hi Kabir”.
 - [x] Verify mobile keyboard and both loan journeys.
 - [x] Compact loan cards, restore eligibility headings, and add locked-loan chat openers.
-- [ ] Replace the fresh-user loan bottom sheet with a two-page six-question form.
+- [x] Replace the fresh-user loan bottom sheet with a two-page six-question form.
