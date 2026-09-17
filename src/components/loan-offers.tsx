@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronDown, ChevronLeft, Info, Loader2, LocateFixed, LockKeyhole, MessageCircle, ShieldCheck, X } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
 import type { DemoUser } from "@/lib/groscore-data";
 import { Button } from "@/components/ui/button";
 import moneyviewLogo from "@/assets/lenders/moneyview.png";
@@ -84,11 +84,10 @@ const AVAILABLE: Offer[] = [
 ];
 
 const LOCKED_ISSUES: LockedOffer[] = [
-  { id: "lock-moneyview", lender: "Moneyview", product: "Personal loan", logo: moneyviewLogo, distance: "30 score points needed", progress: 72, reason: "issues" },
-  { id: "lock-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "2 credit fixes needed", progress: 58, reason: "issues" },
-  { id: "lock-hdfc", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, distance: "45 score points needed", progress: 49, reason: "issues" },
-  { id: "lock-kissht", lender: "Kissht", product: "Personal loan", logo: kisshtLogo, distance: "2 credit fixes needed", progress: 44, reason: "issues" },
-  { id: "lock-creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, distance: "55 score points needed", progress: 37, reason: "issues" },
+  { id: "lock-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "Just a few points away", progress: 58, reason: "issues" },
+  { id: "lock-hdfc", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, distance: "Just a few points away", progress: 49, reason: "issues" },
+  { id: "lock-kissht", lender: "Kissht", product: "Personal loan", logo: kisshtLogo, distance: "Just a few points away", progress: 44, reason: "issues" },
+  { id: "lock-creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, distance: "Just a few points away", progress: 37, reason: "issues" },
 ];
 
 const LOCKED_TIME: LockedOffer[] = [
@@ -131,8 +130,9 @@ function Sheet({ title, subtitle, children, onClose }: { title: string; subtitle
   );
 }
 
-function AppHeader({ onBack }: { onBack: () => void }) {
-  return <header className="flex h-14 shrink-0 items-center gap-2 bg-primary-deep px-3 text-primary-foreground"><Button aria-label="Back to chat" size="icon" variant="ghost" onClick={onBack} className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"><ChevronLeft /></Button><h1 className="font-display text-[18px] font-semibold">Loan</h1></header>;
+function AppHeader({ onBack, onEdit }: { onBack: () => void; onEdit?: () => void }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  return <header className="relative flex h-14 shrink-0 items-center gap-2 bg-primary-deep px-3 text-primary-foreground"><Button aria-label="Back" size="icon" variant="ghost" onClick={onBack} className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"><ChevronLeft className="h-6 w-6" /></Button><h1 className="flex-1 text-[17px] font-semibold">Loans</h1>{onEdit && <><Button aria-label="More options" size="icon" variant="ghost" onClick={() => setMenuOpen((open) => !open)} className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"><MoreVertical className="h-5 w-5" /></Button>{menuOpen && <div className="absolute right-3 top-12 z-40 min-w-44 overflow-hidden rounded-lg border border-border bg-popover shadow-lg"><Button variant="ghost" onClick={() => { setMenuOpen(false); onEdit(); }} className="h-12 w-full justify-start rounded-none px-4 text-sm text-popover-foreground">Edit loan details</Button></div>}</>}</header>;
 }
 
 function LenderLogo({ name, logo, muted = false, size = "md" }: { name: string; logo?: string; muted?: boolean; size?: "sm" | "md" }) {
@@ -221,7 +221,7 @@ function monthlyRate(rate: string) {
   return `${monthly}% p.m.`;
 }
 
-function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offer: Offer; featured: boolean; applied: boolean; onInfo: () => void; onApply: () => void; onUndo: () => void }) {
+function OfferCard({ offer, featured, applied, onInfo, onApply }: { offer: Offer; featured: boolean; applied: boolean; onInfo: () => void; onApply: () => void }) {
   const [details, setDetails] = useState(false);
   const [detailTab, setDetailTab] = useState<"details" | "features">("details");
   return (
@@ -242,7 +242,7 @@ function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offe
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pb-4">
         <Button variant="ghost" onClick={() => setDetails((open) => !open)} className="h-11 justify-start px-0 text-base font-semibold text-primary hover:bg-transparent hover:text-primary-deep">Offer details<ChevronDown className={`transition-transform ${details ? "rotate-180" : ""}`} /></Button>
-        {applied ? <div className="flex h-11 min-w-36 items-center justify-between rounded-md bg-muted px-3 text-sm text-muted-foreground"><span className="font-semibold">Applied</span><Button variant="link" onClick={onUndo} className="h-auto px-0 text-xs">Undo</Button></div> : <Button onClick={onApply} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>}
+        {applied ? <div className="flex h-11 min-w-36 items-center justify-center rounded-md bg-primary-soft px-4 text-sm font-semibold text-primary-deep">In review</div> : <Button onClick={onApply} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>}
       </div>
       {details && <div className="border-t border-border bg-muted/40 px-4 pb-4">
         <div className="grid grid-cols-2 border-b border-border">
@@ -262,7 +262,16 @@ function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offe
 }
 
 function LockedCard({ offer, onClick }: { offer: LockedOffer; onClick: () => void }) {
-  return <Button variant="ghost" onClick={onClick} className="h-auto w-full justify-start rounded-lg border border-border bg-card px-3 py-3 text-left shadow-none hover:bg-muted/50"><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className="truncate text-sm font-bold text-foreground">{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className="mt-1.5 block h-1 overflow-hidden rounded-full bg-border"><span className="block h-full rounded-full bg-amber" style={{ width: `${offer.progress}%` }} /></span><span className="mt-1 block text-[11px] font-semibold text-foreground">{offer.distance}</span></span><span className="ml-3 shrink-0 text-xs font-semibold text-primary">View plan</span></Button>;
+  return <Button variant="ghost" onClick={onClick} className="h-auto w-full justify-start rounded-lg border border-border bg-card px-3 py-3 text-left shadow-none hover:bg-muted/50"><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className="truncate text-sm font-bold text-foreground">{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className="mt-1.5 block text-xs font-semibold text-foreground">{offer.distance}</span></span></Button>;
+}
+
+type ApplicationFilter = "All" | "In review" | "Approved" | "Disbursed";
+
+function ApplicationsScreen({ applied, onBack, onUndo }: { applied: string[]; onBack: () => void; onUndo: (id: string) => void }) {
+  const [filter, setFilter] = useState<ApplicationFilter>("All");
+  const applications = AVAILABLE.filter((offer) => applied.includes(offer.id));
+  const visible = filter === "All" || filter === "In review" ? applications : [];
+  return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={onBack} /><div className="flex-1 overflow-y-auto px-4 pb-6 pt-5"><h2 className="font-display text-xl font-bold text-foreground">Your applications</h2><div className="mt-4 flex gap-2 overflow-x-auto pb-1">{(["All", "In review", "Approved", "Disbursed"] as ApplicationFilter[]).map((item) => <Button key={item} variant={filter === item ? "default" : "outline"} onClick={() => setFilter(item)} className={`h-9 shrink-0 rounded-full px-4 shadow-none ${filter === item ? "bg-primary-deep text-primary-foreground hover:bg-primary-deep/90" : "bg-card"}`}>{item}</Button>)}</div>{visible.length > 0 ? <div className="mt-4 space-y-3">{visible.map((offer) => <article key={offer.id} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3"><LenderLogo name={offer.lender} logo={offer.logo} size="sm" /><div className="min-w-0 flex-1"><h3 className="truncate text-sm font-bold text-foreground">{offer.lender}</h3><p className="text-xs text-muted-foreground">{offer.product}</p></div><div className="text-right"><p className="text-sm font-semibold text-primary-deep">In review</p><Button variant="link" onClick={() => onUndo(offer.id)} className="h-auto px-0 text-xs">Undo</Button></div></article>)}</div> : <div className="mt-8 rounded-lg border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">No {filter === "All" ? "applications" : filter.toLowerCase() + " applications"} yet</div>}</div></div>;
 }
 
 function InAppBrowser({ offer, onClose }: { offer: Offer; onClose: () => void }) {
@@ -278,6 +287,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const [showApplications, setShowApplications] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollTop = useRef(0);
   const update = (patch: Partial<LoanJourneyState>) => setState((current) => ({ ...current, ...patch }));
@@ -298,14 +308,17 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
 
   if (state.step === "details" || state.step === "location") return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={() => update({ step: state.step === "location" ? "details" : "intro" })} /><QuestionPage state={state} update={update} /></div>;
 
+  if (showApplications) return <ApplicationsScreen applied={state.applied} onBack={() => setShowApplications(false)} onUndo={(id) => update({ applied: state.applied.filter((appliedId) => appliedId !== id) })} />;
+
   return (
     <div className="relative flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-slide_260ms_ease-out]">
-      <AppHeader onBack={onBack} />
+      <AppHeader onBack={onBack} onEdit={() => update({ step: "details" })} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {state.persona === "ntc" ? <NTCOffers onChat={() => onChat("ntc")} /> : <>
-          <header className="mb-4 flex items-start justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loans you may be eligible for</h2><Button variant="link" onClick={() => setSheet("amount")} className="h-auto shrink-0 px-0 text-sm font-semibold">₹{Number(state.loanAmount || 50000).toLocaleString("en-IN")}</Button></header>
-          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} onUndo={() => update({ applied: state.applied.filter((id) => id !== offer.id) })} />)}</div>{available.length > 3 && !showAll && <Button variant="link" onClick={() => setShowAll(true)} className="h-12 w-full">Show 6 more<ChevronDown /></Button>}<Button variant="outline" onClick={() => onChat("recommend")} className="mt-3 h-12 w-full rounded-lg bg-card"><MessageCircle className="text-primary" />Ask Arjun to compare</Button></section> : <div className="rounded-lg border border-border bg-card p-5 shadow-sm"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3><Button onClick={() => onChat("issues", "Moneyview")} className="mt-5 h-11 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">See what to improve</Button></div>}
-          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans within reach</h3><p className="mt-0.5 text-xs text-muted-foreground">See what to improve before you apply</p></header><div className="space-y-2">{locked.slice(0, 5).map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div></section>}
+          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2></header>
+          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onInfo={() => setSheet("info")} onApply={() => openApply(offer)} />)}</div>{available.length > 3 && !showAll && <Button variant="link" onClick={() => setShowAll(true)} className="h-12 w-full">Show 6 more<ChevronDown /></Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3></div>}
+          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Almost eligible</h3></header><div className="space-y-2">{locked.slice(0, 5).map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat(offer.reason, offer.lender)} />)}</div></section>}
+          <Button variant="outline" onClick={() => setShowApplications(true)} className="mt-6 h-[54px] w-full rounded-lg bg-card text-base font-semibold shadow-none">Manage applications</Button>
         </>}
       </div>
       {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{[{ label: "₹25,000", value: "25000" }, { label: "₹50,000", value: "50000" }, { label: "₹1,00,000", value: "100000" }].map((option) => <Button key={option.label} variant={option.value === (state.loanAmount || "50000") ? "default" : "outline"} onClick={() => { update({ loanAmount: option.value }); setSheet(null); }} className={option.value === (state.loanAmount || "50000") ? "bg-primary-deep text-primary-foreground" : ""}>{option.label}</Button>)}</div></Sheet>}
