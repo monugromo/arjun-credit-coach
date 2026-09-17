@@ -37,8 +37,8 @@ export interface LoanJourneyState {
   applied: string[];
 }
 
-export const createLoanJourneyState = (): LoanJourneyState => ({
-  step: "intro",
+export const createLoanJourneyState = (firstVisit: boolean): LoanJourneyState => ({
+  step: firstVisit ? "intro" : "offers",
   persona: "rejected",
   work: "",
   income: "",
@@ -132,7 +132,7 @@ function Sheet({ title, subtitle, children, onClose }: { title: string; subtitle
 }
 
 function AppHeader({ onBack }: { onBack: () => void }) {
-  return <header className="flex h-14 shrink-0 items-center gap-2 bg-primary-deep px-3 text-primary-foreground"><Button aria-label="Back to chat" size="icon" variant="ghost" onClick={onBack} className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"><ChevronLeft /></Button><h1 className="font-display text-[18px] font-semibold">Loan</h1><span className="ml-auto rounded-md bg-primary-foreground/15 px-2 py-1 text-[10px] font-semibold uppercase text-primary-foreground">App journey</span></header>;
+  return <header className="flex h-14 shrink-0 items-center gap-2 bg-primary-deep px-3 text-primary-foreground"><Button aria-label="Back to chat" size="icon" variant="ghost" onClick={onBack} className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"><ChevronLeft /></Button><h1 className="font-display text-[18px] font-semibold">Loan</h1></header>;
 }
 
 function LenderLogo({ name, logo, muted = false, size = "md" }: { name: string; logo?: string; muted?: boolean; size?: "sm" | "md" }) {

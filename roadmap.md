@@ -18,4 +18,3 @@
 - [x] Redesign the fresh-loan intro, move its action into thumb reach, and simplify transitions.
 - [x] Restore loan styling consistency and correct lenders, labels, and work options.
 - [x] Rebuild loan offer cards in the supplied compact details-and-features layout.
-- [x] Add the App journey chip and unify the new- and returning-user loan flow.
