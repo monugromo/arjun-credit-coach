@@ -310,7 +310,8 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
 
   const available = state.persona === "prime" ? AVAILABLE : state.persona === "thin" ? AVAILABLE.slice(0, 1) : state.persona === "zero" || state.persona === "ntc" ? [] : AVAILABLE.slice(0, 3);
   const locked = state.persona === "prime" || state.persona === "ntc" ? [] : state.persona === "thin" ? LOCKED_TIME : LOCKED_ISSUES;
-  const visibleAvailable = showAll ? available.slice(0, 9) : available.slice(0, 3);
+  const visibleAvailable = showAll ? available : available.slice(0, 4);
+  const visibleLocked = showAllLocked ? locked : locked.slice(0, 5);
   const startQuestions = () => update({ step: "details" });
   const openApply = (offer: Offer) => { setSelectedOffer(offer); setSheet("apply"); };
   const confirmApply = () => { if (!selectedOffer) return; scrollTop.current = scrollRef.current?.scrollTop ?? 0; setSheet(null); setBrowserOffer(selectedOffer); };
