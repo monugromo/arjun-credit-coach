@@ -221,30 +221,44 @@ function ApprovalBars({ count, label }: { count: number; label: string }) {
 
 function OfferCard({ offer, featured, applied, onInfo, onApply, onUndo }: { offer: Offer; featured: boolean; applied: boolean; onInfo: () => void; onApply: () => void; onUndo: () => void }) {
   const [details, setDetails] = useState(false);
-  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [detailTab, setDetailTab] = useState<"details" | "features">("details");
   return (
-    <article className={`relative overflow-hidden rounded-xl border bg-card shadow-sm ${featured ? "border-primary/35" : "border-border"}`}>
-      <div className={`h-1 w-full ${featured ? "bg-primary" : "bg-border"}`} />
-      <div className="flex items-center gap-3 px-4 py-3">
+    <article className={`overflow-hidden rounded-lg border bg-card ${featured ? "border-primary/40" : "border-border"}`}>
+      <div className="flex min-h-16 items-center gap-3 border-b border-border px-4 py-3">
         <LenderLogo name={offer.lender} logo={offer.logo} size="sm" />
-        <div className="min-w-0 flex-1"><h4 className="font-display truncate text-base font-bold text-foreground">{offer.lender}</h4><p className="text-xs text-muted-foreground">{offer.product}</p></div>
-        {featured && <div className="rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-bold text-primary-deep">BEST MATCH</div>}
-        {offer.options && <Button variant="secondary" size="sm" onClick={() => setOptionsOpen((open) => !open)} className="h-7 px-2 text-[10px]">{offer.options.length} options<ChevronDown className={optionsOpen ? "rotate-180" : ""} /></Button>}
+        <h4 className="min-w-0 flex-1 font-display text-base font-semibold text-foreground">{offer.lender} {offer.product}</h4>
       </div>
-      {optionsOpen && offer.options && <div className="border-y border-border bg-muted px-4 py-2">{offer.options.map((option) => <div key={option} className="py-1 text-xs text-muted-foreground">{option}</div>)}</div>}
-      <div className="grid grid-cols-[1.35fr_.65fr] gap-3 border-y border-border bg-muted/25 px-4 py-3">
-        <div><p className="text-[11px] font-medium text-muted-foreground">You may get</p><p className="font-display mt-0.5 text-lg font-bold text-foreground">{offer.amount}</p></div>
-        <div><p className="text-[11px] text-muted-foreground">Interest from</p><p className="font-display mt-0.5 text-sm font-bold text-foreground">{offer.rate}</p></div>
-        <div className="col-span-2 grid grid-cols-[1.35fr_.65fr] items-end gap-3">
-          <div><p className="mb-1.5 text-[11px] text-muted-foreground">Approval chance</p><ApprovalBars count={offer.chance} label={offer.chanceLabel} /></div>
-          <div><p className="text-[11px] text-muted-foreground">Disbursal</p><p className="mt-0.5 text-xs font-semibold text-foreground">{offer.speed}</p></div>
+      <div className="grid grid-cols-[1.1fr_1.35fr_1fr] px-4 py-4">
+        <div className="min-w-0 border-r border-dashed border-border pr-3">
+          <p className="text-sm text-muted-foreground">Approval rate</p>
+          <div className="mt-2"><ApprovalBars count={offer.chance} label={offer.chanceLabel} /></div>
+        </div>
+        <div className="min-w-0 px-3">
+          <p className="text-sm text-muted-foreground">Loan amount</p>
+          <p className="mt-1 text-base font-semibold leading-5 text-foreground">{offer.amount}</p>
+        </div>
+        <div className="min-w-0 pl-2">
+          <p className="text-sm text-muted-foreground">Interest rate</p>
+          <p className="mt-1 text-base font-semibold leading-5 text-foreground">from {offer.rate}</p>
         </div>
       </div>
-      {details && <div className="border-b border-border px-4 py-3 text-xs text-muted-foreground">Final rate and fees are confirmed by the lender before you submit.</div>}
-      <div className="px-4 py-3">
-        {applied ? <div className="flex h-11 items-center justify-between rounded-lg bg-muted px-3 text-sm text-muted-foreground"><span className="font-semibold">Applied</span><Button variant="link" onClick={onUndo} className="h-auto px-0 text-xs">Undo</Button></div> : <div className="grid grid-cols-[.8fr_1.2fr] gap-2"><Button variant="outline" onClick={() => setDetails((open) => !open)}>Details</Button><Button onClick={onApply} className="h-11 bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Apply now</Button></div>}
-        <Button variant="ghost" onClick={onInfo} className="mt-1 h-7 w-full justify-center px-0 text-[11px] font-normal text-muted-foreground hover:bg-transparent"><Info />1 credit enquiry on application</Button>
+      <div className="flex items-center justify-between gap-3 px-4 pb-4">
+        <Button variant="ghost" onClick={() => setDetails((open) => !open)} className="h-11 justify-start px-0 text-base font-semibold text-primary hover:bg-transparent hover:text-primary-deep">Offer details<ChevronDown className={`transition-transform ${details ? "rotate-180" : ""}`} /></Button>
+        {applied ? <div className="flex h-11 min-w-36 items-center justify-between rounded-md bg-muted px-3 text-sm text-muted-foreground"><span className="font-semibold">Applied</span><Button variant="link" onClick={onUndo} className="h-auto px-0 text-xs">Undo</Button></div> : <Button onClick={onApply} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>}
       </div>
+      {details && <div className="border-t border-border bg-muted/40 px-4 pb-4">
+        <div className="grid grid-cols-2 border-b border-border">
+          <Button type="button" variant="ghost" onClick={() => setDetailTab("details")} className={`h-12 rounded-none border-b-2 text-sm hover:bg-transparent ${detailTab === "details" ? "border-primary text-primary" : "border-transparent text-muted-foreground"}`}>Details</Button>
+          <Button type="button" variant="ghost" onClick={() => setDetailTab("features")} className={`h-12 rounded-none border-b-2 text-sm hover:bg-transparent ${detailTab === "features" ? "border-primary text-primary" : "border-transparent text-muted-foreground"}`}>Features</Button>
+        </div>
+        {detailTab === "details" ? <dl className="space-y-3 pt-4 text-sm">
+          <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Processing fee</dt><dd className="font-semibold text-foreground">Confirmed by lender</dd></div>
+          <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Loan processing time</dt><dd className="text-right font-semibold text-foreground">{offer.speed}</dd></div>
+          <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Loan amount</dt><dd className="text-right font-semibold text-foreground">{offer.amount}</dd></div>
+          {offer.options && <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Available options</dt><dd className="text-right font-semibold text-foreground">{offer.options.join(", ")}</dd></div>}
+        </dl> : <ul className="space-y-3 pt-4 text-sm text-foreground"><li className="flex gap-2"><span aria-hidden="true">•</span>100% digital application</li><li className="flex gap-2"><span aria-hidden="true">•</span>No collateral required</li><li className="flex gap-2"><span aria-hidden="true">•</span>Fast lender decision</li></ul>}
+        <Button variant="ghost" onClick={onInfo} className="mt-3 h-8 w-full justify-start px-0 text-xs font-normal text-muted-foreground hover:bg-transparent"><Info />1 credit enquiry on application</Button>
+      </div>}
     </article>
   );
 }
