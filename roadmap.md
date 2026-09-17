@@ -16,3 +16,4 @@
 - [x] Replace the fresh-user loan bottom sheet with a two-page six-question form.
 - [x] Align the loan form styling, add required DOB wheels, simplify CTAs, and smooth page transitions.
 - [x] Redesign the fresh-loan intro, move its action into thumb reach, and simplify transitions.
+- [ ] Restore loan styling consistency and correct lenders, labels, and work options.
