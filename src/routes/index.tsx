@@ -162,7 +162,10 @@ function Index() {
     if (!u) { alert("Please choose one of the demo accounts shown below."); return; }
     setUser(u);
     setName(u.name);
-    if (u.loanJourney) setLoanJourney(createLoanJourneyState(u.loanJourney === "first"));
+    if (u.loanJourney) {
+      const base = createLoanJourneyState(u.loanJourney === "first");
+      setLoanJourney(u.loanErrors ? { ...base, bureau: u.loanErrors.bureau ?? base.bureau, bre: u.loanErrors.bre ?? base.bre } : base);
+    }
     go("otp");
   };
 
