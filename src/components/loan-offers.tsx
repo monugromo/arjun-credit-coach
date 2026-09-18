@@ -280,6 +280,8 @@ function OfferCard({ offer, featured, leadStatus, notice, onApply }: { offer: Of
         <Button variant="ghost" onClick={() => setDetails((open) => !open)} className="h-11 justify-start px-0 text-base font-semibold text-primary hover:bg-transparent hover:text-primary-deep">Offer details<ChevronDown className={`transition-transform ${details ? "rotate-180" : ""}`} /></Button>
         <Button onClick={onApply} disabled={action.disabled} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">{action.label}</Button>
       </div>
+      {notice && <p className="px-4 pb-4 -mt-2 text-xs font-medium text-destructive">{notice}</p>}
+
       {details && <div className="border-t border-border bg-muted/40 px-4 pb-4">
         <div className="grid grid-cols-2 border-b border-border">
           <Button type="button" variant="ghost" onClick={() => setDetailTab("details")} className={`h-12 rounded-none border-b-2 text-sm hover:bg-transparent ${detailTab === "details" ? "border-primary text-primary" : "border-transparent text-muted-foreground"}`}>Details</Button>
