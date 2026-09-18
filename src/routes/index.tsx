@@ -786,7 +786,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
             <div>
               <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">No bureau data</div>
               <div className="flex flex-col gap-2">
-                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"], ["9876500007", "007", "Meera · Loan offers · returning"], ["9876500008", "008", "Kabir · Loan offers · first visit"]].map(([p, id, label]) => (
+                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"], ["9876500007", "007", "Meera · Loan offers · returning"], ["9876500008", "008", "Kabir · Loan offers · first visit"], ["9876500009", "009", "Suresh · No eligible lenders"], ["9876500010", "010", "Pooja · Lender check failed"], ["9876500011", "011", "Manoj · Bureau not pulled"]].map(([p, id, label]) => (
                   <button key={p} onClick={() => setPhone(p)}
                     className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                     <span>
