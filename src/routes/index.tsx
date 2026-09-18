@@ -304,7 +304,7 @@ function Index() {
     })();
   };
 
-  const triggerLoanChat = (kind: "recommend" | "issues" | "time" | "ntc", lender = "Moneyview") => {
+  const triggerLoanChat = (kind: "recommend" | "issues" | "time" | "ntc" | "apply", lender = "Moneyview") => {
     go("chat");
     setShowCallPopup(false);
     setChatPhase("post-call");
@@ -327,6 +327,16 @@ function Index() {
         await streamCoach([
           { id: "loan-ntc1" + Date.now(), from: "coach", kind: "text", text: "You do not have a credit record yet. Building a score is the best first step." },
           { id: "loan-ntc2" + Date.now(), from: "coach", kind: "text", text: "I can create a simple plan using a secured card and on-time payments." },
+        ]);
+        return;
+      }
+      if (kind === "apply") {
+        setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: "i want to apply for loan", time: nowTime() }]);
+        await streamCoach([
+          { id: "loan-apply0" + Date.now(), from: "coach", kind: "text", text: "Abhi koi lender match nahi hua, lekin main dekh sakta hoon kyun. Aapki report mein sabse bada issue ₹13,583 ka overdue hai Hari & Co ke saath — ise fix karke loans unlock ho sakte hain." },
+          { id: "loan-apply1" + Date.now(), from: "coach", kind: "text", text: "Iske alawa report mein do aur issues hain: 2023 ka ek written-off account aur 94% card utilisation." },
+          { id: "loan-apply2" + Date.now(), from: "coach", kind: "text", text: "Start with the overdue balance because it has the highest impact. Should I draft an email to Hari & Co?" },
+          { id: "loan-quick" + Date.now(), from: "coach", kind: "loanQuickReplies" },
         ]);
         return;
       }
