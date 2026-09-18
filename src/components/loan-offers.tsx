@@ -40,9 +40,17 @@ const leadButton = (status?: LeadStatus): { label: string; disabled: boolean } =
   }
 };
 
+// Bureau state: hit = record pulled, no_hit = new to credit, unavailable = bureau never pulled
+export type BureauState = "hit" | "no_hit" | "unavailable";
+// BRE outcome: ok = lenders returned, none = valid result with 0 eligible, empty/error = no answer
+export type BreOutcome = "ok" | "none" | "empty" | "error";
+
 export interface LoanJourneyState {
   step: Step;
   persona: Persona;
+  bureau: BureauState;
+  bre: BreOutcome;
+  lastCheckedAt: string;
   work: WorkType;
   income: string;
   salaryMode: SalaryMode;
@@ -55,6 +63,9 @@ export interface LoanJourneyState {
 export const createLoanJourneyState = (firstVisit: boolean): LoanJourneyState => ({
   step: firstVisit ? "intro" : "offers",
   persona: "rejected",
+  bureau: "hit",
+  bre: "ok",
+  lastCheckedAt: "",
   work: "",
   income: "",
   salaryMode: "",
@@ -63,6 +74,7 @@ export const createLoanJourneyState = (firstVisit: boolean): LoanJourneyState =>
   dob: "",
   applied: {},
 });
+
 
 type Offer = {
   id: string;
@@ -239,10 +251,11 @@ function monthlyRate(rate: string) {
   return `${monthly}% p.m.`;
 }
 
-function OfferCard({ offer, featured, leadStatus, onApply }: { offer: Offer; featured: boolean; leadStatus?: LeadStatus; onApply: () => void }) {
+function OfferCard({ offer, featured, leadStatus, notice, onApply }: { offer: Offer; featured: boolean; leadStatus?: LeadStatus; notice?: string; onApply: () => void }) {
   const [details, setDetails] = useState(false);
   const action = leadButton(leadStatus);
   const [detailTab, setDetailTab] = useState<"details" | "features">("details");
+
   return (
     <article className={`overflow-hidden rounded-lg border bg-card ${featured ? "border-primary/40" : "border-border"}`}>
       <div className="relative flex min-h-16 items-center gap-3 border-b border-border px-4 py-3">
@@ -267,6 +280,8 @@ function OfferCard({ offer, featured, leadStatus, onApply }: { offer: Offer; fea
         <Button variant="ghost" onClick={() => setDetails((open) => !open)} className="h-11 justify-start px-0 text-base font-semibold text-primary hover:bg-transparent hover:text-primary-deep">Offer details<ChevronDown className={`transition-transform ${details ? "rotate-180" : ""}`} /></Button>
         <Button onClick={onApply} disabled={action.disabled} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">{action.label}</Button>
       </div>
+      {notice && <p className="px-4 pb-4 -mt-2 text-xs font-medium text-destructive">{notice}</p>}
+
       {details && <div className="border-t border-border bg-muted/40 px-4 pb-4">
         <div className="grid grid-cols-2 border-b border-border">
           <Button type="button" variant="ghost" onClick={() => setDetailTab("details")} className={`h-12 rounded-none border-b-2 text-sm hover:bg-transparent ${detailTab === "details" ? "border-primary text-primary" : "border-transparent text-muted-foreground"}`}>Details</Button>
@@ -329,6 +344,8 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const [showApplications, setShowApplications] = useState(false);
   const [editingDetails, setEditingDetails] = useState(false);
   const [unlockTaps, setUnlockTaps] = useState(0);
+  const [applyErrors, setApplyErrors] = useState<Record<string, string>>({});
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollTop = useRef(0);
   const update = (patch: Partial<LoanJourneyState>) => setState((current) => ({ ...current, ...patch }));
@@ -337,14 +354,35 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
 
   useEffect(() => { if (unlockTaps < 3) return; const timer = window.setTimeout(() => setUnlockTaps(0), 30000); return () => window.clearTimeout(timer); }, [unlockTaps]);
 
-  const available = state.persona === "prime" ? AVAILABLE : state.persona === "thin" ? AVAILABLE.slice(0, 1) : state.persona === "zero" || state.persona === "ntc" ? [] : AVAILABLE;
-  const locked = state.persona === "prime" || state.persona === "ntc" ? [] : state.persona === "thin" ? LOCKED_TIME : LOCKED_ISSUES;
+  const noBureau = state.bureau !== "hit" || state.persona === "ntc";
+  const breFailed = state.bre === "empty" || state.bre === "error";
+  const hasStale = breFailed && Boolean(state.lastCheckedAt);
+  const available = noBureau || (breFailed && !hasStale) || state.bre === "none" ? [] : state.persona === "prime" ? AVAILABLE : state.persona === "thin" ? AVAILABLE.slice(0, 1) : state.persona === "zero" ? [] : AVAILABLE;
+  const locked = state.persona === "prime" ? [] : state.persona === "thin" ? LOCKED_TIME : LOCKED_ISSUES;
   const visibleAvailable = showAll ? available : available.slice(0, 4);
   const visibleLocked = showAllLocked ? locked : locked.slice(0, 5);
   const unlocksFrozen = unlockTaps >= 3;
   const startQuestions = () => update({ step: "details" });
-  const openApply = (offer: Offer) => { scrollTop.current = scrollRef.current?.scrollTop ?? 0; setBrowserOffer(offer); };
-  const handleUnlockTap = (offer: LockedOffer) => { if (unlocksFrozen) return; setUnlockTaps((count) => count + 1); onChat(offer.reason, offer.lender); };
+  const openApply = (offer: Offer) => {
+    // Apply API failure: no lead, no enquiry — card keeps its previous state and stays live.
+    if (state.applied[offer.id] === undefined && applyErrors[offer.id] === "pending-fail") {
+      setApplyErrors((current) => ({ ...current, [offer.id]: "Couldn’t start this application. Please try again." }));
+      return;
+    }
+    setApplyErrors((current) => { const next = { ...current }; delete next[offer.id]; return next; });
+    scrollTop.current = scrollRef.current?.scrollTop ?? 0;
+    // Lead is created here; if the lender page fails to open, the card shows Continue + Try again.
+    update({ applied: { ...state.applied, [offer.id]: state.applied[offer.id] ?? "open" } });
+    setBrowserOffer(offer);
+  };
+  const handleUnlockTap = (offer: LockedOffer) => {
+    // Rate limit reached: no lender check, no model call — route to Arjun instead.
+    if (unlocksFrozen) { onChat("issues"); return; }
+    setUnlockTaps((count) => count + 1);
+    onChat(offer.reason, offer.lender);
+  };
+  const retryCheck = () => update({ bre: "ok", step: "checking" });
+
   const closeBrowser = () => { if (browserOffer) update({ applied: { ...state.applied, [browserOffer.id]: "open" } }); setBrowserOffer(null); requestAnimationFrame(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollTop.current; }); };
 
   if (state.step === "checking") return <div className="flex flex-1 flex-col items-center justify-center bg-card px-8 text-center motion-safe:animate-[loan-page-slide_260ms_ease-out]"><Loader2 className="h-11 w-11 animate-spin text-primary" /><h2 className="font-display mt-5 text-xl font-bold text-foreground">Checking lender matches</h2><div className="mt-5 flex gap-2">{INTRO_LENDERS.slice(0, 4).map((lender) => <LenderLogo key={lender.name} name={lender.name} logo={lender.logo} muted size="sm" />)}</div></div>;
@@ -359,10 +397,19 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
     <div className="relative flex min-h-0 flex-1 flex-col bg-card motion-safe:animate-[loan-page-slide_260ms_ease-out]">
       <AppHeader onBack={onBack} onEdit={() => { setEditingDetails(true); update({ step: "details" }); }} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
-        {state.persona === "ntc" ? <NTCOffers onChat={() => onChat("ntc")} /> : <>
+        {noBureau ? <>
+          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">You haven’t been rejected by anyone</h2><p className="mt-1 text-sm text-muted-foreground">Aapki credit file abhi nayi hai — score banate hi lenders khulna shuru ho jaate hain.</p></header>
+          <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat("ntc", offer.lender)} />)}</div>{locked.length > 5 && <Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button>}</section>
+          <Button variant="outline" onClick={() => onChat("ntc")} className="mt-4 h-12 w-full rounded-lg">Build my credit score</Button>
+        </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center">
+          <h3 className="font-display text-lg font-bold text-foreground">We couldn’t check lenders just now</h3>
+          <p className="mt-1 text-sm text-muted-foreground">Yeh network issue hai — aapki eligibility par koi asar nahi.</p>
+          <Button onClick={retryCheck} className="mt-4 h-12 w-full rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground hover:bg-primary-deep/90">Retry</Button>
+        </div> : <>
           <header className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2><Button variant="outline" onClick={() => setShowApplications(true)} className="h-9 shrink-0 rounded-lg bg-card px-3 text-sm font-semibold shadow-none">Applications</Button></header>
-          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} leadStatus={state.applied[offer.id]} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3></div>}
-          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} frozen={unlocksFrozen} onClick={() => handleUnlockTap(offer)} />)}</div>{unlocksFrozen && <p className="mt-2 text-xs text-muted-foreground">You’ve checked 3 lenders. Please wait a moment before checking more.</p>}<Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button></section>}
+          {hasStale && <div className="mb-3 rounded-lg border border-border bg-muted/40 p-3"><p className="text-xs font-semibold text-foreground">We couldn’t check lenders just now — showing your results as of {state.lastCheckedAt}.</p><Button variant="link" onClick={retryCheck} className="h-auto px-0 text-xs">Retry</Button></div>}
+          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} leadStatus={state.applied[offer.id]} notice={applyErrors[offer.id]} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">Nothing available right now — but we know why</h3><p className="mt-1 text-sm text-muted-foreground">Abhi koi lender match nahi hua. Neeche dekhiye kya unlock ho sakta hai.</p><Button variant="outline" onClick={() => onChat("issues")} className="mt-4 h-12 w-full rounded-lg">Talk to Arjun</Button></div>}
+          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => handleUnlockTap(offer)} />)}</div>{unlocksFrozen && <p className="mt-2 text-xs text-muted-foreground">Let’s fix one thing first — Arjun se baat kijiye.</p>}<Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button></section>}
         </>}
       </div>
       {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{[{ label: "₹25,000", value: "25000" }, { label: "₹50,000", value: "50000" }, { label: "₹1,00,000", value: "100000" }].map((option) => <Button key={option.label} variant={option.value === (state.loanAmount || "50000") ? "default" : "outline"} onClick={() => { update({ loanAmount: option.value }); setSheet(null); }} className={option.value === (state.loanAmount || "50000") ? "bg-primary-deep text-primary-foreground" : ""}>{option.label}</Button>)}</div></Sheet>}
