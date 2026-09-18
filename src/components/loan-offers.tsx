@@ -265,7 +265,7 @@ function OfferCard({ offer, featured, leadStatus, onApply }: { offer: Offer; fea
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pb-4">
         <Button variant="ghost" onClick={() => setDetails((open) => !open)} className="h-11 justify-start px-0 text-base font-semibold text-primary hover:bg-transparent hover:text-primary-deep">Offer details<ChevronDown className={`transition-transform ${details ? "rotate-180" : ""}`} /></Button>
-        <Button onClick={onApply} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">{applied ? "Continue" : "Apply now"}</Button>
+        <Button onClick={onApply} disabled={action.disabled} className="h-11 min-w-36 bg-primary-deep px-5 text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">{action.label}</Button>
       </div>
       {details && <div className="border-t border-border bg-muted/40 px-4 pb-4">
         <div className="grid grid-cols-2 border-b border-border">
@@ -302,9 +302,11 @@ const SAMPLE_APPLICATIONS: Array<{ offer: Offer; status: ApplicationStatus }> = 
   { offer: AVAILABLE[6], status: "Rejected" },
 ];
 
-function ApplicationsScreen({ applied, onBack }: { applied: string[]; onBack: () => void }) {
+const leadToApplicationStatus = (status: LeadStatus): ApplicationStatus => status === "approved" ? "Approved" : status === "disbursed" ? "Disbursed" : status === "rejected" ? "Rejected" : "In review";
+
+function ApplicationsScreen({ applied, onBack }: { applied: Record<string, LeadStatus>; onBack: () => void }) {
   const [filter, setFilter] = useState<ApplicationFilter>("All");
-  const liveApplications = AVAILABLE.filter((offer) => applied.includes(offer.id)).map((offer) => ({ offer, status: "In review" as const }));
+  const liveApplications = AVAILABLE.filter((offer) => applied[offer.id]).map((offer) => ({ offer, status: leadToApplicationStatus(applied[offer.id]) }));
   const sampleApplications = SAMPLE_APPLICATIONS.filter(({ offer }) => !liveApplications.some((item) => item.offer.id === offer.id));
   const applications = [...liveApplications, ...sampleApplications];
   const visible = filter === "All" ? applications : applications.filter((item) => item.status === filter);
@@ -343,7 +345,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const startQuestions = () => update({ step: "details" });
   const openApply = (offer: Offer) => { scrollTop.current = scrollRef.current?.scrollTop ?? 0; setBrowserOffer(offer); };
   const handleUnlockTap = (offer: LockedOffer) => { if (unlocksFrozen) return; setUnlockTaps((count) => count + 1); onChat(offer.reason, offer.lender); };
-  const closeBrowser = () => { if (browserOffer) update({ applied: Array.from(new Set([...state.applied, browserOffer.id])) }); setBrowserOffer(null); requestAnimationFrame(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollTop.current; }); };
+  const closeBrowser = () => { if (browserOffer) update({ applied: { ...state.applied, [browserOffer.id]: "open" } }); setBrowserOffer(null); requestAnimationFrame(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollTop.current; }); };
 
   if (state.step === "checking") return <div className="flex flex-1 flex-col items-center justify-center bg-card px-8 text-center motion-safe:animate-[loan-page-slide_260ms_ease-out]"><Loader2 className="h-11 w-11 animate-spin text-primary" /><h2 className="font-display mt-5 text-xl font-bold text-foreground">Checking lender matches</h2><div className="mt-5 flex gap-2">{INTRO_LENDERS.slice(0, 4).map((lender) => <LenderLogo key={lender.name} name={lender.name} logo={lender.logo} muted size="sm" />)}</div></div>;
 
@@ -359,7 +361,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {state.persona === "ntc" ? <NTCOffers onChat={() => onChat("ntc")} /> : <>
           <header className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2><Button variant="outline" onClick={() => setShowApplications(true)} className="h-9 shrink-0 rounded-lg bg-card px-3 text-sm font-semibold shadow-none">Applications</Button></header>
-          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} applied={state.applied.includes(offer.id)} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3></div>}
+          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} leadStatus={state.applied[offer.id]} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">No matches right now</h3></div>}
           {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} frozen={unlocksFrozen} onClick={() => handleUnlockTap(offer)} />)}</div>{unlocksFrozen && <p className="mt-2 text-xs text-muted-foreground">You’ve checked 3 lenders. Please wait a moment before checking more.</p>}<Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button></section>}
         </>}
       </div>
