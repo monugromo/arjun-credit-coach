@@ -251,10 +251,11 @@ function monthlyRate(rate: string) {
   return `${monthly}% p.m.`;
 }
 
-function OfferCard({ offer, featured, leadStatus, onApply }: { offer: Offer; featured: boolean; leadStatus?: LeadStatus; onApply: () => void }) {
+function OfferCard({ offer, featured, leadStatus, notice, onApply }: { offer: Offer; featured: boolean; leadStatus?: LeadStatus; notice?: string; onApply: () => void }) {
   const [details, setDetails] = useState(false);
   const action = leadButton(leadStatus);
   const [detailTab, setDetailTab] = useState<"details" | "features">("details");
+
   return (
     <article className={`overflow-hidden rounded-lg border bg-card ${featured ? "border-primary/40" : "border-border"}`}>
       <div className="relative flex min-h-16 items-center gap-3 border-b border-border px-4 py-3">
