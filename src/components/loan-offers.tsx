@@ -25,6 +25,21 @@ type Step = "intro" | "details" | "location" | "checking" | "offers";
 
 type LoanStateSetter = (next: LoanJourneyState | ((current: LoanJourneyState) => LoanJourneyState)) => void;
 
+// Lead lifecycle per offer: no lead → open → (expired | pending → approved | rejected | disbursed)
+type LeadStatus = "open" | "expired" | "pending" | "approved" | "rejected" | "disbursed";
+
+const leadButton = (status?: LeadStatus): { label: string; disabled: boolean } => {
+  switch (status) {
+    case "open": return { label: "Continue", disabled: false }; // same lender URL
+    case "expired": return { label: "Apply again", disabled: false }; // new lead
+    case "pending": return { label: "Pending", disabled: false }; // same lender URL
+    case "approved": return { label: "Approved", disabled: false }; // same lender URL
+    case "rejected": return { label: "Apply again", disabled: false }; // new lead
+    case "disbursed": return { label: "Disbursed", disabled: true }; // frozen
+    default: return { label: "Apply now", disabled: false }; // no lead → lender
+  }
+};
+
 export interface LoanJourneyState {
   step: Step;
   persona: Persona;
@@ -34,7 +49,7 @@ export interface LoanJourneyState {
   loanAmount: string;
   pincode: string;
   dob: string;
-  applied: string[];
+  applied: Record<string, LeadStatus>;
 }
 
 export const createLoanJourneyState = (firstVisit: boolean): LoanJourneyState => ({
@@ -46,7 +61,7 @@ export const createLoanJourneyState = (firstVisit: boolean): LoanJourneyState =>
   loanAmount: "",
   pincode: "",
   dob: "",
-  applied: [],
+  applied: {},
 });
 
 type Offer = {
