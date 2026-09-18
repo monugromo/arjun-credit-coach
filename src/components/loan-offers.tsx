@@ -109,10 +109,10 @@ const LOCKED_ISSUES: LockedOffer[] = [
 ];
 
 const LOCKED_TIME: LockedOffer[] = [
-  { id: "time-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "4 more months of history", progress: 67, reason: "time" },
-  { id: "time-tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, distance: "4 more months of history", progress: 67, reason: "time" },
-  { id: "time-hdfc", lender: "HDFC Bank", product: "Credit card", logo: hdfcLogo, distance: "4 more months of history", progress: 67, reason: "time" },
-  { id: "time-zype", lender: "Zype", product: "Personal loan", distance: "4 more months of history", progress: 67, reason: "time" },
+  { id: "time-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "Credit file abhi nayi hai", progress: 67, reason: "time" },
+  { id: "time-tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, distance: "Credit file abhi nayi hai", progress: 67, reason: "time" },
+  { id: "time-hdfc", lender: "HDFC Bank", product: "Credit card", logo: hdfcLogo, distance: "Credit file abhi nayi hai", progress: 67, reason: "time" },
+  { id: "time-zype", lender: "Zype", product: "Personal loan", distance: "Credit file abhi nayi hai", progress: 67, reason: "time" },
 ];
 
 const INTRO_LENDERS = [

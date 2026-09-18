@@ -314,7 +314,7 @@ function Index() {
       if (kind === "time") {
         setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `I want to apply for this ${lender} loan.`, time: nowTime() }]);
         await streamCoach([
-          { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: `${lender} requires 12 months of credit history. You currently have 8 months.` },
+          { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: "Aapki credit file abhi nayi hai — report mein sirf 8 mahine ki history dikh rahi hai. Thoda aur time aur clean history ke saath yeh unlock ho jayega." },
           { id: "loan-time2" + Date.now(), from: "coach", kind: "text", text: "There is nothing negative on your report. Your credit file is simply new." },
           { id: "loan-time3" + Date.now(), from: "coach", kind: "text", text: "Prefr and Tez may become available around January. I’ll keep track for you." },
         ]);
@@ -331,8 +331,8 @@ function Index() {
       await streamCoach([{ id: "loan-lock0" + Date.now(), from: "coach", kind: "text", text: `Let me check with ${lender}, please wait…` }]);
       await new Promise((resolve) => setTimeout(resolve, 1500));
       await streamCoach([
-        { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `Aapka score abhi ${user?.score ?? 612} hai. ${lender} ke liye thoda aur score chahiye — kuch issues fix karke yeh loan unlock ho sakta hai.` },
-        { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Three issues are affecting your score: a ₹13,583 overdue with Hari & Co, one written-off account from 2023, and 94% card utilisation." },
+        { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `${lender} se abhi approval nahi mila. Aapki report mein sabse bada issue ₹13,583 ka overdue hai Hari & Co ke saath — ise fix karke yeh loan unlock ho sakta hai.` },
+        { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Iske alawa report mein do aur issues hain: 2023 ka ek written-off account aur 94% card utilisation." },
         { id: "loan-lock3" + Date.now(), from: "coach", kind: "text", text: "Start with the overdue balance because it has the highest impact. Should I draft an email to Hari & Co?" },
         { id: "loan-quick" + Date.now(), from: "coach", kind: "loanQuickReplies" },
       ]);
