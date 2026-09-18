@@ -12,6 +12,8 @@ export interface DemoUser {
   expired?: boolean;
   updated?: { name: string; pan: string; dob: string };
   loanJourney?: "returning" | "first";
+  // Loans error-state demos: bureau = "unavailable" (never pulled), bre = "none" (no eligible lenders), "empty" | "error" (check failed)
+  loanErrors?: { bureau?: "no_hit" | "unavailable"; bre?: "none" | "empty" | "error" };
 }
 
 export const DEMOS: Record<string, DemoUser> = {

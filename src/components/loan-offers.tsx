@@ -303,12 +303,12 @@ function LockedCard({ offer, onClick, frozen }: { offer: LockedOffer; onClick: (
   return <Button variant="ghost" disabled={frozen} onClick={onClick} className="h-auto w-full justify-start rounded-lg border border-border bg-card px-3 py-3 text-left shadow-none hover:bg-muted/50 disabled:opacity-60"><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className="truncate text-sm font-bold text-foreground">{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className="mt-1.5 block text-xs font-semibold text-foreground">{frozen ? "Checking with lenders — please wait" : offer.distance}</span></span></Button>;
 }
 
-type ApplicationFilter = "All" | "In review" | "Approved" | "Disbursed" | "Rejected";
+type ApplicationFilter = "All" | "Pending" | "Approved" | "Disbursed" | "Rejected";
 
 type ApplicationStatus = Exclude<ApplicationFilter, "All">;
 
 const SAMPLE_APPLICATIONS: Array<{ offer: Offer; status: ApplicationStatus }> = [
-  { offer: AVAILABLE[3], status: "In review" },
+  { offer: AVAILABLE[3], status: "Pending" },
   { offer: { id: "hdfc-approved", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, approvalTime: "Less than 24hr", amount: "₹50,000", rate: "15% p.a.", speed: "Within 24 hours", channel: "App based" }, status: "Approved" },
   { offer: AVAILABLE[5], status: "Approved" },
   { offer: AVAILABLE[4], status: "Disbursed" },
@@ -317,7 +317,7 @@ const SAMPLE_APPLICATIONS: Array<{ offer: Offer; status: ApplicationStatus }> = 
   { offer: AVAILABLE[6], status: "Rejected" },
 ];
 
-const leadToApplicationStatus = (status: LeadStatus): ApplicationStatus => status === "approved" ? "Approved" : status === "disbursed" ? "Disbursed" : status === "rejected" ? "Rejected" : "In review";
+const leadToApplicationStatus = (status: LeadStatus): ApplicationStatus => status === "approved" ? "Approved" : status === "disbursed" ? "Disbursed" : status === "rejected" ? "Rejected" : "Pending";
 
 function ApplicationsScreen({ applied, onBack }: { applied: Record<string, LeadStatus>; onBack: () => void }) {
   const [filter, setFilter] = useState<ApplicationFilter>("All");
