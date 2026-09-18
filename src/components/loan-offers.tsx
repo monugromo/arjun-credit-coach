@@ -40,9 +40,17 @@ const leadButton = (status?: LeadStatus): { label: string; disabled: boolean } =
   }
 };
 
+// Bureau state: hit = record pulled, no_hit = new to credit, unavailable = bureau never pulled
+export type BureauState = "hit" | "no_hit" | "unavailable";
+// BRE outcome: ok = lenders returned, none = valid result with 0 eligible, empty/error = no answer
+export type BreOutcome = "ok" | "none" | "empty" | "error";
+
 export interface LoanJourneyState {
   step: Step;
   persona: Persona;
+  bureau: BureauState;
+  bre: BreOutcome;
+  lastCheckedAt: string;
   work: WorkType;
   income: string;
   salaryMode: SalaryMode;
@@ -55,6 +63,9 @@ export interface LoanJourneyState {
 export const createLoanJourneyState = (firstVisit: boolean): LoanJourneyState => ({
   step: firstVisit ? "intro" : "offers",
   persona: "rejected",
+  bureau: "hit",
+  bre: "ok",
+  lastCheckedAt: "",
   work: "",
   income: "",
   salaryMode: "",
@@ -63,6 +74,7 @@ export const createLoanJourneyState = (firstVisit: boolean): LoanJourneyState =>
   dob: "",
   applied: {},
 });
+
 
 type Offer = {
   id: string;
