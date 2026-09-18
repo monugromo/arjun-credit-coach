@@ -344,6 +344,8 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const [showApplications, setShowApplications] = useState(false);
   const [editingDetails, setEditingDetails] = useState(false);
   const [unlockTaps, setUnlockTaps] = useState(0);
+  const [applyErrors, setApplyErrors] = useState<Record<string, string>>({});
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollTop = useRef(0);
   const update = (patch: Partial<LoanJourneyState>) => setState((current) => ({ ...current, ...patch }));
