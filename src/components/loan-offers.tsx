@@ -352,7 +352,6 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
 
   useEffect(() => { if (state.step !== "checking") return; const timer = window.setTimeout(() => setState((current) => ({ ...current, step: "offers" })), 2000); return () => window.clearTimeout(timer); }, [state.step, setState]);
 
-  useEffect(() => { if (unlockTaps < 3) return; const timer = window.setTimeout(() => setUnlockTaps(0), 30000); return () => window.clearTimeout(timer); }, [unlockTaps]);
 
   const noBureau = state.bureau !== "hit" || state.persona === "ntc";
   const breFailed = state.bre === "empty" || state.bre === "error";
@@ -361,7 +360,6 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const locked = state.persona === "prime" ? [] : state.persona === "thin" ? LOCKED_TIME : LOCKED_ISSUES;
   const visibleAvailable = showAll ? available : available.slice(0, 4);
   const visibleLocked = showAllLocked ? locked : locked.slice(0, 5);
-  const unlocksFrozen = unlockTaps >= 3;
   const startQuestions = () => update({ step: "details" });
   const openApply = (offer: Offer) => {
     // Apply API failure: no lead, no enquiry — card keeps its previous state and stays live.
@@ -376,9 +374,10 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
     setBrowserOffer(offer);
   };
   const handleUnlockTap = (offer: LockedOffer) => {
-    // Rate limit reached: no lender check, no model call — route to Arjun instead.
-    if (unlocksFrozen) { onChat("issues"); return; }
-    setUnlockTaps((count) => count + 1);
+    // First tap hands off to Arjun with a prefilled message; after that, further
+    // locked-lender taps are blocked so the user is not stuck in a loop.
+    if (lockedChatStarted) return;
+    setLockedChatStarted(true);
     onChat(offer.reason, offer.lender);
   };
   const retryCheck = () => update({ bre: "ok", step: "checking" });
