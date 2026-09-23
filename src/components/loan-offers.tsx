@@ -343,6 +343,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
   const [showAll, setShowAll] = useState(false);
   const [showAllLocked, setShowAllLocked] = useState(false);
+  const [blockedLender, setBlockedLender] = useState<string | null>(null);
   const [showApplications, setShowApplications] = useState(false);
   const [editingDetails, setEditingDetails] = useState(false);
   const [applyErrors, setApplyErrors] = useState<Record<string, string>>({});
