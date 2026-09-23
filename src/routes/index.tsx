@@ -304,6 +304,28 @@ function Index() {
     })();
   };
 
+  const [loanChatDraft, setLoanChatDraft] = useState<{ kind: "issues" | "time"; lender: string } | null>(null);
+
+  // Runs after the user taps Send on the prefilled locked-lender message.
+  const streamLockedLoanReply = async (kind: "issues" | "time", lender: string) => {
+    if (kind === "time") {
+      await streamCoach([
+        { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: "Aapki credit file abhi nayi hai — report mein sirf 8 mahine ki history dikh rahi hai. Thoda aur time aur clean history ke saath yeh unlock ho jayega." },
+        { id: "loan-time2" + Date.now(), from: "coach", kind: "text", text: "There is nothing negative on your report. Your credit file is simply new." },
+        { id: "loan-time3" + Date.now(), from: "coach", kind: "text", text: "Prefr and Tez may become available around January. I’ll keep track for you." },
+      ]);
+      return;
+    }
+    await streamCoach([{ id: "loan-lock0" + Date.now(), from: "coach", kind: "text", text: `Let me check with ${lender}, please wait…` }]);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await streamCoach([
+      { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `${lender} se abhi approval nahi mila. Aapki report mein sabse bada issue ₹13,583 ka overdue hai Hari & Co ke saath — ise fix karke yeh loan unlock ho sakta hai.` },
+      { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Iske alawa report mein do aur issues hain: 2023 ka ek written-off account aur 94% card utilisation." },
+      { id: "loan-lock3" + Date.now(), from: "coach", kind: "text", text: "Start with the overdue balance because it has the highest impact. Should I draft an email to Hari & Co?" },
+      { id: "loan-quick" + Date.now(), from: "coach", kind: "loanQuickReplies" },
+    ]);
+  };
+
   const triggerLoanChat = (kind: "recommend" | "issues" | "time" | "ntc" | "apply", lender = "Moneyview") => {
     go("chat");
     setShowCallPopup(false);
@@ -314,13 +336,9 @@ function Index() {
         await streamCoach([{ id: "loan-rec" + Date.now(), from: "coach", kind: "text", text: "Moneyview is your strongest match. It has the highest approval chance and may disburse within 24 hours. Apply to one lender at a time to limit credit enquiries." }]);
         return;
       }
-      if (kind === "time") {
-        setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `I want to apply for this ${lender} loan.`, time: nowTime() }]);
-        await streamCoach([
-          { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: "Aapki credit file abhi nayi hai — report mein sirf 8 mahine ki history dikh rahi hai. Thoda aur time aur clean history ke saath yeh unlock ho jayega." },
-          { id: "loan-time2" + Date.now(), from: "coach", kind: "text", text: "There is nothing negative on your report. Your credit file is simply new." },
-          { id: "loan-time3" + Date.now(), from: "coach", kind: "text", text: "Prefr and Tez may become available around January. I’ll keep track for you." },
-        ]);
+      if (kind === "time" || kind === "issues") {
+        // Locked lender: prefill the composer so the user sends it themselves.
+        setLoanChatDraft({ kind, lender });
         return;
       }
       if (kind === "ntc") {
@@ -340,15 +358,6 @@ function Index() {
         ]);
         return;
       }
-      setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `I want to apply for this ${lender} loan.`, time: nowTime() }]);
-      await streamCoach([{ id: "loan-lock0" + Date.now(), from: "coach", kind: "text", text: `Let me check with ${lender}, please wait…` }]);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      await streamCoach([
-        { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `${lender} se abhi approval nahi mila. Aapki report mein sabse bada issue ₹13,583 ka overdue hai Hari & Co ke saath — ise fix karke yeh loan unlock ho sakta hai.` },
-        { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Iske alawa report mein do aur issues hain: 2023 ka ek written-off account aur 94% card utilisation." },
-        { id: "loan-lock3" + Date.now(), from: "coach", kind: "text", text: "Start with the overdue balance because it has the highest impact. Should I draft an email to Hari & Co?" },
-        { id: "loan-quick" + Date.now(), from: "coach", kind: "loanQuickReplies" },
-      ]);
     })();
   };
 
@@ -596,6 +605,8 @@ function Index() {
             onCallbackSelect={handleCallbackSelect}
             onBuildCredit={triggerNtcBuild}
             onLoanQuickReply={handleLoanQuickReply}
+            loanDraft={loanChatDraft}
+            onLoanDraftSend={(kind, lender) => { setLoanChatDraft(null); void streamLockedLoanReply(kind, lender); }}
             onMenu={(k) => {
               if (k === "logout") logout();
               else if (k === "profile") go("profile");
@@ -2135,6 +2146,8 @@ function ChatScreen(props: {
   onCallbackSelect: (opt: string) => void;
   onBuildCredit: () => void;
   onLoanQuickReply: (option: string) => void;
+  loanDraft: { kind: "issues" | "time"; lender: string } | null;
+  onLoanDraftSend: (kind: "issues" | "time", lender: string) => void;
 }) {
   const { user, chat, setChat, chatPhase, setChatPhase, menuOpen, setMenuOpen,
     onAcceptCall, onDeclineCall, openHeader, openCall, openReport, openTasks, tasks, onMenu, typing, onTaskAction, onPickFd, onCallbackSelect, onBuildCredit, onLoanQuickReply } = props;
@@ -2149,11 +2162,20 @@ function ChatScreen(props: {
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [chat, typing]);
 
+  // Locked-loan hand-off: prefill the composer so the user sends it themselves.
+  useEffect(() => {
+    if (props.loanDraft) setDraft(`I want to apply for this ${props.loanDraft.lender} loan.`);
+  }, [props.loanDraft]);
+
   const send = () => {
     const text = draft.trim();
     if (!text) return;
     setChat((c) => [...c, { id: "u" + Date.now(), from: "user", kind: "text", text, time: nowTime() }]);
     setDraft("");
+    if (props.loanDraft) {
+      props.onLoanDraftSend(props.loanDraft.kind, props.loanDraft.lender);
+      return;
+    }
     const isNTC = user.key === "ntc";
     const q = text.toLowerCase();
     const reply = async (items: Array<Omit<ChatMsg, "time" | "id">>) => {
