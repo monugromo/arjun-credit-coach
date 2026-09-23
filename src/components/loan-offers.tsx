@@ -17,7 +17,7 @@ import abhiloansLogo from "@/assets/lenders/abhiloans.png";
 import loan112Logo from "@/assets/lenders/loan112.png";
 import clickpeLogo from "@/assets/lenders/clickpe.png";
 import jupiterLogo from "@/assets/lenders/jupiter.png";
-import unityCardArt from "@/assets/unity-card.png";
+import unityCardArt from "@/assets/unity-roarbank-card.png.asset.json";
 
 export type Persona = "rejected" | "prime" | "thin" | "ntc" | "zero";
 type WorkType = "Salaried" | "Self-employed" | "Student" | "Other" | "";
@@ -357,7 +357,7 @@ function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowM
         <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
         <h3 className="font-display mt-3 text-[22px] font-bold leading-[28px] text-foreground">Roarbank UPI Credit Card</h3>
         <p className="text-sm text-muted-foreground">Unity Small Finance Bank</p>
-        <img src={unityCardArt} alt="Roarbank UPI Credit Card" loading="lazy" width={1024} height={656} className="pointer-events-none absolute -right-6 top-6 w-32 rotate-6 drop-shadow-lg" />
+        <img src={unityCardArt.url} alt="Roarbank UPI Credit Card" loading="lazy" width={1024} height={656} className="pointer-events-none absolute -right-6 top-6 w-32 rotate-6 drop-shadow-lg" />
         <p className="mt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {["No credit history needed", "Zero joining fee", "Zero annual fee", "Up to 20% cashback"].map((feature) => (
@@ -439,7 +439,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <AppHeader onBack={onBack} onEdit={() => { setEditingDetails(true); update({ step: "details" }); }} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {noBureau ? <>
-          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">You haven’t been rejected by anyone</h2><p className="mt-1 text-sm text-muted-foreground">Aapka abhi koi credit score hi nahi hai. Ek credit card se score banana sabse tez tareeka hai.</p></header>
+          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">Aapka credit score abhi nahi hai</h2><p className="mt-1 text-sm text-muted-foreground">Yeh rejection nahi hai. Credit card se score banana sabse tez tareeka hai.</p></header>
           <div className="mb-6"><CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} /></div>
           <header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header>
           <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat("ntc", offer.lender)} />)}</div>{locked.length > 5 && <Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button>}</section>
