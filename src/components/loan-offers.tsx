@@ -487,12 +487,11 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <AppHeader onBack={onBack} onEdit={() => { setEditingDetails(true); update({ step: "details" }); }} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {noBureau ? <>
-          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">Aapka credit score abhi nahi hai</h2><p className="mt-1 text-sm text-muted-foreground">Yeh rejection nahi hai. Credit card se score banana sabse tez tareeka hai.</p></header>
+          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">You haven't been rejected</h2><p className="mt-1 text-sm text-muted-foreground">You just don't have a credit score yet. A credit card is the fastest way to build one.</p></header>
           <div className="mb-6"><CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} /></div>
           <header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header>
           <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat("ntc", offer.lender)} />)}</div>{locked.length > 5 && <Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button>}</section>
-          <Button variant="outline" onClick={() => onChat("ntc")} className="mt-4 h-12 w-full rounded-lg">Build my credit score</Button>
-        </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center">
+        </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center shadow-sm">
           <h3 className="font-display text-lg font-bold text-foreground">We couldn’t check lenders just now</h3>
           <p className="mt-1 text-sm text-muted-foreground">Yeh network issue hai — aapki eligibility par koi asar nahi.</p>
           <Button onClick={retryCheck} className="mt-4 h-12 w-full rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground hover:bg-primary-deep/90">Retry</Button>
