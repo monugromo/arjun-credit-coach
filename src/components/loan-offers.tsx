@@ -17,6 +17,7 @@ import abhiloansLogo from "@/assets/lenders/abhiloans.png";
 import loan112Logo from "@/assets/lenders/loan112.png";
 import clickpeLogo from "@/assets/lenders/clickpe.png";
 import jupiterLogo from "@/assets/lenders/jupiter.png";
+import unityCardArt from "@/assets/unity-card.png";
 
 export type Persona = "rejected" | "prime" | "thin" | "ntc" | "zero";
 type WorkType = "Salaried" | "Self-employed" | "Student" | "Other" | "";
