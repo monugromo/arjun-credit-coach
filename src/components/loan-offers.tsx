@@ -51,7 +51,7 @@ export interface LoanJourneyState {
   bureau: BureauState;
   bre: BreOutcome;
   lastCheckedAt: string;
-  lockedChatStarted: boolean;
+  lockedContacted: string[];
   work: WorkType;
   income: string;
   salaryMode: SalaryMode;
@@ -67,7 +67,7 @@ export const createLoanJourneyState = (firstVisit: boolean): LoanJourneyState =>
   bureau: "hit",
   bre: "ok",
   lastCheckedAt: "",
-  lockedChatStarted: false,
+  lockedContacted: [],
   work: "",
   income: "",
   salaryMode: "",
@@ -301,8 +301,8 @@ function OfferCard({ offer, featured, leadStatus, notice, onApply }: { offer: Of
   );
 }
 
-function LockedCard({ offer, onClick, blocked }: { offer: LockedOffer; onClick: () => void; blocked?: boolean }) {
-  return <Button variant="ghost" disabled={blocked} onClick={onClick} className="h-auto w-full justify-start rounded-lg border border-border bg-card px-3 py-3 text-left shadow-none hover:bg-muted/50 disabled:opacity-60"><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className="truncate text-sm font-bold text-foreground">{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className="mt-1.5 block text-xs font-semibold text-foreground">{blocked ? "Arjun is helping you with this" : offer.distance}</span></span></Button>;
+function LockedCard({ offer, onClick, contacted }: { offer: LockedOffer; onClick: () => void; contacted?: boolean }) {
+  return <Button variant="ghost" onClick={onClick} className={`h-auto w-full justify-start rounded-lg border px-3 py-3 text-left shadow-none ${contacted ? "border-border bg-muted/60 hover:bg-muted/70" : "border-border bg-card hover:bg-muted/50"}`}><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className={`truncate text-sm font-bold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className={`mt-1.5 block text-xs font-semibold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{contacted ? "Checked — try another loan" : offer.distance}</span></span></Button>;
 }
 
 type ApplicationFilter = "All" | "Pending" | "Approved" | "Disbursed" | "Rejected";
