@@ -219,53 +219,29 @@ function AmountField({ id, label, value, onChange, autoFocus = false }: { id: st
 
 function DateWheel({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   const ref = useRef<HTMLInputElement>(null);
-  const [text, setText] = useState("");
-  useEffect(() => {
-    if (!value) { setText(""); return; }
-    const [year, month, day] = value.split("-");
-    let formatted = "";
-    if (day) formatted += day;
-    if (month) formatted += (formatted ? " / " : "") + month;
-    if (year) formatted += (formatted ? " / " : "") + year;
-    setText(formatted);
-  }, [value]);
+  const initial = value.split("-");
+  const stored = initial[0]?.length === 4 ? `${initial[2] || ""}${initial[1] || ""}${initial[0]}` : "";
+  const [digits, setDigits] = useState(stored);
   useEffect(() => { const timer = window.setTimeout(() => ref.current?.focus(), 180); return () => window.clearTimeout(timer); }, []);
   const emit = (raw: string) => {
-    const digits = raw.replace(/\D/g, "").slice(0, 8);
-    const day = digits.slice(0, 2);
-    const month = digits.slice(2, 4);
-    const year = digits.slice(4, 8);
-    let formatted = day;
-    if (month) formatted += " / " + month;
-    if (year) formatted += " / " + year;
-    setText(formatted);
-    if (digits.length === 8) {
+    setDigits(raw);
+    const day = raw.slice(0, 2), month = raw.slice(2, 4), year = raw.slice(4, 8);
+    if (raw.length === 8) {
       const maxDay = new Date(Number(year), Number(month) || 1, 0).getDate();
       const safeDay = String(Math.min(Number(day), maxDay)).padStart(2, "0");
       const safeMonth = String(Math.min(Math.max(Number(month), 1), 12)).padStart(2, "0");
       onChange(`${year}-${safeMonth}-${safeDay}`);
     } else {
-      onChange("");
+      onChange(`${year}-${month}-${day}`);
     }
   };
-  return (
-    <FormField label="Date of birth">
-      <div className="flex h-10 items-center">
-        <input
-          ref={ref}
-          aria-label="Date of birth"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          autoComplete="bday"
-          placeholder="DD / MM / YYYY"
-          value={text}
-          onChange={(event) => emit(event.target.value)}
-          className="min-w-0 flex-1 bg-transparent text-base font-semibold text-foreground outline-none placeholder:text-muted-foreground/50"
-        />
-      </div>
-      <p className="mt-1 text-xs text-muted-foreground">Type your birth date</p>
-    </FormField>
-  );
+  const boxes = digits.padEnd(8, " ").slice(0, 8).split("");
+  const hints = ["D", "D", "M", "M", "Y", "Y", "Y", "Y"];
+  const renderBox = (index: number) => {
+    const filled = boxes[index].trim();
+    return <span key={index} className={`flex h-11 w-8 items-center justify-center rounded-lg border text-base font-semibold ${filled ? "border-foreground/30 bg-background text-foreground" : "border-input bg-background text-muted-foreground/40"}`}>{filled || hints[index]}</span>;
+  };
+  return <FormField label="Date of birth"><div className="relative" onClick={() => ref.current?.focus()}><input ref={ref} aria-label="Date of birth" inputMode="numeric" pattern="[0-9]*" autoComplete="bday" value={digits} onChange={(event) => emit(event.target.value.replace(/\D/g, "").slice(0, 8))} className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0" /><div className="flex items-center gap-1.5 py-1">{renderBox(0)}{renderBox(1)}{renderBox(2)}{renderBox(3)}{renderBox(4)}{renderBox(5)}{renderBox(6)}{renderBox(7)}</div></div><p className="mt-1 text-xs text-muted-foreground">Type your birth date — DD MM YYYY</p></FormField>;
 }
 
 function QuestionPage({ state, update }: { state: LoanJourneyState; update: (patch: Partial<LoanJourneyState>) => void }) {
