@@ -326,7 +326,7 @@ function Index() {
     ]);
   };
 
-  const triggerLoanChat = (kind: "recommend" | "issues" | "time" | "ntc" | "apply", lender = "Moneyview") => {
+  const triggerLoanChat = (kind: "recommend" | "issues" | "time" | "ntc" | "apply" | "card", lender = "Moneyview") => {
     go("chat");
     setShowCallPopup(false);
     setChatPhase("post-call");
