@@ -416,7 +416,7 @@ function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowM
       <div className="px-4 pb-4 pt-3">
         <p className="text-center text-sm text-muted-foreground">High approval: <span className="font-bold text-foreground">99% new-to-credit users got this card</span></p>
         <Button onClick={onApply} className="mt-3 h-[54px] w-full rounded-lg bg-primary-deep text-base font-bold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
-        <Button variant="outline" onClick={onKnowMore} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">Know more</Button>
+        <button type="button" onClick={onKnowMore} className="mt-3 w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground">Know more</button>
       </div>
     </section>
   );
