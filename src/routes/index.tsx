@@ -2146,6 +2146,8 @@ function ChatScreen(props: {
   onCallbackSelect: (opt: string) => void;
   onBuildCredit: () => void;
   onLoanQuickReply: (option: string) => void;
+  loanDraft: { kind: "issues" | "time"; lender: string } | null;
+  onLoanDraftSend: (kind: "issues" | "time", lender: string) => void;
 }) {
   const { user, chat, setChat, chatPhase, setChatPhase, menuOpen, setMenuOpen,
     onAcceptCall, onDeclineCall, openHeader, openCall, openReport, openTasks, tasks, onMenu, typing, onTaskAction, onPickFd, onCallbackSelect, onBuildCredit, onLoanQuickReply } = props;
