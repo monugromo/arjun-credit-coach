@@ -439,7 +439,9 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <AppHeader onBack={onBack} onEdit={() => { setEditingDetails(true); update({ step: "details" }); }} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {noBureau ? <>
-          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">You haven’t been rejected by anyone</h2><p className="mt-1 text-sm text-muted-foreground">Aapki credit file abhi nayi hai — score banate hi lenders khulna shuru ho jaate hain.</p></header>
+          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">You haven’t been rejected by anyone</h2><p className="mt-1 text-sm text-muted-foreground">Aapka abhi koi credit score hi nahi hai. Ek credit card se score banana sabse tez tareeka hai.</p></header>
+          <div className="mb-6"><CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} /></div>
+          <header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header>
           <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat("ntc", offer.lender)} />)}</div>{locked.length > 5 && <Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button>}</section>
           <Button variant="outline" onClick={() => onChat("ntc")} className="mt-4 h-12 w-full rounded-lg">Build my credit score</Button>
         </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center">
