@@ -605,6 +605,8 @@ function Index() {
             onCallbackSelect={handleCallbackSelect}
             onBuildCredit={triggerNtcBuild}
             onLoanQuickReply={handleLoanQuickReply}
+            loanDraft={loanChatDraft}
+            onLoanDraftSend={(kind, lender) => { setLoanChatDraft(null); void streamLockedLoanReply(kind, lender); }}
             onMenu={(k) => {
               if (k === "logout") logout();
               else if (k === "profile") go("profile");
