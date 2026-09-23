@@ -218,20 +218,30 @@ function AmountField({ id, label, value, onChange, autoFocus = false }: { id: st
 }
 
 function DateWheel({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const ref = useRef<HTMLInputElement>(null);
   const initial = value.split("-");
-  const yearNow = new Date().getFullYear();
-  const year = initial[0] || "";
-  const month = initial[1] || "";
-  const day = initial[2] || "";
-  const change = (part: "year" | "month" | "day", next: string) => {
-    const date = { year, month, day, [part]: next };
-    if (!date.year || !date.month || !date.day) { onChange(`${date.year}-${date.month}-${date.day}`); return; }
-    const maxDay = new Date(Number(date.year), Number(date.month), 0).getDate();
-    const safeDay = String(Math.min(Number(date.day), maxDay)).padStart(2, "0");
-    onChange(`${date.year}-${date.month}-${safeDay}`);
+  const stored = initial[0]?.length === 4 ? `${initial[2] || ""}${initial[1] || ""}${initial[0]}` : "";
+  const [digits, setDigits] = useState(stored);
+  useEffect(() => { const timer = window.setTimeout(() => ref.current?.focus(), 180); return () => window.clearTimeout(timer); }, []);
+  const emit = (raw: string) => {
+    setDigits(raw);
+    const day = raw.slice(0, 2), month = raw.slice(2, 4), year = raw.slice(4, 8);
+    if (raw.length === 8) {
+      const maxDay = new Date(Number(year), Number(month) || 1, 0).getDate();
+      const safeDay = String(Math.min(Number(day), maxDay)).padStart(2, "0");
+      const safeMonth = String(Math.min(Math.max(Number(month), 1), 12)).padStart(2, "0");
+      onChange(`${year}-${safeMonth}-${safeDay}`);
+    } else {
+      onChange(`${year}-${month}-${day}`);
+    }
   };
-  const selectClass = "h-12 min-w-0 flex-1 appearance-none bg-card px-2 text-center text-base font-semibold text-foreground outline-none";
-  return <FormField label="Date of birth"><div className="grid grid-cols-3 divide-x divide-border overflow-hidden rounded-lg border border-border bg-card"><select aria-label="Birth day" value={day} onChange={(event) => change("day", event.target.value)} className={selectClass}><option value="">DD</option>{Array.from({ length: 31 }, (_, index) => String(index + 1).padStart(2, "0")).map((item) => <option key={item}>{item}</option>)}</select><select aria-label="Birth month" value={month} onChange={(event) => change("month", event.target.value)} className={selectClass}><option value="">MM</option>{Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0")).map((item) => <option key={item} value={item}>{item}</option>)}</select><select aria-label="Birth year" value={year} onChange={(event) => change("year", event.target.value)} className={selectClass}><option value="">YYYY</option>{Array.from({ length: 83 }, (_, index) => String(yearNow - 18 - index)).map((item) => <option key={item}>{item}</option>)}</select></div></FormField>;
+  const boxes = digits.padEnd(8, " ").slice(0, 8).split("");
+  const hints = ["D", "D", "M", "M", "Y", "Y", "Y", "Y"];
+  const renderBox = (index: number) => {
+    const filled = boxes[index].trim();
+    return <span key={index} className={`flex h-12 w-9 items-center justify-center rounded-lg border text-base font-semibold ${filled ? "border-primary bg-primary-soft text-foreground" : "border-input bg-background text-muted-foreground/40"}`}>{filled || hints[index]}</span>;
+  };
+  return <FormField label="Date of birth"><div className="relative" onClick={() => ref.current?.focus()}><input ref={ref} aria-label="Date of birth" inputMode="numeric" pattern="[0-9]*" autoComplete="bday" value={digits} onChange={(event) => emit(event.target.value.replace(/\D/g, "").slice(0, 8))} className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0" /><div className="flex items-center gap-2 py-1">{renderBox(0)}{renderBox(1)}<span className="text-muted-foreground/40">/</span>{renderBox(2)}{renderBox(3)}<span className="text-muted-foreground/40">/</span>{renderBox(4)}{renderBox(5)}{renderBox(6)}{renderBox(7)}</div></div><p className="mt-1 text-xs text-muted-foreground">Type your birth date — DD MM YYYY</p></FormField>;
 }
 
 function QuestionPage({ state, update }: { state: LoanJourneyState; update: (patch: Partial<LoanJourneyState>) => void }) {
