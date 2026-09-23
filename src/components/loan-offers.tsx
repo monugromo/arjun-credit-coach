@@ -195,7 +195,7 @@ function IntroPage({ onStart }: { onStart: () => void }) {
           <p className="mt-5 text-center text-sm font-medium text-muted-foreground">Compare offers from 30+ lenders</p>
         </div>
       </div>
-      <div className="shrink-0 border-t border-border bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3">
+      <div className="shrink-0 bg-card px-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3">
         <Button onClick={onStart} className="mx-auto h-[54px] w-full max-w-[361px] rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground hover:bg-primary-deep/90">View my offers</Button>
       </div>
     </div>
@@ -241,7 +241,7 @@ function DateWheel({ value, onChange }: { value: string; onChange: (value: strin
     const filled = boxes[index].trim();
     return <span key={index} className={`flex h-11 w-8 items-center justify-center rounded-lg border text-base font-semibold ${filled ? "border-foreground/30 bg-background text-foreground" : "border-input bg-background text-muted-foreground/40"}`}>{filled || hints[index]}</span>;
   };
-  return <FormField label="Date of birth"><div className="relative" onClick={() => ref.current?.focus()}><input ref={ref} aria-label="Date of birth" inputMode="numeric" pattern="[0-9]*" autoComplete="bday" value={digits} onChange={(event) => emit(event.target.value.replace(/\D/g, "").slice(0, 8))} className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0" /><div className="flex items-center gap-1.5 py-1">{renderBox(0)}{renderBox(1)}{renderBox(2)}{renderBox(3)}{renderBox(4)}{renderBox(5)}{renderBox(6)}{renderBox(7)}</div></div><p className="mt-1 text-xs text-muted-foreground">Type your birth date — DD MM YYYY</p></FormField>;
+  return <FormField label="Date of birth"><div className="relative" onClick={() => ref.current?.focus()}><input ref={ref} aria-label="Date of birth" inputMode="numeric" pattern="[0-9]*" autoComplete="bday" value={digits} onChange={(event) => emit(event.target.value.replace(/\D/g, "").slice(0, 8))} className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0" /><div className="flex items-center gap-1">{renderBox(0)}{renderBox(1)}<span className="pb-0.5 text-base font-medium text-muted-foreground/50">/</span>{renderBox(2)}{renderBox(3)}<span className="pb-0.5 text-base font-medium text-muted-foreground/50">/</span>{renderBox(4)}{renderBox(5)}{renderBox(6)}{renderBox(7)}</div></div></FormField>;
 }
 
 function QuestionPage({ state, update }: { state: LoanJourneyState; update: (patch: Partial<LoanJourneyState>) => void }) {
@@ -463,7 +463,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <AppHeader onBack={onBack} onEdit={() => { setEditingDetails(true); update({ step: "details" }); }} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {noBureau ? <>
-          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">You haven't been rejected</h2><p className="mt-1 text-sm text-muted-foreground">You just don't have a credit score yet. A credit card is the fastest way to build one.</p></header>
+          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">Let's make you loan ready</h2><p className="mt-1 text-sm text-muted-foreground">You just don't have a credit score yet. A credit card is the fastest way to build one.</p></header>
           <div className="mb-6"><CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} /></div>
           <header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header>
           <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat("ntc", offer.lender)} />)}</div>{locked.length > 5 && <Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button>}</section>
