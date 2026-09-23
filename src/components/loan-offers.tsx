@@ -337,7 +337,21 @@ function OfferCard({ offer, featured, leadStatus, notice, onApply }: { offer: Of
 }
 
 function LockedCard({ offer, onClick, contacted }: { offer: LockedOffer; onClick: () => void; contacted?: boolean }) {
-  return <Button variant="ghost" onClick={onClick} className={`h-auto w-full justify-start rounded-lg border px-3 py-3 text-left shadow-none ${contacted ? "border-border bg-muted/60 hover:bg-muted/70" : "border-border bg-card hover:bg-muted/50"}`}><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className={`truncate text-sm font-bold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className={`mt-1.5 block text-xs font-semibold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{contacted ? "Checked — try another loan" : offer.distance}</span></span></Button>;
+  return (
+    <Button variant="ghost" onClick={onClick} className={`h-auto w-full rounded-lg border px-3 py-3 text-left shadow-sm ${contacted ? "border-border bg-muted/60 hover:bg-muted/70" : "border-border bg-card hover:bg-muted/50"}`}>
+      <div className="flex w-full items-start gap-3">
+        <LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" />
+        <div className="min-w-0 flex-1 text-left">
+          <div className="flex items-center gap-1.5">
+            <span className={`truncate text-sm font-bold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{offer.lender}</span>
+          </div>
+          <p className="text-[11px] font-normal text-muted-foreground">{offer.product}</p>
+          <p className={`mt-1.5 text-xs font-semibold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{contacted ? "Checked — try another loan" : offer.distance}</p>
+        </div>
+        <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+      </div>
+    </Button>
+  );
 }
 
 type ApplicationFilter = "All" | "Pending" | "Approved" | "Disbursed" | "Rejected";
