@@ -400,7 +400,7 @@ const UNITY_CARD: Offer = {
 
 function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowMore: () => void }) {
   return (
-    <section className="overflow-hidden rounded-xl border border-border bg-card">
+    <section className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
       <div className="relative bg-primary-deep/5 px-4 pb-4 pt-4">
         <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
         <h3 className="font-display mt-3 text-[22px] font-bold leading-[28px] text-foreground">Roarbank UPI Credit Card</h3>
