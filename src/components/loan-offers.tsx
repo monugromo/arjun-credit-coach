@@ -339,7 +339,42 @@ function NTCOffers({ onChat }: { onChat: () => void }) {
   return <div><header className="mb-5"><h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">Start without a credit score</h2><p className="mt-1 text-sm text-muted-foreground">Lenders that consider new-to-credit customers.</p></header><div className="space-y-2">{NTC_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-16 items-center gap-3 rounded-lg border border-border bg-card px-3 py-3"><LenderLogo name={lender.name} logo={lender.logo} size="sm" /><div className="flex-1 text-sm font-bold text-foreground">{lender.name}</div></div>)}</div><Button variant="outline" onClick={onChat} className="mt-4 h-12 w-full rounded-lg">Build my credit score</Button></div>;
 }
 
-export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: DemoUser; state: LoanJourneyState; setState: LoanStateSetter; onChat: (kind: "recommend" | "issues" | "time" | "ntc" | "apply", lender?: string) => void; onBack: () => void }) {
+const UNITY_CARD: Offer = {
+  id: "card-unity-roar",
+  lender: "Unity Small Finance Bank",
+  product: "Roarbank UPI Credit Card",
+  approvalTime: "Instant",
+  amount: "Up to ₹50,000 limit",
+  rate: "Lifetime free",
+  speed: "Instant approval",
+  channel: "App based",
+};
+
+function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowMore: () => void }) {
+  return (
+    <section className="overflow-hidden rounded-xl border border-border bg-card">
+      <div className="relative bg-primary-deep/5 px-4 pb-4 pt-4">
+        <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
+        <h3 className="font-display mt-3 text-[22px] font-bold leading-[28px] text-foreground">Roarbank UPI Credit Card</h3>
+        <p className="text-sm text-muted-foreground">Unity Small Finance Bank</p>
+        <img src={unityCardArt} alt="Roarbank UPI Credit Card" loading="lazy" width={1024} height={656} className="pointer-events-none absolute -right-6 top-6 w-32 rotate-6 drop-shadow-lg" />
+        <p className="mt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {["No credit history needed", "Zero joining fee", "Zero annual fee", "Up to 20% cashback"].map((feature) => (
+            <span key={feature} className="rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground">{feature}</span>
+          ))}
+        </div>
+      </div>
+      <div className="px-4 pb-4 pt-3">
+        <p className="text-center text-sm text-muted-foreground">High approval: <span className="font-bold text-foreground">99% new-to-credit users got this card</span></p>
+        <Button onClick={onApply} className="mt-3 h-[54px] w-full rounded-lg bg-primary-deep text-base font-bold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
+        <Button variant="outline" onClick={onKnowMore} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">Know more</Button>
+      </div>
+    </section>
+  );
+}
+
+export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: DemoUser; state: LoanJourneyState; setState: LoanStateSetter; onChat: (kind: "recommend" | "issues" | "time" | "ntc" | "apply" | "card", lender?: string) => void; onBack: () => void }) {
   const [sheet, setSheet] = useState<"amount" | null>(null);
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
   const [showAll, setShowAll] = useState(false);
