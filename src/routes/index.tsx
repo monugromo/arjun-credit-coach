@@ -2162,11 +2162,20 @@ function ChatScreen(props: {
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [chat, typing]);
 
+  // Locked-loan hand-off: prefill the composer so the user sends it themselves.
+  useEffect(() => {
+    if (props.loanDraft) setDraft(`I want to apply for this ${props.loanDraft.lender} loan.`);
+  }, [props.loanDraft]);
+
   const send = () => {
     const text = draft.trim();
     if (!text) return;
     setChat((c) => [...c, { id: "u" + Date.now(), from: "user", kind: "text", text, time: nowTime() }]);
     setDraft("");
+    if (props.loanDraft) {
+      props.onLoanDraftSend(props.loanDraft.kind, props.loanDraft.lender);
+      return;
+    }
     const isNTC = user.key === "ntc";
     const q = text.toLowerCase();
     const reply = async (items: Array<Omit<ChatMsg, "time" | "id">>) => {
