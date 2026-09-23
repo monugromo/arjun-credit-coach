@@ -294,7 +294,7 @@ function OfferCard({ offer, featured, leadStatus, notice, onApply }: { offer: Of
   const [detailTab, setDetailTab] = useState<"details" | "features">("details");
 
   return (
-    <article className={`overflow-hidden rounded-lg border bg-card ${featured ? "border-primary/40" : "border-border"}`}>
+    <article className={`overflow-hidden rounded-lg border bg-card shadow-sm ${featured ? "border-primary/40" : "border-border"}`}>
       <div className="relative flex min-h-16 items-center gap-3 border-b border-border px-4 py-3">
         <LenderLogo name={offer.lender} logo={offer.logo} size="sm" />
         <div className="min-w-0 flex-1 pr-20">
