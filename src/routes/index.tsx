@@ -314,13 +314,9 @@ function Index() {
         await streamCoach([{ id: "loan-rec" + Date.now(), from: "coach", kind: "text", text: "Moneyview is your strongest match. It has the highest approval chance and may disburse within 24 hours. Apply to one lender at a time to limit credit enquiries." }]);
         return;
       }
-      if (kind === "time") {
-        setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `I want to apply for this ${lender} loan.`, time: nowTime() }]);
-        await streamCoach([
-          { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: "Aapki credit file abhi nayi hai — report mein sirf 8 mahine ki history dikh rahi hai. Thoda aur time aur clean history ke saath yeh unlock ho jayega." },
-          { id: "loan-time2" + Date.now(), from: "coach", kind: "text", text: "There is nothing negative on your report. Your credit file is simply new." },
-          { id: "loan-time3" + Date.now(), from: "coach", kind: "text", text: "Prefr and Tez may become available around January. I’ll keep track for you." },
-        ]);
+      if (kind === "time" || kind === "issues") {
+        // Locked lender: prefill the composer so the user sends it themselves.
+        setLoanChatDraft({ kind, lender });
         return;
       }
       if (kind === "ntc") {
