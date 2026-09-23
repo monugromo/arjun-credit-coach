@@ -348,6 +348,16 @@ function Index() {
         ]);
         return;
       }
+      if (kind === "card") {
+        setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `How do I apply for the ${lender}?`, time: nowTime() }]);
+        await streamCoach([
+          { id: "loan-card1" + Date.now(), from: "coach", kind: "text", text: `${lender} ke liye credit history ki zaroorat nahi — isliye aap abhi eligible hain.` },
+          { id: "loan-card2" + Date.now(), from: "coach", kind: "text", text: "Features: zero joining fee, zero annual fee, UPI par card chalega, aur selected categories mein 20% tak cashback." },
+          { id: "loan-card3" + Date.now(), from: "coach", kind: "text", text: "Apply karna simple hai: Apply now dabaiye, PAN aur Aadhaar se KYC kariye, video KYC complete kariye — approval instant milta hai aur card UPI mein turant add ho jaata hai." },
+          { id: "loan-card4" + Date.now(), from: "coach", kind: "text", text: "Har mahine limit ka 30% se kam use kariye aur full payment time par kariye — 4-6 mahine mein aapka first score ban jayega." },
+        ]);
+        return;
+      }
       if (kind === "apply") {
         setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: "i want to apply for loan", time: nowTime() }]);
         await streamCoach([
