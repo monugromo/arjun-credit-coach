@@ -190,7 +190,7 @@ function IntroPage({ onStart }: { onStart: () => void }) {
         <div className="mx-auto max-w-sm">
           <h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">Find the right loan for you</h2>
           <div className="mt-7 grid grid-cols-3 gap-3">
-            {INTRO_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-border bg-card px-2 py-3"><img src={lender.logo} alt={`${lender.name} logo`} className="h-7 max-w-full object-contain grayscale" /><span className="text-center text-[11px] font-medium leading-tight text-muted-foreground">{lender.name}</span></div>)}
+            {INTRO_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-border bg-card px-2 py-3 shadow-sm"><img src={lender.logo} alt={`${lender.name} logo`} className="h-7 max-w-full object-contain grayscale" /><span className="text-center text-[11px] font-medium leading-tight text-muted-foreground">{lender.name}</span></div>)}
           </div>
           <p className="mt-5 text-center text-sm font-medium text-muted-foreground">Compare offers from 30+ lenders</p>
         </div>
@@ -239,9 +239,9 @@ function DateWheel({ value, onChange }: { value: string; onChange: (value: strin
   const hints = ["D", "D", "M", "M", "Y", "Y", "Y", "Y"];
   const renderBox = (index: number) => {
     const filled = boxes[index].trim();
-    return <span key={index} className={`flex h-12 w-9 items-center justify-center rounded-lg border text-base font-semibold ${filled ? "border-primary bg-primary-soft text-foreground" : "border-input bg-background text-muted-foreground/40"}`}>{filled || hints[index]}</span>;
+    return <span key={index} className={`flex h-11 w-8 items-center justify-center rounded-lg border text-base font-semibold ${filled ? "border-foreground/30 bg-background text-foreground" : "border-input bg-background text-muted-foreground/40"}`}>{filled || hints[index]}</span>;
   };
-  return <FormField label="Date of birth"><div className="relative" onClick={() => ref.current?.focus()}><input ref={ref} aria-label="Date of birth" inputMode="numeric" pattern="[0-9]*" autoComplete="bday" value={digits} onChange={(event) => emit(event.target.value.replace(/\D/g, "").slice(0, 8))} className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0" /><div className="flex items-center gap-2 py-1">{renderBox(0)}{renderBox(1)}<span className="text-muted-foreground/40">/</span>{renderBox(2)}{renderBox(3)}<span className="text-muted-foreground/40">/</span>{renderBox(4)}{renderBox(5)}{renderBox(6)}{renderBox(7)}</div></div><p className="mt-1 text-xs text-muted-foreground">Type your birth date — DD MM YYYY</p></FormField>;
+  return <FormField label="Date of birth"><div className="relative" onClick={() => ref.current?.focus()}><input ref={ref} aria-label="Date of birth" inputMode="numeric" pattern="[0-9]*" autoComplete="bday" value={digits} onChange={(event) => emit(event.target.value.replace(/\D/g, "").slice(0, 8))} className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0" /><div className="flex items-center gap-1.5 py-1">{renderBox(0)}{renderBox(1)}{renderBox(2)}{renderBox(3)}{renderBox(4)}{renderBox(5)}{renderBox(6)}{renderBox(7)}</div></div><p className="mt-1 text-xs text-muted-foreground">Type your birth date — DD MM YYYY</p></FormField>;
 }
 
 function QuestionPage({ state, update }: { state: LoanJourneyState; update: (patch: Partial<LoanJourneyState>) => void }) {
@@ -254,7 +254,7 @@ function PincodeInput({ value, onChange }: { value: string; onChange: (value: st
   const ref = useRef<HTMLInputElement>(null);
   const digits = value.padEnd(6, " ").slice(0, 6).split("");
   useEffect(() => { const timer = window.setTimeout(() => ref.current?.focus(), 180); return () => window.clearTimeout(timer); }, []);
-  return <div><Button variant="link" onClick={() => onChange("110001")} className="mb-4 h-auto px-0"><LocateFixed />Use my location</Button><div className="relative" onClick={() => ref.current?.focus()}><input ref={ref} aria-label="Pincode" inputMode="numeric" pattern="[0-9]*" autoComplete="postal-code" value={value} onChange={(event) => onChange(event.target.value.replace(/\D/g, "").slice(0, 6))} className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0" /><div className="flex gap-2">{digits.map((digit, index) => <span key={index} className={`flex h-12 flex-1 items-center justify-center rounded-lg border text-base font-semibold text-foreground ${digit.trim() ? "border-primary bg-primary-soft" : "border-input bg-background"}`}>{digit}</span>)}</div></div></div>;
+  return <div><Button variant="link" onClick={() => onChange("110001")} className="mb-4 h-auto px-0"><LocateFixed />Use my location</Button><div className="relative" onClick={() => ref.current?.focus()}><input ref={ref} aria-label="Pincode" inputMode="numeric" pattern="[0-9]*" autoComplete="postal-code" value={value} onChange={(event) => onChange(event.target.value.replace(/\D/g, "").slice(0, 6))} className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0" /><div className="flex gap-2">{digits.map((digit, index) => <span key={index} className={`flex h-11 flex-1 items-center justify-center rounded-lg border text-base font-semibold text-foreground ${digit.trim() ? "border-foreground/30 bg-background" : "border-input bg-background"}`}>{digit}</span>)}</div></div></div>;
 }
 
 function monthlyRate(rate: string) {
@@ -270,7 +270,7 @@ function OfferCard({ offer, featured, leadStatus, notice, onApply }: { offer: Of
   const [detailTab, setDetailTab] = useState<"details" | "features">("details");
 
   return (
-    <article className={`overflow-hidden rounded-lg border bg-card ${featured ? "border-primary/40" : "border-border"}`}>
+    <article className={`overflow-hidden rounded-lg border bg-card shadow-sm ${featured ? "border-primary/40" : "border-border"}`}>
       <div className="relative flex min-h-16 items-center gap-3 border-b border-border px-4 py-3">
         <LenderLogo name={offer.lender} logo={offer.logo} size="sm" />
         <div className="min-w-0 flex-1 pr-20">
@@ -313,7 +313,21 @@ function OfferCard({ offer, featured, leadStatus, notice, onApply }: { offer: Of
 }
 
 function LockedCard({ offer, onClick, contacted }: { offer: LockedOffer; onClick: () => void; contacted?: boolean }) {
-  return <Button variant="ghost" onClick={onClick} className={`h-auto w-full justify-start rounded-lg border px-3 py-3 text-left shadow-none ${contacted ? "border-border bg-muted/60 hover:bg-muted/70" : "border-border bg-card hover:bg-muted/50"}`}><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className={`truncate text-sm font-bold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className={`mt-1.5 block text-xs font-semibold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{contacted ? "Checked — try another loan" : offer.distance}</span></span></Button>;
+  return (
+    <Button variant="ghost" onClick={onClick} className={`h-auto w-full rounded-lg border px-3 py-3 text-left shadow-sm ${contacted ? "border-border bg-muted/60 hover:bg-muted/70" : "border-border bg-card hover:bg-muted/50"}`}>
+      <div className="flex w-full items-start gap-3">
+        <LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" />
+        <div className="min-w-0 flex-1 text-left">
+          <div className="flex items-center gap-1.5">
+            <span className={`truncate text-sm font-bold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{offer.lender}</span>
+          </div>
+          <p className="text-[11px] font-normal text-muted-foreground">{offer.product}</p>
+          <p className={`mt-1.5 text-xs font-semibold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{contacted ? "Checked — try another loan" : offer.distance}</p>
+        </div>
+        <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+      </div>
+    </Button>
+  );
 }
 
 type ApplicationFilter = "All" | "Pending" | "Approved" | "Disbursed" | "Rejected";
@@ -338,7 +352,7 @@ function ApplicationsScreen({ applied, onBack }: { applied: Record<string, LeadS
   const sampleApplications = SAMPLE_APPLICATIONS.filter(({ offer }) => !liveApplications.some((item) => item.offer.id === offer.id));
   const applications = [...liveApplications, ...sampleApplications];
   const visible = filter === "All" ? applications : applications.filter((item) => item.status === filter);
-  return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={onBack} /><div className="flex-1 overflow-y-auto px-4 pb-6 pt-5"><h2 className="font-display text-xl font-bold text-foreground">Your applications</h2><div className="mt-4 flex gap-2 overflow-x-auto pb-1">{(["All", "Pending", "Approved", "Disbursed", "Rejected"] as ApplicationFilter[]).map((item) => <Button key={item} variant={filter === item ? "default" : "outline"} onClick={() => setFilter(item)} className={`h-9 shrink-0 rounded-full px-4 shadow-none ${filter === item ? "bg-primary-deep text-primary-foreground hover:bg-primary-deep/90" : "bg-card"}`}>{item}</Button>)}</div>{visible.length > 0 ? <div className="mt-4 space-y-3">{visible.map(({ offer, status }) => <article key={`${offer.id}-${status}`} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3"><LenderLogo name={offer.lender} logo={offer.logo} size="sm" /><div className="min-w-0 flex-1"><h3 className="truncate text-sm font-bold text-foreground">{offer.lender}</h3><p className="text-xs text-muted-foreground">{offer.product} · {offer.amount}</p></div><p className={`whitespace-nowrap text-sm font-semibold ${status === "Rejected" ? "text-destructive" : "text-primary-deep"}`}>{status}</p></article>)}</div> : <div className="mt-8 rounded-lg border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">No {filter === "All" ? "applications" : filter.toLowerCase() + " applications"} yet</div>}</div></div>;
+  return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={onBack} /><div className="flex-1 overflow-y-auto px-4 pb-6 pt-5"><h2 className="font-display text-xl font-bold text-foreground">Your applications</h2><div className="mt-4 flex gap-2 overflow-x-auto pb-1">{(["All", "Pending", "Approved", "Disbursed", "Rejected"] as ApplicationFilter[]).map((item) => <Button key={item} variant={filter === item ? "default" : "outline"} onClick={() => setFilter(item)} className={`h-9 shrink-0 rounded-full px-4 shadow-none ${filter === item ? "bg-primary-deep text-primary-foreground hover:bg-primary-deep/90" : "bg-card"}`}>{item}</Button>)}</div>{visible.length > 0 ? <div className="mt-4 space-y-3">{visible.map(({ offer, status }) => <article key={`${offer.id}-${status}`} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3 shadow-sm"><LenderLogo name={offer.lender} logo={offer.logo} size="sm" /><div className="min-w-0 flex-1"><h3 className="truncate text-sm font-bold text-foreground">{offer.lender}</h3><p className="text-xs text-muted-foreground">{offer.product} · {offer.amount}</p></div><p className={`whitespace-nowrap text-sm font-semibold ${status === "Rejected" ? "text-destructive" : "text-primary-deep"}`}>{status}</p></article>)}</div> : <div className="mt-8 rounded-lg border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">No {filter === "All" ? "applications" : filter.toLowerCase() + " applications"} yet</div>}</div></div>;
 }
 
 function InAppBrowser({ offer, onClose }: { offer: Offer; onClose: () => void }) {
@@ -346,7 +360,7 @@ function InAppBrowser({ offer, onClose }: { offer: Offer; onClose: () => void })
 }
 
 function NTCOffers({ onChat }: { onChat: () => void }) {
-  return <div><header className="mb-5"><h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">Start without a credit score</h2><p className="mt-1 text-sm text-muted-foreground">Lenders that consider new-to-credit customers.</p></header><div className="space-y-2">{NTC_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-16 items-center gap-3 rounded-lg border border-border bg-card px-3 py-3"><LenderLogo name={lender.name} logo={lender.logo} size="sm" /><div className="flex-1 text-sm font-bold text-foreground">{lender.name}</div></div>)}</div><Button variant="outline" onClick={onChat} className="mt-4 h-12 w-full rounded-lg">Build my credit score</Button></div>;
+  return <div><header className="mb-5"><h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">Start without a credit score</h2><p className="mt-1 text-sm text-muted-foreground">Lenders that consider new-to-credit customers.</p></header><div className="space-y-2">{NTC_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-16 items-center gap-3 rounded-lg border border-border bg-card px-3 py-3 shadow-sm"><LenderLogo name={lender.name} logo={lender.logo} size="sm" /><div className="flex-1 text-sm font-bold text-foreground">{lender.name}</div></div>)}</div></div>;
 }
 
 const UNITY_CARD: Offer = {
@@ -362,7 +376,7 @@ const UNITY_CARD: Offer = {
 
 function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowMore: () => void }) {
   return (
-    <section className="overflow-hidden rounded-xl border border-border bg-card">
+    <section className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
       <div className="relative bg-primary-deep/5 px-4 pb-4 pt-4">
         <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
         <h3 className="font-display mt-3 text-[22px] font-bold leading-[28px] text-foreground">Roarbank UPI Credit Card</h3>
@@ -378,7 +392,7 @@ function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowM
       <div className="px-4 pb-4 pt-3">
         <p className="text-center text-sm text-muted-foreground">High approval: <span className="font-bold text-foreground">99% new-to-credit users got this card</span></p>
         <Button onClick={onApply} className="mt-3 h-[54px] w-full rounded-lg bg-primary-deep text-base font-bold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
-        <Button variant="outline" onClick={onKnowMore} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">Know more</Button>
+        <button type="button" onClick={onKnowMore} className="mt-3 w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground">Know more</button>
       </div>
     </section>
   );
@@ -449,19 +463,18 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <AppHeader onBack={onBack} onEdit={() => { setEditingDetails(true); update({ step: "details" }); }} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {noBureau ? <>
-          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">Aapka credit score abhi nahi hai</h2><p className="mt-1 text-sm text-muted-foreground">Yeh rejection nahi hai. Credit card se score banana sabse tez tareeka hai.</p></header>
+          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">You haven't been rejected</h2><p className="mt-1 text-sm text-muted-foreground">You just don't have a credit score yet. A credit card is the fastest way to build one.</p></header>
           <div className="mb-6"><CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} /></div>
           <header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header>
           <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat("ntc", offer.lender)} />)}</div>{locked.length > 5 && <Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button>}</section>
-          <Button variant="outline" onClick={() => onChat("ntc")} className="mt-4 h-12 w-full rounded-lg">Build my credit score</Button>
-        </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center">
+        </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center shadow-sm">
           <h3 className="font-display text-lg font-bold text-foreground">We couldn’t check lenders just now</h3>
           <p className="mt-1 text-sm text-muted-foreground">Yeh network issue hai — aapki eligibility par koi asar nahi.</p>
           <Button onClick={retryCheck} className="mt-4 h-12 w-full rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground hover:bg-primary-deep/90">Retry</Button>
         </div> : <>
           <header className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2><Button variant="outline" onClick={() => setShowApplications(true)} className="h-9 shrink-0 rounded-lg bg-card px-3 text-sm font-semibold shadow-none">Applications</Button></header>
-          {hasStale && <div className="mb-3 rounded-lg border border-border bg-muted/40 p-3"><p className="text-xs font-semibold text-foreground">We couldn’t check lenders just now — showing your results as of {state.lastCheckedAt}.</p><Button variant="link" onClick={retryCheck} className="h-auto px-0 text-xs">Retry</Button></div>}
-          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} leadStatus={state.applied[offer.id]} notice={applyErrors[offer.id]} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">Nothing available right now — but we know why</h3><p className="mt-1 text-sm text-muted-foreground">Abhi koi lender match nahi hua. Neeche dekhiye kya unlock ho sakta hai.</p><Button variant="outline" onClick={() => onChat("apply")} className="mt-4 h-12 w-full rounded-lg">Talk to Arjun</Button></div>}
+          {hasStale && <div className="mb-3 rounded-lg border border-border bg-muted/40 p-3 shadow-sm"><p className="text-xs font-semibold text-foreground">We couldn’t check lenders just now — showing your results as of {state.lastCheckedAt}.</p><Button variant="link" onClick={retryCheck} className="h-auto px-0 text-xs">Retry</Button></div>}
+          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} leadStatus={state.applied[offer.id]} notice={applyErrors[offer.id]} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5 shadow-sm"><h3 className="font-display text-lg font-bold text-foreground">Nothing available right now — but we know why</h3><p className="mt-1 text-sm text-muted-foreground">Abhi koi lender match nahi hua. Neeche dekhiye kya unlock ho sakta hai.</p><Button variant="outline" onClick={() => onChat("apply")} className="mt-4 h-12 w-full rounded-lg">Talk to Arjun</Button></div>}
           {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{blockedLender && <p className="mt-2 rounded-lg border border-border bg-muted/60 p-3 text-xs text-foreground">We have checked with {blockedLender} — you are not eligible right now. Please try another loan or talk to Arjun.</p>}<Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button></section>}
         </>}
       </div>
