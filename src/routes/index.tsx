@@ -358,15 +358,6 @@ function Index() {
         ]);
         return;
       }
-      setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `I want to apply for this ${lender} loan.`, time: nowTime() }]);
-      await streamCoach([{ id: "loan-lock0" + Date.now(), from: "coach", kind: "text", text: `Let me check with ${lender}, please wait…` }]);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      await streamCoach([
-        { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `${lender} se abhi approval nahi mila. Aapki report mein sabse bada issue ₹13,583 ka overdue hai Hari & Co ke saath — ise fix karke yeh loan unlock ho sakta hai.` },
-        { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Iske alawa report mein do aur issues hain: 2023 ka ek written-off account aur 94% card utilisation." },
-        { id: "loan-lock3" + Date.now(), from: "coach", kind: "text", text: "Start with the overdue balance because it has the highest impact. Should I draft an email to Hari & Co?" },
-        { id: "loan-quick" + Date.now(), from: "coach", kind: "loanQuickReplies" },
-      ]);
     })();
   };
 
