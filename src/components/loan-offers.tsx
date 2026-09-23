@@ -51,7 +51,7 @@ export interface LoanJourneyState {
   bureau: BureauState;
   bre: BreOutcome;
   lastCheckedAt: string;
-  lockedChatStarted: boolean;
+  lockedContacted: string[];
   work: WorkType;
   income: string;
   salaryMode: SalaryMode;
@@ -67,7 +67,7 @@ export const createLoanJourneyState = (firstVisit: boolean): LoanJourneyState =>
   bureau: "hit",
   bre: "ok",
   lastCheckedAt: "",
-  lockedChatStarted: false,
+  lockedContacted: [],
   work: "",
   income: "",
   salaryMode: "",
@@ -301,8 +301,8 @@ function OfferCard({ offer, featured, leadStatus, notice, onApply }: { offer: Of
   );
 }
 
-function LockedCard({ offer, onClick, blocked }: { offer: LockedOffer; onClick: () => void; blocked?: boolean }) {
-  return <Button variant="ghost" disabled={blocked} onClick={onClick} className="h-auto w-full justify-start rounded-lg border border-border bg-card px-3 py-3 text-left shadow-none hover:bg-muted/50 disabled:opacity-60"><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className="truncate text-sm font-bold text-foreground">{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className="mt-1.5 block text-xs font-semibold text-foreground">{blocked ? "Arjun is helping you with this" : offer.distance}</span></span></Button>;
+function LockedCard({ offer, onClick, contacted }: { offer: LockedOffer; onClick: () => void; contacted?: boolean }) {
+  return <Button variant="ghost" onClick={onClick} className={`h-auto w-full justify-start rounded-lg border px-3 py-3 text-left shadow-none ${contacted ? "border-border bg-muted/60 hover:bg-muted/70" : "border-border bg-card hover:bg-muted/50"}`}><LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" /><span className="ml-3 min-w-0 flex-1"><span className="flex items-center gap-1.5"><span className={`truncate text-sm font-bold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{offer.lender}</span><LockKeyhole className="h-3.5 w-3.5 text-muted-foreground" /></span><span className="block text-[11px] font-normal text-muted-foreground">{offer.product}</span><span className={`mt-1.5 block text-xs font-semibold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{contacted ? "Checked — try another loan" : offer.distance}</span></span></Button>;
 }
 
 type ApplicationFilter = "All" | "Pending" | "Approved" | "Disbursed" | "Rejected";
@@ -343,6 +343,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
   const [showAll, setShowAll] = useState(false);
   const [showAllLocked, setShowAllLocked] = useState(false);
+  const [blockedLender, setBlockedLender] = useState<string | null>(null);
   const [showApplications, setShowApplications] = useState(false);
   const [editingDetails, setEditingDetails] = useState(false);
   const [applyErrors, setApplyErrors] = useState<Record<string, string>>({});
@@ -375,10 +376,14 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
     setBrowserOffer(offer);
   };
   const handleUnlockTap = (offer: LockedOffer) => {
-    // First tap hands off to Arjun with a prefilled message; after that, further
-    // locked-lender taps are blocked so the user is not stuck in a loop.
-    if (state.lockedChatStarted) return;
-    update({ lockedChatStarted: true });
+    // First tap on a lender hands off to Arjun with a prefilled message; that
+    // lender is then marked checked — tapping it again just shows a notice.
+    if (state.lockedContacted.includes(offer.lender)) {
+      setBlockedLender(offer.lender);
+      return;
+    }
+    setBlockedLender(null);
+    update({ lockedContacted: [...state.lockedContacted, offer.lender] });
     onChat(offer.reason, offer.lender);
   };
   const retryCheck = () => update({ bre: "ok", step: "checking" });
@@ -409,7 +414,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
           <header className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2><Button variant="outline" onClick={() => setShowApplications(true)} className="h-9 shrink-0 rounded-lg bg-card px-3 text-sm font-semibold shadow-none">Applications</Button></header>
           {hasStale && <div className="mb-3 rounded-lg border border-border bg-muted/40 p-3"><p className="text-xs font-semibold text-foreground">We couldn’t check lenders just now — showing your results as of {state.lastCheckedAt}.</p><Button variant="link" onClick={retryCheck} className="h-auto px-0 text-xs">Retry</Button></div>}
           {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} leadStatus={state.applied[offer.id]} notice={applyErrors[offer.id]} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5"><h3 className="font-display text-lg font-bold text-foreground">Nothing available right now — but we know why</h3><p className="mt-1 text-sm text-muted-foreground">Abhi koi lender match nahi hua. Neeche dekhiye kya unlock ho sakta hai.</p><Button variant="outline" onClick={() => onChat("apply")} className="mt-4 h-12 w-full rounded-lg">Talk to Arjun</Button></div>}
-          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} blocked={state.lockedChatStarted} onClick={() => handleUnlockTap(offer)} />)}</div>{state.lockedChatStarted && <p className="mt-2 text-xs text-muted-foreground">Let’s fix one thing first — Arjun se baat jari hai.</p>}<Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button></section>}
+          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{blockedLender && <p className="mt-2 rounded-lg border border-border bg-muted/60 p-3 text-xs text-foreground">We have checked with {blockedLender} — you are not eligible right now. Please try another loan or talk to Arjun.</p>}<Button variant="outline" onClick={() => setShowAllLocked(!showAllLocked)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAllLocked ? <>View less<ChevronUp /></> : <>View more · 30+ lenders<ChevronDown /></>}</Button></section>}
         </>}
       </div>
       {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{[{ label: "₹25,000", value: "25000" }, { label: "₹50,000", value: "50000" }, { label: "₹1,00,000", value: "100000" }].map((option) => <Button key={option.label} variant={option.value === (state.loanAmount || "50000") ? "default" : "outline"} onClick={() => { update({ loanAmount: option.value }); setSheet(null); }} className={option.value === (state.loanAmount || "50000") ? "bg-primary-deep text-primary-foreground" : ""}>{option.label}</Button>)}</div></Sheet>}
