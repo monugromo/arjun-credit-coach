@@ -339,7 +339,7 @@ function Index() {
       }
       if (kind === "card") {
         setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `How do I apply for the ${lender}?`, time: nowTime() }]);
-        await streamCoach([{ id: "loan-card1" + Date.now(), from: "coach", kind: "text", text: "This card needs no credit history and has no joining or annual fee. Tap Apply now, then complete PAN, Aadhaar and video KYC." }]);
+        await streamCoach([{ id: "loan-card1" + Date.now(), from: "coach", kind: "text", text: lender.includes("Novio") ? "Start an FD from ₹2,000, then complete PAN, Aadhaar and video KYC. The card has zero joining and annual fees." : "This card needs no credit history and has no joining or annual fee. Tap Apply now, then complete PAN, Aadhaar and video KYC." }]);
         return;
       }
       if (kind === "apply") {

@@ -345,7 +345,7 @@ function ApplicationsScreen({ applied, onBack }: { applied: Record<string, LeadS
 }
 
 function InAppBrowser({ offer, onClose }: { offer: Offer; onClose: () => void }) {
-  return <div className="absolute inset-0 z-[70] flex flex-col bg-background"><div className="grid h-14 shrink-0 grid-cols-[72px_1fr_72px] items-center bg-primary-deep px-3 text-primary-foreground"><Button onClick={onClose} variant="ghost" className="justify-start px-0 text-primary-foreground hover:bg-transparent">Close</Button><div className="truncate text-center text-[15px] font-bold">{offer.lender}</div><ShieldCheck className="ml-auto h-4 w-4" /></div><div className="flex-1 overflow-y-auto"><div className="bg-primary-deep px-5 pb-8 pt-9 text-center text-primary-foreground"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-card p-2"><img src={offer.logo} alt={`${offer.lender} logo`} className="h-full w-full object-contain" /></div><h2 className="font-display mt-4 text-2xl font-bold">{offer.product}</h2></div><div className="p-4"><div className="rounded-lg border border-border bg-card p-5 shadow-sm"><div className="text-xs text-muted-foreground">Your eligible amount</div><div className="font-display mt-1 text-2xl font-bold text-foreground">{offer.amount}</div><Button className="mt-6 h-12 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue application</Button></div></div></div></div>;
+  return <div className="absolute inset-0 z-[70] flex flex-col bg-background"><div className="grid h-14 shrink-0 grid-cols-[72px_1fr_72px] items-center bg-primary-deep px-3 text-primary-foreground"><Button onClick={onClose} variant="ghost" className="justify-start px-0 text-primary-foreground hover:bg-transparent">Close</Button><div className="truncate text-center text-[15px] font-bold">{offer.lender}</div><ShieldCheck className="ml-auto h-4 w-4" /></div><div className="flex-1 overflow-y-auto"><div className="bg-primary-deep px-5 pb-8 pt-9 text-center text-primary-foreground"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-card p-2">{offer.logo ? <img src={offer.logo} alt={`${offer.lender} logo`} className="h-full w-full object-contain" /> : <span className="text-lg font-black text-primary-deep">{offer.lender.slice(0, 1)}</span>}</div><h2 className="font-display mt-4 text-2xl font-bold">{offer.product}</h2></div><div className="p-4"><div className="rounded-lg border border-border bg-card p-5 shadow-sm"><div className="text-xs text-muted-foreground">Your eligible amount</div><div className="font-display mt-1 text-2xl font-bold text-foreground">{offer.amount}</div><Button className="mt-6 h-12 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue application</Button></div></div></div></div>;
 }
 
 const UNITY_CARD: Offer = {
@@ -356,6 +356,17 @@ const UNITY_CARD: Offer = {
   amount: "Up to ₹50,000 limit",
   rate: "Lifetime free",
   speed: "Instant approval",
+  channel: "App based",
+};
+
+const NOVIO_CARD: Offer = {
+  id: "card-sbm-novio",
+  lender: "SBM Bank India",
+  product: "SBM Novio Credit Card",
+  approvalTime: "Instant",
+  amount: "FD from ₹2,000",
+  rate: "Zero annual fee",
+  speed: "Digital application",
   channel: "App based",
 };
 
@@ -371,6 +382,33 @@ function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowM
         <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {["No credit history needed", "Zero joining fee", "Zero annual fee", "Up to 20% cashback"].map((feature) => (
+            <span key={feature} className="rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground">{feature}</span>
+          ))}
+        </div>
+      </div>
+      <div className="px-4 pb-4 pt-3">
+        <Button onClick={onApply} className="h-[54px] w-full rounded-lg bg-primary-deep text-base font-bold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
+        <button type="button" onClick={onKnowMore} className="mt-3 w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground">Talk to Arjun</button>
+      </div>
+    </section>
+  );
+}
+
+function NovioCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowMore: () => void }) {
+  return (
+    <section className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <div className="relative bg-muted/40 px-4 pb-4 pt-4">
+        <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">New to credit</span>
+        <div className="mt-3 flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h3 className="font-display text-lg font-bold leading-6 text-foreground">SBM Novio Credit Card</h3>
+            <p className="mt-1 text-sm text-muted-foreground">SBM Bank India</p>
+          </div>
+          <div aria-label="Novio" className="shrink-0 text-xl font-black text-primary-deep">novio</div>
+        </div>
+        <p className="mt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {["FD from ₹2,000", "Up to 7% p.a. on FD", "Zero joining fee", "Zero annual fee"].map((feature) => (
             <span key={feature} className="rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground">{feature}</span>
           ))}
         </div>
@@ -458,7 +496,7 @@ export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { us
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {noBureau ? <>
           <header className="mb-5"><h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">You don't have a credit score yet</h2><p className="mt-1 text-sm text-muted-foreground">Start with a credit card.</p></header>
-          <div className="mb-6">{user.noCreditCardOffer ? <CreditCardEmptyState onChat={() => onChat("card")} /> : <CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} />}</div>
+          <div className="mb-6">{user.noCreditCardOffer ? <CreditCardEmptyState onChat={() => onChat("card")} /> : <div className="space-y-4"><CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} /><NovioCardOffer onApply={() => setBrowserOffer(NOVIO_CARD)} onKnowMore={() => onChat("card", "SBM Novio Credit Card")} /></div>}</div>
         </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center shadow-sm">
           <h3 className="font-display text-lg font-bold text-foreground">We couldn’t check lenders just now</h3>
           <p className="mt-1 text-sm text-muted-foreground">Yeh network issue hai - aapki eligibility par koi asar nahi.</p>
