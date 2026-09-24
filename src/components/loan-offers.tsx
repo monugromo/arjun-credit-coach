@@ -406,7 +406,7 @@ function CreditCardEmptyState({ onChat }: { onChat: () => void }) {
 
 function CreditJourneyTracker() {
   const steps = ["Get first credit line", "Repay on time for 6 months", "Loans unlock"];
-  return <ol className="mb-5 grid grid-cols-3 gap-2" aria-label="Credit-building steps">{steps.map((step, index) => <li key={step} className="min-w-0"><div className={`mb-2 h-1 rounded-full ${index === 0 ? "bg-primary-deep" : "bg-muted"}`} /><p className={`text-xs leading-4 ${index === 0 ? "font-bold text-foreground" : "font-medium text-muted-foreground"}`}>{step}</p></li>)}</ol>;
+  return <ol className="mb-5 grid grid-cols-3 gap-2" aria-label="Credit-building steps">{steps.map((step, index) => <li key={step} className="min-w-0"><div className={`mb-3 h-1.5 rounded-full ${index === 0 ? "bg-primary-deep" : "bg-muted"}`} /><span className={`text-[11px] font-bold uppercase ${index === 0 ? "text-primary-deep" : "text-muted-foreground"}`}>Step {index + 1}</span><p className={`mt-1 text-[13px] leading-[18px] ${index === 0 ? "font-bold text-foreground" : "font-medium text-muted-foreground"}`}>{step}</p></li>)}</ol>;
 }
 
 function UnlockIssueSheet({ offer, onClose, onFix }: { offer: LockedOffer; onClose: () => void; onFix: () => void }) {
@@ -479,7 +479,7 @@ export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { us
       <AppHeader onBack={onBack} onEdit={() => { setEditingDetails(true); update({ step: "details" }); }} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {noBureau ? <>
-          <header className="mb-5"><h2 className="font-display text-xl font-bold leading-7 text-foreground">You're new to credit. Here's how to get loan-ready.</h2></header>
+          <header className="mb-5"><h2 className="font-display text-[22px] font-bold leading-7 text-foreground">You're new to credit.<span className="block text-lg font-medium text-muted-foreground">Here's how to get loan-ready.</span></h2></header>
           <CreditJourneyTracker />
           <div className="mb-6">{user.noCreditCardOffer ? <CreditCardEmptyState onChat={() => onChat("card")} /> : <CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} />}</div>
           <header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header>
