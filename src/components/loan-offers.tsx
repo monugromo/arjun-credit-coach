@@ -13,10 +13,6 @@ import creditseaLogo from "@/assets/lenders/creditsea.png";
 import prefrLogo from "@/assets/lenders/prefr.png";
 import hdfcLogo from "@/assets/lenders/hdfc.png";
 import mpokketLogo from "@/assets/lenders/mpokket.png";
-import abhiloansLogo from "@/assets/lenders/abhiloans.png";
-import loan112Logo from "@/assets/lenders/loan112.png";
-import clickpeLogo from "@/assets/lenders/clickpe.png";
-import jupiterLogo from "@/assets/lenders/jupiter.png";
 import unityCardArt from "@/assets/unity-roarbank-card.png.asset.json";
 
 export type Persona = "rejected" | "prime" | "thin" | "ntc" | "zero";
@@ -139,14 +135,6 @@ const INTRO_LENDERS = [
   { name: "mPokket", logo: mpokketLogo },
   { name: "Kissht", logo: kisshtLogo },
   { name: "KreditBee", logo: kreditbeeLogo },
-];
-
-const NTC_LENDERS = [
-  { name: "mPokket", logo: mpokketLogo },
-  { name: "Abhiloans", logo: abhiloansLogo },
-  { name: "Loan112", logo: loan112Logo },
-  { name: "ClickPE", logo: clickpeLogo },
-  { name: "Jupiter RuPay Card", logo: jupiterLogo },
 ];
 
 function Sheet({ title, subtitle, children, onClose }: { title: string; subtitle?: string; children: React.ReactNode; onClose: () => void }) {
@@ -358,10 +346,6 @@ function ApplicationsScreen({ applied, onBack }: { applied: Record<string, LeadS
 
 function InAppBrowser({ offer, onClose }: { offer: Offer; onClose: () => void }) {
   return <div className="absolute inset-0 z-[70] flex flex-col bg-background"><div className="grid h-14 shrink-0 grid-cols-[72px_1fr_72px] items-center bg-primary-deep px-3 text-primary-foreground"><Button onClick={onClose} variant="ghost" className="justify-start px-0 text-primary-foreground hover:bg-transparent">Close</Button><div className="truncate text-center text-[15px] font-bold">{offer.lender}</div><ShieldCheck className="ml-auto h-4 w-4" /></div><div className="flex-1 overflow-y-auto"><div className="bg-primary-deep px-5 pb-8 pt-9 text-center text-primary-foreground"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-card p-2"><img src={offer.logo} alt={`${offer.lender} logo`} className="h-full w-full object-contain" /></div><h2 className="font-display mt-4 text-2xl font-bold">{offer.product}</h2></div><div className="p-4"><div className="rounded-lg border border-border bg-card p-5 shadow-sm"><div className="text-xs text-muted-foreground">Your eligible amount</div><div className="font-display mt-1 text-2xl font-bold text-foreground">{offer.amount}</div><Button className="mt-6 h-12 w-full bg-primary-deep text-primary-foreground hover:bg-primary-deep/90">Continue application</Button></div></div></div></div>;
-}
-
-function NTCOffers({ onChat }: { onChat: () => void }) {
-  return <div><header className="mb-5"><h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">Start without a credit score</h2><p className="mt-1 text-sm text-muted-foreground">Lenders that consider new-to-credit customers.</p></header><div className="space-y-2">{NTC_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-16 items-center gap-3 rounded-lg border border-border bg-card px-3 py-3 shadow-sm"><LenderLogo name={lender.name} logo={lender.logo} size="sm" /><div className="flex-1 text-sm font-bold text-foreground">{lender.name}</div></div>)}</div></div>;
 }
 
 const UNITY_CARD: Offer = {
