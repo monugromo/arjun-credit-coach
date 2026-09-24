@@ -400,8 +400,13 @@ function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowM
   );
 }
 
-function CreditCardEmptyState() {
-  return <section className="rounded-lg border border-dashed border-border bg-card px-5 py-6 text-center shadow-sm"><div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-muted text-primary-deep"><CreditCard className="h-5 w-5" /></div><h3 className="font-display mt-3 text-lg font-bold text-foreground">Oops, no match yet</h3><p className="mt-1 text-sm text-muted-foreground">New credit-building products are coming soon.</p></section>;
+function CreditCardEmptyState({ onChat }: { onChat: () => void }) {
+  return <section className="rounded-lg border border-dashed border-border bg-card px-5 py-6 text-center shadow-sm"><div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-muted text-primary-deep"><CreditCard className="h-5 w-5" /></div><h3 className="font-display mt-3 text-lg font-bold text-foreground">Credit-builder cards launching soon</h3><Button variant="link" onClick={onChat} className="mt-2 h-auto p-0 text-sm font-semibold text-primary-deep">Talk to Arjun</Button></section>;
+}
+
+function CreditJourneyTracker() {
+  const steps = ["Get first credit line", "Repay on time for 6 months", "Loans unlock"];
+  return <ol className="mb-5 grid grid-cols-3 gap-2" aria-label="Credit-building steps">{steps.map((step, index) => <li key={step} className="min-w-0"><div className={`mb-2 h-1 rounded-full ${index === 0 ? "bg-primary-deep" : "bg-muted"}`} /><p className={`text-xs leading-4 ${index === 0 ? "font-bold text-foreground" : "font-medium text-muted-foreground"}`}>{step}</p></li>)}</ol>;
 }
 
 function UnlockIssueSheet({ offer, onClose, onFix }: { offer: LockedOffer; onClose: () => void; onFix: () => void }) {
@@ -474,8 +479,9 @@ export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { us
       <AppHeader onBack={onBack} onEdit={() => { setEditingDetails(true); update({ step: "details" }); }} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {noBureau ? <>
-          <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">Let's make you loan ready</h2><p className="mt-1 text-sm text-muted-foreground">No credit score, no problem. A credit card is the fastest way to build one.</p></header>
-          <div className="mb-6">{user.noCreditCardOffer ? <CreditCardEmptyState /> : <CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} />}</div>
+          <header className="mb-5"><h2 className="font-display text-xl font-bold leading-7 text-foreground">You're new to credit. Here's how to get loan-ready.</h2></header>
+          <CreditJourneyTracker />
+          <div className="mb-6">{user.noCreditCardOffer ? <CreditCardEmptyState onChat={() => onChat("card")} /> : <CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} />}</div>
           <header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header>
           <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{locked.length > 3 && <button onClick={() => setShowAllLocked(!showAllLocked)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAllLocked ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more · 30+ lenders<ChevronDown className="h-4 w-4" /></>}</button>}</section>
         </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center shadow-sm">
