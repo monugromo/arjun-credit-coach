@@ -402,7 +402,7 @@ function NovioCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowMo
         <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
         <div className="min-h-16 pr-24"><h3 className="font-display mt-3 whitespace-nowrap text-lg font-bold leading-6 text-foreground">SBM Novio Credit Card</h3><p className="mt-1 text-sm text-muted-foreground">SBM Bank India</p></div>
         <div className="pointer-events-none absolute -right-14 -top-1 h-[132px] w-40 overflow-hidden">
-          <img src={novioCardArt.url} alt="SBM Novio Credit Card" loading="lazy" width={1209} height={1920} className="absolute right-[56px] top-0 w-[72px] origin-bottom-right rotate-45 rounded-lg drop-shadow-lg" />
+          <img src={novioCardArt.url} alt="SBM Novio Credit Card" loading="lazy" width={1209} height={1920} className="absolute right-[56px] top-0 w-24 origin-bottom-right -rotate-45 rounded-lg drop-shadow-lg" />
         </div>
         <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
         <div className="mt-2 flex flex-wrap gap-2">
