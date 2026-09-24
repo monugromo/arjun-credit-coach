@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AlertCircle, ChevronDown, ChevronLeft, ChevronUp, CreditCard, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronUp, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
 import type { DemoUser } from "@/lib/groscore-data";
 import { Button } from "@/components/ui/button";
 import moneyviewLogo from "@/assets/lenders/moneyview.png";
