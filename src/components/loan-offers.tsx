@@ -377,19 +377,24 @@ const UNITY_CARD: Offer = {
 
 function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowMore: () => void }) {
   return (
-    <section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-      <div className="relative px-4 pb-3 pt-4">
-        <div className="min-h-20 pr-28"><h3 className="font-display text-lg font-bold leading-6 text-foreground">Roarbank UPI Credit Card</h3><p className="mt-1 text-xs text-muted-foreground">Unity Small Finance Bank</p></div>
-        <img src={unityCardArt.url} alt="Roarbank UPI Credit Card" loading="lazy" width={1024} height={656} className="pointer-events-none absolute -right-4 -top-2 w-28 rotate-6 drop-shadow-lg" />
-        <div className="mt-2 flex flex-wrap gap-1.5">
+    <section className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <div className="relative bg-primary-deep/5 px-4 pb-4 pt-4">
+        <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
+        <div className="min-h-28 pr-36"><h3 className="font-display mt-3 text-[22px] font-bold leading-[28px] text-foreground">Roarbank UPI Credit Card</h3><p className="mt-1 text-sm text-muted-foreground">Unity Small Finance Bank</p></div>
+        <div className="pointer-events-none absolute -right-8 -top-1 w-40 rotate-[-10deg] overflow-hidden [clip-path:polygon(14%_0,100%_0,100%_100%,0_100%)]">
+          <img src={unityCardArt.url} alt="Roarbank UPI Credit Card" loading="lazy" width={1024} height={656} className="w-full drop-shadow-lg" />
+        </div>
+        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
+        <div className="mt-2 flex flex-wrap gap-2">
           {["No credit history needed", "Zero joining fee", "Zero annual fee", "Up to 20% cashback"].map((feature) => (
-            <span key={feature} className="rounded-full border border-border bg-card px-2.5 py-1 text-[11px] font-semibold text-foreground">{feature}</span>
+            <span key={feature} className="rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground">{feature}</span>
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-2 border-t border-border px-4 py-3">
-        <Button variant="outline" onClick={onKnowMore} className="h-11 w-full rounded-lg bg-card text-sm font-semibold shadow-none">Talk to Arjun</Button>
-        <Button onClick={onApply} className="h-11 w-full rounded-lg bg-primary-deep text-sm font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
+      <div className="px-4 pb-4 pt-3">
+        <p className="text-center text-sm text-muted-foreground">High approval: <span className="font-bold text-foreground">99% new-to-credit users got this card</span></p>
+        <Button onClick={onApply} className="mt-3 h-[54px] w-full rounded-lg bg-primary-deep text-base font-bold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
+        <button type="button" onClick={onKnowMore} className="mt-3 w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground">Talk to Arjun</button>
       </div>
     </section>
   );
