@@ -392,8 +392,7 @@ function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowM
         </div>
       </div>
       <div className="px-4 pb-4 pt-3">
-        <p className="text-center text-sm text-muted-foreground">High approval: <span className="font-bold text-foreground">99% new-to-credit users got this card</span></p>
-        <Button onClick={onApply} className="mt-3 h-[54px] w-full rounded-lg bg-primary-deep text-base font-bold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
+        <Button onClick={onApply} className="h-[54px] w-full rounded-lg bg-primary-deep text-base font-bold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
         <button type="button" onClick={onKnowMore} className="mt-3 w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground">Talk to Arjun</button>
       </div>
     </section>
@@ -474,6 +473,7 @@ export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { us
       <AppHeader onBack={onBack} onEdit={() => { setEditingDetails(true); update({ step: "details" }); }} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {noBureau ? <>
+          <header className="mb-5"><h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">You don't have a credit score yet</h2><p className="mt-1 text-sm text-muted-foreground">Start with a credit card.</p></header>
           <div className="mb-6">{user.noCreditCardOffer ? <CreditCardEmptyState onChat={() => onChat("card")} /> : <CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} />}</div>
           <header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header>
           <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{locked.length > 3 && <button onClick={() => setShowAllLocked(!showAllLocked)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAllLocked ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more · 30+ lenders<ChevronDown className="h-4 w-4" /></>}</button>}</section>
