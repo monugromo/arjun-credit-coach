@@ -401,7 +401,7 @@ function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowM
 }
 
 function CreditCardEmptyState({ onChat }: { onChat: () => void }) {
-  return <section className="rounded-lg border border-dashed border-border bg-card px-5 py-6 text-center shadow-sm"><div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-muted text-primary-deep"><CreditCard className="h-5 w-5" /></div><h3 className="font-display mt-3 text-lg font-bold text-foreground">Credit-builder cards launching soon</h3><Button variant="link" onClick={onChat} className="mt-2 h-auto p-0 text-sm font-semibold text-primary-deep">Talk to Arjun</Button></section>;
+  return <section className="rounded-lg border border-dashed border-border bg-card px-5 py-6 text-center shadow-sm"><div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-muted text-primary-deep"><CreditCard className="h-5 w-5" /></div><h3 className="font-display mt-3 text-lg font-bold text-foreground">Credit builder launching soon</h3><Button variant="link" onClick={onChat} className="mt-2 h-auto p-0 text-sm font-semibold text-primary-deep">Talk to Arjun</Button></section>;
 }
 
 function CreditJourneyTracker() {
