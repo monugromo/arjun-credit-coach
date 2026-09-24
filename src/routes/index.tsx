@@ -27,7 +27,7 @@ import { LoanOffersScreen, createLoanJourneyState, type LoanJourneyState } from 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "GroScore — Your personal credit coach" },
+      { title: "GroScore - Your personal credit coach" },
       { name: "description", content: "Get loan-ready with Arjun, your personal credit coach." },
       { property: "og:title", content: "GroScore" },
       { property: "og:description", content: "Your personal credit coach." },
@@ -219,7 +219,7 @@ function Index() {
           { id: "cb1" + Date.now(), from: "coach", kind: "text",
             text: "Koi baat nahi 🙂 lagta hai abhi busy ho." },
           { id: "cb2" + Date.now(), from: "coach", kind: "text",
-            text: "Aap bata do — kab call karu? 2 minute ka hi kaam hai, uske baad aapki poori report aur plan share kar dunga." },
+            text: "Aap bata do - kab call karu? 2 minute ka hi kaam hai, uske baad aapki poori report aur plan share kar dunga." },
           { id: "cb3" + Date.now(), from: "coach", kind: "callbackOptions" },
         ]);
         return;
@@ -228,18 +228,18 @@ function Index() {
         items.push({ id: "s1" + Date.now(), from: "coach", kind: "text",
           text: "Achha hua baat ho gayi 🙏" });
         items.push({ id: "s2" + Date.now(), from: "coach", kind: "text",
-          text: "Jaisa discuss kiya — main abhi aapki report aur personalised plan tayar kar raha hoon. 2 minute do mujhe 🙏" });
+          text: "Jaisa discuss kiya - main abhi aapki report aur personalised plan tayar kar raha hoon. 2 minute do mujhe 🙏" });
       } else {
-        // NTC — no credit report (would be empty). Go straight to secured card options.
+        // NTC - no credit report (would be empty). Go straight to secured card options.
         items.push({ id: "s1" + Date.now(), from: "coach", kind: "text",
           text: "Baat karke accha laga 🙏" });
         items.push({ id: "s2" + Date.now(), from: "coach", kind: "text",
-          text: "Ek baat clear kar du — aapko reject nahi kiya gaya hai 🙏 Aapki abhi credit history hi nahi hai, isliye banks ko data nahi mila. Iska solution simple hai." });
+          text: "Ek baat clear kar du - aapko reject nahi kiya gaya hai 🙏 Aapki abhi credit history hi nahi hai, isliye banks ko data nahi mila. Iska solution simple hai." });
         items.push({ id: "s3" + Date.now(), from: "coach", kind: "text",
           text: "Pehle 2 min mein samjho 'NTC' ka matlab kya hota hai 👇" });
         items.push({ id: "vid" + Date.now(), from: "coach", kind: "videoIntro" });
         items.push({ id: "fdintro" + Date.now(), from: "coach", kind: "text",
-          text: "Ab yeh rahe 4 best secured cards — apna FD lagao, card milega, score banega. Swipe karke dekho:" });
+          text: "Ab yeh rahe 4 best secured cards - apna FD lagao, card milega, score banega. Swipe karke dekho:" });
         items.push({ id: "fdcaro" + Date.now(), from: "coach", kind: "fdCarousel" });
       }
       await streamCoach(items);
@@ -248,11 +248,11 @@ function Index() {
         await sleep(2200);
         await streamCoach([
           { id: "rep" + Date.now(), from: "coach", kind: "text",
-            text: "Ho gaya ✅ Yeh rahi aapki report aur projection — dekho score kaise improve hoga:" },
+            text: "Ho gaya ✅ Yeh rahi aapki report aur projection - dekho score kaise improve hoga:" },
           { id: "repdoc" + Date.now(), from: "coach", kind: "report", text: "Credit Report.pdf" },
           { id: "proj" + Date.now(), from: "coach", kind: "projection" },
           { id: "tlintro" + Date.now(), from: "coach", kind: "text",
-            text: "Aur yeh rahi aapki priority task list — ek-ek karke karte hain. Pehla sabse zaroori 👇" },
+            text: "Aur yeh rahi aapki priority task list - ek-ek karke karte hain. Pehla sabse zaroori 👇" },
         ]);
         const taskItems: Array<Omit<ChatMsg, "time">> = [];
         ["t3", "t2", "t1"].forEach((tid, i) => {
@@ -278,7 +278,7 @@ function Index() {
         setChatPhase("awaiting-consent");
       } else {
         await streamCoach([
-          { id: "cbok" + Date.now(), from: "coach", kind: "text", text: `Sure — ${option} call karunga. Tab tak aap report dekh lena 👍` },
+          { id: "cbok" + Date.now(), from: "coach", kind: "text", text: `Sure - ${option} call karunga. Tab tak aap report dekh lena 👍` },
         ]);
       }
     })();
@@ -288,17 +288,17 @@ function Index() {
     if (!user) return;
     go("chat");
     setChat((c) => [...c, { id: "ub" + Date.now(), from: "user", kind: "text",
-      text: "Mujhe credit score build karna hai — guide karo", time: nowTime() }]);
+      text: "Mujhe credit score build karna hai - guide karo", time: nowTime() }]);
     (async () => {
       await sleep(500);
       await streamCoach([
         { id: "nb1" + Date.now(), from: "coach", kind: "text",
-          text: "Bilkul! Pehle clear kar du — aap reject nahi hue ho 🙏 Aapki credit history hi nahi hai, isliye banks ko data nahi mil raha." },
+          text: "Bilkul! Pehle clear kar du - aap reject nahi hue ho 🙏 Aapki credit history hi nahi hai, isliye banks ko data nahi mil raha." },
         { id: "nb2" + Date.now(), from: "coach", kind: "text",
-          text: "2 minute ka yeh short video dekh lo — 'NTC' ka matlab samajh aa jayega 👇" },
+          text: "2 minute ka yeh short video dekh lo - 'NTC' ka matlab samajh aa jayega 👇" },
         { id: "nbvid" + Date.now(), from: "coach", kind: "videoIntro" },
         { id: "nb3" + Date.now(), from: "coach", kind: "text",
-          text: "Aur yeh rahe 4 best secured cards — FD lagao, card milega, score build hoga. Jo pasand aaye us par tap karo:" },
+          text: "Aur yeh rahe 4 best secured cards - FD lagao, card milega, score build hoga. Jo pasand aaye us par tap karo:" },
         { id: "nbfd" + Date.now(), from: "coach", kind: "fdCarousel" },
       ]);
     })();
@@ -345,7 +345,7 @@ function Index() {
       if (kind === "apply") {
         setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: "i want to apply for loan", time: nowTime() }]);
         await streamCoach([
-          { id: "loan-apply0" + Date.now(), from: "coach", kind: "text", text: "Abhi koi lender match nahi hua, lekin main dekh sakta hoon kyun. Aapki report mein sabse bada issue ₹13,583 ka overdue hai Hari & Co ke saath — ise fix karke loans unlock ho sakte hain." },
+          { id: "loan-apply0" + Date.now(), from: "coach", kind: "text", text: "Abhi koi lender match nahi hua, lekin main dekh sakta hoon kyun. Aapki report mein sabse bada issue ₹13,583 ka overdue hai Hari & Co ke saath - ise fix karke loans unlock ho sakte hain." },
           { id: "loan-apply1" + Date.now(), from: "coach", kind: "text", text: "Iske alawa report mein do aur issues hain: 2023 ka ek written-off account aur 94% card utilisation." },
           { id: "loan-apply2" + Date.now(), from: "coach", kind: "text", text: "Start with the overdue balance because it has the highest impact. Should I draft an email to Hari & Co?" },
           { id: "loan-quick" + Date.now(), from: "coach", kind: "loanQuickReplies" },
@@ -360,7 +360,7 @@ function Index() {
     void streamCoach([{ id: "loan-answer" + Date.now(), from: "coach", kind: "text", text: option === "Draft the email" ? "I’m preparing a clear email for Hari & Co." : "First, bring card utilisation below 30%. Then we can address the written-off account." }]);
   };
 
-  // Task action — user taps a task; jump to chat and stream Arjun's guidance + drafts
+  // Task action - user taps a task; jump to chat and stream Arjun's guidance + drafts
   const triggerTaskFlow = (taskId: string) => {
     if (!user) return;
     go("chat");
@@ -374,41 +374,41 @@ function Index() {
       if (taskId === "t3") {
         await streamCoach([
           { id: "g1" + Date.now(), from: "coach", kind: "text",
-            text: `Hi ${user.name} 👋 acha kiya jo tap kiya — yeh sabse zaroori hai abhi.` },
+            text: `Hi ${user.name} 👋 acha kiya jo tap kiya - yeh sabse zaroori hai abhi.` },
           { id: "g2" + Date.now(), from: "coach", kind: "text",
             text: "IndusInd ne aapke naam pe ek hard enquiry daali hai, par aapne khud apply nahi kiya. Yeh galat hai aur isse score girta hai." },
           { id: "g3" + Date.now(), from: "coach", kind: "text",
-            text: "Kya karna hai (2 minute ka kaam):\n1️⃣ IndusInd ke customer care ko likho — 'unauthorised enquiry, please remove'\n2️⃣ CIBIL pe dispute file karo (main link bhej dunga)\n3️⃣ Reply ka wait — 7–15 din mein hat jata hai" },
+            text: "Kya karna hai (2 minute ka kaam):\n1️⃣ IndusInd ke customer care ko likho - 'unauthorised enquiry, please remove'\n2️⃣ CIBIL pe dispute file karo (main link bhej dunga)\n3️⃣ Reply ka wait - 7–15 din mein hat jata hai" },
           { id: "g4" + Date.now(), from: "coach", kind: "text",
-            text: "Tension mat lo — maine aapke liye email draft kar diya hai. Bas review karke 'Send' dabao 👇" },
+            text: "Tension mat lo - maine aapke liye email draft kar diya hai. Bas review karke 'Send' dabao 👇" },
           { id: "em" + Date.now(), from: "coach", kind: "emailDraft", meta: { taskId } },
         ]);
       } else if (taskId === "t2") {
         await streamCoach([
           { id: "g1" + Date.now(), from: "coach", kind: "text",
-            text: `Hi ${user.name} 👋 HDFC wali EMI 11 din se overdue hai — yeh sabse jaldi fix karne wali cheez hai.` },
+            text: `Hi ${user.name} 👋 HDFC wali EMI 11 din se overdue hai - yeh sabse jaldi fix karne wali cheez hai.` },
           { id: "g2" + Date.now(), from: "coach", kind: "text",
             text: "Har din late = +1 negative mark. Aaj pay kar diya to next report mein 'paid' show hoga aur ~70 points wapas aa sakte hain." },
           { id: "g3" + Date.now(), from: "coach", kind: "text",
             text: "Kaise:\n1️⃣ HDFC NetBanking → Loans → Pay EMI\n2️⃣ ₹4,820 (overdue) + ₹350 (late fee) = ₹5,170\n3️⃣ Receipt screenshot mujhe bhej dena, main track karunga" },
           { id: "g4" + Date.now(), from: "coach", kind: "text",
-            text: "Pay karne ke baad autopay set karna mat bhoolna — main reminder bhejta rahunga 💚" },
+            text: "Pay karne ke baad autopay set karna mat bhoolna - main reminder bhejta rahunga 💚" },
         ]);
       } else if (taskId === "t1") {
         await streamCoach([
           { id: "g1" + Date.now(), from: "coach", kind: "text",
-            text: `Yeh 'written-off' Hari & Co wala mark sabse bhaari hai ${user.name} — +115 points wapas aa sakte hain.` },
+            text: `Yeh 'written-off' Hari & Co wala mark sabse bhaari hai ${user.name} - +115 points wapas aa sakte hain.` },
           { id: "g2" + Date.now(), from: "coach", kind: "text",
             text: "Aapne batayaa tha ki yeh aapka account hi nahi hai. Bureau ko likhna hoga ki yeh entry galat hai." },
           { id: "g3" + Date.now(), from: "coach", kind: "text",
-            text: "Steps:\n1️⃣ CIBIL dispute portal khol ke 'not my account' file karo\n2️⃣ PAN + ID proof attach\n3️⃣ 30 din mein reply aata hai\n\nMain dispute draft taiyaar kar deta hoon — chahiye?" },
+            text: "Steps:\n1️⃣ CIBIL dispute portal khol ke 'not my account' file karo\n2️⃣ PAN + ID proof attach\n3️⃣ 30 din mein reply aata hai\n\nMain dispute draft taiyaar kar deta hoon - chahiye?" },
         ]);
       } else if (taskId === "n1") {
         await streamCoach([
           { id: "g1" + Date.now(), from: "coach", kind: "text",
-            text: `Bilkul sahi qadam ${user.name} 👏 — secured card aapki credit history shuru karega.` },
+            text: `Bilkul sahi qadam ${user.name} 👏 - secured card aapki credit history shuru karega.` },
           { id: "g2" + Date.now(), from: "coach", kind: "text",
-            text: "Maine 4 options shortlist kiye hain — sabse fast SBM Bank hai. ₹2,000 FD, guaranteed approval, 7 din mein card." },
+            text: "Maine 4 options shortlist kiye hain - sabse fast SBM Bank hai. ₹2,000 FD, guaranteed approval, 7 din mein card." },
           { id: "g3" + Date.now(), from: "coach", kind: "fdCarousel" },
         ]);
       } else {
@@ -416,21 +416,21 @@ function Index() {
           { id: "g1" + Date.now(), from: "coach", kind: "text",
             text: `Theek hai ${user.name}, "${task.title}" pe kaam karte hain.` },
           { id: "g2" + Date.now(), from: "coach", kind: "text",
-            text: task.desc + " — main step-by-step samjha deta hoon." },
+            text: task.desc + " - main step-by-step samjha deta hoon." },
           { id: "g3" + Date.now(), from: "coach", kind: "text",
-            text: "1️⃣ App khol ke verify karo\n2️⃣ Required action lo\n3️⃣ Confirmation mujhe bhej do — main track kar lunga ✅" },
+            text: "1️⃣ App khol ke verify karo\n2️⃣ Required action lo\n3️⃣ Confirmation mujhe bhej do - main track kar lunga ✅" },
         ]);
       }
     })();
   };
 
-  // FD card "View details" tap — stream a typing-style detail message + apply link
+  // FD card "View details" tap - stream a typing-style detail message + apply link
   const triggerFdDetails = (card: FdCard) => {
     if (!user) return;
     go("chat");
     (async () => {
       setChat((c) => [...c, { id: "ufd" + Date.now(), from: "user", kind: "text",
-        text: `View details — ${card.bank} ${card.name}`, time: nowTime() }]);
+        text: `View details - ${card.bank} ${card.name}`, time: nowTime() }]);
       await sleep(400);
       await streamCoach([
         { id: "cfd0" + Date.now(), from: "coach", kind: "text",
@@ -438,7 +438,7 @@ function Index() {
         { id: "cfd1" + Date.now(), from: "coach", kind: "text",
           text: `Bढ़िया choice! ${card.name} ke details:\n\n• Min FD: ₹${card.minDeposit.toLocaleString("en-IN")}\n• Approval: ${card.approval}\n• Fees: ${card.fee}\n• ${card.benefits[0]}` },
         { id: "cfd2" + Date.now(), from: "coach", kind: "text",
-          text: "Aap eligible ho ✅ — bas KYC + FD lagao aur 5–7 din mein card aa jayega." },
+          text: "Aap eligible ho ✅ - bas KYC + FD lagao aur 5–7 din mein card aa jayega." },
         { id: "cfd3" + Date.now(), from: "coach", kind: "text",
           text: "Yeh raha aapka secure apply link 👇" },
         { id: "cfd4" + Date.now(), from: "coach", kind: "applyLink",
@@ -689,14 +689,14 @@ function Landing({ onStart }: { onStart: () => void }) {
         }}
       />
 
-      {/* Logo — vertical mark with wordmark, left aligned */}
+      {/* Logo - vertical mark with wordmark, left aligned */}
       <div className="relative z-10 pt-16 px-6">
         {/* -ml offsets the logo's internal left whitespace so the wordmark
             optically aligns with the headline below */}
         <img src={groLogo} alt="GroScore" className="w-40 h-auto -ml-1" />
       </div>
 
-      {/* Headline — dark green, left aligned, tight gap under logo */}
+      {/* Headline - dark green, left aligned, tight gap under logo */}
       <div className="relative z-10 px-6 mt-7">
         <h1
           className="text-[34px] font-extrabold leading-[1.1] tracking-[-0.025em]"
@@ -705,7 +705,7 @@ function Landing({ onStart }: { onStart: () => void }) {
           Your personal<br />credit coach
         </h1>
         <p className="mt-3.5 text-[15px] text-gray-500 leading-[1.6] max-w-[300px]">
-          Better credit, smarter savings, stronger insight — with experts in your corner, 24×7.
+          Better credit, smarter savings, stronger insight - with experts in your corner, 24×7.
         </p>
       </div>
 
@@ -926,7 +926,7 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
             {/* PAN card (real reference image with user data overlay) */}
             <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200">
               <img src={panCardRef} alt="PAN card" className="w-full block" />
-              {/* Name overlay — covers the "YOUR NAME" placeholder */}
+              {/* Name overlay - covers the "YOUR NAME" placeholder */}
               <div className="absolute" style={{ left: "11%", top: "42%", width: "42%" }}>
                 {editing ? (
                   <div className="flex items-center gap-1 bg-white/95 rounded px-1 py-0.5">
@@ -941,7 +941,7 @@ function PanCardScreen({ user, name, setName, onConfirm, onChangeNumber, onNotFo
                   </div>
                 )}
               </div>
-              {/* PAN number overlay — covers the "ABCDE1234F" placeholder */}
+              {/* PAN number overlay - covers the "ABCDE1234F" placeholder */}
               <div className="absolute" style={{ left: "11%", top: "72%", width: "50%" }}>
                 <div className="font-mono text-[13px] sm:text-sm font-bold tracking-wider text-gray-900 bg-white rounded px-1.5 py-0.5 inline-block shadow-sm">
                   {user.pan}
@@ -1044,7 +1044,7 @@ function PanInputScreen({ user, name, setName, onBack, onContinue }:
             </p>
             {needsVerify && (
               <p className="text-xs text-amber-700 mt-1">
-                New number — verify it with an OTP to continue.
+                New number - verify it with an OTP to continue.
               </p>
             )}
           </div>
@@ -1218,7 +1218,7 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
   { user: DemoUser; name: string; updated?: boolean; onYes: () => void; onNotMe: () => void; onBack: () => void }) {
   const [loading, setLoading] = useState(true);
   useEffect(() => { const t = setTimeout(() => setLoading(false), 1400); return () => clearTimeout(t); }, []);
-  const src = updated && user.updated ? user.updated : { name: name || user.name, pan: user.pan, dob: user.dob || "—" };
+  const src = updated && user.updated ? user.updated : { name: name || user.name, pan: user.pan, dob: user.dob || "-" };
   const displayName = (src.name || user.name).toUpperCase();
   const rows: Array<{ label: string; value: string; icon: React.ComponentType<{ className?: string }> }> = [
     { label: "Name", value: displayName, icon: User },
@@ -1237,7 +1237,7 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
       ) : (
         <>
           <div className={UI.body}>
-            <p className={`${UI.eyebrow} mb-3`}>{updated ? "Updated details — is this you?" : "Is this you?"}</p>
+            <p className={`${UI.eyebrow} mb-3`}>{updated ? "Updated details - is this you?" : "Is this you?"}</p>
             <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="px-4 py-3 flex items-center gap-3" style={{ background: "#F1FBF4" }}>
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-white" style={{ background: WA.green }}>
@@ -1288,7 +1288,7 @@ function BureauValidateScreen({ user, name, updated, onYes, onNotMe, onBack }:
 
 /* ====================== BUREAU FETCHING (after "Not me" PAN entry) ====================== */
 
-/* ====================== BUREAU REFETCH (after "Not me" PAN entry — found updated details) ====================== */
+/* ====================== BUREAU REFETCH (after "Not me" PAN entry - found updated details) ====================== */
 function BureauRefetch({ onDone }: { onDone: () => void }) {
   const [phase, setPhase] = useState<"loading" | "found">("loading");
   useEffect(() => {
@@ -1391,7 +1391,7 @@ function Ntc2FetchScreen({ onDone }: { onDone: () => void }) {
   );
 }
 
-/* ====================== NTC2: No credit history — confirm loan/CC ====================== */
+/* ====================== NTC2: No credit history - confirm loan/CC ====================== */
 function Ntc2NoHistoryScreen({ user, name, onHasCredit, onNoCredit, onBack }:
   { user: DemoUser; name: string; onHasCredit: () => void; onNoCredit: () => void; onBack: () => void }) {
   const [choice, setChoice] = useState<"yes" | "no" | null>(null);
@@ -1487,7 +1487,7 @@ function PanValidateScreen({ name, setName, defaultPan, onBack, onContinue }:
         <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
           <div className="text-[11px] uppercase font-bold tracking-wider text-gray-500 mb-1">Name (as entered)</div>
           <div className="flex items-center justify-between gap-3">
-            <div className="text-lg font-bold text-gray-900 uppercase truncate">{name || "—"}</div>
+            <div className="text-lg font-bold text-gray-900 uppercase truncate">{name || "-"}</div>
             <button onClick={onBack} className="text-xs font-semibold underline shrink-0" style={{ color: WA.accent }}>Edit</button>
           </div>
           <div className="text-[11px] text-gray-500 mt-1">Make sure this matches your PAN card exactly.</div>
@@ -1956,10 +1956,10 @@ function NTCChecklistScreen({ user, variant = "matched", onDone }: { user: DemoU
     },
     "no-history": {
       title: "No score? No problem.",
-      subtitle: "You're new to credit — a clean slate. We'll help you build it, step by step.",
+      subtitle: "You're new to credit - a clean slate. We'll help you build it, step by step.",
       steps: [
         { icon: Search, label: "Checking credit bureau" },
-        { icon: UserPlus, label: "No score yet — that's okay" },
+        { icon: UserPlus, label: "No score yet - that's okay" },
         { icon: Wallet, label: "Preparing your build-up plan" },
         { icon: CheckCircle2, label: "Arjun is ready to help" },
       ],
@@ -2096,8 +2096,8 @@ function IncomingCall({ onAccept, onDecline }: { onAccept: () => void; onDecline
 
 function ActiveCall({ user, onEnd }: { user: DemoUser; onEnd: () => void }) {
   const lines = user.key === "distressed"
-    ? ["Namaste Sonu! Main Arjun.", "Aapka score 413 hai — par tension mat lo.", "6 cheezein theek ho sakti hain.", "Sabse pehle ek galat entry hata dete hain…", "Main step-by-step guide karunga, theek hai?"]
-    : ["Namaste Rahul! Main Arjun.", "Aapki report dekhi — abhi credit history nahi hai.", "Aap bank ke liye 'invisible' ho.", "Main ek guaranteed secured card dilwa deta hoon.", "3-4 mahine mein aapka score ban jayega…"];
+    ? ["Namaste Sonu! Main Arjun.", "Aapka score 413 hai - par tension mat lo.", "6 cheezein theek ho sakti hain.", "Sabse pehle ek galat entry hata dete hain…", "Main step-by-step guide karunga, theek hai?"]
+    : ["Namaste Rahul! Main Arjun.", "Aapki report dekhi - abhi credit history nahi hai.", "Aap bank ke liye 'invisible' ho.", "Main ek guaranteed secured card dilwa deta hoon.", "3-4 mahine mein aapka score ban jayega…"];
   const [i, setI] = useState(0);
   const [sec, setSec] = useState(0);
   useEffect(() => { const iv = setInterval(() => setSec((s) => s + 1), 1000); return () => clearInterval(iv); }, []);
@@ -2189,25 +2189,25 @@ function ChatScreen(props: {
         await reply([
           { from: "coach", kind: "text", text: `Namaste ${user.name} 🙏` },
           { from: "coach", kind: "text", text: isNTC
-              ? "Batao, kaise madad karu? Aap poochh sakte ho — 'mera score', 'mere tasks', ya 'daily savings' 💚"
-              : "Kaise madad karu? Aap likh sakte ho — 'mera score', 'mere tasks', ya 'savings plan' 💚" },
+              ? "Batao, kaise madad karu? Aap poochh sakte ho - 'mera score', 'mere tasks', ya 'daily savings' 💚"
+              : "Kaise madad karu? Aap likh sakte ho - 'mera score', 'mere tasks', ya 'savings plan' 💚" },
         ]);
         return;
       }
       if (asksScore) {
         if (isNTC) {
           await reply([
-            { from: "coach", kind: "text", text: "Abhi aapki credit history nahi hai — isliye score generate nahi hua." },
+            { from: "coach", kind: "text", text: "Abhi aapki credit history nahi hai - isliye score generate nahi hua." },
             { from: "coach", kind: "text", text: "Tension mat lo, yeh normal hai first-time users ke liye. Ek secured card se 60–90 din mein score ban jayega 💪" },
             { from: "coach", kind: "text", text: "Chalo, main aapko build karne mein help karta hoon 👇" },
           ]);
           setTimeout(() => onBuildCredit(), 2600);
         } else {
           await reply([
-            { from: "coach", kind: "text", text: `Aapka current score hai ${user.score} — band: ${user.band}.` },
+            { from: "coach", kind: "text", text: `Aapka current score hai ${user.score} - band: ${user.band}.` },
             { from: "coach", kind: "text", text: "Yeh rahi aapki poori report 👇" },
             { from: "coach", kind: "report", text: "Credit Report.pdf" },
-            { from: "coach", kind: "text", text: "Kuch samajh nahi aaye toh bata dena — main breakdown kar dunga." },
+            { from: "coach", kind: "text", text: "Kuch samajh nahi aaye toh bata dena - main breakdown kar dunga." },
           ]);
         }
         return;
@@ -2219,13 +2219,13 @@ function ChatScreen(props: {
           return;
         }
         await reply([
-          { from: "coach", kind: "text", text: `Aapke paas ${todo.length} pending task${todo.length > 1 ? "s" : ""} hain — priority order mein:` },
+          { from: "coach", kind: "text", text: `Aapke paas ${todo.length} pending task${todo.length > 1 ? "s" : ""} hain - priority order mein:` },
         ]);
         for (const t of todo.slice(0, 3)) {
           await reply([{ from: "coach", kind: "task", meta: { taskId: t.id } }]);
         }
         if (todo.length > 3) {
-          await reply([{ from: "coach", kind: "text", text: `Aur ${todo.length - 3} tasks bhi hain — 'Tasks' tab mein dekh lena.` }]);
+          await reply([{ from: "coach", kind: "text", text: `Aur ${todo.length - 3} tasks bhi hain - 'Tasks' tab mein dekh lena.` }]);
         }
         await reply([{ from: "coach", kind: "text", text: "Kaunsa pehle karna hai? Tap kar do 👆" }]);
         return;
@@ -2233,7 +2233,7 @@ function ChatScreen(props: {
       if (asksSavings) {
         await reply([
           { from: "coach", kind: "text", text: "Aapka daily savings autopay abhi ₹50/day pe chal raha hai ✅" },
-          { from: "coach", kind: "text", text: "Chaho toh ₹60 ya ₹100/day tak badha sakte ho — FD tezi se banegi aur card limit bhi zyada milegi." },
+          { from: "coach", kind: "text", text: "Chaho toh ₹60 ya ₹100/day tak badha sakte ho - FD tezi se banegi aur card limit bhi zyada milegi." },
           { from: "coach", kind: "text", text: "Menu se 'Daily Savings' kholo aur amount update kar do 👍" },
         ]);
         return;
@@ -2247,7 +2247,7 @@ function ChatScreen(props: {
         { from: "coach", kind: "text", text: isNTC
             ? "• Credit score build karna\n• Secured card lena\n• Daily savings setup\n• Kisi bhi credit-related sawaal ka jawab"
             : "• Credit score aur report samajhna\n• Pending tasks fix karna\n• Daily savings & FD\n• Kisi bhi credit-related sawaal ka jawab" },
-        { from: "coach", kind: "text", text: "Aap simple likh do — 'mera score', 'mere tasks', ya 'savings' 👇" },
+        { from: "coach", kind: "text", text: "Aap simple likh do - 'mera score', 'mere tasks', ya 'savings' 👇" },
       ]);
     })();
   };
@@ -2280,7 +2280,7 @@ function ChatScreen(props: {
         )}
       </div>
 
-      {/* Chat body — frozen between header/footer, scrolls inside */}
+      {/* Chat body - frozen between header/footer, scrolls inside */}
       <div className="flex-1 min-h-0 overflow-y-auto px-3 py-3 space-y-1.5"
         style={{
           backgroundColor: "#ffffff",
@@ -2410,7 +2410,7 @@ function ChatScreen(props: {
                     <div className="rounded-xl p-4 text-white text-center" style={{ background: WA.green }}>
                       <div className="text-xs opacity-90">Credit Profile</div>
                       <div className="text-2xl font-bold mt-1">NTC</div>
-                      <div className="text-xs mt-1 opacity-90">No history yet — let's build one 💪</div>
+                      <div className="text-xs mt-1 opacity-90">No history yet - let's build one 💪</div>
                     </div>
                   )}
                 </div>
@@ -2494,7 +2494,7 @@ function ChatScreen(props: {
                   <div className="flex items-start gap-2 rounded-xl p-3" style={{ background: "#EEF6FF" }}>
                     <div className="text-lg leading-none">💰</div>
                     <div className="text-[12.5px] text-gray-700 leading-snug">
-                      Your savings sit in an <b>FD earning 7.25% p.a.</b> — you keep the interest and the FD becomes the security for your card.
+                      Your savings sit in an <b>FD earning 7.25% p.a.</b> - you keep the interest and the FD becomes the security for your card.
                     </div>
                   </div>
                 </div>
@@ -2570,7 +2570,7 @@ function ChatScreen(props: {
                   <div className="font-semibold text-gray-900">Waiting for approval in your UPI app</div>
                   <div className="text-[12.5px] text-gray-500 leading-snug">Open Google Pay / PhonePe / Paytm and approve the updated mandate of ₹{savingsPlan}/day.</div>
                   <button onClick={() => setMandateStep("success")} className="text-[13px] font-semibold" style={{ color: WA.green }}>
-                    I've approved — continue
+                    I've approved - continue
                   </button>
                 </div>
               )}
@@ -2838,7 +2838,7 @@ function EmailDraftCard({ taskId }: { taskId?: string }) {
   const [open, setOpen] = useState(true);
   // default = IndusInd enquiry dispute
   const to = "grievance.redressal@indusind.com";
-  const subject = "Unauthorised hard enquiry on my credit report — request to remove";
+  const subject = "Unauthorised hard enquiry on my credit report - request to remove";
   const body = `Dear IndusInd Bank Team,
 
 I am writing regarding an unauthorised hard enquiry on my credit report from your institution.
@@ -3001,10 +3001,10 @@ function ReportScreen({ user, onBack, onStartChat }: { user: DemoUser; onBack: (
   const isNTC = user.key === "ntc";
   if (isNTC) {
     const steps = [
-      { title: "Get a secured card", desc: "Against a small FD — guaranteed approval" },
-      { title: "Use it for daily purchases", desc: "Groceries, fuel, recharges — keep usage under 30%" },
+      { title: "Get a secured card", desc: "Against a small FD - guaranteed approval" },
+      { title: "Use it for daily purchases", desc: "Groceries, fuel, recharges - keep usage under 30%" },
       { title: "Pay full bill on time", desc: "Every on-time payment = positive mark" },
-      { title: "Score appears in 90 days", desc: "Bureaus start tracking you — you become visible" },
+      { title: "Score appears in 90 days", desc: "Bureaus start tracking you - you become visible" },
     ];
     return (
       <div className="flex-1 min-h-0 flex flex-col bg-gray-50">
@@ -3022,7 +3022,7 @@ function ReportScreen({ user, onBack, onStartChat }: { user: DemoUser; onBack: (
             <div className="w-20 h-20 rounded-full bg-white mx-auto flex items-center justify-center text-4xl shadow-sm">🌱</div>
             <h2 className="text-2xl font-extrabold text-gray-900 text-center mt-4">No credit score yet</h2>
             <p className="text-[15px] text-gray-600 text-center mt-2 leading-relaxed px-2">
-              Don't worry, {user.name}! You're "new to credit" — banks just haven't seen you yet. We'll help you build a strong score from zero.
+              Don't worry, {user.name}! You're "new to credit" - banks just haven't seen you yet. We'll help you build a strong score from zero.
             </p>
           </button>
 
@@ -3341,8 +3341,8 @@ function DailySavingsBlock({ onStartChat, isNTC }: { onStartChat: () => void; is
           <div className="font-bold text-gray-900 text-[17px]">Daily Savings</div>
           <p className="text-sm text-gray-600 mt-1 leading-relaxed">
             {isNTC
-              ? <>Save just <b>₹30–₹50 a day</b> and unlock your Secured Card FD in ~{plan.days} days — no big lump sum needed.</>
-              : <>Build a safety cushion — save <b>₹30–₹50 a day</b> into an FD earning 7.25% p.a. and unlock a higher-limit Secured Card.</>}
+              ? <>Save just <b>₹30–₹50 a day</b> and unlock your Secured Card FD in ~{plan.days} days - no big lump sum needed.</>
+              : <>Build a safety cushion - save <b>₹30–₹50 a day</b> into an FD earning 7.25% p.a. and unlock a higher-limit Secured Card.</>}
           </p>
         </div>
       </div>
@@ -3373,7 +3373,7 @@ function DailySavingsBlock({ onStartChat, isNTC }: { onStartChat: () => void; is
         </div>
       </div>
 
-      {/* Plan chips — tap to pick */}
+      {/* Plan chips - tap to pick */}
       <div className="mt-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Pick your daily amount</div>
       <div className="mt-2 grid grid-cols-3 gap-2">
         {plans.map((p) => {
@@ -3398,11 +3398,11 @@ function DailySavingsBlock({ onStartChat, isNTC }: { onStartChat: () => void; is
       <div className="mt-3 flex items-start gap-2 rounded-xl p-3" style={{ background: "#EEF6FF" }}>
         <div className="text-lg leading-none">💰</div>
         <div className="text-[12.5px] text-gray-700 leading-snug">
-          Your savings sit in an <b>FD earning 7.25% p.a.</b> — you keep the interest and the FD becomes the security for your card.
+          Your savings sit in an <b>FD earning 7.25% p.a.</b> - you keep the interest and the FD becomes the security for your card.
         </div>
       </div>
 
-      {/* Autopay CTA — a different flow, not an "add card" button */}
+      {/* Autopay CTA - a different flow, not an "add card" button */}
       <button
         onClick={onStartChat}
         className="mt-4 w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 font-bold active:scale-[0.98] transition"
@@ -3415,7 +3415,7 @@ function DailySavingsBlock({ onStartChat, isNTC }: { onStartChat: () => void; is
         onClick={onStartChat}
         className="mt-2 w-full py-3 rounded-2xl font-semibold text-[13px] text-gray-700 bg-gray-100 active:scale-[0.98] transition"
       >
-        Start now — deposit ₹{plan.d} today
+        Start now - deposit ₹{plan.d} today
       </button>
       <div className="mt-2 text-center text-[11px] text-gray-500">Auto-debit via UPI · Pause anytime · 100% refundable</div>
     </div>
@@ -3647,7 +3647,7 @@ function MiniProfilePopup({ user, onCall, onCancel }:
             <div>
               <div className="text-[11px] uppercase font-semibold text-gray-500 tracking-wide">Credit Score</div>
               <div className="text-[28px] font-extrabold text-gray-900 leading-none mt-1">
-                {isNTC ? "—" : user.score}
+                {isNTC ? "-" : user.score}
               </div>
             </div>
             <span className="px-2.5 py-1 rounded-full text-[11px] font-bold" style={{ background: isNTC ? "#E5E7EB" : "#FEE2E2", color: isNTC ? "#374151" : "#B91C1C" }}>
