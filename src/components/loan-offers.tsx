@@ -14,6 +14,7 @@ import prefrLogo from "@/assets/lenders/prefr.png";
 import hdfcLogo from "@/assets/lenders/hdfc.png";
 import mpokketLogo from "@/assets/lenders/mpokket.png";
 import unityCardArt from "@/assets/unity-roarbank-card.png.asset.json";
+import novioCardArt from "@/assets/sbm-novio-card.png.asset.json";
 
 export type Persona = "rejected" | "prime" | "thin" | "ntc" | "zero";
 type WorkType = "Salaried" | "Self-employed" | "Student" | "Other" | "";
@@ -397,16 +398,13 @@ function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowM
 function NovioCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowMore: () => void }) {
   return (
     <section className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-      <div className="relative bg-muted/40 px-4 pb-4 pt-4">
-        <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">New to credit</span>
-        <div className="mt-3 flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <h3 className="font-display text-lg font-bold leading-6 text-foreground">SBM Novio Credit Card</h3>
-            <p className="mt-1 text-sm text-muted-foreground">SBM Bank India</p>
-          </div>
-          <div aria-label="Novio" className="shrink-0 text-xl font-black text-primary-deep">novio</div>
+      <div className="relative bg-primary-deep/5 px-4 pb-4 pt-4">
+        <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
+        <div className="min-h-16 pr-24"><h3 className="font-display mt-3 whitespace-nowrap text-lg font-bold leading-6 text-foreground">SBM Novio Credit Card</h3><p className="mt-1 text-sm text-muted-foreground">SBM Bank India</p></div>
+        <div className="pointer-events-none absolute -right-14 -top-1 w-40 rotate-[-10deg]">
+          <img src={novioCardArt.url} alt="SBM Novio Credit Card" loading="lazy" width={768} height={1217} className="w-full drop-shadow-lg" />
         </div>
-        <p className="mt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
+        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {["FD from ₹2,000", "Up to 7% p.a. on FD", "Zero joining fee", "Zero annual fee"].map((feature) => (
             <span key={feature} className="rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground">{feature}</span>
