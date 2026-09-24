@@ -114,19 +114,19 @@ const AVAILABLE: Offer[] = [
 ];
 
 const LOCKED_ISSUES: LockedOffer[] = [
-  { id: "lock-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "Tap to see how to unlock", progress: 58, reason: "issues", issue: "₹13,583 overdue with Hari & Co", explanation: "This overdue account is the highest-impact issue on your credit report." },
-  { id: "lock-hdfc", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, distance: "Tap to see how to unlock", progress: 49, reason: "issues", issue: "Written-off account from 2023", explanation: "A written-off account is currently affecting your credit profile." },
-  { id: "lock-kissht", lender: "Kissht", product: "Personal loan", logo: kisshtLogo, distance: "Tap to see how to unlock", progress: 44, reason: "issues", issue: "Credit utilisation is at 94%", explanation: "Reducing your card balance below 30% can strengthen your credit profile." },
-  { id: "lock-creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, distance: "Tap to see how to unlock", progress: 37, reason: "issues", issue: "₹13,583 overdue with Hari & Co", explanation: "This overdue account is the highest-impact issue on your credit report." },
-  { id: "lock-lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, distance: "Tap to see how to unlock", progress: 35, reason: "issues", issue: "Written-off account from 2023", explanation: "A written-off account is currently affecting your credit profile." },
-  { id: "lock-zype", lender: "Zype", product: "Personal loan", distance: "Tap to see how to unlock", progress: 42, reason: "issues", issue: "Credit utilisation is at 94%", explanation: "Reducing your card balance below 30% can strengthen your credit profile." },
+  { id: "lock-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "Your chances are very low. Talk to Arjun", progress: 58, reason: "issues", issue: "₹13,583 overdue with Hari & Co", explanation: "This overdue account is the highest-impact issue on your credit report." },
+  { id: "lock-hdfc", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, distance: "Your chances are very low. Talk to Arjun", progress: 49, reason: "issues", issue: "Written-off account from 2023", explanation: "A written-off account is currently affecting your credit profile." },
+  { id: "lock-kissht", lender: "Kissht", product: "Personal loan", logo: kisshtLogo, distance: "Your chances are very low. Talk to Arjun", progress: 44, reason: "issues", issue: "Credit utilisation is at 94%", explanation: "Reducing your card balance below 30% can strengthen your credit profile." },
+  { id: "lock-creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, distance: "Your chances are very low. Talk to Arjun", progress: 37, reason: "issues", issue: "₹13,583 overdue with Hari & Co", explanation: "This overdue account is the highest-impact issue on your credit report." },
+  { id: "lock-lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, distance: "Your chances are very low. Talk to Arjun", progress: 35, reason: "issues", issue: "Written-off account from 2023", explanation: "A written-off account is currently affecting your credit profile." },
+  { id: "lock-zype", lender: "Zype", product: "Personal loan", distance: "Your chances are very low. Talk to Arjun", progress: 42, reason: "issues", issue: "Credit utilisation is at 94%", explanation: "Reducing your card balance below 30% can strengthen your credit profile." },
 ];
 
 const LOCKED_TIME: LockedOffer[] = [
-  { id: "time-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "Tap to see how to unlock", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
-  { id: "time-tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, distance: "Tap to see how to unlock", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
-  { id: "time-hdfc", lender: "HDFC Bank", product: "Credit card", logo: hdfcLogo, distance: "Tap to see how to unlock", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
-  { id: "time-zype", lender: "Zype", product: "Personal loan", distance: "Tap to see how to unlock", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
+  { id: "time-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "Your chances are very low. Talk to Arjun", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
+  { id: "time-tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, distance: "Your chances are very low. Talk to Arjun", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
+  { id: "time-hdfc", lender: "HDFC Bank", product: "Credit card", logo: hdfcLogo, distance: "Your chances are very low. Talk to Arjun", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
+  { id: "time-zype", lender: "Zype", product: "Personal loan", distance: "Your chances are very low. Talk to Arjun", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
 ];
 
 const INTRO_LENDERS = [
@@ -401,7 +401,7 @@ function NovioCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowMo
       <div className="relative bg-primary-deep/5 px-4 pb-4 pt-4">
         <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
         <div className="min-h-16 pr-24"><h3 className="font-display mt-3 whitespace-nowrap text-lg font-bold leading-6 text-foreground">SBM Novio Credit Card</h3><p className="mt-1 text-sm text-muted-foreground">SBM Bank India</p></div>
-        <div className="pointer-events-none absolute -right-2 -top-3 h-28 w-[72px] rotate-[-10deg] overflow-hidden rounded-lg shadow-lg">
+        <div className="pointer-events-none absolute -right-2 -top-3 h-28 w-[72px] rotate-[-20deg] overflow-hidden rounded-lg shadow-lg">
           <img src={novioCardArt.url} alt="SBM Novio Credit Card" loading="lazy" width={768} height={1217} className="h-full w-full object-cover" />
         </div>
         <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
