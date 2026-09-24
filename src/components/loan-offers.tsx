@@ -14,7 +14,7 @@ import prefrLogo from "@/assets/lenders/prefr.png";
 import hdfcLogo from "@/assets/lenders/hdfc.png";
 import mpokketLogo from "@/assets/lenders/mpokket.png";
 import unityCardArt from "@/assets/unity-roarbank-card.png.asset.json";
-import novioCardArt from "@/assets/sbm-novio-card.png.asset.json";
+import novioCardArt from "@/assets/sbm-novio-card-landscape.png.asset.json";
 
 export type Persona = "rejected" | "prime" | "thin" | "ntc" | "zero";
 type WorkType = "Salaried" | "Self-employed" | "Student" | "Other" | "";
@@ -401,8 +401,8 @@ function NovioCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowMo
       <div className="relative bg-primary-deep/5 px-4 pb-4 pt-4">
         <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
         <div className="min-h-16 pr-24"><h3 className="font-display mt-3 whitespace-nowrap text-lg font-bold leading-6 text-foreground">SBM Novio Credit Card</h3><p className="mt-1 text-sm text-muted-foreground">SBM Bank India</p></div>
-        <div className="pointer-events-none absolute -right-2 -top-3 h-28 w-[72px] rotate-[-20deg] overflow-hidden rounded-lg shadow-lg">
-          <img src={novioCardArt.url} alt="SBM Novio Credit Card" loading="lazy" width={768} height={1217} className="h-full w-full object-cover" />
+        <div className="pointer-events-none absolute -right-14 -top-1 w-40 rotate-[-10deg]">
+          <img src={novioCardArt.url} alt="SBM Novio Credit Card" loading="lazy" width={986} height={662} className="w-full rounded-lg drop-shadow-lg" />
         </div>
         <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
         <div className="mt-2 flex flex-wrap gap-2">
