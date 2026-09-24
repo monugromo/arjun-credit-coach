@@ -200,7 +200,7 @@ export const initialChat = (key: DemoKey, name?: string): ChatMsg[] => {
     return [
       { id: "s0", from: "system", text: "Today", time: "", kind: "text" },
       { id: "a1", from: "coach", kind: "text", text: "Welcome to GroScore, Aarav! 👋", time: t(20, 28) },
-      { id: "a2", from: "coach", kind: "text", text: "Abhi aapka koi credit history nahi hai — bilkul fresh start. Chinta mat karo, hum mil ke banayenge 💚", time: t(20, 28) },
+      { id: "a2", from: "coach", kind: "text", text: "Abhi aapka koi credit history nahi hai - bilkul fresh start. Chinta mat karo, hum mil ke banayenge 💚", time: t(20, 28) },
       { id: "a3", from: "coach", kind: "text", text: "Main aapko 2 minute mein call karta hoon, pehla step samjha doonga.", time: t(20, 29) },
     ];
   }
@@ -217,7 +217,7 @@ export const initialChat = (key: DemoKey, name?: string): ChatMsg[] => {
       id: "n2",
       from: "coach",
       kind: "text",
-      text: "Aapki credit profile check kar raha hoon — abhi credit history nahi hai, par tension mat lo 💚",
+      text: "Aapki credit profile check kar raha hoon - abhi credit history nahi hai, par tension mat lo 💚",
       time: t(20, 28),
     },
     {
@@ -231,9 +231,9 @@ export const initialChat = (key: DemoKey, name?: string): ChatMsg[] => {
 };
 
 export const distressedTasks = [
-  { id: "t3", title: "Unrecognised enquiry — IndusInd", impact: 25, status: "todo", desc: "Aapne apply nahi kiya? Dispute kar do" },
-  { id: "t2", title: "Pay overdue EMI — HDFC Personal Loan", impact: 70, status: "todo", desc: "₹4,820 overdue · pay today" },
-  { id: "t1", title: "Written-off account — Hari & Co", impact: 115, status: "todo", desc: "Yeh galat lagta hai — bureau ko likho" },
+  { id: "t3", title: "Unrecognised enquiry - IndusInd", impact: 25, status: "todo", desc: "Aapne apply nahi kiya? Dispute kar do" },
+  { id: "t2", title: "Pay overdue EMI - HDFC Personal Loan", impact: 70, status: "todo", desc: "₹4,820 overdue · pay today" },
+  { id: "t1", title: "Written-off account - Hari & Co", impact: 115, status: "todo", desc: "Yeh galat lagta hai - bureau ko likho" },
   { id: "t4", title: "Reduce enquiry pressure", impact: 13, status: "todo", desc: "Next 60 din naya loan apply mat karo" },
   { id: "t5", title: "Old closed account update", impact: 18, status: "todo", desc: "Bajaj loan closed hai par 'active' dikh raha hai" },
   { id: "t6", title: "Credit utilization < 30%", impact: 22, status: "todo", desc: "Card spend kam karo is mahine" },
@@ -320,7 +320,7 @@ export const updatesFeed = (key: DemoKey) => {
   }
   return [
     ...base,
-    { id: "u3", title: "NTC profile detected", desc: "No credit history yet — that's okay", when: "Today", tag: "Report" },
+    { id: "u3", title: "NTC profile detected", desc: "No credit history yet - that's okay", when: "Today", tag: "Report" },
     { id: "u4", title: "4 secured cards shortlisted", desc: "Pick one to start building score", when: "Today", tag: "Cards" },
   ];
 };

@@ -77,10 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "GroScore — Your personal credit coach" },
+      { title: "GroScore - Your personal credit coach" },
       { name: "description", content: "Understand your credit and find personalised loan options with GroScore." },
       { name: "author", content: "GroScore" },
-      { property: "og:title", content: "GroScore — Your personal credit coach" },
+      { property: "og:title", content: "GroScore - Your personal credit coach" },
       { property: "og:description", content: "Understand your credit and find personalised loan options with GroScore." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

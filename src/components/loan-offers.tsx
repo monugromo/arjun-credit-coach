@@ -323,7 +323,7 @@ function LockedCard({ offer, onClick, contacted }: { offer: LockedOffer; onClick
             <span className={`truncate text-sm font-bold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{offer.lender}</span>
           </div>
           <p className="text-[11px] font-normal text-muted-foreground">{offer.product}</p>
-          <p className={`mt-1.5 text-xs font-semibold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{contacted ? "Checked — try another loan" : offer.distance}</p>
+          <p className={`mt-1.5 text-xs font-semibold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{contacted ? "Checked - try another loan" : offer.distance}</p>
         </div>
         <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
       </div>
@@ -434,7 +434,7 @@ export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { us
   const visibleLocked = showAllLocked ? locked : locked.slice(0, 3);
   const startQuestions = () => update({ step: "details" });
   const openApply = (offer: Offer) => {
-    // Apply API failure: no lead, no enquiry — card keeps its previous state and stays live.
+    // Apply API failure: no lead, no enquiry - card keeps its previous state and stays live.
     if (state.applied[offer.id] === undefined && applyErrors[offer.id] === "pending-fail") {
       setApplyErrors((current) => ({ ...current, [offer.id]: "Couldn’t start this application. Please try again." }));
       return;
@@ -447,7 +447,7 @@ export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { us
   };
   const handleUnlockTap = (offer: LockedOffer) => {
     // First tap on a lender hands off to Arjun with a prefilled message; that
-    // lender is then marked checked — tapping it again just shows a notice.
+    // lender is then marked checked - tapping it again just shows a notice.
     if (state.lockedContacted.includes(offer.lender)) {
       setBlockedLender(offer.lender);
       return;
@@ -479,13 +479,13 @@ export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { us
           <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{locked.length > 3 && <button onClick={() => setShowAllLocked(!showAllLocked)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAllLocked ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more · 30+ lenders<ChevronDown className="h-4 w-4" /></>}</button>}</section>
         </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center shadow-sm">
           <h3 className="font-display text-lg font-bold text-foreground">We couldn’t check lenders just now</h3>
-          <p className="mt-1 text-sm text-muted-foreground">Yeh network issue hai — aapki eligibility par koi asar nahi.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Yeh network issue hai - aapki eligibility par koi asar nahi.</p>
           <Button onClick={retryCheck} className="mt-4 h-12 w-full rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground hover:bg-primary-deep/90">Retry</Button>
         </div> : <>
           <header className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2><Button variant="outline" onClick={() => setShowApplications(true)} className="h-9 shrink-0 rounded-lg bg-card px-3 text-sm font-semibold shadow-none">Applications</Button></header>
-          {hasStale && <div className="mb-3 rounded-lg border border-border bg-muted/40 p-3 shadow-sm"><p className="text-xs font-semibold text-foreground">We couldn’t check lenders just now — showing your results as of {state.lastCheckedAt}.</p><Button variant="link" onClick={retryCheck} className="h-auto px-0 text-xs">Retry</Button></div>}
+          {hasStale && <div className="mb-3 rounded-lg border border-border bg-muted/40 p-3 shadow-sm"><p className="text-xs font-semibold text-foreground">We couldn’t check lenders just now - showing your results as of {state.lastCheckedAt}.</p><Button variant="link" onClick={retryCheck} className="h-auto px-0 text-xs">Retry</Button></div>}
           {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} leadStatus={state.applied[offer.id]} notice={applyErrors[offer.id]} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <button type="button" onClick={() => setShowAll(!showAll)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAll ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more<ChevronDown className="h-4 w-4" /></>}</button>}</section> : <div className="rounded-lg border border-border bg-card p-5 shadow-sm"><h3 className="font-display text-lg font-bold text-foreground">Nothing available right now</h3><p className="mt-1 text-sm text-muted-foreground">Your credit profile needs a little work. See what you can unlock below.</p><Button onClick={() => onChat("apply")} className="mt-4 h-[54px] w-full rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">Talk to Arjun</Button></div>}
-          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{blockedLender && <p className="mt-2 rounded-lg border border-border bg-muted/60 p-3 text-xs text-foreground">We have checked with {blockedLender} — you are not eligible right now. Please try another loan or talk to Arjun.</p>}<button onClick={() => setShowAllLocked(!showAllLocked)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAllLocked ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more · 30+ lenders<ChevronDown className="h-4 w-4" /></>}</button></section>}
+          {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{blockedLender && <p className="mt-2 rounded-lg border border-border bg-muted/60 p-3 text-xs text-foreground">We have checked with {blockedLender} - you are not eligible right now. Please try another loan or talk to Arjun.</p>}<button onClick={() => setShowAllLocked(!showAllLocked)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAllLocked ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more · 30+ lenders<ChevronDown className="h-4 w-4" /></>}</button></section>}
         </>}
       </div>
       {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{[{ label: "₹25,000", value: "25000" }, { label: "₹50,000", value: "50000" }, { label: "₹1,00,000", value: "100000" }].map((option) => <Button key={option.label} variant={option.value === (state.loanAmount || "50000") ? "default" : "outline"} onClick={() => { update({ loanAmount: option.value }); setSheet(null); }} className={option.value === (state.loanAmount || "50000") ? "bg-primary-deep text-primary-foreground" : ""}>{option.label}</Button>)}</div></Sheet>}
