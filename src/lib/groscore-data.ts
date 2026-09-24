@@ -12,6 +12,7 @@ export interface DemoUser {
   expired?: boolean;
   updated?: { name: string; pan: string; dob: string };
   loanJourney?: "returning" | "first";
+  noCreditCardOffer?: boolean;
   // Loans error-state demos: bureau = "unavailable" (never pulled), bre = "none" (no eligible lenders), "empty" | "error" (check failed)
   loanErrors?: { bureau?: "no_hit" | "unavailable"; bre?: "none" | "empty" | "error" };
 }
@@ -134,6 +135,17 @@ export const DEMOS: Record<string, DemoUser> = {
     hasScore: false,
     loanJourney: "returning",
     loanErrors: { bureau: "unavailable" },
+  },
+  "9876500012": {
+    key: "loan",
+    phone: "9876500012",
+    name: "Riya",
+    pan: "ABCPR1212F",
+    dob: "08/04/1998",
+    hasScore: false,
+    loanJourney: "returning",
+    loanErrors: { bureau: "unavailable" },
+    noCreditCardOffer: true,
   },
 };
 
