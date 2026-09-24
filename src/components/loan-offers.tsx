@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AlertCircle, Check, ChevronDown, ChevronLeft, ChevronUp, CreditCard, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronLeft, ChevronUp, CreditCard, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
 import type { DemoUser } from "@/lib/groscore-data";
 import { Button } from "@/components/ui/button";
 import moneyviewLogo from "@/assets/lenders/moneyview.png";
@@ -209,8 +209,7 @@ function FormField({ label, children }: { label: string; children: React.ReactNo
 }
 
 function InlineSelect({ label, value, options, onChange }: { label: string; value: string; options: Array<{ label: string; note?: string }>; onChange: (value: string) => void }) {
-  const [open, setOpen] = useState(false);
-  return <div className="relative"><FormField label={label}><Button type="button" variant="ghost" onClick={() => setOpen((current) => !current)} className="h-10 w-full justify-between px-0 text-base hover:bg-transparent"><span className={value ? "text-foreground" : "text-muted-foreground"}>{value || "Select"}</span><ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} /></Button></FormField>{open && <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-20 overflow-hidden rounded-lg border border-border bg-popover shadow-lg">{options.map((option) => <Button type="button" key={option.label} variant="ghost" onClick={() => { onChange(option.label); setOpen(false); }} className="h-auto min-h-12 w-full justify-start rounded-none border-b border-border px-4 py-2 text-left last:border-b-0"><span className="flex-1"><span className="block text-sm font-semibold text-popover-foreground">{option.label}</span>{option.note && <span className="block text-xs font-normal text-muted-foreground">{option.note}</span>}</span>{value === option.label && <Check className="h-4 w-4 text-primary" />}</Button>)}</div>}</div>;
+  return <FormField label={label}><div className="flex flex-wrap gap-2 pt-1">{options.map((option) => <Button type="button" key={option.label} variant={value === option.label ? "default" : "outline"} onClick={() => onChange(option.label)} className={`h-9 rounded-full px-4 text-sm font-semibold shadow-none ${value === option.label ? "bg-primary-deep text-primary-foreground hover:bg-primary-deep/90" : "bg-card text-foreground hover:bg-muted"}`}>{option.label}</Button>)}</div></FormField>;
 }
 
 function AmountField({ id, label, value, onChange, autoFocus = false }: { id: string; label: string; value: string; onChange: (value: string) => void; autoFocus?: boolean }) {
@@ -378,29 +377,26 @@ const UNITY_CARD: Offer = {
 
 function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowMore: () => void }) {
   return (
-    <section className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-      <div className="relative bg-primary-deep/5 px-4 pb-4 pt-4">
-        <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
-        <div className="min-h-28 pr-36"><h3 className="font-display mt-3 text-[22px] font-bold leading-[28px] text-foreground">Roarbank UPI Credit Card</h3><p className="mt-1 text-sm text-muted-foreground">Unity Small Finance Bank</p></div>
-        <img src={unityCardArt.url} alt="Roarbank UPI Credit Card" loading="lazy" width={1024} height={656} className="pointer-events-none absolute right-3 top-3 w-28 rotate-6 drop-shadow-lg" />
-        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
-        <div className="mt-2 flex flex-wrap gap-2">
+    <section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+      <div className="relative px-4 pb-3 pt-4">
+        <div className="min-h-20 pr-28"><h3 className="font-display text-lg font-bold leading-6 text-foreground">Roarbank UPI Credit Card</h3><p className="mt-1 text-xs text-muted-foreground">Unity Small Finance Bank</p></div>
+        <img src={unityCardArt.url} alt="Roarbank UPI Credit Card" loading="lazy" width={1024} height={656} className="pointer-events-none absolute -right-4 -top-2 w-28 rotate-6 drop-shadow-lg" />
+        <div className="mt-2 flex flex-wrap gap-1.5">
           {["No credit history needed", "Zero joining fee", "Zero annual fee", "Up to 20% cashback"].map((feature) => (
-            <span key={feature} className="rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground">{feature}</span>
+            <span key={feature} className="rounded-full border border-border bg-card px-2.5 py-1 text-[11px] font-semibold text-foreground">{feature}</span>
           ))}
         </div>
       </div>
-      <div className="px-4 pb-4 pt-3">
-        <p className="text-center text-sm text-muted-foreground">High approval: <span className="font-bold text-foreground">99% new-to-credit users got this card</span></p>
-        <Button onClick={onApply} className="mt-3 h-[54px] w-full rounded-lg bg-primary-deep text-base font-bold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
-        <button type="button" onClick={onKnowMore} className="mt-3 w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground">Talk to Arjun</button>
+      <div className="grid grid-cols-2 gap-2 border-t border-border px-4 py-3">
+        <Button variant="outline" onClick={onKnowMore} className="h-11 w-full rounded-lg bg-card text-sm font-semibold shadow-none">Talk to Arjun</Button>
+        <Button onClick={onApply} className="h-11 w-full rounded-lg bg-primary-deep text-sm font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
       </div>
     </section>
   );
 }
 
 function CreditCardEmptyState() {
-  return <section className="rounded-xl border border-dashed border-border bg-card px-5 py-8 text-center shadow-sm"><div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted text-primary-deep"><CreditCard className="h-6 w-6" /></div><h3 className="font-display mt-4 text-lg font-bold text-foreground">Credit-building products coming soon</h3><p className="mt-1 text-sm text-muted-foreground">We do not have a card match for you right now. We will let you know when one becomes available.</p></section>;
+  return <section className="rounded-lg border border-dashed border-border bg-card px-5 py-6 text-center shadow-sm"><div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-muted text-primary-deep"><CreditCard className="h-5 w-5" /></div><h3 className="font-display mt-3 text-lg font-bold text-foreground">Oops, no match yet</h3><p className="mt-1 text-sm text-muted-foreground">New credit-building products are coming soon.</p></section>;
 }
 
 function UnlockIssueSheet({ offer, onClose, onFix }: { offer: LockedOffer; onClose: () => void; onFix: () => void }) {
@@ -431,7 +427,7 @@ export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { us
   const available = noBureau || (breFailed && !hasStale) || state.bre === "none" ? [] : state.persona === "prime" ? AVAILABLE : state.persona === "thin" ? AVAILABLE.slice(0, 1) : state.persona === "zero" ? [] : AVAILABLE;
   const locked = state.persona === "prime" ? [] : state.persona === "thin" ? LOCKED_TIME : LOCKED_ISSUES;
   const visibleAvailable = showAll ? available : available.slice(0, 4);
-  const visibleLocked = showAllLocked ? locked : locked.slice(0, 5);
+  const visibleLocked = showAllLocked ? locked : locked.slice(0, 3);
   const startQuestions = () => update({ step: "details" });
   const openApply = (offer: Offer) => {
     // Apply API failure: no lead, no enquiry — card keeps its previous state and stays live.
@@ -476,7 +472,7 @@ export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { us
           <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">Let's make you loan ready</h2><p className="mt-1 text-sm text-muted-foreground">No credit score, no problem. A credit card is the fastest way to build one.</p></header>
           <div className="mb-6">{user.noCreditCardOffer ? <CreditCardEmptyState /> : <CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} />}</div>
           <header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header>
-          <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{locked.length > 5 && <button onClick={() => setShowAllLocked(!showAllLocked)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAllLocked ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more · 30+ lenders<ChevronDown className="h-4 w-4" /></>}</button>}</section>
+          <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{locked.length > 3 && <button onClick={() => setShowAllLocked(!showAllLocked)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAllLocked ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more · 30+ lenders<ChevronDown className="h-4 w-4" /></>}</button>}</section>
         </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center shadow-sm">
           <h3 className="font-display text-lg font-bold text-foreground">We couldn’t check lenders just now</h3>
           <p className="mt-1 text-sm text-muted-foreground">Yeh network issue hai — aapki eligibility par koi asar nahi.</p>
@@ -484,7 +480,7 @@ export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { us
         </div> : <>
           <header className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl font-bold text-foreground">Loan offers for you</h2><Button variant="outline" onClick={() => setShowApplications(true)} className="h-9 shrink-0 rounded-lg bg-card px-3 text-sm font-semibold shadow-none">Applications</Button></header>
           {hasStale && <div className="mb-3 rounded-lg border border-border bg-muted/40 p-3 shadow-sm"><p className="text-xs font-semibold text-foreground">We couldn’t check lenders just now — showing your results as of {state.lastCheckedAt}.</p><Button variant="link" onClick={retryCheck} className="h-auto px-0 text-xs">Retry</Button></div>}
-          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} leadStatus={state.applied[offer.id]} notice={applyErrors[offer.id]} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5 shadow-sm"><h3 className="font-display text-lg font-bold text-foreground">Nothing available right now — but we know why</h3><p className="mt-1 text-sm text-muted-foreground">Abhi koi lender match nahi hua. Neeche dekhiye kya unlock ho sakta hai.</p><Button variant="outline" onClick={() => onChat("apply")} className="mt-4 h-12 w-full rounded-lg">Talk to Arjun</Button></div>}
+          {available.length > 0 ? <section><div className="space-y-3">{visibleAvailable.map((offer, index) => <OfferCard key={offer.id} featured={index === 0} offer={offer} leadStatus={state.applied[offer.id]} notice={applyErrors[offer.id]} onApply={() => openApply(offer)} />)}</div>{available.length > 4 && <Button variant="outline" onClick={() => setShowAll(!showAll)} className="mt-2 h-12 w-full rounded-lg border-border bg-card text-sm font-semibold text-foreground shadow-none hover:bg-muted/50">{showAll ? <>View less<ChevronUp /></> : <>View more<ChevronDown /></>}</Button>}</section> : <div className="rounded-lg border border-border bg-card p-5 shadow-sm"><h3 className="font-display text-lg font-bold text-foreground">Nothing available right now</h3><p className="mt-1 text-sm text-muted-foreground">Your credit profile needs a little work. See what you can unlock below.</p><Button onClick={() => onChat("apply")} className="mt-4 h-[54px] w-full rounded-lg bg-primary-deep text-base font-semibold text-primary-foreground shadow-none hover:bg-primary-deep/90">Talk to Arjun</Button></div>}
           {locked.length > 0 && <section className="mt-6"><header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{blockedLender && <p className="mt-2 rounded-lg border border-border bg-muted/60 p-3 text-xs text-foreground">We have checked with {blockedLender} — you are not eligible right now. Please try another loan or talk to Arjun.</p>}<button onClick={() => setShowAllLocked(!showAllLocked)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAllLocked ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more · 30+ lenders<ChevronDown className="h-4 w-4" /></>}</button></section>}
         </>}
       </div>

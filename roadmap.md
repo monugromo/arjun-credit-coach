@@ -23,3 +23,4 @@
 - [x] Move application tracking above loan offers and add sample applications across every status.
 - [x] Show 4 offers with a "View more" expander, rename section to "Loans you can unlock", and show 5 unlockable loans with a "View more" expander.
 - [x] View less after View more; Rejected status in Your applications; Undo removed; locked-loan chat now references the user's actual score.
+- [x] Compact the credit card offer, use chip choices, unify actions, show three locked loans, and simplify empty states.
