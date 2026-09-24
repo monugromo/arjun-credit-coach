@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronDown, ChevronLeft, ChevronUp, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
+import { AlertCircle, Check, ChevronDown, ChevronLeft, ChevronUp, CreditCard, Info, Loader2, LocateFixed, LockKeyhole, MoreVertical, ShieldCheck, X } from "lucide-react";
 import type { DemoUser } from "@/lib/groscore-data";
 import { Button } from "@/components/ui/button";
 import moneyviewLogo from "@/assets/lenders/moneyview.png";
@@ -100,6 +100,8 @@ type LockedOffer = {
   distance: string;
   progress: number;
   reason: "issues" | "time";
+  issue?: string;
+  explanation?: string;
 };
 
 const AVAILABLE: Offer[] = [
@@ -115,19 +117,19 @@ const AVAILABLE: Offer[] = [
 ];
 
 const LOCKED_ISSUES: LockedOffer[] = [
-  { id: "lock-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "Just a few points away", progress: 58, reason: "issues" },
-  { id: "lock-hdfc", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, distance: "Just a few points away", progress: 49, reason: "issues" },
-  { id: "lock-kissht", lender: "Kissht", product: "Personal loan", logo: kisshtLogo, distance: "Just a few points away", progress: 44, reason: "issues" },
-  { id: "lock-creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, distance: "Just a few points away", progress: 37, reason: "issues" },
-  { id: "lock-lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, distance: "Just a few points away", progress: 35, reason: "issues" },
-  { id: "lock-zype", lender: "Zype", product: "Personal loan", distance: "Just a few points away", progress: 42, reason: "issues" },
+  { id: "lock-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "Tap to see how to unlock", progress: 58, reason: "issues", issue: "₹13,583 overdue with Hari & Co", explanation: "This overdue account is the highest-impact issue on your credit report." },
+  { id: "lock-hdfc", lender: "HDFC Bank", product: "Personal loan", logo: hdfcLogo, distance: "Tap to see how to unlock", progress: 49, reason: "issues", issue: "Written-off account from 2023", explanation: "A written-off account is currently affecting your credit profile." },
+  { id: "lock-kissht", lender: "Kissht", product: "Personal loan", logo: kisshtLogo, distance: "Tap to see how to unlock", progress: 44, reason: "issues", issue: "Credit utilisation is at 94%", explanation: "Reducing your card balance below 30% can strengthen your credit profile." },
+  { id: "lock-creditsea", lender: "Credit Sea", product: "Credit line", logo: creditseaLogo, distance: "Tap to see how to unlock", progress: 37, reason: "issues", issue: "₹13,583 overdue with Hari & Co", explanation: "This overdue account is the highest-impact issue on your credit report." },
+  { id: "lock-lendingplate", lender: "Lendingplate", product: "Personal loan", logo: lendingplateLogo, distance: "Tap to see how to unlock", progress: 35, reason: "issues", issue: "Written-off account from 2023", explanation: "A written-off account is currently affecting your credit profile." },
+  { id: "lock-zype", lender: "Zype", product: "Personal loan", distance: "Tap to see how to unlock", progress: 42, reason: "issues", issue: "Credit utilisation is at 94%", explanation: "Reducing your card balance below 30% can strengthen your credit profile." },
 ];
 
 const LOCKED_TIME: LockedOffer[] = [
-  { id: "time-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "Credit file abhi nayi hai", progress: 67, reason: "time" },
-  { id: "time-tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, distance: "Credit file abhi nayi hai", progress: 67, reason: "time" },
-  { id: "time-hdfc", lender: "HDFC Bank", product: "Credit card", logo: hdfcLogo, distance: "Credit file abhi nayi hai", progress: 67, reason: "time" },
-  { id: "time-zype", lender: "Zype", product: "Personal loan", distance: "Credit file abhi nayi hai", progress: 67, reason: "time" },
+  { id: "time-prefr", lender: "Prefr", product: "Personal loan", logo: prefrLogo, distance: "Tap to see how to unlock", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
+  { id: "time-tez", lender: "Tez Credit", product: "Personal loan", logo: tezLogo, distance: "Tap to see how to unlock", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
+  { id: "time-hdfc", lender: "HDFC Bank", product: "Credit card", logo: hdfcLogo, distance: "Tap to see how to unlock", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
+  { id: "time-zype", lender: "Zype", product: "Personal loan", distance: "Tap to see how to unlock", progress: 67, reason: "time", issue: "Your credit file is still new", explanation: "Your report currently has eight months of credit history. More on-time payments will help." },
 ];
 
 const INTRO_LENDERS = [
@@ -168,10 +170,10 @@ function AppHeader({ onBack, onEdit }: { onBack: () => void; onEdit?: () => void
   return <header className="relative flex h-14 shrink-0 items-center gap-2 bg-primary-deep px-3 text-primary-foreground"><Button aria-label="Back" size="icon" variant="ghost" onClick={onBack} className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"><ChevronLeft className="h-6 w-6" /></Button><h1 className="flex-1 text-[17px] font-semibold">Loans</h1>{onEdit && <><Button aria-label="More options" size="icon" variant="ghost" onClick={() => setMenuOpen((open) => !open)} className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"><MoreVertical className="h-5 w-5" /></Button>{menuOpen && <div className="absolute right-3 top-12 z-40 min-w-44 overflow-hidden rounded-lg border border-border bg-popover shadow-lg"><Button variant="ghost" onClick={() => { setMenuOpen(false); onEdit(); }} className="h-12 w-full justify-start rounded-none px-4 text-sm text-popover-foreground">Edit loan details</Button></div>}</>}</header>;
 }
 
-function LenderLogo({ name, logo, muted = false, size = "md" }: { name: string; logo?: string; muted?: boolean; size?: "sm" | "md" }) {
+function LenderLogo({ name, logo, size = "md" }: { name: string; logo?: string; size?: "sm" | "md" }) {
   const dimensions = size === "sm" ? "h-9 w-9" : "h-12 w-12";
   return (
-    <div className={`flex ${dimensions} shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-card p-1.5 ${muted ? "grayscale opacity-60" : ""}`}>
+    <div className={`flex ${dimensions} shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-card p-1.5`}>
       {logo ? <img src={logo} alt={`${name} logo`} className="h-full w-full object-contain" /> : <span className="text-sm font-bold text-primary-deep">{name.slice(0, 1)}</span>}
     </div>
   );
@@ -190,7 +192,7 @@ function IntroPage({ onStart }: { onStart: () => void }) {
         <div className="mx-auto max-w-sm">
           <h2 className="font-display text-[22px] font-bold leading-[28px] text-foreground">Find the right loan for you</h2>
           <div className="mt-7 grid grid-cols-3 gap-3">
-            {INTRO_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-border bg-card px-2 py-3 shadow-sm"><img src={lender.logo} alt={`${lender.name} logo`} className="h-7 max-w-full object-contain grayscale" /><span className="text-center text-[11px] font-medium leading-tight text-muted-foreground">{lender.name}</span></div>)}
+            {INTRO_LENDERS.map((lender) => <div key={lender.name} className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-border bg-card px-2 py-3 shadow-sm"><img src={lender.logo} alt={`${lender.name} logo`} className="h-7 max-w-full object-contain" /><span className="text-center text-[11px] font-medium leading-tight text-muted-foreground">{lender.name}</span></div>)}
           </div>
           <p className="mt-5 text-center text-sm font-medium text-muted-foreground">Compare offers from 30+ lenders</p>
         </div>
@@ -316,7 +318,7 @@ function LockedCard({ offer, onClick, contacted }: { offer: LockedOffer; onClick
   return (
     <Button variant="ghost" onClick={onClick} className={`h-auto w-full rounded-lg border px-3 py-3 text-left shadow-sm ${contacted ? "border-border bg-muted/60 hover:bg-muted/70" : "border-border bg-card hover:bg-muted/50"}`}>
       <div className="flex w-full items-start gap-3">
-        <LenderLogo name={offer.lender} logo={offer.logo} muted size="sm" />
+        <LenderLogo name={offer.lender} logo={offer.logo} size="sm" />
         <div className="min-w-0 flex-1 text-left">
           <div className="flex items-center gap-1.5">
             <span className={`truncate text-sm font-bold ${contacted ? "text-muted-foreground" : "text-foreground"}`}>{offer.lender}</span>
@@ -379,10 +381,9 @@ function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowM
     <section className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
       <div className="relative bg-primary-deep/5 px-4 pb-4 pt-4">
         <span className="inline-flex rounded-md bg-primary-deep px-2 py-1 text-[11px] font-bold text-primary-foreground">Recommended</span>
-        <h3 className="font-display mt-3 text-[22px] font-bold leading-[28px] text-foreground">Roarbank UPI Credit Card</h3>
-        <p className="text-sm text-muted-foreground">Unity Small Finance Bank</p>
-        <img src={unityCardArt.url} alt="Roarbank UPI Credit Card" loading="lazy" width={1024} height={656} className="pointer-events-none absolute -right-6 top-6 w-32 rotate-6 drop-shadow-lg" />
-        <p className="mt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
+        <div className="min-h-28 pr-36"><h3 className="font-display mt-3 text-[22px] font-bold leading-[28px] text-foreground">Roarbank UPI Credit Card</h3><p className="mt-1 text-sm text-muted-foreground">Unity Small Finance Bank</p></div>
+        <img src={unityCardArt.url} alt="Roarbank UPI Credit Card" loading="lazy" width={1024} height={656} className="pointer-events-none absolute right-3 top-3 w-28 rotate-6 drop-shadow-lg" />
+        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Why this fits you</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {["No credit history needed", "Zero joining fee", "Zero annual fee", "Up to 20% cashback"].map((feature) => (
             <span key={feature} className="rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground">{feature}</span>
@@ -392,18 +393,27 @@ function CreditCardOffer({ onApply, onKnowMore }: { onApply: () => void; onKnowM
       <div className="px-4 pb-4 pt-3">
         <p className="text-center text-sm text-muted-foreground">High approval: <span className="font-bold text-foreground">99% new-to-credit users got this card</span></p>
         <Button onClick={onApply} className="mt-3 h-[54px] w-full rounded-lg bg-primary-deep text-base font-bold text-primary-foreground shadow-none hover:bg-primary-deep/90">Apply now</Button>
-        <button type="button" onClick={onKnowMore} className="mt-3 w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground">Know more</button>
+        <button type="button" onClick={onKnowMore} className="mt-3 w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground">Talk to Arjun</button>
       </div>
     </section>
   );
 }
 
-export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: DemoUser; state: LoanJourneyState; setState: LoanStateSetter; onChat: (kind: "recommend" | "issues" | "time" | "ntc" | "apply" | "card", lender?: string) => void; onBack: () => void }) {
+function CreditCardEmptyState() {
+  return <section className="rounded-xl border border-dashed border-border bg-card px-5 py-8 text-center shadow-sm"><div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted text-primary-deep"><CreditCard className="h-6 w-6" /></div><h3 className="font-display mt-4 text-lg font-bold text-foreground">Credit-building products coming soon</h3><p className="mt-1 text-sm text-muted-foreground">We do not have a card match for you right now. We will let you know when one becomes available.</p></section>;
+}
+
+function UnlockIssueSheet({ offer, onClose, onFix }: { offer: LockedOffer; onClose: () => void; onFix: () => void }) {
+  return <Sheet title="Why this loan is locked" onClose={onClose}><div className="mt-5"><div className="flex items-center gap-3 border-b border-border pb-4"><LenderLogo name={offer.lender} logo={offer.logo} /><div className="min-w-0 flex-1"><h4 className="font-display text-lg font-bold text-foreground">{offer.lender}</h4><p className="text-sm text-muted-foreground">{offer.product}</p></div><LockKeyhole className="h-5 w-5 shrink-0 text-muted-foreground" /></div><div className="py-5"><p className="text-xs font-bold uppercase text-muted-foreground">Issue found in your report</p><div className="mt-3 flex gap-3"><AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" /><div><h4 className="font-display text-lg font-bold text-foreground">{offer.issue}</h4><p className="mt-2 text-sm leading-5 text-muted-foreground">{offer.explanation}</p></div></div><div className="mt-5 flex gap-2 rounded-lg bg-primary-soft p-3 text-sm text-foreground"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary-deep" /><p>No lender application has been sent, so your credit score is unaffected.</p></div></div><Button onClick={onFix} className="h-[54px] w-full rounded-lg bg-primary-deep text-base font-bold text-primary-foreground hover:bg-primary-deep/90">Fix this with Arjun</Button></div></Sheet>;
+}
+
+export function LoanOffersScreen({ user, state, setState, onChat, onBack }: { user: DemoUser; state: LoanJourneyState; setState: LoanStateSetter; onChat: (kind: "recommend" | "issues" | "time" | "ntc" | "apply" | "card", lender?: string) => void; onBack: () => void }) {
   const [sheet, setSheet] = useState<"amount" | null>(null);
   const [browserOffer, setBrowserOffer] = useState<Offer | null>(null);
   const [showAll, setShowAll] = useState(false);
   const [showAllLocked, setShowAllLocked] = useState(false);
   const [blockedLender, setBlockedLender] = useState<string | null>(null);
+  const [selectedLocked, setSelectedLocked] = useState<LockedOffer | null>(null);
   const [showApplications, setShowApplications] = useState(false);
   const [editingDetails, setEditingDetails] = useState(false);
   const [applyErrors, setApplyErrors] = useState<Record<string, string>>({});
@@ -443,14 +453,14 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       return;
     }
     setBlockedLender(null);
-    update({ lockedContacted: [...state.lockedContacted, offer.lender] });
-    onChat(offer.reason, offer.lender);
+    setSelectedLocked(offer);
   };
+  const fixLockedOffer = (offer: LockedOffer) => { update({ lockedContacted: [...state.lockedContacted, offer.lender] }); setSelectedLocked(null); onChat(offer.reason, offer.lender); };
   const retryCheck = () => update({ bre: "ok", step: "checking" });
 
   const closeBrowser = () => { if (browserOffer) update({ applied: { ...state.applied, [browserOffer.id]: "open" } }); setBrowserOffer(null); requestAnimationFrame(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollTop.current; }); };
 
-  if (state.step === "checking") return <div className="flex flex-1 flex-col items-center justify-center bg-card px-8 text-center motion-safe:animate-[loan-page-slide_260ms_ease-out]"><Loader2 className="h-11 w-11 animate-spin text-primary" /><h2 className="font-display mt-5 text-xl font-bold text-foreground">Checking lender matches</h2><div className="mt-5 flex gap-2">{INTRO_LENDERS.slice(0, 4).map((lender) => <LenderLogo key={lender.name} name={lender.name} logo={lender.logo} muted size="sm" />)}</div></div>;
+  if (state.step === "checking") return <div className="flex flex-1 flex-col items-center justify-center bg-card px-8 text-center motion-safe:animate-[loan-page-slide_260ms_ease-out]"><Loader2 className="h-11 w-11 animate-spin text-primary" /><h2 className="font-display mt-5 text-xl font-bold text-foreground">Checking lender matches</h2><div className="mt-5 flex gap-2">{INTRO_LENDERS.slice(0, 4).map((lender) => <LenderLogo key={lender.name} name={lender.name} logo={lender.logo} size="sm" />)}</div></div>;
 
   if (state.step === "intro") return <div className="relative flex min-h-0 flex-1 flex-col bg-card"><AppHeader onBack={onBack} /><div className="flex min-h-0 flex-1 motion-safe:animate-[loan-page-slide_260ms_ease-out]"><IntroPage onStart={startQuestions} /></div></div>;
 
@@ -464,9 +474,9 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
         {noBureau ? <>
           <header className="mb-4"><h2 className="font-display text-xl font-bold text-foreground">Let's make you loan ready</h2><p className="mt-1 text-sm text-muted-foreground">No credit score, no problem. A credit card is the fastest way to build one.</p></header>
-          <div className="mb-6"><CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} /></div>
+          <div className="mb-6">{user.noCreditCardOffer ? <CreditCardEmptyState /> : <CreditCardOffer onApply={() => setBrowserOffer(UNITY_CARD)} onKnowMore={() => onChat("card", "Roarbank UPI Credit Card")} />}</div>
           <header className="mb-3"><h3 className="font-display text-lg font-bold text-foreground">Loans you can unlock</h3></header>
-          <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} onClick={() => onChat("ntc", offer.lender)} />)}</div>{locked.length > 5 && <button onClick={() => setShowAllLocked(!showAllLocked)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAllLocked ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more · 30+ lenders<ChevronDown className="h-4 w-4" /></>}</button>}</section>
+          <section><div className="space-y-2">{visibleLocked.map((offer) => <LockedCard key={offer.id} offer={offer} contacted={state.lockedContacted.includes(offer.lender)} onClick={() => handleUnlockTap(offer)} />)}</div>{locked.length > 5 && <button onClick={() => setShowAllLocked(!showAllLocked)} className="mt-3 flex w-full items-center justify-center gap-1 text-sm font-semibold text-foreground hover:text-foreground/80">{showAllLocked ? <>View less<ChevronUp className="h-4 w-4" /></> : <>View more · 30+ lenders<ChevronDown className="h-4 w-4" /></>}</button>}</section>
         </> : breFailed && !hasStale ? <div className="rounded-lg border border-border bg-card p-5 text-center shadow-sm">
           <h3 className="font-display text-lg font-bold text-foreground">We couldn’t check lenders just now</h3>
           <p className="mt-1 text-sm text-muted-foreground">Yeh network issue hai — aapki eligibility par koi asar nahi.</p>
@@ -480,6 +490,7 @@ export function LoanOffersScreen({ state, setState, onChat, onBack }: { user: De
       </div>
       {sheet === "amount" && <Sheet title="Loan amount" subtitle="Choose the amount you need" onClose={() => setSheet(null)}><div className="mt-5 grid grid-cols-3 gap-2">{[{ label: "₹25,000", value: "25000" }, { label: "₹50,000", value: "50000" }, { label: "₹1,00,000", value: "100000" }].map((option) => <Button key={option.label} variant={option.value === (state.loanAmount || "50000") ? "default" : "outline"} onClick={() => { update({ loanAmount: option.value }); setSheet(null); }} className={option.value === (state.loanAmount || "50000") ? "bg-primary-deep text-primary-foreground" : ""}>{option.label}</Button>)}</div></Sheet>}
       {browserOffer && <InAppBrowser offer={browserOffer} onClose={closeBrowser} />}
+      {selectedLocked && <UnlockIssueSheet offer={selectedLocked} onClose={() => setSelectedLocked(null)} onFix={() => fixLockedOffer(selectedLocked)} />}
     </div>
   );
 }

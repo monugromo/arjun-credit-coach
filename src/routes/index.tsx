@@ -306,24 +306,12 @@ function Index() {
 
   const [loanChatDraft, setLoanChatDraft] = useState<{ kind: "issues" | "time"; lender: string } | null>(null);
 
-  // Runs after the user taps Send on the prefilled locked-lender message.
   const streamLockedLoanReply = async (kind: "issues" | "time", lender: string) => {
     if (kind === "time") {
-      await streamCoach([
-        { id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: "Aapki credit file abhi nayi hai — report mein sirf 8 mahine ki history dikh rahi hai. Thoda aur time aur clean history ke saath yeh unlock ho jayega." },
-        { id: "loan-time2" + Date.now(), from: "coach", kind: "text", text: "There is nothing negative on your report. Your credit file is simply new." },
-        { id: "loan-time3" + Date.now(), from: "coach", kind: "text", text: "Prefr and Tez may become available around January. I’ll keep track for you." },
-      ]);
+      await streamCoach([{ id: "loan-time1" + Date.now(), from: "coach", kind: "text", text: "Your credit file is still new. Keep making payments on time and I’ll track when more lenders become available." }]);
       return;
     }
-    await streamCoach([{ id: "loan-lock0" + Date.now(), from: "coach", kind: "text", text: `Let me check with ${lender}, please wait…` }]);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    await streamCoach([
-      { id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: `${lender} se abhi approval nahi mila. Aapki report mein sabse bada issue ₹13,583 ka overdue hai Hari & Co ke saath — ise fix karke yeh loan unlock ho sakta hai.` },
-      { id: "loan-lock2" + Date.now(), from: "coach", kind: "text", text: "Iske alawa report mein do aur issues hain: 2023 ka ek written-off account aur 94% card utilisation." },
-      { id: "loan-lock3" + Date.now(), from: "coach", kind: "text", text: "Start with the overdue balance because it has the highest impact. Should I draft an email to Hari & Co?" },
-      { id: "loan-quick" + Date.now(), from: "coach", kind: "loanQuickReplies" },
-    ]);
+    await streamCoach([{ id: "loan-lock1" + Date.now(), from: "coach", kind: "text", text: "Start with the overdue account on your report. I can help you contact Hari & Co and track the update." }]);
   };
 
   const triggerLoanChat = (kind: "recommend" | "issues" | "time" | "ntc" | "apply" | "card", lender = "Moneyview") => {
@@ -337,8 +325,9 @@ function Index() {
         return;
       }
       if (kind === "time" || kind === "issues") {
-        // Locked lender: prefill the composer so the user sends it themselves.
-        setLoanChatDraft({ kind, lender });
+        setLoanChatDraft(null);
+        setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `Help me fix the issue blocking my ${lender} loan.`, time: nowTime() }]);
+        void streamLockedLoanReply(kind, lender);
         return;
       }
       if (kind === "ntc") {
@@ -350,12 +339,7 @@ function Index() {
       }
       if (kind === "card") {
         setChat((c) => [...c, { id: "loan-user" + Date.now(), from: "user", kind: "text", text: `How do I apply for the ${lender}?`, time: nowTime() }]);
-        await streamCoach([
-          { id: "loan-card1" + Date.now(), from: "coach", kind: "text", text: `${lender} ke liye credit history ki zaroorat nahi — isliye aap abhi eligible hain.` },
-          { id: "loan-card2" + Date.now(), from: "coach", kind: "text", text: "Features: zero joining fee, zero annual fee, UPI par card chalega, aur selected categories mein 20% tak cashback." },
-          { id: "loan-card3" + Date.now(), from: "coach", kind: "text", text: "Apply karna simple hai: Apply now dabaiye, PAN aur Aadhaar se KYC kariye, video KYC complete kariye — approval instant milta hai aur card UPI mein turant add ho jaata hai." },
-          { id: "loan-card4" + Date.now(), from: "coach", kind: "text", text: "Har mahine limit ka 30% se kam use kariye aur full payment time par kariye — 4-6 mahine mein aapka first score ban jayega." },
-        ]);
+        await streamCoach([{ id: "loan-card1" + Date.now(), from: "coach", kind: "text", text: "This card needs no credit history and has no joining or annual fee. Tap Apply now, then complete PAN, Aadhaar and video KYC." }]);
         return;
       }
       if (kind === "apply") {
@@ -817,7 +801,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
             <div>
               <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">No bureau data</div>
               <div className="flex flex-col gap-2">
-                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"], ["9876500007", "007", "Meera · Loan offers · returning"], ["9876500008", "008", "Kabir · Loan offers · first visit"], ["9876500009", "009", "Suresh · No eligible lenders"], ["9876500010", "010", "Pooja · Lender check failed"], ["9876500011", "011", "Manoj · Bureau not pulled"]].map(([p, id, label]) => (
+                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"], ["9876500007", "007", "Meera · Loan offers · returning"], ["9876500008", "008", "Kabir · Loan offers · first visit"], ["9876500009", "009", "Suresh · No eligible lenders"], ["9876500010", "010", "Pooja · Lender check failed"], ["9876500011", "011", "Manoj · Bureau not pulled"], ["9876500012", "012", "Riya · No credit card offer"]].map(([p, id, label]) => (
                   <button key={p} onClick={() => setPhone(p)}
                     className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                     <span>
