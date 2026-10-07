@@ -374,3 +374,35 @@
 .credit-report .report-refresh-row small { font-size: 12px; color: var(--report-subtle); font-weight: 500; }
 .credit-report .report-refresh-row strong { font-size: 14px; font-weight: 600; }
 .credit-report .report-refresh { height: 40px; border-radius: 999px; padding: 0 18px; background: var(--report-brand); color: var(--report-paper); font-size: 14px; font-weight: 600; }
+
+/* Premium swiss minimal (v3) overrides */
+.credit-report .report-equifax { gap: 8px; font-size: 11px; letter-spacing: .2em; }
+.credit-report .report-equifax .report-bureau-mark { width: 24px; height: 24px; font-size: 14px; }
+.credit-report .report-score-value strong { font-size: 72px; font-weight: 800; letter-spacing: -0.045em; line-height: 1; }
+.credit-report .report-score-value > span { font-size: 20px; font-weight: 500; letter-spacing: -0.01em; }
+.credit-report .report-score-band, .credit-report .report-score-change { font-size: 14px; font-weight: 700; padding: 7px 16px; border: 1px solid color-mix(in oklab, var(--report-positive) 18%, transparent); }
+.credit-report .report-score-band { color: var(--report-brand); }
+.credit-report .report-range-track { gap: 4px; height: 8px; }
+.credit-report .report-range-track > span:nth-child(1) { background: color-mix(in oklab, var(--report-danger) 14%, transparent); border-radius: 20px 0 0 20px; }
+.credit-report .report-range-track > span:nth-child(2) { background: color-mix(in oklab, var(--report-warning) 16%, transparent); border-radius: 0; }
+.credit-report .report-range-track > span:nth-child(3) { background: var(--report-brand); border-radius: 0; }
+.credit-report .report-range-track > span:nth-child(4) { background: var(--report-positive-soft); border-radius: 0 20px 20px 0; }
+.credit-report .report-range-marker { top: 50%; width: 6px; height: 24px; border: 2px solid var(--report-paper); box-shadow: 0 1px 3px rgb(0 0 0 / .25); transform: translate(-50%, -50%); }
+.credit-report .report-range-labels { margin-top: 12px; letter-spacing: .12em; color: var(--report-faint); }
+.credit-report .report-range-labels span:nth-child(3) { color: var(--report-ink); }
+.credit-report .report-dots { gap: 6px; margin-top: 24px; }
+.credit-report .report-dots button { width: 16px; height: 6px; }
+.credit-report .report-dots button.is-active { width: 24px; }
+.credit-report .report-refresh-row { margin-top: 24px; padding-top: 24px; }
+.credit-report .report-refresh-row small { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+.credit-report .report-refresh-row strong { font-size: 16px; font-weight: 700; }
+.credit-report .report-factors-title { text-align: left; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+.credit-report .report-factor-row { min-height: 0; gap: 16px; padding: 24px 0; }
+.credit-report .report-factor-row .report-icon { width: 48px; height: 48px; border-radius: 16px; background: var(--report-surface); color: var(--report-brand); }
+.credit-report .report-factor-row .report-icon svg { width: 24px; height: 24px; stroke-width: 1.5; }
+.credit-report .report-factor-row .report-row-label > strong { font-size: 15px; font-weight: 700; }
+.credit-report .report-factor-row .report-row-label > small { font-size: 14px; font-weight: 500; }
+.credit-report .report-status-word { font-size: 14px; font-weight: 700; }
+.credit-report .report-chevron { width: 16px; height: 16px; }
+.credit-report .report-range-marker { height: 20px; }
+.credit-report .report-range-labels { margin-top: 14px; }
