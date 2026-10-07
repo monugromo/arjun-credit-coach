@@ -2,6 +2,7 @@ import { useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, List, MessageCircle, RefreshCw, Wallet, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { DemoUser } from "@/lib/groscore-data";
+import equifaxLogo from "@/assets/equifax-logo.png.asset.json";
 
 const cards = [
   { bank: "HDFC Bank", last4: "4521", used: 128000, limit: 150000, pct: 85, tone: "danger" },
@@ -39,7 +40,7 @@ const totalLimit = cards.reduce((sum, card) => sum + card.limit, 0);
 const totalOutstanding = loans.reduce((sum, loan) => sum + loan.outstanding, 0);
 
 function BureauFooter() {
-  return <footer className="report-bureau"><span>Powered by</span><span className="report-bureau-mark">E</span><strong>EQUIFAX</strong></footer>;
+  return <footer className="report-bureau"><span>Powered by</span><img className="report-bureau-logo" src={equifaxLogo.url} alt="Equifax" /></footer>;
 }
 
 export function CreditReport({ user, onBack, onStartChat, savings }: { user: DemoUser; onBack: () => void; onStartChat: () => void; savings: ReactNode }) {
@@ -127,7 +128,7 @@ export function CreditReport({ user, onBack, onStartChat, savings }: { user: Dem
         <section className="report-section report-savings">{savings}</section>
       </> : <>
         <section className="report-section report-score-hero">
-          <div className="report-meta-row"><span className="report-equifax"><span className="report-bureau-mark">E</span>EQUIFAX</span><Button variant="ghost" size="icon" aria-label="About your credit score" onClick={() => setShowInfo(!showInfo)}><Info /></Button></div>
+          <div className="report-meta-row"><span className="report-equifax"><img className="report-equifax-logo" src={equifaxLogo.url} alt="Equifax" /></span><Button variant="ghost" size="icon" aria-label="About your credit score" onClick={() => setShowInfo(!showInfo)}><Info /></Button></div>
           <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
             <div className="report-slide">
               <div className="report-score-value"><strong>{score}</strong><span>of 900</span></div>
