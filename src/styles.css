@@ -404,3 +404,5 @@
 .credit-report .report-factor-row .report-row-label > small { font-size: 14px; font-weight: 500; }
 .credit-report .report-status-word { font-size: 14px; font-weight: 700; }
 .credit-report .report-chevron { width: 16px; height: 16px; }
+.credit-report .report-range-marker { height: 20px; }
+.credit-report .report-range-labels { margin-top: 14px; }
