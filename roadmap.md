@@ -26,4 +26,4 @@
 - [x] Compact the credit card offer, use chip choices, unify actions, show three locked loans, and simplify empty states.
 - [x] Apply the selected Clean Minimalist credit report design while preserving data and core journeys.
 - [x] Verify report overview, factor details, accounts, savings and navigation in the browser.
-- [ ] Align every report screen with the app theme, consistent type sizes and spacing; verify all drill-downs without changing flows.
+- [x] Align every report screen with the app theme, consistent type sizes and spacing; verify all drill-downs without changing flows.
