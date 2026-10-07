@@ -188,7 +188,7 @@
   --report-danger: oklch(0.637 0.237 25.331);
   --report-danger-soft: oklch(0.892 0.058 10.001);
   --report-bureau: oklch(0.455 0.188 13.697);
-  font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   color: var(--report-ink);
   background: var(--report-paper);
   letter-spacing: 0;
@@ -331,3 +331,17 @@
   .report-row-label > strong { font-size: 13px; }
   .report-detail-stats > div { padding: 18px; }
 }
+/* Premium minimalist factor list (ss1) */
+.credit-report .report-factors { padding-top: 32px; }
+.credit-report .report-factors-title { text-align: center; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+.credit-report .report-factor-row { min-height: 84px; gap: 16px; padding: 20px 4px; border-radius: 0; }
+.credit-report .report-factor-row:hover { background: transparent; }
+.credit-report .report-factor-row .report-icon { background: transparent; color: var(--report-brand); width: 28px; }
+.credit-report .report-factor-row .report-icon svg { width: 22px; height: 22px; stroke-width: 1.75; }
+.credit-report .report-row-label > strong { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+.credit-report .report-row-label > small { font-size: 13px; font-weight: 400; }
+.credit-report .report-status-word { font-size: 14px; font-weight: 500; flex-shrink: 0; }
+.credit-report .report-chevron { width: 16px; height: 16px; color: var(--report-subtle); }
+.credit-report .report-accounts-link-wrap { padding: 4px 24px 28px; display: flex; justify-content: center; }
+.credit-report .report-accounts-link { width: auto; min-height: 44px; background: transparent; color: var(--report-brand); padding: 8px 12px; font-size: 15px; font-weight: 600; gap: 10px; }
+.credit-report .report-accounts-link:hover { background: transparent; color: var(--report-brand); opacity: .8; }
