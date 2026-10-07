@@ -1,5 +1,5 @@
 import { useRef, useState, type ReactNode } from "react";
-import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, List, MessageCircle, Wallet, X } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, List, MessageCircle, RefreshCw, Wallet, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { DemoUser } from "@/lib/groscore-data";
 
@@ -30,6 +30,10 @@ const factors = [
 type Tab = "cards" | "loans" | "enquiries";
 type View = "score" | "trend" | "accounts" | typeof factors[number]["key"];
 type Account = { kind: "card"; index: number } | { kind: "loan"; index: number };
+// Demo bureau pull date; replace with the real report date from the backend.
+const REPORT_LAST_PULLED = "2026-10-05T00:00:00";
+const REFRESH_CYCLE_DAYS = 30;
+const formatDate = (d: Date) => d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 const money = (amount: number) => "₹" + amount.toLocaleString("en-IN");
 const totalLimit = cards.reduce((sum, card) => sum + card.limit, 0);
 const totalOutstanding = loans.reduce((sum, loan) => sum + loan.outstanding, 0);
@@ -43,6 +47,10 @@ export function CreditReport({ user, onBack, onStartChat, savings }: { user: Dem
   const [tab, setTab] = useState<Tab>("cards");
   const [account, setAccount] = useState<Account | null>(null);
   const [showInfo, setShowInfo] = useState(false);
+  const [slide, setSlide] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [lastPulled, setLastPulled] = useState(() => new Date(REPORT_LAST_PULLED));
+  const daysLeft = Math.max(0, REFRESH_CYCLE_DAYS - Math.floor((Date.now() - lastPulled.getTime()) / 86400000));
   const scrollRef = useRef<HTMLDivElement>(null);
   const scoreScroll = useRef(0);
   const accountsScroll = useRef(0);
@@ -118,9 +126,37 @@ export function CreditReport({ user, onBack, onStartChat, savings }: { user: Dem
         <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}><div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
         <section className="report-section report-savings">{savings}</section>
       </> : <>
-        <section className="report-section report-score-hero"><div className="report-brand-row"><div className="report-brand">GroScore</div><Button variant="ghost" size="icon" aria-label="About your credit score" onClick={() => setShowInfo(!showInfo)}><Info /></Button></div><div className="report-score-value"><strong>{score}</strong><span>of 900</span></div><div className="report-score-tags"><span className={`report-score-band ${band === "Poor" ? "report-tone-danger" : band === "Fair" ? "report-tone-warning" : "report-tone-positive"}`}>{band}</span><span className="report-score-change"><ArrowUpRight />12 pts this month</span></div><div className="report-range" aria-label={`Credit score ${score} out of 900`}><div className="report-range-track"><span /><span /><span /><span /></div><span className="report-range-marker" style={{ left: `${Math.max(0, Math.min(100, (score - 300) / 6))}%` }} /><div className="report-range-labels"><span>Poor</span><span>Fair</span><span>Good</span><span>Excellent</span></div><div className="report-range-endpoints"><span>300</span><span>900</span></div></div><div className="report-source"><FileText /><span>Your Equifax credit report</span></div>{showInfo && <div className="report-info"><Button variant="ghost" size="icon" aria-label="Close score information" onClick={() => setShowInfo(false)}><X /></Button><p>Your score and accounts are based on the information in your Equifax credit report. Checking this report does not create a credit enquiry.</p></div>}</section>
-        <div className="report-overview-tabs" role="tablist" aria-label="Report overview"><Button variant="ghost" role="tab" aria-selected={view === "score"} className={view === "score" ? "report-tab is-active" : "report-tab"} onClick={() => setView("score")}>Score</Button><Button variant="ghost" role="tab" aria-selected={view === "trend"} className={view === "trend" ? "report-tab is-active" : "report-tab"} onClick={() => setView("trend")}>Trend</Button></div>
-        {view === "trend" ? <section className="report-section report-trend" role="tabpanel" aria-label="Trend"><span className="report-eyebrow">THIS MONTH</span><h2 className="report-tone-positive">+12 <span>points</span></h2><h3>Your score is moving up</h3><p className="report-description">Your report shows a 12-point increase this month. Earlier monthly scores aren't available here yet.</p><Button variant="link" className="report-text-action" onClick={() => setView("score")}>See what's shaping your score <ChevronRight /></Button></section> : <section className="report-section report-factors" role="tabpanel" aria-label="Score"><h3 className="report-factors-title">What's shaping it</h3><div>{factors.map(item => <Button variant="ghost" className="report-factor-row" key={item.key} onClick={() => navigate(item.key)}><span className="report-icon"><item.icon /></span><span className="report-row-label"><strong>{item.title}</strong><small>{item.subtitle}</small></span><span className={`report-status-word report-tone-${item.tone}`}>{item.tone === "positive" ? "Good" : item.tone === "warning" ? "Fair" : "Poor"}</span><ChevronRight className="report-chevron" /></Button>)}</div></section>}
+        <section className="report-section report-score-hero">
+          <div className="report-meta-row"><span className="report-equifax"><span className="report-bureau-mark">E</span>EQUIFAX</span><Button variant="ghost" size="icon" aria-label="About your credit score" onClick={() => setShowInfo(!showInfo)}><Info /></Button></div>
+          <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
+            <div className="report-slide">
+              <div className="report-score-value"><strong>{score}</strong><span>of 900</span></div>
+              <div className="report-score-tags"><span className={`report-score-band ${band === "Poor" ? "report-tone-danger" : band === "Fair" ? "report-tone-warning" : "report-tone-positive"}`}>{band}</span><span className="report-score-change"><ArrowUpRight />12 pts this month</span></div>
+              <div className="report-range" aria-label={`Credit score ${score} out of 900`}><div className="report-range-track"><span /><span /><span /><span /></div><span className="report-range-marker" style={{ left: `${Math.max(0, Math.min(100, (score - 300) / 6))}%` }} /><div className="report-range-labels"><span>Poor</span><span>Fair</span><span>Good</span><span>Excellent</span></div></div>
+            </div>
+            <div className="report-slide">
+              <div className="report-trend-card">
+                <div className="report-trend-head"><strong>Monthly trend</strong><span className="report-tone-positive">+12 this month</span></div>
+                <svg viewBox="0 0 280 130" className="report-trend-chart" role="img" aria-label={`Score moved from ${score - 12} to ${score}`}>
+                  <line x1="20" y1="30" x2="260" y2="30" className="grid" /><line x1="20" y1="100" x2="260" y2="100" className="grid" />
+                  <line x1="40" y1="100" x2="240" y2="40" className="path" />
+                  <circle cx="40" cy="100" r="4" className="dot" /><circle cx="240" cy="40" r="6" className="dot" />
+                  <line x1="240" y1="46" x2="240" y2="112" className="drop" />
+                  <rect x="214" y="8" width="52" height="24" rx="6" className="tag" /><text x="240" y="25" textAnchor="middle" className="tag-text">{score}</text>
+                  <text x="40" y="84" textAnchor="middle" className="label">{score - 12}</text>
+                  <text x="40" y="126" textAnchor="middle" className="axis">Last month</text><text x="240" y="126" textAnchor="middle" className="axis is-now">Now</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="report-dots">{[0, 1].map(i => <button key={i} type="button" aria-label={i ? "Show trend" : "Show score"} className={slide === i ? "is-active" : ""} onClick={() => carouselRef.current?.scrollTo({ left: i * carouselRef.current.clientWidth, behavior: "smooth" })} />)}</div>
+          <div className="report-refresh-row">
+            <span><small>Last updated</small><strong>{formatDate(lastPulled)}</strong></span>
+            {daysLeft > 0 ? <span className="is-right"><small>Next update</small><strong>in {daysLeft} {daysLeft === 1 ? "day" : "days"}</strong></span> : <Button className="report-refresh" onClick={() => setLastPulled(new Date())}><RefreshCw />Refresh now</Button>}
+          </div>
+          {showInfo && <div className="report-info"><Button variant="ghost" size="icon" aria-label="Close score information" onClick={() => setShowInfo(false)}><X /></Button><p>Your score and accounts are based on the information in your Equifax credit report. Checking this report does not create a credit enquiry.</p></div>}
+        </section>
+        <section className="report-section report-factors" role="tabpanel" aria-label="Score"><h3 className="report-factors-title">What's shaping it</h3><div>{factors.map(item => <Button variant="ghost" className="report-factor-row" key={item.key} onClick={() => navigate(item.key)}><span className="report-icon"><item.icon /></span><span className="report-row-label"><strong>{item.title}</strong><small>{item.subtitle}</small></span><span className={`report-status-word report-tone-${item.tone}`}>{item.tone === "positive" ? "Good" : item.tone === "warning" ? "Fair" : "Poor"}</span><ChevronRight className="report-chevron" /></Button>)}</div></section>
         <div className="report-accounts-link-wrap"><Button variant="ghost" className="report-accounts-link" onClick={() => navigate("accounts", "cards")}><List />Show credit cards and loans</Button></div>
         <section className="report-section report-savings"><details><summary>Daily Savings <span>₹450 saved <ChevronRight /></span></summary><div>{savings}</div></details></section>
       </>}
