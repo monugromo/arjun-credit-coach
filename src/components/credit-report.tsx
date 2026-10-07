@@ -118,8 +118,16 @@ export function CreditReport({ user, onBack, onStartChat, savings }: { user: Dem
         <section className="report-section"><h3>{currentCard ? "Credit usage" : "Payment status"}</h3>{currentCard ? <><div className={`report-detail-number report-tone-${currentCard.tone}`}>{currentCard.pct}<span>% used</span></div><div className="report-utilisation"><span className={`report-fill report-fill-${currentCard.tone}`} style={{ width: `${currentCard.pct}%` }} /></div></> : <><p className={`report-payment-status report-tone-${currentLoan?.tone}`}><CheckCircle2 />{currentLoan?.status}</p><dl className="report-details"><div><dt>Monthly EMI</dt><dd>{money(currentLoan?.emi ?? 0)}</dd></div></dl></>}</section>
         <section className="report-section"><p className="report-description">These details are shown in your credit report.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Something looks off? Talk to Arjun <ArrowUpRight /></Button></section>
       </> : factor ? <>
-        <section className="report-section report-detail-heading"><span className="report-eyebrow">WHAT'S SHAPING YOUR SCORE</span><h2>{factor.title}</h2><p>{factor.explanation}</p><div className={`report-detail-number report-tone-${factor.tone}`}>{factor.value}<span>{factor.unit.toLowerCase()}</span></div><div className="report-advice"><Info /><div><strong>{factor.advice}</strong><p>{factor.note}</p></div></div></section>
-        <section className="report-section report-factor-accounts"><div className="report-section-title"><h3>{view === "enquiries" ? "Recent enquiries" : "By account"}</h3><span>{view === "usage" ? "3 cards" : view === "enquiries" ? "5 enquiries" : view === "mix" ? "7 accounts" : "4 loans"}</span></div>{view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <>{cardRows}{loanRows}</> : loanRows}</section>
+        <section className="report-section rf-hero">
+          <div className="rf-hero-text"><span className="report-eyebrow">WHAT'S SHAPING YOUR SCORE</span><h2>{factor.title}</h2><p>{factor.explanation}</p></div>
+          <span className="rf-hero-art" aria-hidden><span className="rf-hero-ring" /><factor.icon /></span>
+        </section>
+        <section className="report-section rf-metric">
+          <small>{factor.unit}</small>
+          <div className="rf-metric-row"><strong>{factor.value}</strong><span className={`rf-pill rf-pill-${factor.tone}`}><i />{factor.tone === "positive" ? "Good" : factor.tone === "warning" ? "Fair" : "Needs work"}</span></div>
+          <div className="rf-tip"><Info /><div><strong>{factor.advice}</strong><p>{factor.note}</p></div></div>
+        </section>
+        <section className="report-section rf-accounts"><div className="rf-accounts-head"><h3>{view === "enquiries" ? "Recent enquiries" : "By account"}</h3><span>{view === "usage" ? "3 cards" : view === "enquiries" ? "5 enquiries" : view === "mix" ? "7 accounts" : "4 loans"}</span></div><div className="rf-group">{view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <>{cardRows}{loanRows}</> : loanRows}</div></section>
         <section className="report-section"><Button variant="link" className="report-text-action" onClick={onStartChat}><MessageCircle />Talk to Arjun</Button></section>
       </> : view === "accounts" ? <>
         <section className="report-section report-detail-heading"><span className="report-eyebrow">YOUR CREDIT ACCOUNTS</span><h2>Your cards & loans</h2><p>3 cards · 4 loans</p></section>
