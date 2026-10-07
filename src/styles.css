@@ -172,273 +172,196 @@
   }
 }
 
-/* Clean Minimalist report: scoped so other journeys keep their styling. */
+/* Shared report presentation, scoped away from other app journeys. */
 .credit-report {
-  --report-paper: oklch(1 0 0);
-  --report-ink: oklch(0.208 0.042 265.755);
-  --report-subtle: oklch(0.554 0.046 257.417);
-  --report-faint: oklch(0.704 0.04 256.788);
-  --report-line: oklch(0.968 0.007 247.896);
-  --report-surface: oklch(0.984 0.003 247.858);
-  --report-brand: oklch(0.432 0.095 166.913);
-  --report-positive: oklch(0.508 0.118 165.612);
-  --report-positive-soft: oklch(0.979 0.021 166.113);
-  --report-warning: oklch(0.555 0.163 48.998);
-  --report-warning-soft: oklch(0.901 0.076 70.697);
-  --report-danger: oklch(0.637 0.237 25.331);
-  --report-danger-soft: oklch(0.892 0.058 10.001);
-  --report-bureau: oklch(0.455 0.188 13.697);
-  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  color: var(--report-ink);
-  background: var(--report-paper);
-  letter-spacing: 0;
-}
-.dark .credit-report {
   --report-paper: var(--card);
   --report-ink: var(--foreground);
   --report-subtle: var(--muted-foreground);
-  --report-faint: var(--muted-foreground);
+  --report-faint: var(--timestamp);
   --report-line: var(--border);
   --report-surface: var(--muted);
-  --report-brand: oklch(0.765 0.177 163.223);
-  --report-positive: oklch(0.765 0.177 163.223);
-  --report-positive-soft: var(--muted);
-  --report-warning: oklch(0.828 0.189 84.429);
-  --report-danger: oklch(0.704 0.191 22.216);
+  --report-brand: var(--primary);
+  --report-positive: var(--primary);
+  --report-positive-soft: var(--primary-soft);
+  --report-warning: oklch(0.555 0.163 48.998);
+  --report-warning-soft: color-mix(in oklab, var(--report-warning) 12%, var(--report-paper));
+  --report-danger: var(--danger);
+  --report-danger-soft: color-mix(in oklab, var(--report-danger) 12%, var(--report-paper));
+  --report-history-tip: var(--primary-soft);
+  --report-history-border: var(--border);
+  --report-gutter: 24px;
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--report-ink);
+  background: var(--report-paper);
 }
-.credit-report button { font-family: inherit; letter-spacing: 0; }
+.dark .credit-report { --report-warning: var(--amber); }
+.credit-report, .credit-report * { letter-spacing: 0; }
+.credit-report button { font-family: inherit; }
 .report-scroll { scrollbar-width: thin; }
-.report-section { padding: 24px; border-bottom: 1px solid var(--report-line); }
-.report-section h2 { font-size: 26px; line-height: 1.25; font-weight: 800; overflow-wrap: anywhere; }
-.report-section h3 { font-size: 18px; line-height: 1.4; font-weight: 800; }
-.report-brand-row { display: flex; justify-content: space-between; align-items: center; }
-.report-brand { color: var(--report-brand); font-size: 20px; font-weight: 800; }
-.report-score-hero { padding-top: 20px; border: 0; }
-.report-score-value { display: flex; align-items: baseline; gap: 10px; margin-top: 16px; }
-.report-score-value strong { font-size: 72px; line-height: 1.1; font-weight: 800; font-variant-numeric: tabular-nums; }
-.report-score-value > span { font-size: 18px; color: var(--report-subtle); font-weight: 600; }
-.report-score-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-.report-score-band, .report-score-change { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 100px; background: var(--report-positive-soft); }
+.report-section { padding: 24px var(--report-gutter); border-bottom: 1px solid var(--report-line); }
+.report-section h2 { font-size: 22px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
+.report-section h3 { font-size: 18px; line-height: 1.4; font-weight: 600; }
+.report-brand { color: var(--report-brand); font-size: 20px; font-weight: 700; }
+.report-description, .report-detail-heading > p, .report-ntc-intro > p { font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
+.report-detail-heading h2 { margin: 0 0 8px; }
+.report-eyebrow { display: block; font-size: 12px; font-weight: 500; color: var(--report-subtle); margin-bottom: 8px; }
+.report-score-hero { padding-top: 16px; padding-bottom: 8px; border: 0; }
+.report-meta-row { display: flex; justify-content: space-between; align-items: center; }
+.report-equifax-logo { height: 18px; width: auto; display: block; }
+.report-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 calc(-1 * var(--report-gutter)); }
+.report-carousel::-webkit-scrollbar { display: none; }
+.report-slide { flex: 0 0 100%; min-width: 0; min-height: 218px; scroll-snap-align: start; padding: 8px var(--report-gutter) 0; }
+.report-score-value { display: flex; align-items: baseline; gap: 8px; }
+.report-score-value strong { font-size: 64px; line-height: 1.1; font-weight: 800; font-variant-numeric: tabular-nums; }
+.report-score-value > span { font-size: 16px; color: var(--report-subtle); font-weight: 500; }
+.report-score-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.report-score-band, .report-score-change { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 20px; font-weight: 600; padding: 4px 10px; border-radius: 100px; background: var(--report-positive-soft); }
 .report-score-change { color: var(--report-positive); }
 .report-score-change svg { width: 14px; height: 14px; }
-.report-range { position: relative; margin-top: 28px; }
-.report-range-track { display: flex; gap: 5px; height: 8px; }
-.report-range-track > span { flex: 1; border-radius: 20px; }
+.report-range { position: relative; margin-top: 24px; }
+.report-range-track { display: flex; gap: 4px; height: 8px; }
+.report-range-track > span { flex: 1; border-radius: 2px; }
 .report-range-track > span:nth-child(1) { background: var(--report-danger-soft); }
 .report-range-track > span:nth-child(2) { background: var(--report-warning-soft); }
 .report-range-track > span:nth-child(3) { background: var(--report-positive); }
 .report-range-track > span:nth-child(4) { background: var(--report-positive-soft); }
-.report-range-marker { position: absolute; top: -4px; width: 4px; height: 16px; border-radius: 4px; background: var(--report-ink); transform: translateX(-50%); }
-.report-range-labels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; margin-top: 10px; color: var(--report-subtle); font-size: 10px; font-weight: 700; text-align: center; text-transform: uppercase; }
-.report-range-endpoints { display: flex; justify-content: space-between; color: var(--report-faint); font-size: 10px; margin-top: 6px; }
-.report-source { display: flex; align-items: center; gap: 8px; background: var(--report-surface); border: 1px solid var(--report-line); padding: 14px; border-radius: 8px; margin-top: 20px; color: var(--report-subtle); font-size: 12px; font-weight: 600; }
-.report-source svg { width: 16px; height: 16px; color: var(--report-brand); }
-.report-info { font-size: 12px; color: var(--report-subtle); line-height: 1.7; margin-top: 12px; }
+.report-range-marker { position: absolute; top: -4px; width: 4px; height: 16px; border-radius: 2px; background: var(--report-ink); transform: translateX(-50%); }
+.report-range-labels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-top: 10px; color: var(--report-subtle); font-size: 11px; font-weight: 500; text-align: center; }
+.report-trend-card { padding-top: 4px; }
+.report-trend-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 14px; }
+.report-trend-head strong, .report-trend-head span { font-weight: 600; }
+.report-trend-chart { width: 100%; height: 156px; margin-top: 8px; }
+.report-trend-chart .grid { stroke: var(--report-line); stroke-dasharray: 3 4; }
+.report-trend-chart .path { stroke: var(--report-brand); stroke-width: 3; stroke-linecap: round; }
+.report-trend-chart .dot, .report-trend-chart .tag { fill: var(--report-brand); }
+.report-trend-chart .drop { stroke: var(--report-brand); stroke-dasharray: 2 3; stroke-width: 1.5; }
+.report-trend-chart .tag-text { fill: var(--report-paper); font-size: 13px; font-weight: 600; }
+.report-trend-chart .label, .report-trend-chart .axis { fill: var(--report-subtle); font-size: 11px; font-weight: 500; }
+.report-trend-chart .axis.is-now { fill: var(--report-ink); }
+.report-dots { display: flex; justify-content: center; gap: 8px; }
+.report-dots button { width: 20px; height: 6px; min-height: 6px; padding: 0; border-radius: 4px; background: var(--report-line); transition: background .2s; }
+.report-dots button.is-active { background: var(--report-brand); }
+.report-refresh-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--report-line); }
+.report-refresh-row > span { display: flex; flex-direction: column; gap: 4px; }
+.report-refresh-row .is-right { text-align: right; }
+.report-refresh-row small { font-size: 12px; color: var(--report-subtle); }
+.report-refresh-row strong { font-size: 14px; font-weight: 600; }
+.report-refresh { height: 44px; border-radius: 8px; padding: 0 16px; background: var(--report-brand); color: var(--primary-foreground); font-size: 14px; font-weight: 600; }
+.report-info { font-size: 13px; color: var(--report-subtle); line-height: 1.65; margin-top: 16px; }
 .report-info button { float: right; }
-.report-overview-tabs, .report-account-tabs { display: flex; margin: 0 24px; border-bottom: 1px solid var(--report-line); }
-.report-tab { flex: 1; height: 48px; border-radius: 0; border-bottom: 2px solid transparent; color: var(--report-subtle); font-size: 13px; font-weight: 700; padding: 8px; }
-.report-tab.is-active { color: var(--report-brand); border-bottom-color: var(--report-brand); }
-.report-tab > span { font-size: 10px; background: var(--report-surface); padding: 2px 5px; border-radius: 4px; }
-.report-section-title { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 16px; }
-.report-section-title > span { font-size: 12px; color: var(--report-subtle); }
-.report-section-title > strong { font-size: 14px; }
-.report-factors { border: 0; padding-top: 24px; padding-bottom: 16px; }
-.report-factor-row { display: flex; justify-content: initial; width: 100%; height: auto; min-height: 80px; gap: 10px; padding: 16px 0; border-radius: 0; border-bottom: 1px solid var(--report-line); white-space: normal; text-align: left; }
+.report-factors { border: 0; padding-top: 24px; padding-bottom: 8px; }
+.report-factors-title { margin-bottom: 8px; text-align: left; }
+.report-factor-row { display: flex; justify-content: initial; width: 100%; height: auto; min-height: 80px; gap: 12px; padding: 16px 0; border-radius: 0; border-bottom: 1px solid var(--report-line); white-space: normal; text-align: left; }
 .report-factor-row:last-child { border-bottom: 0; }
-.report-factor-line { flex-shrink: 0; width: 3px; height: 34px; border-radius: 4px; }
-.report-icon { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 8px; background: var(--report-surface); color: var(--report-ink); }
-.report-icon svg { width: 19px; height: 19px; }
+.report-factor-row:hover, .report-account-row:hover, .rf-history-account:hover { background: var(--report-surface); }
+.report-icon { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 8px; background: var(--report-surface); color: var(--report-brand); }
+.report-icon svg { width: 20px; height: 20px; stroke-width: 1.75; }
 .report-row-label { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
-.report-row-label > strong { font-size: 14px; font-weight: 700; line-height: 1.4; }
-.report-row-label > small { color: var(--report-subtle); font-size: 11px; line-height: 1.5; font-weight: 500; }
-.report-metric { display: flex; flex-direction: column; text-align: right; gap: 2px; flex-shrink: 0; }
-.report-metric strong { font-size: 16px; font-weight: 800; }
-.report-metric small { font-size: 9px; font-weight: 700; color: var(--report-subtle); }
-.report-chevron { color: var(--report-faint); width: 14px; height: 14px; }
+.report-row-label > strong { font-size: 14px; font-weight: 600; line-height: 1.45; overflow-wrap: anywhere; }
+.report-row-label > small { color: var(--report-subtle); font-size: 13px; line-height: 1.5; font-weight: 400; }
+.report-status-word, .report-status { font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.report-chevron { color: var(--report-subtle); width: 16px; height: 16px; flex-shrink: 0; }
 .report-tone-warning { color: var(--report-warning); }
 .report-tone-danger { color: var(--report-danger); }
 .report-tone-positive { color: var(--report-positive); }
 .report-fill-warning { background: var(--report-warning); }
 .report-fill-danger { background: var(--report-danger); }
 .report-fill-positive { background: var(--report-positive); }
-.report-accounts-link-wrap { padding: 0 24px 24px; }
-.report-accounts-link { width: 100%; height: auto; min-height: 80px; display: flex; justify-content: space-between; padding: 18px; border-radius: 8px; background: var(--report-brand); color: var(--report-paper); box-shadow: none; white-space: normal; text-align: left; gap: 12px; }
-.report-accounts-link:hover { background: var(--report-brand); opacity: .94; }
-.report-accounts-link > span { display: flex; flex-direction: column; gap: 6px; }
-.report-accounts-link strong { font-size: 16px; font-weight: 700; }
-.report-accounts-link small { font-size: 11px; line-height: 1.5; font-weight: 500; opacity: .8; }
-.report-bureau { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 24px; font-size: 10px; color: var(--report-subtle); border-top: 1px solid var(--report-line); }
-.report-bureau strong { color: var(--report-bureau); font-weight: 800; }
-.report-bureau-mark { background: var(--report-bureau); color: var(--report-paper); border-radius: 100%; display: flex; justify-content: center; align-items: center; width: 16px; height: 16px; font-size: 10px; font-weight: 800; }
-.report-eyebrow { display: block; font-size: 10px; font-weight: 700; color: var(--report-subtle); margin-bottom: 12px; }
-.report-detail-heading h2 { margin-bottom: 10px; }
-.report-detail-heading > p, .report-description { font-size: 14px; line-height: 1.7; color: var(--report-subtle); }
-.report-detail-number { font-size: 56px; font-weight: 800; line-height: 1.2; margin-top: 24px; margin-bottom: 20px; }
-.report-detail-number > span { font-size: 14px; font-weight: 600; color: var(--report-subtle); margin-left: 8px; }
-.report-advice { display: flex; align-items: flex-start; gap: 12px; background: var(--report-positive-soft); border-left: 3px solid var(--report-brand); border-radius: 8px; padding: 16px; }
-.report-advice > svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; color: var(--report-brand); }
-.report-advice strong { font-size: 14px; }
-.report-advice p { font-size: 13px; margin-top: 6px; line-height: 1.7; color: var(--report-subtle); }
-.report-account-panel { border: 0; padding-top: 20px; }
+.report-accounts-link-wrap { padding: 0 var(--report-gutter) 20px; display: flex; justify-content: center; }
+.report-accounts-link { width: 100%; height: auto; min-height: 44px; background: transparent; color: var(--report-brand); padding: 8px 0; font-size: 14px; font-weight: 600; gap: 8px; white-space: normal; }
+.report-accounts-link:hover { background: var(--report-positive-soft); color: var(--report-brand); }
+.report-account-tabs { display: flex; margin: 0 var(--report-gutter); border-bottom: 1px solid var(--report-line); }
+.report-tab { flex: 1; min-width: 0; height: 48px; border-radius: 0; border-bottom: 2px solid transparent; color: var(--report-subtle); font-size: 14px; font-weight: 500; padding: 8px; gap: 6px; }
+.report-tab.is-active { color: var(--report-brand); border-bottom-color: var(--report-brand); font-weight: 600; }
+.report-tab > span { font-size: 12px; background: var(--report-surface); padding: 1px 5px; border-radius: 4px; }
+.report-section-title { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 16px; }
+.report-section-title > span { font-size: 13px; color: var(--report-subtle); }
+.report-section-title > strong { font-size: 16px; font-weight: 600; }
+.report-account-panel { border: 0; }
 .report-account-row { display: flex; flex-direction: column; gap: 0; width: 100%; height: auto; padding: 20px 0; border-radius: 0; border-bottom: 1px solid var(--report-line); white-space: normal; text-align: left; }
 .report-account-top { display: flex; gap: 10px; width: 100%; align-items: center; }
+.report-metric { display: flex; flex-direction: column; text-align: right; gap: 2px; flex-shrink: 0; }
+.report-metric strong { font-size: 16px; font-weight: 600; }
+.report-metric small { font-size: 11px; font-weight: 400; color: var(--report-subtle); }
 .report-utilisation { width: 100%; height: 4px; border-radius: 4px; background: var(--report-line); overflow: hidden; margin-top: 16px; }
 .report-fill { height: 100%; display: block; border-radius: 4px; }
-.report-account-bottom { width: 100%; display: flex; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--report-subtle); margin-top: 8px; }
-.report-status { font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.report-account-bottom { width: 100%; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--report-subtle); margin-top: 8px; }
 .report-loan-values { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
-.report-loan-values > span { display: flex; flex-direction: column; gap: 4px; }
-.report-loan-values small { font-size: 10px; color: var(--report-subtle); }
-.report-loan-values strong { font-size: 12px; font-weight: 700; }
-.report-enquiry-row { display: flex; align-items: center; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--report-line); }
-.report-enquiry-row time { color: var(--report-subtle); font-size: 10px; flex-shrink: 0; }
-.report-detail-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid var(--report-line); }
-.report-detail-stats > div { display: flex; flex-direction: column; gap: 10px; padding: 24px; }
-.report-detail-stats > div:first-child { border-right: 1px solid var(--report-line); }
-.report-detail-stats small { font-size: 10px; color: var(--report-subtle); font-weight: 700; }
-.report-detail-stats strong { font-size: 20px; font-weight: 800; }
-.report-payment-status { display: flex; align-items: center; gap: 8px; font-size: 16px; margin-top: 20px; font-weight: 700; }
+.report-loan-values > span { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.report-loan-values small { font-size: 11px; color: var(--report-subtle); }
+.report-loan-values strong { font-size: 12px; font-weight: 600; overflow-wrap: anywhere; }
+.report-enquiry-row { display: flex; align-items: center; gap: 10px; padding: 18px 0; border-bottom: 1px solid var(--report-line); }
+.report-enquiry-row time { color: var(--report-subtle); font-size: 12px; flex-shrink: 0; }
+.report-detail-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid var(--report-line); padding: 0 var(--report-gutter); }
+.report-detail-stats > div { display: flex; flex-direction: column; gap: 8px; padding: 20px 0; min-width: 0; }
+.report-detail-stats > div + div { padding-left: 16px; }
+.report-detail-stats small { font-size: 12px; color: var(--report-subtle); font-weight: 500; }
+.report-detail-stats strong { font-size: 20px; font-weight: 600; overflow-wrap: anywhere; }
+.report-detail-number { font-size: 36px; font-weight: 600; line-height: 1.2; margin: 16px 0; }
+.report-detail-number > span { font-size: 14px; font-weight: 400; color: var(--report-subtle); margin-left: 8px; }
+.report-payment-status { display: flex; align-items: center; gap: 8px; font-size: 16px; margin-top: 16px; font-weight: 600; }
 .report-payment-status svg { width: 20px; height: 20px; }
-.report-details { margin-top: 24px; }
-.report-details > div { display: flex; justify-content: space-between; font-size: 14px; }
+.report-details { margin-top: 20px; }
+.report-details > div { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; }
 .report-details dt { color: var(--report-subtle); }
-.report-details dd { font-weight: 700; }
-.report-text-action { height: auto; padding: 12px 0; color: var(--report-brand); white-space: normal; justify-content: flex-start; text-align: left; font-weight: 700; font-size: 13px; }
-.report-primary { width: 100%; height: 54px; margin-top: 24px; border-radius: 8px; }
-.report-ntc-intro > p { font-size: 14px; line-height: 1.7; color: var(--report-subtle); margin-top: 12px; }
-.report-ntc-icon { margin: 24px 0 16px; width: 48px; height: 48px; }
+.report-details dd { font-weight: 600; }
+.report-text-action { min-height: 44px; height: auto; padding: 10px 0; color: var(--report-brand); white-space: normal; justify-content: flex-start; text-align: left; font-weight: 600; font-size: 14px; }
+.report-primary { width: 100%; height: 54px; margin-top: 24px; border-radius: 8px; font-size: 16px; font-weight: 600; }
+.report-ntc-intro > p { margin-top: 12px; }
+.report-ntc-icon { margin: 20px 0 16px; width: 48px; height: 48px; }
 .report-steps { margin-top: 16px; }
-.report-step { height: auto; min-height: 72px; width: 100%; justify-content: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--report-line); border-radius: 0; text-align: left; white-space: normal; }
+.report-step { height: auto; min-height: 72px; width: 100%; justify-content: flex-start; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--report-line); border-radius: 0; text-align: left; white-space: normal; }
 .report-step > span:first-child { color: var(--report-brand); background: var(--report-positive-soft); flex-shrink: 0; border-radius: 100%; width: 28px; height: 28px; display: flex; justify-content: center; align-items: center; }
-.report-step > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-.report-step strong { font-size: 13px; }
-.report-step small { font-size: 12px; line-height: 1.5; color: var(--report-subtle); }
-.report-trend h2 { font-size: 56px; margin-bottom: 20px; }
-.report-trend h2 > span { font-size: 18px; }
-.report-trend .report-description { margin-top: 10px; }
+.report-step > span:nth-child(2) { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.report-step strong { font-size: 14px; font-weight: 600; }
+.report-step small { font-size: 13px; line-height: 1.5; color: var(--report-subtle); }
 .report-savings { border-top: 1px solid var(--report-line); }
-.report-savings summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-weight: 700; list-style: none; gap: 12px; }
+.report-savings summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-weight: 600; list-style: none; gap: 12px; }
 .report-savings summary::-webkit-details-marker { display: none; }
-.report-savings summary > span { display: flex; gap: 8px; align-items: center; color: var(--report-subtle); font-size: 12px; font-weight: 500; }
+.report-savings summary > span { display: flex; gap: 8px; align-items: center; color: var(--report-subtle); font-size: 12px; font-weight: 400; }
 .report-savings summary svg { width: 16px; height: 16px; }
 .report-savings details[open] summary { margin-bottom: 20px; }
 .report-savings details[open] summary svg { transform: rotate(90deg); }
 .report-savings > div, .report-savings details > div > div { padding: 0; border-radius: 0; box-shadow: none; background: transparent; }
-@media (max-width: 360px) {
-  .report-section { padding-left: 18px; padding-right: 18px; }
+.report-bureau { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 24px; font-size: 12px; color: var(--report-subtle); border-top: 1px solid var(--report-line); }
+.report-bureau-logo { height: 12px; width: auto; display: block; }
+/* Preserve the supplied history illustration and account-group layout. */
+.rf-hero { position: relative; padding-top: 24px; padding-bottom: 8px; border: 0; }
+.rf-hero-text { min-width: 0; }
+.rf-hero-text h2 { margin: 0 0 16px; }
+.rf-hero-text p { width: calc(100% - 112px); min-height: 100px; font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
+.rf-history-illustration { position: absolute; right: var(--report-gutter); top: 72px; width: 96px; height: auto; object-fit: contain; }
+.rf-hero-art { position: absolute; right: var(--report-gutter); top: 76px; width: 88px; height: 72px; display: grid; place-items: center; color: var(--report-brand); }
+.rf-hero-art svg { width: 44px; height: 44px; stroke-width: 1.5; }
+.rf-metric { padding-top: 16px; padding-bottom: 0; border: 0; }
+.rf-metric > small { font-size: 13px; font-weight: 400; color: var(--report-subtle); }
+.rf-metric-row { margin: 4px 0 12px; }
+.rf-metric-row > strong { font-size: 36px; font-weight: 600; line-height: 1.2; color: var(--report-ink); }
+.rf-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; }
+.rf-pill-positive { color: var(--report-positive); background: var(--report-positive-soft); }
+.rf-pill-warning { color: var(--report-warning); background: var(--report-warning-soft); }
+.rf-pill-danger { color: var(--report-danger); background: var(--report-danger-soft); }
+.rf-tip { display: flex; align-items: flex-start; gap: 12px; margin-top: 20px; padding: 16px; border-radius: 8px; background: var(--report-history-tip); }
+.rf-tip > svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; color: var(--report-brand); }
+.rf-tip p { font-size: 14px; line-height: 1.65; margin: 0; color: var(--report-ink); }
+.rf-accounts { padding-top: 24px; padding-bottom: 24px; border: 0; }
+.rf-group { border: 1px solid var(--report-history-border); border-radius: 8px; padding: 0 16px; background: var(--report-paper); }
+.rf-history-account { display: flex; width: 100%; min-height: 76px; height: auto; gap: 10px; padding: 16px 0; text-align: left; white-space: normal; border-radius: 0; border-bottom: 1px solid var(--report-line); }
+.rf-history-account > svg:first-child { width: 20px; height: 20px; flex-shrink: 0; color: var(--report-brand); }
+.rf-history-account > svg:last-child { width: 16px; height: 16px; flex-shrink: 0; color: var(--report-subtle); }
+.rf-history-status { max-width: 60px; flex-shrink: 0; font-size: 12px; font-weight: 400; color: var(--report-subtle); text-align: right; }
+.rf-group .report-account-list > :last-child { border-bottom: 0; }
+.rf-group .report-account-list + .report-account-list { border-top: 1px solid var(--report-line); }
+@media (max-width: 380px) {
+  .credit-report { --report-gutter: 16px; }
   .report-factor-row { gap: 8px; }
-  .report-factor-row .report-icon { width: 30px; height: 34px; }
-  .report-row-label > strong { font-size: 13px; }
-  .report-detail-stats > div { padding: 18px; }
+  .report-tab { padding: 8px 4px; gap: 4px; }
+  .rf-group { padding: 0 12px; }
+  .report-enquiry-row { gap: 8px; flex-wrap: wrap; }
+  .report-enquiry-row time { margin-left: 44px; }
 }
-/* Premium minimalist factor list (ss1) */
-.credit-report .report-factors { padding-top: 32px; }
-.credit-report .report-factors-title { text-align: center; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
-.credit-report .report-factor-row { min-height: 84px; gap: 16px; padding: 20px 4px; border-radius: 0; }
-.credit-report .report-factor-row:hover { background: transparent; }
-.credit-report .report-factor-row .report-icon { background: transparent; color: var(--report-brand); width: 28px; }
-.credit-report .report-factor-row .report-icon svg { width: 22px; height: 22px; stroke-width: 1.75; }
-.credit-report .report-row-label > strong { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
-.credit-report .report-row-label > small { font-size: 13px; font-weight: 400; }
-.credit-report .report-status-word { font-size: 14px; font-weight: 500; flex-shrink: 0; }
-.credit-report .report-chevron { width: 16px; height: 16px; color: var(--report-subtle); }
-.credit-report .report-accounts-link-wrap { padding: 4px 24px 28px; display: flex; justify-content: center; }
-.credit-report .report-accounts-link { width: auto; min-height: 44px; background: transparent; color: var(--report-brand); padding: 8px 12px; font-size: 15px; font-weight: 600; gap: 10px; }
-.credit-report .report-accounts-link:hover { background: transparent; color: var(--report-brand); opacity: .8; }
-/* Score carousel + refresh */
-.credit-report .report-meta-row { display: flex; justify-content: space-between; align-items: center; }
-.credit-report .report-equifax { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; letter-spacing: .08em; color: var(--report-bureau); }
-.credit-report .report-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 -24px; }
-.credit-report .report-carousel::-webkit-scrollbar { display: none; }
-.credit-report .report-slide { flex: 0 0 100%; scroll-snap-align: start; padding: 0 24px; }
-.credit-report .report-score-value { margin-top: 8px; }
-.credit-report .report-score-value strong { font-size: 64px; letter-spacing: -0.03em; }
-.credit-report .report-trend-card { background: var(--report-surface); border-radius: 16px; padding: 16px; margin-top: 8px; }
-.credit-report .report-trend-head { display: flex; justify-content: space-between; font-size: 14px; }
-.credit-report .report-trend-head strong { font-weight: 700; }
-.credit-report .report-trend-head span { font-weight: 600; }
-.credit-report .report-trend-chart { width: 100%; height: auto; margin-top: 8px; }
-.report-trend-chart .grid { stroke: var(--report-line); stroke-dasharray: 3 4; }
-.report-trend-chart .path { stroke: var(--report-brand); stroke-width: 3; stroke-linecap: round; }
-.report-trend-chart .dot, .report-trend-chart .tag { fill: var(--report-brand); }
-.report-trend-chart .drop { stroke: var(--report-brand); stroke-dasharray: 2 3; stroke-width: 1.5; }
-.report-trend-chart .tag-text { fill: var(--report-paper); font-size: 13px; font-weight: 700; }
-.report-trend-chart .label, .report-trend-chart .axis { fill: var(--report-subtle); font-size: 11px; font-weight: 600; }
-.report-trend-chart .axis.is-now { fill: var(--report-ink); font-weight: 700; }
-.credit-report .report-dots { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
-.credit-report .report-dots button { width: 20px; height: 4px; border-radius: 4px; background: var(--report-line); transition: width .2s, background .2s; }
-.credit-report .report-dots button.is-active { width: 32px; background: var(--report-brand); }
-.credit-report .report-refresh-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--report-line); }
-.credit-report .report-refresh-row > span { display: flex; flex-direction: column; gap: 2px; }
-.credit-report .report-refresh-row .is-right { text-align: right; }
-.credit-report .report-refresh-row small { font-size: 12px; color: var(--report-subtle); font-weight: 500; }
-.credit-report .report-refresh-row strong { font-size: 14px; font-weight: 600; }
-.credit-report .report-refresh { height: 40px; border-radius: 999px; padding: 0 18px; background: var(--report-brand); color: var(--report-paper); font-size: 14px; font-weight: 600; }
-
-/* Premium swiss minimal (v3) overrides */
-.credit-report .report-equifax { gap: 8px; font-size: 11px; letter-spacing: .2em; }
-.credit-report .report-equifax .report-bureau-mark { width: 24px; height: 24px; font-size: 14px; }
-.credit-report .report-score-value strong { font-size: 72px; font-weight: 800; letter-spacing: -0.045em; line-height: 1; }
-.credit-report .report-score-value > span { font-size: 20px; font-weight: 500; letter-spacing: -0.01em; }
-.credit-report .report-score-band, .credit-report .report-score-change { font-size: 14px; font-weight: 700; padding: 7px 16px; border: 1px solid color-mix(in oklab, var(--report-positive) 18%, transparent); }
-.credit-report .report-score-band { color: var(--report-brand); }
-.credit-report .report-range-track { gap: 4px; height: 8px; }
-.credit-report .report-range-track > span:nth-child(1) { background: color-mix(in oklab, var(--report-danger) 14%, transparent); border-radius: 20px 0 0 20px; }
-.credit-report .report-range-track > span:nth-child(2) { background: color-mix(in oklab, var(--report-warning) 16%, transparent); border-radius: 0; }
-.credit-report .report-range-track > span:nth-child(3) { background: var(--report-brand); border-radius: 0; }
-.credit-report .report-range-track > span:nth-child(4) { background: var(--report-positive-soft); border-radius: 0 20px 20px 0; }
-.credit-report .report-range-marker { top: 50%; width: 6px; height: 24px; border: 2px solid var(--report-paper); box-shadow: 0 1px 3px rgb(0 0 0 / .25); transform: translate(-50%, -50%); }
-.credit-report .report-range-labels { margin-top: 12px; letter-spacing: .12em; color: var(--report-faint); }
-.credit-report .report-range-labels span:nth-child(3) { color: var(--report-ink); }
-.credit-report .report-dots { gap: 6px; margin-top: 24px; }
-.credit-report .report-dots button { width: 16px; height: 6px; }
-.credit-report .report-dots button.is-active { width: 24px; }
-.credit-report .report-refresh-row { margin-top: 24px; padding-top: 24px; }
-.credit-report .report-refresh-row small { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
-.credit-report .report-refresh-row strong { font-size: 16px; font-weight: 700; }
-.credit-report .report-factors-title { text-align: left; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
-.credit-report .report-factor-row { min-height: 0; gap: 16px; padding: 24px 0; }
-.credit-report .report-factor-row .report-icon { width: 48px; height: 48px; border-radius: 16px; background: var(--report-surface); color: var(--report-brand); }
-.credit-report .report-factor-row .report-icon svg { width: 24px; height: 24px; stroke-width: 1.5; }
-.credit-report .report-factor-row .report-row-label > strong { font-size: 15px; font-weight: 700; }
-.credit-report .report-factor-row .report-row-label > small { font-size: 14px; font-weight: 500; }
-.credit-report .report-status-word { font-size: 14px; font-weight: 700; }
-.credit-report .report-chevron { width: 16px; height: 16px; }
-.credit-report .report-range-marker { height: 20px; }
-.credit-report .report-range-labels { margin-top: 14px; }
-/* Real Equifax logo */
-.credit-report .report-equifax-logo { height: 18px; width: auto; display: block; }
-.credit-report .report-bureau-logo { height: 12px; width: auto; display: block; }
-.credit-report .report-bureau { gap: 8px; }
-
-/* Factor details follow the supplied history reference. */
-.credit-report { --report-history-tip: oklch(0.975 0.012 250); --report-history-border: oklch(0.81 0 0); }
-.dark .credit-report { --report-history-tip: var(--muted); --report-history-border: var(--border); }
-.credit-report .rf-hero { position: relative; min-height: 182px; padding-top: 32px; padding-bottom: 12px; border: 0; }
-.credit-report .rf-hero-text { min-width: 0; }
-.credit-report .rf-hero-text h2 { font-size: 24px; font-weight: 500; letter-spacing: 0; line-height: 1.3; margin: 0 0 16px; padding-right: 4px; }
-.credit-report .rf-hero-text p { width: 68%; font-size: 14px; line-height: 1.6; color: var(--report-subtle); }
-.credit-report .rf-history-illustration { position: absolute; right: 16px; top: 58px; width: 108px; height: auto; object-fit: contain; }
-.credit-report .rf-hero-art { position: absolute; right: 24px; top: 70px; width: 72px; height: 72px; display: grid; place-items: center; color: var(--report-brand); }
-.credit-report .rf-hero-art svg { width: 44px; height: 44px; stroke-width: 1.3; }
-.credit-report .rf-metric { padding-top: 24px; padding-bottom: 0; border: 0; }
-.credit-report .rf-metric > small { font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--report-subtle); }
-.credit-report .rf-metric-row { margin: 6px 0 12px; }
-.credit-report .rf-metric-row > strong { font-size: 30px; font-weight: 500; letter-spacing: 0; line-height: 1.2; color: var(--report-ink); }
-.credit-report .rf-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 0; }
-.credit-report .rf-pill-positive { color: var(--report-positive); background: color-mix(in oklab, var(--report-positive) 7%, transparent); }
-.credit-report .rf-pill-warning { color: var(--report-warning); background: color-mix(in oklab, var(--report-warning) 7%, transparent); }
-.credit-report .rf-pill-danger { color: var(--report-danger); background: color-mix(in oklab, var(--report-danger) 7%, transparent); }
-.credit-report .rf-tip { display: flex; align-items: flex-start; gap: 16px; margin-top: 24px; padding: 18px; border-radius: 16px; background: var(--report-history-tip); border: 0; }
-.credit-report .rf-tip > svg { width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; color: var(--report-ink); }
-.credit-report .rf-tip p { font-size: 14px; line-height: 1.6; margin: 0; color: var(--report-subtle); }
-.credit-report .rf-accounts { padding-top: 24px; padding-bottom: 8px; border: 0; }
-.credit-report .rf-group { border: 1px solid var(--report-history-border); border-radius: 12px; padding: 8px 16px; background: var(--report-paper); }
-.credit-report .rf-history-account { display: flex; width: 100%; min-height: 76px; height: auto; gap: 14px; padding: 16px 0; text-align: left; white-space: normal; border-radius: 0; }
-.credit-report .rf-history-account > svg:first-child { width: 20px; height: 20px; flex-shrink: 0; color: var(--report-brand); }
-.credit-report .rf-history-account > svg:last-child { width: 18px; height: 18px; flex-shrink: 0; color: var(--report-ink); }
-.credit-report .rf-history-account .report-row-label > strong { font-size: 14px; font-weight: 500; letter-spacing: 0; }
-.credit-report .rf-history-account .report-row-label > small { font-size: 13px; }
-.credit-report .rf-history-status { max-width: 64px; flex-shrink: 0; font-size: 12px; font-weight: 400; color: var(--report-subtle); text-align: right; }
-.credit-report .rf-group .report-account-list > :last-child { border-bottom: 0; }
-.credit-report .rf-group .report-account-list + .report-account-list { border-top: 1px solid var(--report-line); }
+@media (prefers-reduced-motion: reduce) {
+  .report-dots button { transition: none; }
+}
