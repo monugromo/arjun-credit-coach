@@ -406,3 +406,7 @@
 .credit-report .report-chevron { width: 16px; height: 16px; }
 .credit-report .report-range-marker { height: 20px; }
 .credit-report .report-range-labels { margin-top: 14px; }
+/* Real Equifax logo */
+.credit-report .report-equifax-logo { height: 18px; width: auto; display: block; }
+.credit-report .report-bureau-logo { height: 12px; width: auto; display: block; }
+.credit-report .report-bureau { gap: 8px; }
