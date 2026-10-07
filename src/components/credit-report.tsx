@@ -1,8 +1,9 @@
 import { useRef, useState, type ReactNode } from "react";
-import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, List, MessageCircle, RefreshCw, Wallet, X } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, Lightbulb, List, MessageCircle, RefreshCw, Wallet, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { DemoUser } from "@/lib/groscore-data";
 import equifaxLogo from "@/assets/equifax-logo.png.asset.json";
+import paymentIllustration from "@/assets/payment-history-reference.png.asset.json";
 
 const cards = [
   { bank: "HDFC Bank", last4: "4521", used: 128000, limit: 150000, pct: 85, tone: "danger" },
@@ -119,16 +120,16 @@ export function CreditReport({ user, onBack, onStartChat, savings }: { user: Dem
         <section className="report-section"><p className="report-description">These details are shown in your credit report.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Something looks off? Talk to Arjun <ArrowUpRight /></Button></section>
       </> : factor ? <>
         <section className="report-section rf-hero">
-          <div className="rf-hero-text"><span className="report-eyebrow">WHAT'S SHAPING YOUR SCORE</span><h2>{factor.title}</h2><p>{factor.explanation}</p></div>
-          <span className="rf-hero-art" aria-hidden><span className="rf-hero-ring" /><factor.icon /></span>
+          <div className="rf-hero-text"><h2>{factor.title}</h2><p>{view === "payment" ? "Paying on time impacts your credit score the most. It shows that you are a trustworthy borrower." : factor.explanation}</p></div>
+          {view === "payment" ? <img className="rf-history-illustration" src={paymentIllustration.url} alt="" width={199} height={174} /> : <span className="rf-hero-art" aria-hidden><factor.icon /></span>}
         </section>
         <section className="report-section rf-metric">
-          <small>{factor.unit}</small>
-          <div className="rf-metric-row"><strong>{factor.value}</strong><span className={`rf-pill rf-pill-${factor.tone}`}><i />{factor.tone === "positive" ? "Good" : factor.tone === "warning" ? "Fair" : "Needs work"}</span></div>
-          <div className="rf-tip"><Info /><div><strong>{factor.advice}</strong><p>{factor.note}</p></div></div>
+          <small>{view === "payment" ? "Payments on time" : factor.unit}</small>
+          <div className="rf-metric-row"><strong>{factor.value}</strong></div>
+          <span className={`rf-pill rf-pill-${factor.tone}`}>{factor.tone === "positive" ? "Good" : factor.tone === "warning" ? "Fair" : "Needs work"}<Info size={14} /></span>
+          <div className="rf-tip"><Lightbulb /><p>{view === "payment" ? "You should always pay the full credit card bill and EMI by the due date." : `${factor.advice}. ${factor.note}`}</p></div>
         </section>
-        <section className="report-section rf-accounts"><div className="rf-accounts-head"><h3>{view === "enquiries" ? "Recent enquiries" : "By account"}</h3><span>{view === "usage" ? "3 cards" : view === "enquiries" ? "5 enquiries" : view === "mix" ? "7 accounts" : "4 loans"}</span></div><div className="rf-group">{view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <>{cardRows}{loanRows}</> : loanRows}</div></section>
-        <section className="report-section"><Button variant="link" className="report-text-action" onClick={onStartChat}><MessageCircle />Talk to Arjun</Button></section>
+        <section className="report-section rf-accounts"><div className="rf-group">{view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <>{cardRows}{loanRows}</> : <div className="report-account-list">{loans.map((loan, index) => <Button variant="ghost" key={loan.name} className="rf-history-account" onClick={() => openAccount({ kind: "loan", index })}><Wallet /><span className="report-row-label"><strong>{loan.lender}</strong><small>{loan.name}</small></span><span className="rf-history-status">{loan.status}</span><ChevronRight /></Button>)}</div>}</div></section>
       </> : view === "accounts" ? <>
         <section className="report-section report-detail-heading"><span className="report-eyebrow">YOUR CREDIT ACCOUNTS</span><h2>Your cards & loans</h2><p>3 cards · 4 loans</p></section>
         <div className="report-account-tabs" role="tablist" aria-label="Credit accounts">{([ ["cards", "Cards", cards.length], ["loans", "Loans", loans.length], ["enquiries", "Enquiries", enquiries.length] ] as const).map(([key, label, count]) => <Button variant="ghost" key={key} role="tab" aria-selected={tab === key} className={tab === key ? "report-tab is-active" : "report-tab"} onClick={() => setTab(key)}>{label}<span>{count}</span></Button>)}</div>
