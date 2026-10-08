@@ -35,7 +35,6 @@ type Account = { kind: "card"; index: number } | { kind: "loan"; index: number }
 // Demo bureau pull date; replace with the real report date from the backend.
 const REPORT_LAST_PULLED = "2026-10-05T00:00:00";
 const REFRESH_CYCLE_DAYS = 30;
-const formatDate = (d: Date) => d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 const money = (amount: number) => "₹" + amount.toLocaleString("en-IN");
 const totalLimit = cards.reduce((sum, card) => sum + card.limit, 0);
 const totalOutstanding = loans.reduce((sum, loan) => sum + loan.outstanding, 0);
