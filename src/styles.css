@@ -207,24 +207,40 @@
 .report-description, .report-detail-heading > p, .report-ntc-intro > p { font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
 .report-detail-heading h2 { margin: 0 0 8px; }
 .report-eyebrow { display: block; font-size: 12px; font-weight: 500; color: var(--report-subtle); margin-bottom: 8px; }
-.report-score-hero { padding-top: 16px; padding-bottom: 8px; border: 0; }
-.report-meta-row { display: flex; justify-content: space-between; align-items: center; }
-.report-equifax-logo { height: 18px; width: auto; display: block; }
+.report-hero-wrap { padding: 16px var(--report-gutter) 4px; }
+.report-score-card { border: 1px solid var(--report-line); border-radius: 22px; background: var(--report-paper); box-shadow: 0 1px 2px color-mix(in oklab, var(--report-ink) 7%, transparent), 0 18px 40px -30px color-mix(in oklab, var(--report-ink) 45%, transparent); padding: 4px 18px 0; }
+.report-score-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.report-score-headline { margin: 0; padding-top: 14px; font-size: 16px; line-height: 1.4; font-weight: 600; color: var(--report-ink); }
+.report-score-head button { margin: 6px -8px 0 0; }
+.report-score-card .report-carousel { margin: 0 -18px; }
+.report-score-card .report-slide { padding: 14px 18px 0; }
+.report-score-card .report-dots { margin-top: 18px; }
+.report-score-card .report-refresh-row { margin: 20px -18px 0; padding: 14px 18px; }
+.report-score-card .report-info { margin: 16px -18px 0; padding: 14px 18px 16px; border-top: 1px solid var(--report-line); }
+.report-score-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+
 .report-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 calc(-1 * var(--report-gutter)); }
 .report-carousel::-webkit-scrollbar { display: none; }
-.report-slide { flex: 0 0 100%; min-width: 0; min-height: 218px; scroll-snap-align: start; padding: 8px var(--report-gutter) 0; }
+.report-slide { flex: 0 0 100%; min-width: 0; min-height: 198px; scroll-snap-align: start; padding: 8px var(--report-gutter) 0; }
 .report-score-value { display: flex; align-items: baseline; gap: 8px; }
 .report-score-value strong { font-size: 72px; line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
 .report-score-value > span { font-size: 15px; color: var(--report-subtle); font-weight: 500; }
-.report-score-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 14px; }
+.report-score-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 10px; }
 .report-band { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; letter-spacing: 0.01em; }
 .report-band i { width: 8px; height: 8px; border-radius: 100%; background: currentColor; }
 .report-change { display: inline-flex; align-items: center; gap: 3px; font-size: 13px; font-weight: 500; color: var(--report-positive); }
 .report-change svg { width: 14px; height: 14px; }
-.report-range { position: relative; margin-top: 26px; }
+.report-range { position: relative; margin-top: 24px; }
 .report-range-track { height: 6px; border-radius: 999px; background: linear-gradient(to right, var(--report-danger) 0%, var(--report-warning) 38%, var(--report-positive) 72%, var(--report-positive) 100%); opacity: 0.85; }
-.report-range-marker { position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 100%; background: var(--report-ink); border: 3px solid var(--report-paper); box-shadow: 0 1px 4px color-mix(in oklab, var(--report-ink) 35%, transparent); transform: translate(-50%, -50%); }
-.report-range-labels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-top: 18px; color: var(--report-subtle); font-size: 11px; font-weight: 500; text-align: center; }
+.report-range-ticks { position: absolute; left: 0; right: 0; top: 0; height: 6px; border-radius: 999px; pointer-events: none; background-image: linear-gradient(to right, transparent 0 41.7%, var(--report-paper) 41.7% calc(41.7% + 1.5px), transparent calc(41.7% + 1.5px)), linear-gradient(to right, transparent 0 58.3%, var(--report-paper) 58.3% calc(58.3% + 1.5px), transparent calc(58.3% + 1.5px)), linear-gradient(to right, transparent 0 75%, var(--report-paper) 75% calc(75% + 1.5px), transparent calc(75% + 1.5px)); }
+.report-range-marker { position: absolute; top: 3px; width: 14px; height: 14px; border-radius: 100%; background: var(--report-ink); border: 3px solid var(--report-paper); box-shadow: 0 1px 4px color-mix(in oklab, var(--report-ink) 35%, transparent); transform: translate(-50%, -50%); }
+.report-range-labels { position: relative; height: 15px; margin-top: 13px; }
+.report-range-labels span { position: absolute; transform: translateX(-50%); white-space: nowrap; color: var(--report-subtle); font-size: 11px; font-weight: 500; }
+.report-range-labels span:nth-child(1) { left: 20.8%; }
+.report-range-labels span:nth-child(2) { left: 50%; }
+.report-range-labels span:nth-child(3) { left: 66.7%; }
+.report-range-labels span:nth-child(4) { left: 87.5%; }
+
 .report-trend-card { padding-top: 4px; }
 .report-trend-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 14px; }
 .report-trend-head strong, .report-trend-head span { font-weight: 600; }
