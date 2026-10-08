@@ -15,6 +15,20 @@ type Props = ({ kind: "card"; account: CardDetails } | { kind: "loan"; account: 
 const money = (value: number) => `₹${value.toLocaleString("en-IN")}`;
 const loanArtwork: Record<string, string> = { "Personal Loan": personalArt.url, "Consumer Loan": personalArt.url, "Auto Loan": vehicleArt.url, "Vehicle Loan": vehicleArt.url, "Two-wheeler Loan": vehicleArt.url, "Home Loan": homeArt.url };
 
+function UsageIndicator({ pct, tone, label }: { pct: number; tone: string; label: string }) {
+  const clamped = Math.max(0, Math.min(100, Math.round(pct)));
+  const bubbleStyle: CSSProperties = { left: `clamp(18px, ${clamped}%, calc(100% - 18px))` };
+  return (
+    <div className={`account-usage-indicator report-tone-${tone}`}>
+      <div className="account-usage-track" role="img" aria-label={`${clamped}%`}>
+        <div className="account-usage-fill" style={{ width: `${clamped}%` }} />
+        <span className="account-usage-bubble" style={bubbleStyle}>{clamped}%</span>
+      </div>
+      <p className="account-usage-label">{label}</p>
+    </div>
+  );
+}
+
 export function ReportAccountDetail(props: Props) {
   const [showInfo, setShowInfo] = useState(false);
   const card = props.kind === "card" ? props.account : undefined;
