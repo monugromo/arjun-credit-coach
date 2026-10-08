@@ -338,6 +338,7 @@
 .report-metric small { font-size: 11px; font-weight: 400; color: var(--report-subtle); }
 .report-utilisation { width: 100%; height: 4px; border-radius: 4px; background: var(--report-line); overflow: hidden; margin-top: 16px; }
 .report-fill { height: 100%; display: block; border-radius: 4px; }
+.report-utilisation .report-fill { background: var(--report-brand); }
 .report-account-bottom { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
 .report-account-bottom > span { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .report-account-bottom > span:last-child { text-align: right; }
