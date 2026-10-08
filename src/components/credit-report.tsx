@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, Lightbulb, List, MessageCircle, RefreshCw, Wallet, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { DemoUser } from "@/lib/groscore-data";
 import equifaxLogo from "@/assets/equifax-logo.png.asset.json";
 import paymentIllustration from "@/assets/payment-history-reference.png.asset.json";
@@ -165,14 +166,14 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
         <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}><div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
       </> : <>
         <section className="report-section report-score-hero">
-          <div className="report-score-head"><p className="report-score-headline">{scoreHeadline}</p></div>
+          <div className="report-score-head"><p className="report-score-headline"><span className="report-score-greeting">{firstName},</span>{scoreHeadline.slice(firstName.length + 2)}</p></div>
           <div className="report-score-panel">
           <div className="report-hero-bureau"><img src={equifaxLogo.url} alt="Equifax" /></div>
           <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
             <div className="report-slide">
               <div className="report-gauge-wrap">
                 <ScoreGauge score={score} />
-                <div className="report-gauge-value"><strong>{score}</strong><div className={`report-gauge-band report-tone-${bandTone}`}><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" onClick={() => setShowInfo(!showInfo)}><Info /></Button></div><span className="report-score-change"><ArrowUpRight />+12 this month</span></div>
+                <div className="report-gauge-value"><strong>{score}</strong><div className={`report-gauge-band report-tone-${bandTone}`}><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" aria-haspopup="dialog" onClick={() => setShowInfo(true)}><Info /></Button></div><span className="report-score-change"><ArrowUpRight />+12 this month</span></div>
               </div>
             </div>
             <div className="report-slide">
@@ -190,12 +191,13 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
               </div>
             </div>
           </div>
+          <div className="report-dots" aria-label="Score views">{[0, 1].map(index => <Button key={index} variant="ghost" size="icon" aria-label={index === 0 ? "Show score overview" : "Show score trend"} aria-pressed={slide === index} onClick={() => { const el = carouselRef.current; if (el) el.scrollTo({ left: index * el.clientWidth, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }}><span className={slide === index ? "is-active" : ""} /></Button>)}</div>
           <div className="report-refresh-row">
             {daysLeft > 0 ? <span className="report-updated">Next update in {daysLeft} {daysLeft === 1 ? "day" : "days"}</span> : <Button variant="link" className="report-refresh" onClick={() => setLastPulled(new Date())}><RefreshCw />Refresh now</Button>}
           </div>
-          <div className="report-hero-actions"><Button variant="ghost" onClick={download}><Download />Download Report</Button><Button variant="ghost" onClick={() => { const el = carouselRef.current; if (el) el.scrollTo({ left: slide === 0 ? el.clientWidth : 0, behavior: "smooth" }); }}><ArrowUpRight />{slide === 0 ? "Score Trend" : "Score Overview"}</Button></div>
+          <div className="report-hero-actions"><Button variant="ghost" onClick={download}><Download />Download Report</Button><Button variant="ghost" onClick={onBack}><MessageCircle />Talk to Arjun</Button></div>
           </div>
-          {showInfo && <div className="report-info"><Button variant="ghost" size="icon" aria-label="Close score information" onClick={() => setShowInfo(false)}><X /></Button><p>Your score and accounts are based on the information in your Equifax credit report. Checking this report does not create a credit enquiry.</p><ul className="report-info-bands"><li><i className="report-status-dot report-tone-danger" aria-hidden /><strong>Poor</strong> 300-549 - lenders see high risk</li><li><i className="report-status-dot report-tone-warning" aria-hidden /><strong>Fair</strong> 550-649 - some lenders may approve</li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Good</strong> 650-749 - most lenders approve</li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Excellent</strong> 750-900 - best rates and offers</li></ul></div>}
+          <Dialog open={showInfo} onOpenChange={setShowInfo}><DialogContent className="credit-report report-score-dialog"><DialogTitle>What your score means</DialogTitle><DialogDescription>Your score and accounts are based on the information in your Equifax credit report. Checking this report does not create a credit enquiry.</DialogDescription><ul className="report-info-bands"><li><i className="report-status-dot report-tone-danger" aria-hidden /><strong>Poor</strong><span>300-549 - lenders see high risk</span></li><li><i className="report-status-dot report-tone-warning" aria-hidden /><strong>Fair</strong><span>550-649 - some lenders may approve</span></li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Good</strong><span>650-749 - most lenders approve</span></li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Excellent</strong><span>750-900 - best rates and offers</span></li></ul></DialogContent></Dialog>
         </section>
 
 
