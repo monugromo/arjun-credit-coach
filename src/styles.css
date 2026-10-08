@@ -388,10 +388,22 @@
 .account-detail-payment > span { color: var(--report-subtle); }
 .account-detail-payment strong { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
 .account-detail-payment svg { width: 16px; height: 16px; }
-.account-history-unavailable { display: flex; gap: 12px; align-items: flex-start; margin-top: 20px; padding: 18px 0 0; border-top: 1px dashed var(--report-line); }
-.account-history-unavailable > svg { width: 22px; height: 22px; flex-shrink: 0; color: var(--report-subtle); }
-.account-history-unavailable strong { font-size: 14px; font-weight: 500; }
-.account-history-unavailable p { font-size: 14px; line-height: 1.6; color: var(--report-subtle); margin-top: 4px; }
+.account-history-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.account-history-head h3 { margin: 0; }
+.account-history-year { display: inline-flex; align-items: center; gap: 2px; }
+.account-history-year span { font-size: 14px; font-weight: 600; min-width: 44px; text-align: center; }
+.account-history-year button { width: 28px; height: 28px; color: var(--report-subtle); }
+.account-history-year button:disabled { opacity: 0.35; }
+.account-history-year button svg { width: 16px; height: 16px; }
+.account-history-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 8px; margin-top: 18px; }
+.account-history-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0; }
+.account-history-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.account-history-ontime .account-history-dot, i.account-history-ontime { background: var(--report-brand); }
+.account-history-delayed .account-history-dot, i.account-history-delayed { background: #E5484D; }
+.account-history-unreported .account-history-dot, i.account-history-unreported { background: var(--report-line); }
+.account-history-month { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; color: var(--report-subtle); }
+.account-history-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--report-line); }
+.account-history-legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--report-subtle); }
 .account-detail-facts dl { display: grid; gap: 24px; margin-top: 24px; }
 .account-detail-facts dt { font-size: 14px; color: var(--report-subtle); margin-bottom: 4px; }
 .account-detail-facts dd { font-size: 16px; font-weight: 500; }
