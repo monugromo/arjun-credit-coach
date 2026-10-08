@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Simplify account-page dividers, remove the bureau-update fact, use an Arjun text action and separate product from masked account number; verify both account types.
+- [x] Simplify account-page dividers, remove the bureau-update fact, use an Arjun text action and separate product from masked account number; verified both account types and chat handoff without page errors.
 
 - [x] Fill demo account information with labelled sample lifecycle details and compact aligned rows; verified all nine accounts on both comparison reports, typography, navigation and no page errors.
 
