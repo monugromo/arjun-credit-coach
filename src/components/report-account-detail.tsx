@@ -115,7 +115,7 @@ export function ReportAccountDetail(props: Props) {
         <div><dt>Account closed on</dt><dd className={props.information ? undefined : "account-value-unavailable"}>{props.information?.closedOn ?? (props.information?.status === "Active" ? "Not closed" : "Not reported")}</dd></div>
       </dl>
     </section>
-    <section className="report-section account-detail-support"><p>This information is based on what the lender reports to Equifax.</p><Button variant="link" onClick={props.onStartChat}>Report an issue to Arjun</Button></section>
+    <section className="report-section account-detail-support"><p>This information is based on what the lender reports to Equifax.</p><Button variant="outline" onClick={props.onStartChat}>Talk to Arjun</Button></section>
     <Dialog open={showInfo} onOpenChange={setShowInfo}><DialogContent className="credit-report report-score-dialog"><DialogTitle>About this account</DialogTitle><DialogDescription>{props.information?.sample ? "Account information includes sample statuses and dates for this demo, not verified bureau records. " : `Balances and payment information are supplied by ${lender} to Equifax. `}Payment status is separate from whether an account is active or closed.</DialogDescription></DialogContent></Dialog>
   </div>;
 }
