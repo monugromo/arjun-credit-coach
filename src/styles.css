@@ -207,9 +207,32 @@
 .report-description, .report-detail-heading > p, .report-ntc-intro > p { font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
 .report-detail-heading h2 { margin: 0 0 8px; }
 .report-eyebrow { display: block; font-size: 12px; font-weight: 500; color: var(--report-subtle); margin-bottom: 8px; }
-.report-score-hero { padding-top: 20px; padding-bottom: 0; border-bottom: 0; }
+.report-score-hero { padding: 20px 16px 0; border-bottom: 0; }
+.report-score-panel { margin-top: 18px; border: 1px solid var(--report-line); border-radius: 8px; overflow: hidden; background: var(--report-paper); }
+.report-hero-bureau { display: flex; justify-content: flex-end; padding: 16px 18px 0; }
+.report-hero-bureau img { width: 76px; height: 24px; object-fit: contain; }
+.report-score-panel .report-carousel { margin: 0; }
+.report-score-panel .report-slide { padding: 2px 12px 0; min-height: 198px; }
+.report-gauge-wrap { position: relative; width: 100%; max-width: 360px; margin: 0 auto; }
+.report-score-gauge { display: block; width: 100%; height: auto; overflow: visible; }
+.report-gauge-soft { fill: none; stroke: currentColor; stroke-width: 28px; opacity: 0.16; }
+.report-gauge-edge { fill: none; stroke: currentColor; stroke-width: 5px; transform: translate(160px, 150px) scale(1.11) translate(-160px, -150px); }
+.report-gauge-pointer { fill: var(--report-ink); }
+.report-gauge-label { fill: var(--report-subtle); font-size: 12px; }
+.report-gauge-value { position: absolute; top: 44%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+.report-gauge-value > strong { font-size: 44px; line-height: 1.15; font-weight: 600; font-variant-numeric: tabular-nums; }
+.report-gauge-band { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; }
+.report-gauge-band button { width: 26px; height: 26px; color: inherit; }
+.report-gauge-band svg { width: 16px; height: 16px; }
+.report-gauge-value .report-score-change { margin: 5px 0 0; font-size: 11px; white-space: nowrap; }
+.report-score-panel .report-refresh-row { justify-content: center; border: 0; margin: 0; padding: 4px 12px 18px; font-size: 13px; }
+.report-score-panel .report-refresh { margin-left: 0; }
+.report-hero-actions { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--report-line); }
+.report-hero-actions button { height: 52px; padding: 8px; gap: 7px; border-radius: 0; color: var(--report-ink); font-size: 12px; font-weight: 600; }
+.report-hero-actions button + button { border-left: 1px solid var(--report-line); }
+.report-hero-actions svg { width: 16px; height: 16px; }
 .report-score-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-.report-score-headline { margin: 0; max-width: 240px; font-size: 21px; line-height: 1.3; font-weight: 700; letter-spacing: -0.015em; color: var(--report-ink); }
+.report-score-headline { margin: 0; max-width: 300px; font-size: 18px; line-height: 1.4; font-weight: 600; color: var(--report-ink); }
 .report-score-head button { margin: -4px -8px 0 0; color: var(--report-subtle); }
 .report-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 calc(-1 * var(--report-gutter)); }
 .report-carousel::-webkit-scrollbar { display: none; }
