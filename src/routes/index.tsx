@@ -170,6 +170,17 @@ function Index() {
     go("otp");
   };
 
+  // Report comparison numbers (014 / 015) sign in instantly with the demo OTP.
+  const onDirectReportLogin = (p: string) => {
+    const u = DEMOS[p];
+    if (!u?.directReportLogin) return;
+    setPhone(p);
+    setUser(u);
+    setName(u.name);
+    setOtp("123456");
+    go("report");
+  };
+
   const startChatFlow = (u: DemoUser) => {
     setChat([]);
     setChatPhase("intro");
@@ -458,7 +469,7 @@ function Index() {
         </div>}
         {screen === "landing" && <Landing onStart={() => go("phone")} />}
         {screen === "phone" && (
-          <PhoneScreen phone={phone} setPhone={setPhone} onBack={() => go("landing")} onSubmit={onPhoneSubmit} />
+          <PhoneScreen phone={phone} setPhone={setPhone} onBack={() => go("landing")} onSubmit={onPhoneSubmit} onDirectLogin={onDirectReportLogin} />
         )}
         {screen === "otp" && user && (
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
@@ -758,7 +769,7 @@ function WATopBar({ title, onBack, right }: { title: string; onBack?: () => void
 }
 
 /* ====================== PHONE ====================== */
-function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; setPhone: (s: string) => void; onBack: () => void; onSubmit: () => void }) {
+function PhoneScreen({ phone, setPhone, onBack, onSubmit, onDirectLogin }: { phone: string; setPhone: (s: string) => void; onBack: () => void; onSubmit: () => void; onDirectLogin: (p: string) => void }) {
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-white">
       <WATopBar title="Enter your phone number" onBack={onBack} />
@@ -804,7 +815,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
               <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">No bureau data</div>
               <div className="flex flex-col gap-2">
                 {[["9876500014", "014", "Report comparison · Original"], ["9876500015", "015", "Report comparison · Shaded"], ["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"], ["9876500007", "007", "Meera · Loan offers · returning"], ["9876500008", "008", "Kabir · Loan offers · first visit"], ["9876500009", "009", "Suresh · No eligible lenders"], ["9876500010", "010", "Pooja · Lender check failed"], ["9876500011", "011", "Manoj · Bureau not pulled"], ["9876500012", "012", "Riya · No credit card offer"], ["9876500013", "013", "Sonu · Report design comparison"]].map(([p, id, label]) => (
-                  <button key={p} onClick={() => setPhone(p)}
+                  <button key={p} onClick={() => (p === "9876500014" || p === "9876500015") ? onDirectLogin(p) : setPhone(p)}
                     className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                     <span>
                       <div className="font-medium text-gray-900">#{id} · +91 {p.slice(0, 5)} {p.slice(5)}</div>
