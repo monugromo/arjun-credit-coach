@@ -60,7 +60,15 @@ export function ReportAccountDetail(props: Props) {
         <ReportBankMark name={lender} logoUrl={props.logoUrl} />
         <div className="account-detail-copy"><div className="account-detail-title"><h2>{lender}</h2><Button variant="ghost" size="icon" aria-label="About this account" onClick={() => setShowInfo(true)}><Info /></Button></div><p className="account-detail-subtitle"><span>{product}</span><span>(A/C No. XXXX{props.account.last4})</span></p></div>
       </div>
-      <img className="account-detail-art" src={artwork} alt={`${product} illustration`} />
+      <div className="account-art-stage">
+        <div className="account-art-stage-bg" aria-hidden="true">
+          <span className="account-art-ring account-art-ring-outer" />
+          <span className="account-art-ring account-art-ring-inner" />
+          <span className="account-art-glow" />
+          <span className="account-art-pedestal" />
+        </div>
+        <img className="account-detail-art" src={artwork} alt={`${product} illustration`} />
+      </div>
       <dl className="account-detail-balances">
         <div><dt>{card ? "Total Spends" : "Sanctioned amount"}</dt><dd>{money(card?.used ?? loan?.sanctioned ?? 0)}</dd></div>
         <div><dt>{card ? "Credit limit" : "Current balance"}</dt><dd>{money(card?.limit ?? loan?.outstanding ?? 0)}</dd></div>
