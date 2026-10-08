@@ -2999,7 +2999,7 @@ function FdDetailSheet({ card, onClose }: { card: FdCard; onClose: () => void })
 
 /* ====================== REPORT ====================== */
 function ReportScreen({ user, onBack, onStartChat }: { user: DemoUser; onBack: () => void; onStartChat: () => void }) {
-  return <CreditReport user={user} onBack={onBack} onStartChat={onStartChat} savings={<DailySavingsBlock onStartChat={onStartChat} isNTC={user.key === "ntc"} />} />;
+  return <CreditReport user={user} onBack={onBack} onStartChat={onStartChat} />;
 }
 
 function BigGauge({ value }: { value: number }) {
