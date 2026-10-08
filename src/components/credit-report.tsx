@@ -14,6 +14,7 @@ import { gaugeScoreAt, GAUGE_DURATION_MS } from "@/lib/report-animation";
 import { recentScoreRecords, scoreRecordDate, SCORE_TREND_TICKS, scoreTrendY } from "@/lib/report-trend";
 import { ReportBankMark } from "@/components/report-bank-mark";
 import { creditUsageTone } from "@/lib/report-usage";
+import { ReportAccountDetail } from "@/components/report-account-detail";
 
 const cards = [
   { bank: "HDFC Bank", last4: "4521", used: 128000, limit: 150000, pct: 85, tone: "danger" },
@@ -185,10 +186,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         <section className="report-section"><h3>Already have loans or cards?</h3><p className="report-description">Your PAN or name may be incorrect. Update them to fetch the right report.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Update name & PAN <ArrowUpRight /></Button></section>
         <section className="report-section"><h3>Still see an error?</h3><p className="report-description">Our support team will look into it within 24 hours.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Raise a ticket <ArrowUpRight /></Button></section>
       </> : account && (currentCard || currentLoan) ? <>
-        <section className="report-section report-detail-heading"><span className="report-eyebrow">Account details</span><h2>{currentCard?.bank ?? currentLoan?.lender}</h2><p>{currentCard ? `Credit card · •••• ${currentCard.last4}` : currentLoan?.name}</p></section>
-        <div className="report-detail-stats"><div><small>{currentCard ? "Credit limit" : "Sanctioned amount"}</small><strong>{money(currentCard?.limit ?? currentLoan?.sanctioned ?? 0)}</strong></div><div><small>{currentCard ? "Balance used" : "Outstanding balance"}</small><strong>{money(currentCard?.used ?? currentLoan?.outstanding ?? 0)}</strong></div></div>
-        <section className="report-section"><h3>{currentCard ? "Credit usage" : "Payment status"}</h3>{currentCard ? <><div className={`report-detail-number report-tone-${creditUsageTone(currentCard.pct)}`}>{currentCard.pct}<span>% used</span></div><div className="report-utilisation"><span className={`report-fill report-fill-${creditUsageTone(currentCard.pct)}`} style={{ width: `${currentCard.pct}%` }} /></div></> : <><p className={`report-payment-status report-tone-${currentLoan?.tone}`}><CheckCircle2 />{currentLoan?.status}</p><dl className="report-details"><div><dt>Monthly EMI</dt><dd>{money(currentLoan?.emi ?? 0)}</dd></div></dl></>}</section>
-        <section className="report-section"><dl className="report-details report-lifecycle-detail"><div><dt>Account status</dt><dd>Not reported</dd></div></dl><p className="report-description">Account balances, limits and payment status are reported by the lender.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Something looks off? Talk to Arjun <ArrowUpRight /></Button></section>
+        {currentCard ? <ReportAccountDetail kind="card" account={currentCard} logoUrl={bankLogos[currentCard.bank]} onStartChat={onStartChat} /> : currentLoan ? <ReportAccountDetail kind="loan" account={currentLoan} logoUrl={bankLogos[currentLoan.lender]} onStartChat={onStartChat} /> : null}
       </> : factor ? <>
         <section className="report-section rf-hero">
           <div className="rf-hero-heading"><div className="rf-hero-text"><h2>{factor.title}</h2><span className="rf-total-count">{factorTotal}</span></div><img className="rf-history-illustration" src={factorIllustrations[factor.key]} alt="" loading="lazy" width={512} height={512} /></div>

@@ -19,3 +19,4 @@
 - Normalize and cap recorded score pulls, format date labels, and map scores onto the fixed range in a shared trend helper before chart rendering; this keeps chart rules testable and avoids fabricated chart points.
 - Render bank identity through a shared report bank mark with optional logo URLs and neutral initials on missing or failed images; this keeps account layouts stable without inventing bank artwork.
 - Derive card utilisation colour through the shared report usage helper in lists and details; this keeps threshold boundaries consistent and testable.
+- Render every loan and card drill-down through one shared account-detail component using the existing report state and supplied account fields; this keeps the reference layout consistent without changing navigation or inventing history.
