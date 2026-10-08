@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Standardize neutral factor descriptions, clarify account-list sections and separators, and remove grey row hover blocks; verify both comparison samples.
+- [x] Standardize neutral factor descriptions, clarify account-list sections and separators, and remove grey row hover blocks; verify both comparison samples.
 
 - [x] Add distinct green factor illustrations and Credit age using existing report data; verify both samples.
 
