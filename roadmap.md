@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Redesign bank account cards directly from the report theme with logo space and verify detail actions.
+- [x] Redesign bank account cards directly from the report theme with logo space and verify detail actions on both comparison accounts.
 - [x] Match report icons and illustrations to the theme and remove factor advice notes.
 
 - [x] Tighten both sample reports equally and show a neutral dated score trend capped at seven recorded pulls (only the current dated score is available; no history fabricated).
