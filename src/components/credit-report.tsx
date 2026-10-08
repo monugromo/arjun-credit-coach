@@ -11,7 +11,7 @@ import mixIllustration from "@/assets/report-mix.png";
 import enquiryIllustration from "@/assets/report-enquiries.png";
 import ageIllustration from "@/assets/report-age.png";
 import { gaugeScoreAt, GAUGE_DURATION_MS } from "@/lib/report-animation";
-import { recentScoreRecords, scoreRecordDate } from "@/lib/report-trend";
+import { recentScoreRecords, scoreRecordDate, SCORE_TREND_TICKS, scoreTrendY } from "@/lib/report-trend";
 import { ReportBankMark } from "@/components/report-bank-mark";
 import { creditUsageTone } from "@/lib/report-usage";
 
@@ -122,9 +122,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   const accountsScroll = useRef(0);
   const score = user.score ?? 413;
   const trendRecords = recentScoreRecords(user.scoreHistory ?? [{ date: REPORT_LAST_PULLED, score }]);
-  const trendLow = Math.max(300, Math.min(...trendRecords.map(record => record.score), score) - 24);
-  const trendHigh = Math.min(900, Math.max(...trendRecords.map(record => record.score), score) + 24);
-  const trendPoints = trendRecords.map((record, index) => ({ ...record, x: trendRecords.length === 1 ? 172 : 36 + index * 264 / (trendRecords.length - 1), y: 118 - (record.score - trendLow) / (trendHigh - trendLow) * 64 }));
+  const trendPoints = trendRecords.map((record, index) => ({ ...record, x: trendRecords.length === 1 ? 172 : 48 + index * 248 / (trendRecords.length - 1), y: scoreTrendY(record.score) }));
   const trendFirst = trendRecords[0];
   const trendLast = trendRecords[trendRecords.length - 1];
   const trendChange = trendFirst && trendLast && trendRecords.length > 1 ? trendLast.score - trendFirst.score : undefined;
@@ -227,23 +225,22 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
               <div className="report-trend-card">
                 <div className="report-trend-head"><strong>Score trend</strong>{trendChange !== undefined && <span>{trendChange > 0 ? "+" : ""}{trendChange} points</span>}</div>
                 <svg viewBox="0 0 320 156" className="report-trend-chart" role="img" aria-label={trendRecords.length ? `Score trend: ${trendRecords.map(record => `${scoreRecordDate(record.date)}, ${record.score}`).join("; ")}` : "No recorded score history"}>
-                  {[54, 86, 118].map((y, index) => <g key={y}><line x1="28" y1={y} x2="308" y2={y} className="grid" /><text x="21" y={y + 4} textAnchor="end" className="label">{Math.round(trendHigh - index * (trendHigh - trendLow) / 2)}</text></g>)}
-                  <line x1="28" y1="126" x2="308" y2="126" className="baseline" />
+                  {SCORE_TREND_TICKS.map(value => <g key={value}><line x1="32" y1={scoreTrendY(value)} x2="308" y2={scoreTrendY(value)} className="grid" /><text x="25" y={scoreTrendY(value) + 4} textAnchor="end" className="label">{value}</text></g>)}
+                  <line x1="32" y1="120" x2="308" y2="120" className="baseline" />
                   {trendPoints.length > 1 && <path d={trendPoints.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ")} fill="none" className="path" />}
                   {trendPoints.map(point => {
-                    const [day, month] = scoreRecordDate(point.date).split(" ");
                     return <g key={point.date}>
-                      <line x1={point.x} y1={point.y + 5} x2={point.x} y2="126" className="grid" />
+                      <line x1={point.x} y1={point.y} x2={point.x} y2="120" className="grid" />
                       <circle cx={point.x} cy={point.y} r="4" className="dot" />
                       <text x={point.x} y={point.y - 13} textAnchor="middle" className="score-label">{point.score}</text>
-                      <text x={point.x} y="140" textAnchor="middle" className="axis"><tspan x={point.x}>{day}</tspan><tspan x={point.x} dy="12">{month}</tspan></text>
+                      <text x={point.x} y="142" textAnchor="middle" className="axis">{scoreRecordDate(point.date)}</text>
                     </g>;
                   })}
                 </svg>
               </div>
             </div>
           </div>
-          <div className="report-score-change" aria-label="Score change: up 12 points this month"><strong>+12 <span>points</span></strong><small>This month</small></div>
+          <div className="report-score-change" aria-label="Score change: up 12 points"><strong>+12 <span>points</span></strong></div>
           <div className="report-dots" aria-label="Score views">{[0, 1].map(index => <Button key={index} variant="ghost" size="icon" aria-label={index === 0 ? "Show score overview" : "Show score trend"} aria-pressed={slide === index} onClick={() => { const el = carouselRef.current; if (el) el.scrollTo({ left: index * el.clientWidth, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }}><span className={slide === index ? "is-active" : ""} /></Button>)}</div>
           <div className="report-refresh-row">
             {daysLeft > 0 ? <span className="report-updated">Next update in {daysLeft} {daysLeft === 1 ? "day" : "days"}</span> : <Button variant="link" className="report-refresh" onClick={() => setLastPulled(new Date())}><RefreshCw />Refresh now</Button>}

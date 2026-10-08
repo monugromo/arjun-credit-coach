@@ -221,7 +221,7 @@
 .report-gauge-needle { transform-origin: 0 0; }
 .report-gauge-label { fill: var(--report-subtle); font-size: 12px; }
 .report-gauge-value { position: absolute; top: 44%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
-.report-gauge-value > strong { font-size: 44px; line-height: 1.15; font-weight: 600; font-variant-numeric: tabular-nums; }
+.report-gauge-value > strong { font-size: 44px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
 .report-gauge-band { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; color: var(--report-subtle); }
 .report-gauge-band button { width: 26px; height: 26px; color: inherit; }
 .report-gauge-band svg { width: 16px; height: 16px; }
@@ -247,10 +247,9 @@
 .report-score-value { display: flex; align-items: baseline; gap: 8px; }
 .report-score-value strong { font-size: 72px; line-height: 1; font-weight: 500; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .report-score-value > span { font-size: 18px; color: var(--report-subtle); font-weight: 500; }
-.report-score-change { display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 2px 0 0; color: var(--report-positive); }
-.report-score-change > strong { font-size: 24px; line-height: 1.3; font-weight: 700; font-variant-numeric: tabular-nums; }
+.report-score-change { display: flex; align-items: baseline; justify-content: center; gap: 6px; margin: -6px 0 0; color: var(--report-positive); }
+.report-score-change > strong { display: flex; align-items: baseline; gap: 6px; font-size: 22px; line-height: 1.3; font-weight: 700; font-variant-numeric: tabular-nums; }
 .report-score-change > strong span { font-size: 14px; font-weight: 600; }
-.report-score-change > small { color: var(--report-subtle); font-size: 13px; font-weight: 400; }
 .report-lifecycle-note { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 20px; color: var(--report-subtle); font-size: 12px; line-height: 1.6; }
 .report-lifecycle-note svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
 .report-lifecycle-detail { margin: 0 0 16px; }
