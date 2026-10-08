@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { CheckCircle2, ChevronLeft, ChevronRight, Info, MessageCircle, Clock } from "lucide-react";
+import { Check, X, ChevronLeft, ChevronRight, Info, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { ReportBankMark } from "@/components/report-bank-mark";
@@ -31,18 +31,7 @@ function UsageIndicator({ pct, tone, label }: { pct: number; tone: string; label
 
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 const CURRENT_YEAR = new Date().getFullYear();
-const CURRENT_MONTH = new Date().getMonth();
 const HISTORY_YEARS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2];
-
-type MonthStatus = "ontime" | "delayed" | "unreported";
-function monthStatuses(year: number, delayed: boolean): MonthStatus[] {
-  const reportedCount = year < CURRENT_YEAR ? 12 : CURRENT_MONTH + 1;
-  return MONTHS.map((_, index) => {
-    if (index >= reportedCount) return "unreported";
-    if (delayed && index >= reportedCount - 2) return "delayed";
-    return "ontime";
-  });
-}
 
 export function ReportAccountDetail(props: Props) {
   const [showInfo, setShowInfo] = useState(false);
@@ -78,20 +67,19 @@ export function ReportAccountDetail(props: Props) {
           <Button variant="ghost" size="icon" aria-label="Next year" disabled={historyYear >= CURRENT_YEAR} onClick={() => setHistoryYear(y => y + 1)}><ChevronRight /></Button>
         </div>
       </div>
-      {loan && <div className="account-detail-payment"><span>Latest payment status</span><strong className={`report-tone-${loan.tone}`}>{loan.status === "On time" ? <CheckCircle2 /> : <Clock />}{loan.status}</strong></div>}
       <div className="account-history-grid" role="img" aria-label={`Monthly payment status for ${historyYear}`}>
-        {monthStatuses(historyYear, loan ? loan.status !== "On time" : (card?.pct ?? 0) >= 50).map((status, index) => (
-          <div key={MONTHS[index]} className={`account-history-cell account-history-${status}`}>
-            <span className="account-history-dot" aria-hidden="true" />
-            <span className="account-history-month">{MONTHS[index]}</span>
+        {MONTHS.map(month => (
+          <div key={month} className="account-history-cell account-history-unreported">
+            <span className="account-history-month">{month}</span>
+            <span className="account-history-missing" aria-label="Not reported">–</span>
           </div>
         ))}
       </div>
       <div className="account-history-legend">
-        <span><i className="account-history-dot account-history-ontime" />On time</span>
-        <span><i className="account-history-dot account-history-delayed" />Delayed</span>
-        <span><i className="account-history-dot account-history-unreported" />Not reported</span>
+        <span><i className="account-history-dot account-history-ontime"><Check /></i>On time Payment</span>
+        <span><i className="account-history-dot account-history-delayed"><X /></i>Late Payment</span>
       </div>
+      <p className="account-history-recorded">Last payment recorded by Bureau: Not reported</p>
     </section>
     <section className="report-section account-detail-facts">
       <h3>Account information</h3>
