@@ -402,7 +402,7 @@
 .account-history-dot svg { width: 13px; height: 13px; stroke-width: 3; }
 .account-history-ontime .account-history-dot, i.account-history-ontime { background: var(--report-brand); }
 .account-history-delayed .account-history-dot, i.account-history-delayed { background: var(--report-danger); }
-.account-history-unreported .account-history-dot, i.account-history-unreported { background: var(--report-line); }
+.account-history-unreported .account-history-dot, i.account-history-unreported { background: transparent; border: 1.5px solid var(--report-line); }
 .account-history-month { font-size: 11px; font-weight: 500; letter-spacing: 0; color: var(--report-subtle); }
 .account-history-missing { display: grid; place-items: center; width: 20px; height: 20px; color: var(--report-faint); font-size: 16px; line-height: 1; }
 .account-history-legend { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; padding: 20px 12px; border-top: 1px solid var(--report-line); }
