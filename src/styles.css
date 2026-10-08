@@ -377,7 +377,8 @@
 .account-detail-balances dd { font-size: 17px; font-weight: 600; line-height: 1.4; letter-spacing: 0; overflow-wrap: anywhere; }
 .report-account-detail .report-section h3 { font-size: 16px; font-weight: 600; }
 .account-detail-payment { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-.account-usage-indicator { margin-top: 52px; }
+.account-usage-indicator { margin-top: 44px; }
+.account-detail-usage .account-usage-indicator { margin-top: 52px; }
 .account-usage-track { position: relative; height: 6px; border-radius: 3px; background: var(--report-line); }
 .account-usage-fill { height: 100%; border-radius: 3px; background: currentColor; box-shadow: 0 5px 9px -2px color-mix(in srgb, currentColor 45%, transparent); }
 .account-usage-bubble { position: absolute; top: -38px; transform: translateX(-50%); padding: 5px 12px; border: 1.5px solid var(--report-ink); border-radius: 9px; background: var(--report-paper); color: var(--report-ink); font-size: 13px; font-weight: 600; line-height: 1.35; white-space: nowrap; }

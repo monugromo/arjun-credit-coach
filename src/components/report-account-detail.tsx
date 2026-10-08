@@ -44,14 +44,11 @@ export function ReportAccountDetail(props: Props) {
       </div>
       <img className="account-detail-art" src={artwork} alt={`${product} illustration`} />
       <dl className="account-detail-balances">
-        <div><dt>{card ? "Credit limit" : "Sanctioned amount"}</dt><dd>{money(card?.limit ?? loan?.sanctioned ?? 0)}</dd></div>
-        <div><dt>Current balance</dt><dd>{money(card?.used ?? loan?.outstanding ?? 0)}</dd></div>
+        <div><dt>{card ? "Total Spends" : "Sanctioned amount"}</dt><dd>{money(card?.used ?? loan?.sanctioned ?? 0)}</dd></div>
+        <div><dt>{card ? "Credit limit" : "Current balance"}</dt><dd>{money(card?.limit ?? loan?.outstanding ?? 0)}</dd></div>
       </dl>
+      {card && <UsageIndicator pct={card.pct} tone={creditUsageTone(card.pct)} label={`Total used ${money(card.used)}`} />}
     </section>
-    {card && <section className="report-section account-detail-usage">
-      <h3>Credit utilisation</h3>
-      <UsageIndicator pct={card.pct} tone={creditUsageTone(card.pct)} label={`${money(card.used)} used of ${money(card.limit)}`} />
-    </section>}
     {loan && <section className="report-section account-detail-usage">
       <h3>Loan outstanding</h3>
       <UsageIndicator pct={loan.sanctioned > 0 ? ((loan.sanctioned - loan.outstanding) / loan.sanctioned) * 100 : 0} tone="positive" label={`${money(Math.max(0, loan.sanctioned - loan.outstanding))} principal paid`} />
