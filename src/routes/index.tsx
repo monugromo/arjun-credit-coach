@@ -126,7 +126,6 @@ function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [typing, setTyping] = useState(false);
   const streamingRef = useRef(false);
-  const [showCallPopup, setShowCallPopup] = useState(false);
   const [bureauUpdated, setBureauUpdated] = useState(false);
   const [mobileLinked, setMobileLinked] = useState(false);
   const [journeyVariant, setJourneyVariant] = useState<JourneyVariant>("matched");
@@ -188,7 +187,7 @@ function Index() {
     go("chat");
   };
 
-  // Auto-play intro stream when entering chat for the first time, then show call popup
+  // Auto-play the intro stream without opening an unsolicited call popup.
   useEffect(() => {
     if (screen !== "chat" || !user) return;
     if (chatPhase !== "intro" || chat.length > 0) return;
@@ -198,7 +197,6 @@ function Index() {
       await sleep(400);
       await streamCoach(initialChat(user.key, user.name));
       setChatPhase(user.key === "loan" ? "post-call" : "awaiting-consent");
-      setShowCallPopup(user.key !== "loan");
       streamingRef.current = false;
     })();
   }, [screen, user, chatPhase, chat.length]);
@@ -207,7 +205,7 @@ function Index() {
     setScreen("phone"); setPhone(""); setOtp(""); setUser(null);
     setName(""); setChat([]); setTasks(distressedTasks);
     setReportUpdated(false); setTasksUpdated(false); setMenuOpen(false);
-    setChatPhase("intro"); setShowCallPopup(false); setBureauUpdated(false); setMobileLinked(false);
+    setChatPhase("intro"); setBureauUpdated(false); setMobileLinked(false);
     setLoanJourney(createLoanJourneyState(false));
   };
 
@@ -328,7 +326,6 @@ function Index() {
 
   const triggerLoanChat = (kind: "recommend" | "issues" | "time" | "ntc" | "apply" | "card", lender = "Moneyview") => {
     go("chat");
-    setShowCallPopup(false);
     setChatPhase("post-call");
     (async () => {
       if (kind === "recommend") {
@@ -663,17 +660,6 @@ function Index() {
             }}
             reportDot={reportUpdated}
             taskCount={tasks.filter((t) => t.status === "todo").length}
-          />
-        )}
-        {showCallPopup && user && (
-          <MiniProfilePopup
-            user={user}
-            onCall={() => {
-              setShowCallPopup(false);
-              setChatPhase("awaiting-consent");
-              go("call-incoming");
-            }}
-            onCancel={() => setShowCallPopup(false)}
           />
         )}
       </div>
