@@ -29,8 +29,24 @@ function UsageIndicator({ pct, tone, label }: { pct: number; tone: string; label
   );
 }
 
+const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const CURRENT_YEAR = new Date().getFullYear();
+const CURRENT_MONTH = new Date().getMonth();
+const HISTORY_YEARS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2];
+
+type MonthStatus = "ontime" | "delayed" | "unreported";
+function monthStatuses(year: number, delayed: boolean): MonthStatus[] {
+  const reportedCount = year < CURRENT_YEAR ? 12 : CURRENT_MONTH + 1;
+  return MONTHS.map((_, index) => {
+    if (index >= reportedCount) return "unreported";
+    if (delayed && index >= reportedCount - 2) return "delayed";
+    return "ontime";
+  });
+}
+
 export function ReportAccountDetail(props: Props) {
   const [showInfo, setShowInfo] = useState(false);
+  const [historyYear, setHistoryYear] = useState(CURRENT_YEAR);
   const card = props.kind === "card" ? props.account : undefined;
   const loan = props.kind === "loan" ? props.account : undefined;
   const lender = card?.bank ?? loan?.lender ?? "";
