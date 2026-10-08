@@ -244,6 +244,10 @@
 .report-refresh { margin-left: auto; height: auto; padding: 0; color: var(--report-brand); font-size: 12.5px; font-weight: 600; gap: 6px; }
 .report-refresh svg { width: 14px; height: 14px; }
 .report-info { font-size: 13px; color: var(--report-subtle); line-height: 1.65; margin-top: 16px; }
+.report-info-bands { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.report-info-bands li { display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; }
+.report-info-bands strong { color: var(--report-ink); font-weight: 600; min-width: 64px; }
+.report-info-bands .report-status-dot { flex: none; align-self: center; }
 .report-info button { float: right; }
 .report-factors { border: 0; padding-top: 28px; padding-bottom: 8px; }
 .report-factors-title { margin-bottom: 4px; text-align: left; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
