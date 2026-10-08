@@ -371,6 +371,7 @@
 .account-detail-title svg { width: 16px; height: 16px; }
 .account-detail-subtitle { display: flex; flex-direction: column; gap: 2px; color: var(--report-subtle); font-size: 12px; line-height: 1.5; margin-top: 2px; }
 .account-detail-subtitle span { overflow-wrap: anywhere; }
+.account-detail-account { flex-shrink: 0; margin: 4px 0 0; color: var(--report-subtle); font-size: 12px; font-weight: 500; line-height: 1.5; white-space: nowrap; text-align: right; }
 .account-art-stage { position: relative; display: flex; justify-content: center; padding: 28px 24px 24px; margin: 4px 0 8px; }
 .account-art-stage-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
 .account-art-ring { position: absolute; border-radius: 50%; }
