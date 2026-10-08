@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { ReportBankMark } from "@/components/report-bank-mark";
 import { creditUsageTone } from "@/lib/report-usage";
-import cardArt from "@/assets/account-reference/credit-card.jpg.asset.json";
-import personalArt from "@/assets/account-reference/personal.jpg.asset.json";
-import vehicleArt from "@/assets/account-reference/vehicle.jpg.asset.json";
-import homeArt from "@/assets/account-reference/home.jpg.asset.json";
+import cardArt from "@/assets/account-art/account-credit-card.png.asset.json";
+import personalArt from "@/assets/account-art/account-personal.png.asset.json";
+import vehicleArt from "@/assets/account-art/account-vehicle.png.asset.json";
+import homeArt from "@/assets/account-art/account-home.png.asset.json";
 
 type CardDetails = { bank: string; last4: string; limit: number; used: number; pct: number };
 type LoanDetails = { lender: string; name: string; last4: string; sanctioned: number; outstanding: number; emi: number; status: string; tone: string };
