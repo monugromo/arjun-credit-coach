@@ -320,19 +320,33 @@
 .report-section-title > span { font-size: 13px; color: var(--report-subtle); }
 .report-section-title > strong { font-size: 16px; font-weight: 600; }
 .report-account-panel { border: 0; }
-.report-account-row { display: flex; flex-direction: column; gap: 0; width: 100%; height: auto; padding: 20px 0; border-radius: 0; border-bottom: 1px solid var(--report-line); white-space: normal; text-align: left; }
+.report-account-list { display: grid; gap: 12px; }
+.report-account-stack { display: grid; gap: 12px; }
+.report-bank-mark { width: 40px; height: 40px; flex: 0 0 40px; display: grid; place-items: center; border: 1px solid var(--report-line); border-radius: 6px; background: var(--report-paper); color: var(--report-ink); }
+.report-bank-mark img { display: block; width: 32px; height: 32px; object-fit: contain; }
+.report-bank-mark > span { font-size: 13px; font-weight: 600; }
+.report-account-row { display: flex; flex-direction: column; gap: 0; width: 100%; height: auto; padding: 16px; border-radius: 8px; border: 1px solid var(--report-line); background: var(--report-paper); white-space: normal; text-align: left; box-shadow: none; }
+.report-usage-heading, .report-loan-status { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 16px; font-size: 12px; color: var(--report-subtle); }
+.report-usage-heading strong, .report-loan-status strong { font-size: 13px; font-weight: 500; }
+.report-loan-status strong { color: var(--report-ink); }
+.report-loan-status strong.report-tone-warning { color: var(--report-warning); }
+.report-account-row .report-utilisation { margin-top: 6px; }
 .report-account-top { display: flex; gap: 10px; width: 100%; align-items: center; }
 .report-metric { display: flex; flex-direction: column; text-align: right; gap: 2px; flex-shrink: 0; }
 .report-metric strong { font-size: 16px; font-weight: 600; }
 .report-metric small { font-size: 11px; font-weight: 400; color: var(--report-subtle); }
 .report-utilisation { width: 100%; height: 4px; border-radius: 4px; background: var(--report-line); overflow: hidden; margin-top: 16px; }
 .report-fill { height: 100%; display: block; border-radius: 4px; }
-.report-account-bottom { width: 100%; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--report-subtle); margin-top: 8px; }
-.report-loan-values { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
+.report-account-bottom { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+.report-account-bottom > span { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.report-account-bottom > span:last-child { text-align: right; }
+.report-account-bottom small { font-size: 12px; font-weight: 400; color: var(--report-subtle); }
+.report-account-bottom strong { font-size: 14px; font-weight: 500; color: var(--report-ink); overflow-wrap: anywhere; }
+.report-loan-values { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--report-line); }
 .report-loan-values > span { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.report-loan-values small { font-size: 11px; color: var(--report-subtle); }
+.report-loan-values small { font-size: 12px; color: var(--report-subtle); overflow-wrap: anywhere; }
 .report-loan-values strong { font-size: 12px; font-weight: 600; overflow-wrap: anywhere; }
-.report-enquiry-row { display: flex; align-items: center; gap: 10px; padding: 18px 0; border-bottom: 1px solid var(--report-line); }
+.report-enquiry-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 16px; border: 1px solid var(--report-line); border-radius: 8px; }
 .report-enquiry-row time { color: var(--report-subtle); font-size: 12px; flex-shrink: 0; }
 .report-detail-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid var(--report-line); padding: 0 var(--report-gutter); }
 .report-detail-stats > div { display: flex; flex-direction: column; gap: 8px; padding: 20px 0; min-width: 0; }
@@ -388,7 +402,7 @@
 .rf-tip p { font-size: 14px; line-height: 1.65; margin: 0; color: var(--report-ink); }
 .rf-accounts { padding-top: 24px; padding-bottom: 24px; border: 0; }
 .rf-group { border: 1px solid var(--report-history-border); border-radius: 8px; padding: 0 16px; background: var(--report-paper); }
-.rf-history-account { display: flex; width: 100%; min-height: 76px; height: auto; gap: 10px; padding: 16px 0; text-align: left; white-space: normal; border-radius: 0; border-bottom: 1px solid var(--report-line); }
+.rf-history-account { display: flex; width: 100%; min-height: 76px; height: auto; gap: 10px; padding: 16px; text-align: left; white-space: normal; border-radius: 8px; border: 1px solid var(--report-line); background: var(--report-paper); }
 .rf-history-account > svg:first-child { width: 20px; height: 20px; flex-shrink: 0; color: var(--report-ink); }
 .rf-history-account > svg:last-child { width: 16px; height: 16px; flex-shrink: 0; color: var(--report-subtle); }
 .rf-history-status { max-width: 60px; flex-shrink: 0; font-size: 12px; font-weight: 400; color: var(--report-subtle); text-align: right; }
