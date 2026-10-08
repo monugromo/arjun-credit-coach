@@ -214,21 +214,22 @@
 .report-carousel::-webkit-scrollbar { display: none; }
 .report-slide { flex: 0 0 100%; min-width: 0; min-height: 218px; scroll-snap-align: start; padding: 8px var(--report-gutter) 0; }
 .report-score-value { display: flex; align-items: baseline; gap: 8px; }
-.report-score-value strong { font-size: 64px; line-height: 1.1; font-weight: 800; font-variant-numeric: tabular-nums; }
-.report-score-value > span { font-size: 16px; color: var(--report-subtle); font-weight: 500; }
-.report-score-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.report-score-band, .report-score-change { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 20px; font-weight: 600; padding: 4px 10px; border-radius: 100px; background: var(--report-positive-soft); }
-.report-score-change { color: var(--report-positive); }
-.report-score-change svg { width: 14px; height: 14px; }
-.report-range { position: relative; margin-top: 24px; }
-.report-range-track { display: flex; gap: 4px; height: 8px; }
-.report-range-track > span { flex: 1; border-radius: 2px; }
+.report-score-value strong { font-size: 72px; line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.report-score-value > span { font-size: 15px; color: var(--report-subtle); font-weight: 500; }
+.report-score-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 14px; }
+.report-band { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; letter-spacing: 0.01em; }
+.report-band i { width: 8px; height: 8px; border-radius: 100%; background: currentColor; }
+.report-change { display: inline-flex; align-items: center; gap: 3px; font-size: 13px; font-weight: 500; color: var(--report-positive); }
+.report-change svg { width: 14px; height: 14px; }
+.report-range { position: relative; margin-top: 26px; }
+.report-range-track { display: flex; gap: 3px; height: 6px; }
+.report-range-track > span { flex: 1; border-radius: 3px; }
 .report-range-track > span:nth-child(1) { background: var(--report-danger-soft); }
 .report-range-track > span:nth-child(2) { background: var(--report-warning-soft); }
 .report-range-track > span:nth-child(3) { background: var(--report-positive); }
 .report-range-track > span:nth-child(4) { background: var(--report-positive-soft); }
-.report-range-marker { position: absolute; top: -4px; width: 4px; height: 16px; border-radius: 2px; background: var(--report-ink); transform: translateX(-50%); }
-.report-range-labels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-top: 10px; color: var(--report-subtle); font-size: 11px; font-weight: 500; text-align: center; }
+.report-range-marker { position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 100%; background: var(--report-ink); border: 3px solid var(--report-paper); box-shadow: 0 1px 4px color-mix(in oklab, var(--report-ink) 35%, transparent); transform: translate(-50%, -50%); }
+.report-range-labels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-top: 12px; color: var(--report-subtle); font-size: 11px; font-weight: 500; text-align: center; }
 .report-trend-card { padding-top: 4px; }
 .report-trend-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 14px; }
 .report-trend-head strong, .report-trend-head span { font-weight: 600; }
@@ -243,19 +244,19 @@
 .report-dots { display: flex; justify-content: center; gap: 8px; }
 .report-dots button { width: 20px; height: 6px; min-height: 6px; padding: 0; border-radius: 4px; background: var(--report-line); transition: background .2s; }
 .report-dots button.is-active { background: var(--report-brand); }
-.report-refresh-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--report-line); }
-.report-refresh-row > span { display: flex; flex-direction: column; gap: 4px; }
-.report-refresh-row .is-right { text-align: right; }
-.report-refresh-row small { font-size: 12px; color: var(--report-subtle); }
-.report-refresh-row strong { font-size: 14px; font-weight: 600; }
-.report-refresh { height: 44px; border-radius: 8px; padding: 0 16px; background: var(--report-brand); color: var(--primary-foreground); font-size: 14px; font-weight: 600; }
+.report-refresh-row { display: flex; align-items: center; gap: 8px; margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--report-line); font-size: 12.5px; color: var(--report-subtle); }
+.report-updated + .report-updated::before { content: "·"; margin-right: 8px; color: var(--report-faint); }
+.report-refresh { margin-left: auto; height: auto; padding: 0; color: var(--report-brand); font-size: 12.5px; font-weight: 600; gap: 6px; }
+.report-refresh svg { width: 14px; height: 14px; }
 .report-info { font-size: 13px; color: var(--report-subtle); line-height: 1.65; margin-top: 16px; }
 .report-info button { float: right; }
-.report-factors { border: 0; padding-top: 24px; padding-bottom: 8px; }
-.report-factors-title { margin-bottom: 8px; text-align: left; }
-.report-factor-row { display: flex; justify-content: initial; width: 100%; height: auto; min-height: 80px; gap: 12px; padding: 16px 0; border-radius: 0; border-bottom: 1px solid var(--report-line); white-space: normal; text-align: left; }
-.report-factor-row:last-child { border-bottom: 0; }
+.report-factors { border: 0; padding-top: 28px; padding-bottom: 8px; }
+.report-factors-title { margin-bottom: 4px; text-align: left; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.report-factor-row { display: flex; justify-content: initial; align-items: center; width: 100%; height: auto; min-height: 72px; gap: 14px; padding: 16px 0; border-radius: 0; white-space: normal; text-align: left; }
 .report-factor-row:hover, .report-account-row:hover, .rf-history-account:hover { background: var(--report-surface); }
+.report-factor-row .report-icon { background: transparent; color: var(--report-ink); width: 24px; height: 24px; }
+.report-factor-row .report-icon svg { width: 22px; height: 22px; stroke-width: 1.5; }
+.report-factor-row:not(:last-child) .report-row-label { border-bottom: 1px solid var(--report-line); padding-bottom: 16px; margin-bottom: -16px; }
 .report-icon { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 8px; background: var(--report-surface); color: var(--report-brand); }
 .report-icon svg { width: 20px; height: 20px; stroke-width: 1.75; }
 .report-row-label { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
