@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Tighten both sample reports equally and show a neutral dated score trend capped at seven recorded pulls.
+- [x] Tighten both sample reports equally and show a neutral dated score trend capped at seven recorded pulls (only the current dated score is available; no history fabricated).
 
 - [x] Slow the needle return, synchronize the score number, and apply the supplied Score trend styling without inventing history.
 
