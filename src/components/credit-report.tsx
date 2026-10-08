@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, Lightbulb, MessageCircle, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { DemoUser } from "@/lib/groscore-data";
 import equifaxLogo from "@/assets/equifax-logo.png.asset.json";
 import paymentIllustration from "@/assets/payment-history-reference.png.asset.json";
+import { gaugeScoreAt, GAUGE_DURATION_MS } from "@/lib/report-animation";
 
 const cards = [
   { bank: "HDFC Bank", last4: "4521", used: 128000, limit: 150000, pct: 85, tone: "danger" },
@@ -53,22 +54,29 @@ function BureauFooter() {
 
 const openedScoreGauges = new Set<string>();
 
-function ScoreGauge({ score, animationKey }: { score: number; animationKey: string }) {
+function ScoreGauge({ score, animationKey, scoreRef }: { score: number; animationKey: string; scoreRef: RefObject<HTMLElement | null> }) {
   const needleRef = useRef<SVGGElement>(null);
   const angle = Math.max(0, Math.min(180, (score - 300) / 600 * 180));
   useEffect(() => {
     if (openedScoreGauges.has(animationKey)) return;
     openedScoreGauges.add(animationKey);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    needleRef.current?.animate(
-      [
-        { transform: "rotate(0deg)", offset: 0, easing: "cubic-bezier(0.4, 0, 0.2, 1)" },
-        { transform: "rotate(180deg)", offset: 0.55, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
-        { transform: `rotate(${angle}deg)`, offset: 1 },
-      ],
-      { duration: 2000 },
-    );
-  }, [animationKey, angle]);
+    let frame = 0;
+    const started = performance.now();
+    const update = (now: number) => {
+      const elapsed = now - started;
+      const value = gaugeScoreAt(elapsed, score);
+      needleRef.current?.setAttribute("transform", `rotate(${(value - 300) / 600 * 180})`);
+      if (scoreRef.current) scoreRef.current.textContent = String(Math.round(value));
+      if (elapsed < GAUGE_DURATION_MS) frame = requestAnimationFrame(update);
+    };
+    update(started);
+    return () => {
+      cancelAnimationFrame(frame);
+      needleRef.current?.setAttribute("transform", `rotate(${angle})`);
+      if (scoreRef.current) scoreRef.current.textContent = String(score);
+    };
+  }, [animationKey, angle, score, scoreRef]);
   const point = (angle: number, radius: number) => {
     const radians = angle * Math.PI / 180;
     return [160 - radius * Math.cos(radians), 150 - radius * Math.sin(radians)];
@@ -94,6 +102,7 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
   const [account, setAccount] = useState<Account | null>(null);
   const [showInfo, setShowInfo] = useState(false);
   const [slide, setSlide] = useState(0);
+  const scoreValueRef = useRef<HTMLElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [lastPulled, setLastPulled] = useState(() => new Date(REPORT_LAST_PULLED));
   const daysLeft = Math.max(0, REFRESH_CYCLE_DAYS - Math.floor((Date.now() - lastPulled.getTime()) / 86400000));
@@ -106,7 +115,6 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
   const currentCard = account?.kind === "card" ? cards[account.index] : undefined;
   const currentLoan = account?.kind === "loan" ? loans[account.index] : undefined;
   const band = user.band ?? "Poor";
-  const bandTone = band === "Poor" ? "danger" : band === "Fair" ? "warning" : "positive";
   const firstName = user.name.split(" ")[0];
   const scoreHeadline = band === "Excellent" ? `${firstName}, your score is in excellent shape` : band === "Good" ? `${firstName}, your score is in a good place` : band === "Fair" ? `${firstName}, your score can still improve` : `${firstName}, your score needs work`;
 
@@ -189,21 +197,23 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
           <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
             <div className="report-slide">
               <div className="report-gauge-wrap">
-                <ScoreGauge score={score} animationKey={user.phone} />
-                <div className="report-gauge-value"><strong>{score}</strong><div className="report-gauge-band"><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" aria-haspopup="dialog" onClick={() => setShowInfo(true)}><Info /></Button></div><span className="report-score-change"><ArrowUpRight />+12 this month</span></div>
+                <ScoreGauge score={score} animationKey={user.phone} scoreRef={scoreValueRef} />
+                <div className="report-gauge-value"><strong ref={scoreValueRef}>{score}</strong><div className="report-gauge-band"><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" aria-haspopup="dialog" onClick={() => setShowInfo(true)}><Info /></Button></div><span className="report-score-change"><ArrowUpRight />+12 this month</span></div>
               </div>
             </div>
             <div className="report-slide">
               <div className="report-trend-card">
-                <div className="report-trend-head"><strong>Monthly trend</strong><span className="report-tone-positive">+12 this month</span></div>
-                <svg viewBox="0 0 280 130" className="report-trend-chart" role="img" aria-label={`Score moved from ${score - 12} to ${score}`}>
-                  <line x1="20" y1="30" x2="260" y2="30" className="grid" /><line x1="20" y1="100" x2="260" y2="100" className="grid" />
-                  <line x1="40" y1="100" x2="240" y2="40" className="path" />
-                  <circle cx="40" cy="100" r="4" className="dot" /><circle cx="240" cy="40" r="6" className="dot" />
-                  <line x1="240" y1="46" x2="240" y2="112" className="drop" />
-                  <rect x="214" y="8" width="52" height="24" rx="6" className="tag" /><text x="240" y="25" textAnchor="middle" className="tag-text">{score}</text>
-                  <text x="40" y="84" textAnchor="middle" className="label">{score - 12}</text>
-                  <text x="40" y="126" textAnchor="middle" className="axis">Last month</text><text x="240" y="126" textAnchor="middle" className="axis is-now">Now</text>
+                <div className="report-trend-head"><strong>Score trend</strong><span className="report-tone-positive">+12 points</span></div>
+                <svg viewBox="0 0 320 175" className="report-trend-chart" role="img" aria-label={`Score moved from ${score - 12} to ${score}`}>
+                  <path d="M 0 138 L 48 120 L 268 66 L 320 54 L 320 146 L 0 146 Z" className="area" />
+                  <line x1="0" y1="146" x2="320" y2="146" className="baseline" />
+                  <line x1="48" y1="64" x2="48" y2="146" className="grid" />
+                  <line x1="268" y1="66" x2="268" y2="146" className="grid" />
+                  <line x1="48" y1="120" x2="268" y2="66" className="path" />
+                  <circle cx="48" cy="120" r="6" className="dot" /><circle cx="268" cy="66" r="6" className="dot" />
+                  <rect x="242" y="16" width="52" height="30" rx="6" className="tag" /><text x="268" y="36" textAnchor="middle" className="tag-text">{score}</text>
+                  <text x="48" y="103" textAnchor="middle" className="label">{score - 12}</text>
+                  <text x="48" y="168" textAnchor="middle" className="axis">Previous</text><text x="268" y="168" textAnchor="middle" className="axis is-now">Latest</text>
                 </svg>
               </div>
             </div>
