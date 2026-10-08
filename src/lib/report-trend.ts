@@ -18,5 +18,5 @@ export function recentScoreRecords(records: readonly ScoreRecord[]): ScoreRecord
 }
 
 export function scoreRecordDate(date: string): string {
-  return new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", timeZone: "UTC" }).format(new Date(date));
+  return new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", timeZone: "UTC" }).format(new Date(date)).replace(/\bSept\b/, "Sep");
 }

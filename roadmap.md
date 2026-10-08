@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Remove “This month”, refine score spacing and +12 sizing, and use a fixed 300–900 trend with single-line dates and all available recorded values; verify both samples.
+- [x] Remove “This month”, refine score spacing and +12 sizing, and use a fixed 300–900 trend with single-line dates and all available recorded values; verified both samples (only one recorded pull is available).
 
 - [x] Emphasise score change without an arrow, clarify unavailable account lifecycle status, and polish report wording with “Full credit details”; verify both samples.
 

@@ -16,6 +16,6 @@
 - Gate direct report entry after demo OTP with a demo-user flag; this bypasses onboarding only for comparison accounts, not other journeys or real authentication.
 - Track first gauge openings in session memory per demo account and drive needle and number from one shared animation timeline; this keeps them synchronized, avoids replay, and honours reduced-motion preferences.
 - Use only available report fields in account details and trends; never invent payment calendars, bureau dates or historical scores to fill a layout.
-- Normalize and cap recorded score pulls in a shared trend helper before chart rendering; this keeps the history limit testable and avoids fabricated chart points.
+- Normalize and cap recorded score pulls, format date labels, and map scores onto the fixed range in a shared trend helper before chart rendering; this keeps chart rules testable and avoids fabricated chart points.
 - Render bank identity through a shared report bank mark with optional logo URLs and neutral initials on missing or failed images; this keeps account layouts stable without inventing bank artwork.
 - Derive card utilisation colour through the shared report usage helper in lists and details; this keeps threshold boundaries consistent and testable.
