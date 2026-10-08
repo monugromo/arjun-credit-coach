@@ -8,6 +8,7 @@ export interface DemoUser {
   dob?: string;
   hasScore: boolean;
   score?: number;
+  scoreHistory?: { date: string; score: number }[];
   band?: string;
   expired?: boolean;
   updated?: { name: string; pan: string; dob: string };

@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Tighten both sample reports equally and show a neutral dated score trend capped at seven recorded pulls (only the current dated score is available; no history fabricated).
+
 - [x] Slow the needle return, synchronize the score number, and apply the supplied Score trend styling without inventing history.
 
 - [x] Update report CTAs and summary labels, remove the automatic call popup, and verify the needle sweeps to 900 before settling.

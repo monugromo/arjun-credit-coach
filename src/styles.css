@@ -212,7 +212,7 @@
 .report-hero-bureau { display: flex; justify-content: flex-end; padding: 16px 18px 0; }
 .report-hero-bureau img { width: 76px; height: 24px; object-fit: contain; }
 .report-score-panel .report-carousel { margin: 0; }
-.report-score-panel .report-slide { padding: 2px 12px 0; min-height: 198px; }
+.report-score-panel .report-slide { padding: 2px 12px 0; min-height: 0; aspect-ratio: 320 / 175; }
 .report-gauge-wrap { position: relative; width: 100%; max-width: 360px; margin: 0 auto; }
 .report-score-gauge { display: block; width: 100%; height: auto; overflow: visible; }
 .report-gauge-soft { fill: none; stroke: none; }
@@ -226,7 +226,7 @@
 .report-gauge-band button { width: 26px; height: 26px; color: inherit; }
 .report-gauge-band svg { width: 16px; height: 16px; }
 .report-gauge-value .report-score-change { margin: 5px 0 0; font-size: 11px; white-space: nowrap; }
-.report-score-panel .report-refresh-row { justify-content: center; border: 0; margin: 0; padding: 4px 12px 18px; font-size: 13px; }
+.report-score-panel .report-refresh-row { justify-content: center; border: 0; margin: 0; padding: 0 12px 12px; font-size: 13px; }
 .report-score-panel .report-refresh { margin-left: 0; }
 .report-hero-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 0 0 8px; }
 .report-hero-actions button { height: 48px; padding: 8px; gap: 7px; border: 1px solid var(--report-ink); border-radius: 8px; background: var(--report-paper); color: var(--report-ink); font-size: 14px; font-weight: 600; box-shadow: none; }
@@ -265,18 +265,14 @@
 .report-trend-card { padding-top: 4px; }
 .report-trend-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 14px; }
 .report-trend-head strong, .report-trend-head span { font-weight: 600; }
-.report-trend-chart { display: block; width: 100%; height: auto; aspect-ratio: 320 / 175; margin-top: 8px; }
-.report-trend-chart .area { fill: var(--report-positive-soft); }
+.report-trend-chart { display: block; width: 100%; height: auto; aspect-ratio: 320 / 156; margin-top: 8px; }
 .report-trend-chart .baseline { stroke: var(--report-line); }
 .report-trend-chart .grid { stroke: var(--report-line); stroke-dasharray: 4 5; }
 .report-trend-chart .path { stroke: var(--report-ink); stroke-width: 2; stroke-linecap: round; }
 .report-trend-chart .dot { fill: var(--report-paper); stroke: var(--report-ink); stroke-width: 2; }
-.report-trend-chart .tag { fill: var(--report-ink); }
-.report-trend-chart .drop { stroke: var(--report-brand); stroke-dasharray: 2 3; stroke-width: 1.5; }
-.report-trend-chart .tag-text { fill: var(--report-paper); font-size: 13px; font-weight: 600; }
-.report-trend-chart .label, .report-trend-chart .axis { fill: var(--report-subtle); font-size: 11px; font-weight: 500; }
-.report-trend-chart .axis.is-now { fill: var(--report-brand); }
-.report-dots { display: flex; justify-content: center; gap: 0; margin: 0 0 8px; }
+.report-trend-chart .score-label { fill: var(--report-ink); font-size: 12px; font-weight: 600; }
+.report-trend-chart .label, .report-trend-chart .axis { fill: var(--report-subtle); font-size: 10px; font-weight: 500; }
+.report-dots { display: flex; justify-content: center; gap: 0; margin: 0; }
 .report-dots button { width: 32px; height: 32px; padding: 0; border-radius: 100%; }
 .report-dots button span { width: 6px; height: 6px; border-radius: 100%; background: var(--report-line); }
 .report-dots button span.is-active { background: var(--report-brand); }
@@ -291,7 +287,7 @@
 .report-info-bands strong { color: var(--report-ink); font-weight: 600; min-width: 64px; }
 .report-info-bands .report-status-dot { flex: none; align-self: center; }
 .report-info button { float: right; }
-.report-factors { border: 0; padding-top: 28px; padding-bottom: 8px; }
+.report-factors { border: 0; padding-top: 20px; padding-bottom: 8px; }
 .report-factors-title { margin-bottom: 4px; text-align: left; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
 .report-factor-row { display: flex; justify-content: initial; align-items: center; width: 100%; height: auto; min-height: 72px; gap: 14px; padding: 16px 0; border-radius: 0; white-space: normal; text-align: left; }
 .report-factor-row:hover, .report-account-row:hover, .rf-history-account:hover { background: var(--report-surface); }
