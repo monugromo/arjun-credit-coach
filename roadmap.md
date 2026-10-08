@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Fill demo account information with labelled sample lifecycle details and compact aligned rows; verify cards and loans on both comparison accounts.
+- [x] Fill demo account information with labelled sample lifecycle details and compact aligned rows; verified all nine accounts on both comparison reports, typography, navigation and no page errors.
 
 - [x] Replace green account artwork with the four supplied grayscale illustrations and standardise account-detail text sizes; verified all seven existing accounts on both samples and navigation, with home artwork ready for home-loan data.
 
