@@ -18,3 +18,4 @@
 - Use only available report fields in account details and trends; never invent payment calendars, bureau dates or historical scores to fill a layout.
 - Normalize and cap recorded score pulls in a shared trend helper before chart rendering; this keeps the history limit testable and avoids fabricated chart points.
 - Render bank identity through a shared report bank mark with optional logo URLs and neutral initials on missing or failed images; this keeps account layouts stable without inventing bank artwork.
+- Derive card utilisation colour through the shared report usage helper in lists and details; this keeps threshold boundaries consistent and testable.
