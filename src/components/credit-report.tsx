@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { DemoUser } from "@/lib/groscore-data";
 import equifaxLogo from "@/assets/equifax-logo.png.asset.json";
-import paymentIllustration from "@/assets/payment-history-reference.png.asset.json";
+import factorIllustration from "@/assets/report-factor-illustration.png";
 import { gaugeScoreAt, GAUGE_DURATION_MS } from "@/lib/report-animation";
 import { recentScoreRecords, scoreRecordDate } from "@/lib/report-trend";
 import { ReportBankMark } from "@/components/report-bank-mark";
@@ -48,6 +48,7 @@ const REPORT_LAST_PULLED = "2026-10-05T00:00:00";
 const REFRESH_CYCLE_DAYS = 30;
 const money = (amount: number) => "₹" + amount.toLocaleString("en-IN");
 const totalLimit = cards.reduce((sum, card) => sum + card.limit, 0);
+const totalUsed = cards.reduce((sum, card) => sum + card.used, 0);
 const totalOutstanding = loans.reduce((sum, loan) => sum + loan.outstanding, 0);
 
 function BureauFooter() {
@@ -121,6 +122,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   const trendChange = trendFirst && trendLast && trendRecords.length > 1 ? trendLast.score - trendFirst.score : undefined;
   const isNTC = user.key === "ntc";
   const factor = factors.find((item) => item.key === view);
+  const factorTotal = view === "payment" ? `${loans.length} loan accounts` : view === "usage" ? `${cards.length} credit cards` : view === "mix" ? `${cards.length + loans.length} total accounts` : `${enquiries.length} enquiries · Last 6 months`;
   const currentCard = account?.kind === "card" ? cards[account.index] : undefined;
   const currentLoan = account?.kind === "loan" ? loans[account.index] : undefined;
   const band = user.band ?? "Poor";
@@ -186,12 +188,15 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         <section className="report-section"><p className="report-description">These details are shown in your credit report.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Something looks off? Talk to Arjun <ArrowUpRight /></Button></section>
       </> : factor ? <>
         <section className="report-section rf-hero">
-          <div className="rf-hero-text"><h2>{factor.title}</h2><p>{view === "payment" ? "Paying on time impacts your credit score the most. It shows that you are a trustworthy borrower." : factor.explanation}</p></div>
-          {view === "payment" ? <img className="rf-history-illustration" src={paymentIllustration.url} alt="" width={199} height={174} /> : <span className="rf-hero-art" aria-hidden><factor.icon /></span>}
+          <div className="rf-hero-text"><h2>{factor.title}</h2><span className="rf-total-count">{factorTotal}</span><p>{view === "payment" ? "Paying on time impacts your credit score the most. It shows that you are a trustworthy borrower." : factor.explanation}</p></div>
+          <img className="rf-history-illustration" src={factorIllustration} alt="" loading="lazy" width={512} height={512} />
         </section>
         <section className="report-section rf-metric">
-          <small>{view === "payment" ? "Payments on time" : factor.unit}</small>
-          <div className="rf-metric-row"><strong>{factor.value}</strong></div>
+          <small>{view === "payment" ? "Payments on time" : view === "usage" ? "Credit usage" : view === "mix" ? "Credit mix" : "Enquiries"}</small>
+          <div className={`rf-metric-row${view === "usage" || view === "mix" ? " rf-metric-expanded" : ""}`}>
+            <strong>{view === "usage" ? `${money(totalUsed)} / ${money(totalLimit)}` : view === "mix" ? `${cards.length} credit cards · ${loans.length} loans` : view === "enquiries" ? enquiries.length : factor.value}</strong>
+            {view === "usage" && <span>{factor.value} reported usage</span>}
+          </div>
           <span className={`rf-pill rf-pill-${factor.tone}`}>{factor.tone === "positive" ? "Good" : factor.tone === "warning" ? "Fair" : "Needs work"}<Info size={14} /></span>
         </section>
         <section className="report-section rf-accounts"><div className="report-account-stack">{view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <>{cardRows}{loanRows}</> : <div className="report-account-list">{loans.map((loan, index) => <Button variant="ghost" key={loan.name} className="rf-history-account" onClick={() => openAccount({ kind: "loan", index })}><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.lender}</strong><small>{loan.name}</small></span><span className="rf-history-status">{loan.status}</span><ChevronRight /></Button>)}</div>}</div></section>

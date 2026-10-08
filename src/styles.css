@@ -338,6 +338,7 @@
 .report-metric small { font-size: 11px; font-weight: 400; color: var(--report-subtle); }
 .report-utilisation { width: 100%; height: 4px; border-radius: 4px; background: var(--report-line); overflow: hidden; margin-top: 16px; }
 .report-fill { height: 100%; display: block; border-radius: 4px; }
+.report-utilisation .report-fill { background: var(--report-brand); }
 .report-account-bottom { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
 .report-account-bottom > span { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .report-account-bottom > span:last-child { text-align: right; }
@@ -383,17 +384,21 @@
 .report-bureau { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 24px; font-size: 12px; color: var(--report-subtle); border-top: 1px solid var(--report-line); }
 .report-bureau-logo { height: 12px; width: auto; display: block; }
 /* Preserve the supplied history illustration and account-group layout. */
-.rf-hero { position: relative; padding-top: 24px; padding-bottom: 8px; border: 0; }
+.rf-hero { position: relative; padding-top: 24px; padding-bottom: 8px; border: 0; min-height: 200px; }
 .rf-hero-text { min-width: 0; }
-.rf-hero-text h2 { margin: 0 0 16px; }
-.rf-hero-text p { width: calc(100% - 112px); min-height: 100px; font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
-.rf-history-illustration { position: absolute; right: var(--report-gutter); top: 72px; width: 96px; height: auto; object-fit: contain; filter: grayscale(1); }
+.rf-hero-text h2 { margin: 0 0 6px; }
+.rf-total-count { display: block; margin-bottom: 16px; font-size: 13px; color: var(--report-brand); font-weight: 500; }
+.rf-hero-text p { width: calc(100% - 112px); font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
+.rf-history-illustration { position: absolute; right: var(--report-gutter); top: 78px; width: 104px; height: 104px; object-fit: contain; }
 .rf-hero-art { position: absolute; right: var(--report-gutter); top: 76px; width: 88px; height: 72px; display: grid; place-items: center; color: var(--report-ink); }
 .rf-hero-art svg { width: 44px; height: 44px; stroke-width: 1.5; }
 .rf-metric { padding-top: 16px; padding-bottom: 0; border: 0; }
 .rf-metric > small { font-size: 13px; font-weight: 400; color: var(--report-subtle); }
 .rf-metric-row { margin: 4px 0 12px; }
 .rf-metric-row > strong { font-size: 36px; font-weight: 600; line-height: 1.2; color: var(--report-ink); }
+.rf-metric-expanded { display: flex; flex-direction: column; gap: 6px; }
+.rf-metric-expanded > strong { font-size: 22px; line-height: 1.45; font-weight: 500; overflow-wrap: anywhere; }
+.rf-metric-expanded > span { font-size: 13px; color: var(--report-subtle); }
 .rf-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; }
 .rf-pill-positive { color: var(--report-positive); background: var(--report-positive-soft); }
 .rf-pill-warning { color: var(--report-warning); background: var(--report-warning-soft); }
