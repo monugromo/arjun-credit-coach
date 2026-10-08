@@ -60,7 +60,7 @@ function ScoreGauge({ score }: { score: number }) {
   const angle = Math.max(0, Math.min(180, (score - 300) / 600 * 180));
   const marker = point(angle, 112);
   return <svg viewBox="0 0 320 270" className="report-score-gauge" role="img" aria-label={`Credit score ${score} out of 900`}>
-    <defs><linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" className="report-dial-stop-low" /><stop offset="45%" className="report-dial-stop-mid" /><stop offset="72%" className="report-dial-stop-high" /><stop offset="100%" className="report-dial-stop-top" /></linearGradient></defs>
+    <defs><linearGradient id={gradientId} gradientUnits="userSpaceOnUse" x1="48" y1="0" x2="272" y2="0"><stop offset="0%" className="report-dial-stop-low" /><stop offset="45%" className="report-dial-stop-mid" /><stop offset="72%" className="report-dial-stop-high" /><stop offset="100%" className="report-dial-stop-top" /></linearGradient></defs>
     <circle cx="160" cy="148" r="94" className="report-dial-track" />
     <circle cx="160" cy="148" r="77" className="report-dial-face" />
     {angle > 0 && <path d={`M 48 148 A 112 112 0 0 1 ${marker[0]} ${marker[1]}`} stroke={`url(#${gradientId})`} className="report-dial-arc" />}
