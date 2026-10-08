@@ -6,6 +6,7 @@ import type { DemoUser } from "@/lib/groscore-data";
 import equifaxLogo from "@/assets/equifax-logo.png.asset.json";
 import paymentIllustration from "@/assets/payment-history-reference.png.asset.json";
 import { gaugeScoreAt, GAUGE_DURATION_MS } from "@/lib/report-animation";
+import { recentScoreRecords, scoreRecordDate } from "@/lib/report-trend";
 
 const cards = [
   { bank: "HDFC Bank", last4: "4521", used: 128000, limit: 150000, pct: 85, tone: "danger" },
@@ -110,6 +111,13 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
   const scoreScroll = useRef(0);
   const accountsScroll = useRef(0);
   const score = user.score ?? 413;
+  const trendRecords = recentScoreRecords(user.scoreHistory ?? [{ date: REPORT_LAST_PULLED, score }]);
+  const trendLow = Math.max(300, Math.min(...trendRecords.map(record => record.score), score) - 24);
+  const trendHigh = Math.min(900, Math.max(...trendRecords.map(record => record.score), score) + 24);
+  const trendPoints = trendRecords.map((record, index) => ({ ...record, x: trendRecords.length === 1 ? 172 : 36 + index * 264 / (trendRecords.length - 1), y: 118 - (record.score - trendLow) / (trendHigh - trendLow) * 64 }));
+  const trendFirst = trendRecords[0];
+  const trendLast = trendRecords[trendRecords.length - 1];
+  const trendChange = trendFirst && trendLast && trendRecords.length > 1 ? trendLast.score - trendFirst.score : undefined;
   const isNTC = user.key === "ntc";
   const factor = factors.find((item) => item.key === view);
   const currentCard = account?.kind === "card" ? cards[account.index] : undefined;
@@ -202,17 +210,20 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
             </div>
             <div className="report-slide">
               <div className="report-trend-card">
-                <div className="report-trend-head"><strong>Score trend</strong><span className="report-tone-positive">+12 points</span></div>
-                <svg viewBox="0 0 320 175" className="report-trend-chart" role="img" aria-label={`Score moved from ${score - 12} to ${score}`}>
-                  <path d="M 0 138 L 48 120 L 268 66 L 320 54 L 320 146 L 0 146 Z" className="area" />
-                  <line x1="0" y1="146" x2="320" y2="146" className="baseline" />
-                  <line x1="48" y1="64" x2="48" y2="146" className="grid" />
-                  <line x1="268" y1="66" x2="268" y2="146" className="grid" />
-                  <line x1="48" y1="120" x2="268" y2="66" className="path" />
-                  <circle cx="48" cy="120" r="6" className="dot" /><circle cx="268" cy="66" r="6" className="dot" />
-                  <rect x="242" y="16" width="52" height="30" rx="6" className="tag" /><text x="268" y="36" textAnchor="middle" className="tag-text">{score}</text>
-                  <text x="48" y="103" textAnchor="middle" className="label">{score - 12}</text>
-                  <text x="48" y="168" textAnchor="middle" className="axis">Previous</text><text x="268" y="168" textAnchor="middle" className="axis is-now">Latest</text>
+                <div className="report-trend-head"><strong>Score trend</strong>{trendChange !== undefined && <span>{trendChange > 0 ? "+" : ""}{trendChange} points</span>}</div>
+                <svg viewBox="0 0 320 156" className="report-trend-chart" role="img" aria-label={trendRecords.length ? `Score trend: ${trendRecords.map(record => `${scoreRecordDate(record.date)}, ${record.score}`).join("; ")}` : "No recorded score history"}>
+                  {[54, 86, 118].map((y, index) => <g key={y}><line x1="28" y1={y} x2="308" y2={y} className="grid" /><text x="21" y={y + 4} textAnchor="end" className="label">{Math.round(trendHigh - index * (trendHigh - trendLow) / 2)}</text></g>)}
+                  <line x1="28" y1="126" x2="308" y2="126" className="baseline" />
+                  {trendPoints.length > 1 && <path d={trendPoints.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ")} fill="none" className="path" />}
+                  {trendPoints.map(point => {
+                    const [day, month] = scoreRecordDate(point.date).split(" ");
+                    return <g key={point.date}>
+                      <line x1={point.x} y1={point.y + 5} x2={point.x} y2="126" className="grid" />
+                      <circle cx={point.x} cy={point.y} r="4" className="dot" />
+                      <text x={point.x} y={point.y - 13} textAnchor="middle" className="score-label">{point.score}</text>
+                      <text x={point.x} y="140" textAnchor="middle" className="axis"><tspan x={point.x}>{day}</tspan><tspan x={point.x} dy="12">{month}</tspan></text>
+                    </g>;
+                  })}
                 </svg>
               </div>
             </div>
