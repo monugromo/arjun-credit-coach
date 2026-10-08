@@ -113,7 +113,7 @@ type ChatPhase = "intro" | "awaiting-consent" | "in-call" | "post-call";
 type JourneyVariant = "matched" | "linked" | "no-history" | "distressed";
 
 function Index() {
-  const [screen, setScreen] = useState<Screen>("landing");
+  const [screen, setScreen] = useState<Screen>("phone");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [user, setUser] = useState<DemoUser | null>(null);
@@ -193,7 +193,7 @@ function Index() {
   }, [screen, user, chatPhase, chat.length]);
 
   const logout = () => {
-    setScreen("landing"); setPhone(""); setOtp(""); setUser(null);
+    setScreen("phone"); setPhone(""); setOtp(""); setUser(null);
     setName(""); setChat([]); setTasks(distressedTasks);
     setReportUpdated(false); setTasksUpdated(false); setMenuOpen(false);
     setChatPhase("intro"); setShowCallPopup(false); setBureauUpdated(false); setMobileLinked(false);
@@ -463,6 +463,7 @@ function Index() {
         {screen === "otp" && user && (
           <OtpScreen phone={user.phone} otp={otp} setOtp={setOtp}
             onBack={() => go("phone")} onDone={() => {
+              if (user.directReportLogin) return go("report");
               if (user.key === "loan") return startChatFlow(user);
               if (user.expired) return goToPaywall("distressed");
               return go("name");
@@ -802,7 +803,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit }: { phone: string; set
             <div>
               <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">No bureau data</div>
               <div className="flex flex-col gap-2">
-                {[["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"], ["9876500007", "007", "Meera · Loan offers · returning"], ["9876500008", "008", "Kabir · Loan offers · first visit"], ["9876500009", "009", "Suresh · No eligible lenders"], ["9876500010", "010", "Pooja · Lender check failed"], ["9876500011", "011", "Manoj · Bureau not pulled"], ["9876500012", "012", "Riya · No credit card offer"], ["9876500013", "013", "Sonu · Report design comparison"]].map(([p, id, label]) => (
+                {[["9876500014", "014", "Report comparison · Original"], ["9876500015", "015", "Report comparison · Shaded"], ["9876500003", "003", "Aarav · NTC · No history"], ["9876500004", "004", "Sonu · Score 413"], ["9876500005", "005", "Darpan · Trial ended"], ["9876500007", "007", "Meera · Loan offers · returning"], ["9876500008", "008", "Kabir · Loan offers · first visit"], ["9876500009", "009", "Suresh · No eligible lenders"], ["9876500010", "010", "Pooja · Lender check failed"], ["9876500011", "011", "Manoj · Bureau not pulled"], ["9876500012", "012", "Riya · No credit card offer"], ["9876500013", "013", "Sonu · Report design comparison"]].map(([p, id, label]) => (
                   <button key={p} onClick={() => setPhone(p)}
                     className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                     <span>
