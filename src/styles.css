@@ -220,9 +220,9 @@
 .report-gauge-pointer { fill: var(--report-ink); }
 .report-gauge-needle { transform-origin: 0 0; }
 .report-gauge-label { fill: var(--report-subtle); font-size: 12px; }
-.report-gauge-value { position: absolute; top: 44%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+.report-gauge-value { position: absolute; top: 40%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
 .report-gauge-value > strong { font-size: 44px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
-.report-gauge-band { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; color: var(--report-subtle); }
+.report-gauge-band { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 14px; padding-left: 26px; font-size: 14px; font-weight: 600; color: var(--report-subtle); }
 .report-gauge-band button { width: 26px; height: 26px; color: inherit; }
 .report-gauge-band svg { width: 16px; height: 16px; }
 
@@ -465,12 +465,12 @@
 .report-bureau-logo { height: 12px; width: auto; display: block; }
 /* Preserve the supplied history illustration and account-group layout. */
 .rf-hero { position: relative; padding-top: 20px; padding-bottom: 8px; border: 0; }
-.rf-hero-heading { display: grid; grid-template-columns: minmax(0, 1fr) 80px; align-items: center; gap: 12px; margin-bottom: 16px; }
+.rf-hero-heading { display: grid; grid-template-columns: minmax(0, 1fr) 112px; align-items: center; gap: 16px; margin-bottom: 20px; padding: 16px; border-radius: 16px; background: color-mix(in srgb, var(--report-brand) 7%, var(--report-paper)); }
 .rf-hero-text { min-width: 0; }
 .rf-hero-text h2 { margin: 0 0 6px; }
 .rf-total-count { display: block; font-size: 13px; color: var(--report-brand); font-weight: 500; }
 .rf-explanation { margin: 0; width: 100%; font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
-.rf-history-illustration { display: block; margin: 0; width: 80px; height: 80px; object-fit: contain; }
+.rf-history-illustration { display: block; margin: 0; width: 112px; height: 112px; object-fit: contain; }
 .rf-hero-art { position: absolute; right: var(--report-gutter); top: 76px; width: 88px; height: 72px; display: grid; place-items: center; color: var(--report-ink); }
 .rf-hero-art svg { width: 44px; height: 44px; stroke-width: 1.5; }
 .rf-metric { padding-top: 16px; padding-bottom: 0; border: 0; }
@@ -511,3 +511,11 @@
 @media (prefers-reduced-motion: reduce) {
   .report-dots button { transition: none; }
 }
+
+/* Clickable account cards */
+.credit-report .report-account-list { gap: 10px; }
+.credit-report .report-account-row { position: relative; padding: 14px 40px 14px 14px; border: 1px solid var(--report-line) !important; border-radius: 14px; background: var(--report-paper); box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 4px 12px rgba(15,23,42,.04); transition: transform .15s, box-shadow .15s, border-color .15s; cursor: pointer; }
+.credit-report .report-account-row::after { content: ""; position: absolute; right: 16px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid var(--report-subtle); border-top: 1.5px solid var(--report-subtle); transform: translateY(-50%) rotate(45deg); }
+.credit-report .report-account-row:hover { background: var(--report-paper); border-color: color-mix(in srgb, var(--report-brand) 40%, var(--report-line)) !important; box-shadow: 0 6px 18px rgba(15,23,42,.08); }
+.credit-report .report-account-row:active { transform: scale(.99); }
+.credit-report .rf-group .report-account-list > .report-account-row:last-child { border-bottom: 1px solid var(--report-line) !important; }
