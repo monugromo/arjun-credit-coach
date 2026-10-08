@@ -164,15 +164,10 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   };
 
   const cardRows = <div className="report-account-list">{cards.map((card, index) => <Button variant="ghost" key={card.last4} className="report-account-row" onClick={() => openAccount({ kind: "card", index })}>
-    <span className="report-account-top"><ReportBankMark name={card.bank} logoUrl={bankLogos[card.bank]} /><span className="report-row-label"><strong>{card.bank}</strong><small>Credit card · •••• {card.last4}</small></span><ChevronRight className="report-chevron" /></span>
-    <span className="report-usage-heading"><span>Credit usage</span><strong className={`report-tone-${card.tone}`}>{card.pct}%</strong></span>
-    <span className="report-utilisation"><span className={`report-fill report-fill-${card.tone}`} style={{ width: `${card.pct}%` }} /></span>
-    <span className="report-account-bottom"><span><small>Used balance</small><strong>{money(card.used)}</strong></span><span><small>Credit limit</small><strong>{money(card.limit)}</strong></span></span>
+    <span className="report-account-top"><ReportBankMark name={card.bank} logoUrl={bankLogos[card.bank]} /><span className="report-row-label"><strong>{card.bank}</strong><small>Credit card</small></span></span>
   </Button>)}</div>;
   const loanRows = <div className="report-account-list">{loans.map((loan, index) => <Button variant="ghost" key={loan.name} className="report-account-row" onClick={() => openAccount({ kind: "loan", index })}>
-    <span className="report-account-top"><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.lender}</strong><small>{loan.name}</small></span><ChevronRight className="report-chevron" /></span>
-    <span className="report-loan-status"><span>Payment status</span><strong className={loan.tone === "warning" ? "report-tone-warning" : ""}>{loan.status}</strong></span>
-    <span className="report-loan-values"><span><small>Outstanding</small><strong>{money(loan.outstanding)}</strong></span><span><small>EMI</small><strong>{money(loan.emi)}</strong></span><span><small>Sanctioned</small><strong>{money(loan.sanctioned)}</strong></span></span>
+    <span className="report-account-top"><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.lender}</strong><small>Loan</small></span></span>
   </Button>)}</div>;
   const enquiryRows = <div className="report-account-list">{enquiries.map(enquiry => <div className="report-enquiry-row" key={enquiry.lender}><ReportBankMark name={enquiry.lender} logoUrl={bankLogos[enquiry.lender]} /><span className="report-row-label"><strong>{enquiry.lender}</strong><small>{enquiry.product}</small></span><time>{enquiry.date}</time></div>)}</div>;
 
@@ -210,7 +205,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         </section>
         <section className="report-section rf-accounts">
           <h3 className="rf-list-heading">{view === "age" ? "Account age" : view === "usage" ? "Credit cards" : view === "enquiries" ? "Recent enquiries" : view === "mix" ? "Credit accounts" : "Loan accounts"}</h3>
-          <div className="report-account-stack">{view === "age" ? <p className="report-description">Account opening dates are not available.</p> : view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <><div className="rf-account-group"><h4>Credit cards <span>{cards.length}</span></h4>{cardRows}</div><div className="rf-account-group"><h4>Loans <span>{loans.length}</span></h4>{loanRows}</div></> : <div className="report-account-list">{loans.map((loan, index) => <Button variant="ghost" key={loan.name} className="rf-history-account" onClick={() => openAccount({ kind: "loan", index })}><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.lender}</strong><small>{loan.name}</small></span><span className="rf-history-status">{loan.status}</span><ChevronRight /></Button>)}</div>}</div>
+          <div className="report-account-stack">{view === "age" ? <p className="report-description">Account opening dates are not available.</p> : view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <><div className="rf-account-group"><h4>Credit cards <span>{cards.length}</span></h4>{cardRows}</div><div className="rf-account-group"><h4>Loans <span>{loans.length}</span></h4>{loanRows}</div></> : loanRows}</div>
         </section>
       </> : view === "accounts" ? <>
         <section className="report-section report-detail-heading"><span className="report-eyebrow">CREDIT ACCOUNTS</span><h2>Cards & loans</h2><p>3 cards · 4 loans</p></section>
