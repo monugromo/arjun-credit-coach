@@ -49,9 +49,12 @@ export function ReportAccountDetail(props: Props) {
       </dl>
     </section>
     {card && <section className="report-section account-detail-usage">
-      <div><h3>Credit utilisation</h3><strong className={`report-tone-${creditUsageTone(card.pct)}`}>{card.pct}%</strong></div>
-      <progress className={`account-usage-meter report-tone-${creditUsageTone(card.pct)}`} value={card.pct} max={100} aria-label="Credit utilisation" />
-      <p>{money(card.used)} used of {money(card.limit)}</p>
+      <h3>Credit utilisation</h3>
+      <UsageIndicator pct={card.pct} tone={creditUsageTone(card.pct)} label={`${money(card.used)} used of ${money(card.limit)}`} />
+    </section>}
+    {loan && <section className="report-section account-detail-usage">
+      <h3>Loan outstanding</h3>
+      <UsageIndicator pct={loan.sanctioned > 0 ? ((loan.sanctioned - loan.outstanding) / loan.sanctioned) * 100 : 0} tone="positive" label={`${money(Math.max(0, loan.sanctioned - loan.outstanding))} principal paid`} />
     </section>}
     <section className="report-section account-detail-history">
       <h3>Payment history</h3>
