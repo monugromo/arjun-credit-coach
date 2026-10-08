@@ -31,7 +31,15 @@ function UsageIndicator({ pct, tone, label }: { pct: number; tone: string; label
 
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 const CURRENT_YEAR = new Date().getFullYear();
+const CURRENT_MONTH = new Date().getMonth();
 const HISTORY_YEARS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2];
+
+type MonthStatus = "ontime" | "delayed" | "unreported";
+const hashSeed = (value: string) => { let h = 7; for (const ch of value) h = (h * 31 + ch.charCodeAt(0)) | 0; return Math.abs(h); };
+const sampleMonthStatuses = (seed: string, year: number): MonthStatus[] => MONTHS.map((_, i) => {
+  if (year > CURRENT_YEAR || (year === CURRENT_YEAR && i > CURRENT_MONTH)) return "unreported";
+  return hashSeed(`${seed}:${year}:${i}`) % 100 < 18 ? "delayed" : "ontime";
+});
 
 export function ReportAccountDetail(props: Props) {
   const [showInfo, setShowInfo] = useState(false);
