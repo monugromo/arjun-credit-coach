@@ -20,6 +20,13 @@ export interface DemoUser {
   loanErrors?: { bureau?: "no_hit" | "unavailable"; bre?: "none" | "empty" | "error" };
 }
 
+// Sample 7-day score history for report comparison demos (explicitly requested dummy data).
+const SAMPLE_SCORE_HISTORY = [
+  { date: "2026-09-29", score: 398 }, { date: "2026-09-30", score: 401 }, { date: "2026-10-01", score: 399 },
+  { date: "2026-10-02", score: 404 }, { date: "2026-10-03", score: 407 }, { date: "2026-10-04", score: 410 },
+  { date: "2026-10-05", score: 413 },
+];
+
 export const DEMOS: Record<string, DemoUser> = {
   "9876500001": {
     key: "ntc",
@@ -149,6 +156,7 @@ export const DEMOS: Record<string, DemoUser> = {
     score: 413,
     band: "Poor",
     reportDesign: "comparison",
+    scoreHistory: SAMPLE_SCORE_HISTORY,
     directReportLogin: true,
   },
   "9876500014": {
@@ -160,6 +168,7 @@ export const DEMOS: Record<string, DemoUser> = {
     hasScore: true,
     score: 413,
     band: "Poor",
+    scoreHistory: SAMPLE_SCORE_HISTORY,
     directReportLogin: true,
   },
   "9876500015": {
@@ -172,6 +181,7 @@ export const DEMOS: Record<string, DemoUser> = {
     score: 413,
     band: "Poor",
     reportDesign: "comparison",
+    scoreHistory: SAMPLE_SCORE_HISTORY,
     directReportLogin: true,
   },
   "9876500012": {
