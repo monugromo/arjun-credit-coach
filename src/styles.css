@@ -363,14 +363,14 @@
 .report-enquiry-row time { color: var(--report-subtle); font-size: 12px; flex-shrink: 0; }
 .account-detail-hero { padding-top: 24px; padding-bottom: 24px; }
 .account-detail-identity { display: flex; align-items: flex-start; gap: 12px; }
-.account-detail-identity > div { min-width: 0; flex: 1; }
-.account-detail-identity .report-bank-mark { margin-top: 3px; }
+.account-detail-copy { min-width: 0; flex: 1; }
+.account-detail-identity .report-bank-mark { margin-top: 3px; flex: 0 0 40px; }
 .account-detail-title { display: flex; align-items: center; gap: 6px; }
 .account-detail-title h2 { font-size: 20px; font-weight: 600; line-height: 1.4; letter-spacing: 0; }
 .account-detail-title button { width: 30px; height: 30px; flex-shrink: 0; color: var(--report-subtle); }
 .account-detail-title svg { width: 17px; height: 17px; }
-.account-detail-identity p { color: var(--report-subtle); font-size: 14px; margin-top: 2px; }
-.account-detail-identity small { display: block; color: var(--report-subtle); font-size: 14px; margin-top: 4px; }
+.account-detail-subtitle { display: flex; flex-wrap: wrap; column-gap: 5px; row-gap: 2px; color: var(--report-subtle); font-size: 14px; line-height: 1.5; margin-top: 2px; }
+.account-detail-subtitle span { white-space: nowrap; }
 .account-detail-art { display: block; width: 100%; max-width: 320px; height: 180px; margin: 16px auto 20px; object-fit: contain; }
 .account-detail-balances { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .account-detail-balances dt { font-size: 14px; color: var(--report-subtle); margin-bottom: 4px; }
