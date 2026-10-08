@@ -220,7 +220,7 @@
 .report-gauge-pointer { fill: var(--report-ink); }
 .report-gauge-needle { transform-origin: 0 0; }
 .report-gauge-label { fill: var(--report-subtle); font-size: 12px; }
-.report-gauge-value { position: absolute; top: 40%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+.report-gauge-value { position: absolute; top: 44%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
 .report-gauge-value > strong { font-size: 44px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
 .report-gauge-band { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 14px; padding-left: 26px; font-size: 14px; font-weight: 600; color: var(--report-subtle); }
 .report-gauge-band button { width: 26px; height: 26px; color: inherit; }
