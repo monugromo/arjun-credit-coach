@@ -1,7 +1,7 @@
 # Roadmap
 
 - [ ] Redesign bank account cards with logo space after a design is selected.
-- [ ] Match report icons and illustrations to the theme and remove factor advice notes.
+- [x] Match report icons and illustrations to the theme and remove factor advice notes.
 
 - [x] Tighten both sample reports equally and show a neutral dated score trend capped at seven recorded pulls (only the current dated score is available; no history fabricated).
 
