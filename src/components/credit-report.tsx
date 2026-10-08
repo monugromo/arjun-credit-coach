@@ -139,7 +139,10 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
           <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
             <div className="report-slide">
               <div className="report-score-value"><strong>{score}</strong><span>of 900</span></div>
-              <div className="report-score-tags"><span className={`report-score-band ${band === "Poor" ? "report-tone-danger" : band === "Fair" ? "report-tone-warning" : "report-tone-positive"}`}>{band}</span><span className="report-score-change"><ArrowUpRight />12 pts this month</span></div>
+              <div className="report-score-meta">
+                <span className={`report-band report-tone-${band === "Poor" ? "danger" : band === "Fair" ? "warning" : "positive"}`}><i aria-hidden />{band}</span>
+                <span className="report-change"><ArrowUpRight />+12 this month</span>
+              </div>
               <div className="report-range" aria-label={`Credit score ${score} out of 900`}><div className="report-range-track"><span /><span /><span /><span /></div><span className="report-range-marker" style={{ left: `${Math.max(0, Math.min(100, (score - 300) / 6))}%` }} /><div className="report-range-labels"><span>Poor</span><span>Fair</span><span>Good</span><span>Excellent</span></div></div>
             </div>
             <div className="report-slide">
