@@ -2999,7 +2999,7 @@ function FdDetailSheet({ card, onClose }: { card: FdCard; onClose: () => void })
 
 /* ====================== REPORT ====================== */
 function ReportScreen({ user, onBack, onStartChat }: { user: DemoUser; onBack: () => void; onStartChat: () => void }) {
-  return <CreditReport user={user} onBack={onBack} onStartChat={onStartChat} savings={<DailySavingsBlock onStartChat={onStartChat} isNTC={user.key === "ntc"} />} />;
+  return <CreditReport user={user} onBack={onBack} onStartChat={onStartChat} />;
 }
 
 function BigGauge({ value }: { value: number }) {
@@ -3050,108 +3050,6 @@ function ScoreGaugeCard({ value, delta = 12 }: { value: number; delta?: number }
           <span>300</span><span>600</span><span>750</span><span>900</span>
         </div>
       </div>
-    </div>
-  );
-}
-
-function DailySavingsBlock({ onStartChat, isNTC }: { onStartChat: () => void; isNTC: boolean }) {
-  const plans = [
-    { d: 50, goal: 2500, days: 50, tag: "Current" },
-    { d: 60, goal: 3000, days: 50, tag: "Increase" },
-    { d: 100, goal: 5000, days: 50, tag: "Boost" },
-  ];
-  const [selected, setSelected] = useState(50);
-  const plan = plans.find((p) => p.d === selected)!;
-  // Illustrative: ₹450 saved, ~30 days in, avg balance ~₹225 → interest at 7.25% p.a.
-  const savedSoFar = 450;
-  const interestEarned = 2.68;
-  const pct = Math.round((savedSoFar / plan.goal) * 100);
-  const daysLeft = Math.max(0, Math.ceil((plan.goal - savedSoFar) / plan.d));
-  return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm">
-      <div className="flex items-start gap-3">
-        <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: "#FFF4E5" }}>🪙</div>
-        <div className="flex-1">
-          <div className="font-bold text-gray-900 text-[17px]">Daily Savings</div>
-          <p className="text-sm text-gray-600 mt-1 leading-relaxed">
-            {isNTC
-              ? <>Save just <b>₹30–₹50 a day</b> and unlock your Secured Card FD in ~{plan.days} days - no big lump sum needed.</>
-              : <>Build a safety cushion - save <b>₹30–₹50 a day</b> into an FD earning 7.25% p.a. and unlock a higher-limit Secured Card.</>}
-          </p>
-        </div>
-      </div>
-
-      {/* Till now: balance + interest earned */}
-      <div className="mt-4 rounded-xl p-4" style={{ background: "#F7FBF8" }}>
-        <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Till now</div>
-        <div className="mt-1 flex items-baseline justify-between">
-          <div>
-            <div className="text-[11px] text-gray-500">Balance</div>
-            <div className="text-2xl font-extrabold text-gray-900">₹{savedSoFar.toLocaleString("en-IN")}</div>
-          </div>
-          <div className="text-right">
-            <div className="text-[11px] text-gray-500">Interest earned</div>
-            <div className="text-base font-bold" style={{ color: WA.green }}>+ ₹{interestEarned.toFixed(2)}</div>
-          </div>
-          <div className="text-right">
-            <div className="text-[11px] text-gray-500">Goal</div>
-            <div className="text-base font-bold text-gray-900">₹{plan.goal.toLocaleString("en-IN")}</div>
-          </div>
-        </div>
-        <div className="mt-3 h-2 w-full rounded-full bg-gray-200 overflow-hidden">
-          <div className="h-full rounded-full" style={{ width: `${Math.min(100, pct)}%`, background: WA.green }} />
-        </div>
-        <div className="mt-2 flex items-center justify-between text-[12px] text-gray-600">
-          <span>{pct}% funded</span>
-          <span>~{daysLeft} days left @ ₹{plan.d}/day</span>
-        </div>
-      </div>
-
-      {/* Plan chips - tap to pick */}
-      <div className="mt-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Pick your daily amount</div>
-      <div className="mt-2 grid grid-cols-3 gap-2">
-        {plans.map((p) => {
-          const active = p.d === selected;
-          return (
-            <button
-              key={p.d}
-              onClick={() => setSelected(p.d)}
-              className={`rounded-xl px-2 py-3 text-center border-2 transition active:scale-[0.98] ${active ? "text-white" : "bg-white border-gray-200 text-gray-900"}`}
-              style={active ? { background: WA.green, borderColor: WA.green } : undefined}
-            >
-              <div className="text-[10px] font-semibold opacity-70 uppercase tracking-wide">{p.tag}</div>
-              <div className="text-[11px] font-semibold opacity-80 mt-0.5">₹{p.d}/day</div>
-              <div className="text-[15px] font-extrabold mt-0.5">₹{p.goal.toLocaleString("en-IN")}</div>
-              <div className="text-[10px] opacity-80 mt-0.5">{p.days} days</div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Interest note */}
-      <div className="mt-3 flex items-start gap-2 rounded-xl p-3" style={{ background: "#EEF6FF" }}>
-        <div className="text-lg leading-none">💰</div>
-        <div className="text-[12.5px] text-gray-700 leading-snug">
-          Your savings sit in an <b>FD earning 7.25% p.a.</b> - you keep the interest and the FD becomes the security for your card.
-        </div>
-      </div>
-
-      {/* Autopay CTA - a different flow, not an "add card" button */}
-      <button
-        onClick={onStartChat}
-        className="mt-4 w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 font-bold active:scale-[0.98] transition"
-        style={{ borderColor: WA.green, color: WA.green, background: "#F7FBF8" }}
-      >
-        <Zap className="w-4 h-4" />
-        Setup autopay · ₹{plan.d}/day
-      </button>
-      <button
-        onClick={onStartChat}
-        className="mt-2 w-full py-3 rounded-2xl font-semibold text-[13px] text-gray-700 bg-gray-100 active:scale-[0.98] transition"
-      >
-        Start now - deposit ₹{plan.d} today
-      </button>
-      <div className="mt-2 text-center text-[11px] text-gray-500">Auto-debit via UPI · Pause anytime · 100% refundable</div>
     </div>
   );
 }
