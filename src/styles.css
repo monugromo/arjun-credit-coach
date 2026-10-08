@@ -390,8 +390,8 @@
 .rf-hero-text { min-width: 0; }
 .rf-hero-text h2 { margin: 0 0 6px; }
 .rf-total-count { display: block; margin-bottom: 16px; font-size: 13px; color: var(--report-brand); font-weight: 500; }
-.rf-hero-text p { width: calc(100% - 112px); font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
-.rf-history-illustration { position: absolute; right: var(--report-gutter); top: 78px; width: 104px; height: 104px; object-fit: contain; }
+.rf-hero-text p { width: 100%; font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
+.rf-history-illustration { display: block; margin: 4px 0 12px auto; width: 104px; height: 104px; object-fit: contain; }
 .rf-hero-art { position: absolute; right: var(--report-gutter); top: 76px; width: 88px; height: 72px; display: grid; place-items: center; color: var(--report-ink); }
 .rf-hero-art svg { width: 44px; height: 44px; stroke-width: 1.5; }
 .rf-metric { padding-top: 16px; padding-bottom: 0; border: 0; }

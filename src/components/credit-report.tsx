@@ -33,10 +33,10 @@ const enquiries = [
   { lender: "Paytm", product: "BNPL", date: "21 Mar 2026" },
 ];
 const factors = [
-  { key: "payment", title: "Payment history", subtitle: "97% of EMIs paid on time", value: "97%", unit: "ON TIME", tone: "warning", icon: CalendarCheck, explanation: "Payment history reflects how consistently payments are made on time. Timely payments help build a strong credit score.", advice: "Keep every payment on time", note: "Set up reminders or auto-pay for your next bills." },
-  { key: "usage", title: "Credit usage", subtitle: "61% of your limit", value: "61%", unit: "USED", tone: "warning", icon: CreditCard, explanation: "Credit usage is the share of available credit being used. Lower usage helps maintain a healthy credit score.", advice: "Make room on your cards", note: "Pay down outstanding balances and keep new spending manageable." },
-  { key: "mix", title: "Credit mix", subtitle: "3 cards · 4 loans", value: "7", unit: "ACCOUNTS", tone: "positive", icon: Layers, explanation: "Credit mix is the balance of credit cards and loans. Managing different types of credit responsibly helps build a strong credit history.", advice: "Look after the credit you have", note: "You don't need to open a new account just to change your credit mix." },
-  { key: "enquiries", title: "New enquiries", subtitle: "5 in last 6 months", value: "5", unit: "PULLS", tone: "danger", icon: FileText, explanation: "A credit enquiry is recorded when a lender checks credit history for an application. Several enquiries in a short period can affect a credit score.", advice: "Review recent applications", note: "If an enquiry looks unfamiliar, talk to Arjun." },
+  { key: "payment", title: "Payment history", subtitle: "97% of EMIs paid on time", value: "97%", unit: "ON TIME", tone: "warning", icon: CalendarCheck, explanation: "Paying on time impacts your CIBIL score the most. It shows that you are a trustworthy borrower.", advice: "Keep every payment on time", note: "Set up reminders or auto-pay for your next bills." },
+  { key: "usage", title: "Credit usage", subtitle: "61% of your limit", value: "61%", unit: "USED", tone: "warning", icon: CreditCard, explanation: "Credit usage tells you how much credit you used out of your total credit limit.", advice: "Make room on your cards", note: "Pay down outstanding balances and keep new spending manageable." },
+  { key: "mix", title: "Credit mix", subtitle: "3 cards · 4 loans", value: "7", unit: "ACCOUNTS", tone: "positive", icon: Layers, explanation: "Credit mix shows all your credit cards and loans and how diverse they are.", advice: "Look after the credit you have", note: "You don't need to open a new account just to change your credit mix." },
+  { key: "enquiries", title: "New enquiries", subtitle: "5 in last 6 months", value: "5", unit: "PULLS", tone: "danger", icon: FileText, explanation: "An enquiry occurs when a lending institution checks your credit report when you've applied for a credit product (loans, credit cards, etc.)", advice: "Review recent applications", note: "If an enquiry looks unfamiliar, talk to Arjun." },
   { key: "age", title: "Credit age", subtitle: "Not available", value: "Not available", unit: "AVERAGE AGE", tone: "positive", icon: Clock, explanation: "Credit age reflects how long credit accounts have been open. A longer history helps demonstrate consistent credit management over time.", advice: "Look after your credit history", note: "" },
 ] as const;
 const factorIllustrations = { payment: paymentIllustration, usage: usageIllustration, mix: mixIllustration, enquiries: enquiryIllustration, age: ageIllustration };
@@ -192,8 +192,8 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         <section className="report-section"><p className="report-description">Account balances, limits and payment status reported by the lender.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Something looks off? Talk to Arjun <ArrowUpRight /></Button></section>
       </> : factor ? <>
         <section className="report-section rf-hero">
-          <div className="rf-hero-text"><h2>{factor.title}</h2><span className="rf-total-count">{factorTotal}</span><p>{factor.explanation}</p></div>
           <img className="rf-history-illustration" src={factorIllustrations[factor.key]} alt="" loading="lazy" width={512} height={512} />
+          <div className="rf-hero-text"><h2>{factor.title}</h2><span className="rf-total-count">{factorTotal}</span><p>{factor.explanation}</p></div>
         </section>
         <section className="report-section rf-metric">
           <small>{view === "payment" ? "Payments on time" : view === "usage" ? "Credit usage" : view === "mix" ? "Credit mix" : view === "age" ? "Average credit age" : "Enquiries"}</small>
