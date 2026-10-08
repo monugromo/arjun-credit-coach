@@ -166,7 +166,6 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
         </section>
         <section className="report-section report-factors" role="tabpanel" aria-label="Score"><h3 className="report-factors-title">What's shaping it</h3><div>{factors.map(item => <Button variant="ghost" className="report-factor-row" key={item.key} onClick={() => navigate(item.key)}><span className="report-icon"><item.icon /></span><span className="report-row-label"><strong>{item.title}</strong><small>{item.subtitle}</small></span><span className={`report-status-word report-tone-${item.tone}`}>{item.tone === "positive" ? "Good" : item.tone === "warning" ? "Fair" : "Poor"}</span><ChevronRight className="report-chevron" /></Button>)}</div></section>
         <div className="report-accounts-link-wrap"><Button variant="ghost" className="report-accounts-link" onClick={() => navigate("accounts", "cards")}><List />Show credit cards and loans</Button></div>
-        <section className="report-section report-savings"><details><summary>Daily Savings <span>₹450 saved <ChevronRight /></span></summary><div>{savings}</div></details></section>
       </>}
       <BureauFooter />
     </div>
