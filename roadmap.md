@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Match factor screens to the supplied references with consistent green artwork and available top totals; verify both report samples.
+
 - [x] Redesign bank account cards directly from the report theme with logo space and verify detail actions on both comparison accounts.
 - [x] Match report icons and illustrations to the theme and remove factor advice notes.
 
