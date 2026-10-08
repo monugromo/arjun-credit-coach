@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, Lightbulb, List, MessageCircle, RefreshCw, Wallet, X } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, Lightbulb, MessageCircle, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { DemoUser } from "@/lib/groscore-data";
@@ -61,8 +61,12 @@ function ScoreGauge({ score, animationKey }: { score: number; animationKey: stri
     openedScoreGauges.add(animationKey);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     needleRef.current?.animate(
-      [{ transform: "rotate(0deg)" }, { transform: `rotate(${angle}deg)` }],
-      { duration: 1100, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
+      [
+        { transform: "rotate(0deg)", offset: 0, easing: "cubic-bezier(0.4, 0, 0.2, 1)" },
+        { transform: "rotate(180deg)", offset: 0.55, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
+        { transform: `rotate(${angle}deg)`, offset: 1 },
+      ],
+      { duration: 2000 },
     );
   }, [animationKey, angle]);
   const point = (angle: number, radius: number) => {
@@ -186,7 +190,7 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
             <div className="report-slide">
               <div className="report-gauge-wrap">
                 <ScoreGauge score={score} animationKey={user.phone} />
-                <div className="report-gauge-value"><strong>{score}</strong><div className={`report-gauge-band report-tone-${bandTone}`}><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" aria-haspopup="dialog" onClick={() => setShowInfo(true)}><Info /></Button></div><span className="report-score-change"><ArrowUpRight />+12 this month</span></div>
+                <div className="report-gauge-value"><strong>{score}</strong><div className="report-gauge-band"><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" aria-haspopup="dialog" onClick={() => setShowInfo(true)}><Info /></Button></div><span className="report-score-change"><ArrowUpRight />+12 this month</span></div>
               </div>
             </div>
             <div className="report-slide">
@@ -208,14 +212,13 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
           <div className="report-refresh-row">
             {daysLeft > 0 ? <span className="report-updated">Next update in {daysLeft} {daysLeft === 1 ? "day" : "days"}</span> : <Button variant="link" className="report-refresh" onClick={() => setLastPulled(new Date())}><RefreshCw />Refresh now</Button>}
           </div>
-          <div className="report-hero-actions"><Button variant="ghost" onClick={download}><Download />Download Report</Button><Button variant="ghost" onClick={onBack}><MessageCircle />Talk to Arjun</Button></div>
+          <div className="report-hero-actions"><Button variant="outline" onClick={() => navigate("accounts", "cards")}><FileText />Credit report</Button><Button variant="outline" onClick={onBack}><MessageCircle />Talk to Arjun</Button></div>
           </div>
           <Dialog open={showInfo} onOpenChange={setShowInfo}><DialogContent className="credit-report report-score-dialog"><DialogTitle>What your score means</DialogTitle><DialogDescription>Your score and accounts are based on the information in your Equifax credit report. Checking this report does not create a credit enquiry.</DialogDescription><ul className="report-info-bands"><li><i className="report-status-dot report-tone-danger" aria-hidden /><strong>Poor</strong><span>300-549 - lenders see high risk</span></li><li><i className="report-status-dot report-tone-warning" aria-hidden /><strong>Fair</strong><span>550-649 - some lenders may approve</span></li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Good</strong><span>650-749 - most lenders approve</span></li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Excellent</strong><span>750-900 - best rates and offers</span></li></ul></DialogContent></Dialog>
         </section>
 
 
-        <section className="report-section report-factors" role="tabpanel" aria-label="Score"><h3 className="report-factors-title">What's shaping it</h3><div>{factors.map(item => <Button variant="ghost" className="report-factor-row" key={item.key} onClick={() => navigate(item.key)}><span className="report-icon"><item.icon /></span><span className="report-row-label"><strong>{item.title}</strong><small>{item.subtitle}</small></span><span className={`report-status-word report-tone-${item.tone}`}><i className="report-status-dot" aria-hidden />{item.tone === "positive" ? "Good" : item.tone === "warning" ? "Fair" : "Poor"}</span><ChevronRight className="report-chevron" /></Button>)}</div></section>
-        <div className="report-accounts-link-wrap"><Button variant="ghost" className="report-accounts-link" onClick={() => navigate("accounts", "cards")}><List />Show credit cards and loans</Button></div>
+        <section className="report-section report-factors" role="tabpanel" aria-label="Score"><h3 className="report-factors-title">Credit report summary</h3><div>{factors.map(item => <Button variant="ghost" className="report-factor-row" key={item.key} onClick={() => navigate(item.key)}><span className="report-icon"><item.icon /></span><span className="report-row-label"><strong>{item.title}</strong><small>{item.subtitle}</small></span><span className="report-status-word">{item.tone === "positive" ? "Good" : item.tone === "warning" ? "Fair" : "Poor"}</span><ChevronRight className="report-chevron" /></Button>)}</div></section>
       </>}
       <BureauFooter />
     </div>
