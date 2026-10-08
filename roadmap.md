@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Update report CTAs and summary labels, remove the automatic call popup, and verify the needle sweeps to 900 before settling.
+- [x] Update report CTAs and summary labels, remove the automatic call popup, and verify the needle sweeps to 900 before settling.
 
 - [x] Add two direct-login Loan / CC demo accounts.
 - [x] Build returning-user available and locked lender offers.
