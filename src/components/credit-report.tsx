@@ -15,6 +15,7 @@ import { recentScoreRecords, scoreRecordDate, SCORE_TREND_TICKS, scoreTrendY } f
 import { ReportBankMark } from "@/components/report-bank-mark";
 import { creditUsageTone } from "@/lib/report-usage";
 import { ReportAccountDetail } from "@/components/report-account-detail";
+import { demoAccountInformation } from "@/lib/report-account-information";
 
 const cards = [
   { bank: "HDFC Bank", last4: "4521", used: 128000, limit: 150000, pct: 85, tone: "danger" },
@@ -188,7 +189,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         <section className="report-section"><h3>Already have loans or cards?</h3><p className="report-description">Your PAN or name may be incorrect. Update them to fetch the right report.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Update name & PAN <ArrowUpRight /></Button></section>
         <section className="report-section"><h3>Still see an error?</h3><p className="report-description">Our support team will look into it within 24 hours.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Raise a ticket <ArrowUpRight /></Button></section>
       </> : account && (currentCard || currentLoan) ? <>
-        {currentCard ? <ReportAccountDetail kind="card" account={currentCard} logoUrl={bankLogos[currentCard.bank]} seed={`${currentCard.bank}-${currentCard.last4}`} onStartChat={onStartChat} /> : currentLoan ? <ReportAccountDetail kind="loan" account={currentLoan} logoUrl={bankLogos[currentLoan.lender]} seed={`${currentLoan.lender}-${currentLoan.last4}`} onStartChat={onStartChat} /> : null}
+        {currentCard ? <ReportAccountDetail kind="card" account={currentCard} information={demoAccountInformation[currentCard.last4]} logoUrl={bankLogos[currentCard.bank]} seed={`${currentCard.bank}-${currentCard.last4}`} onStartChat={onStartChat} /> : currentLoan ? <ReportAccountDetail kind="loan" account={currentLoan} information={demoAccountInformation[currentLoan.last4]} logoUrl={bankLogos[currentLoan.lender]} seed={`${currentLoan.lender}-${currentLoan.last4}`} onStartChat={onStartChat} /> : null}
       </> : factor ? <>
         <section className="report-section rf-hero">
           <div className="rf-hero-heading"><div className="rf-hero-text"><h2>{factor.title}</h2><span className="rf-total-count">{factorTotal}</span></div><img className="rf-history-illustration" src={factorIllustrations[factor.key]} alt="" loading="lazy" width={512} height={512} /></div>
@@ -209,7 +210,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
       </> : view === "accounts" ? <>
         <section className="report-section report-detail-heading"><span className="report-eyebrow">Credit accounts</span><h2>Full credit details</h2><p>{cards.length} credit cards · {loans.length} loans</p></section>
         <div className="report-account-tabs" role="tablist" aria-label="Credit accounts">{([ ["cards", "Cards", cards.length], ["loans", "Loans", loans.length], ["enquiries", "Enquiries", enquiries.length] ] as const).map(([key, label, count]) => <Button variant="ghost" key={key} role="tab" aria-selected={tab === key} className={tab === key ? "report-tab is-active" : "report-tab"} onClick={() => setTab(key)}>{label}<span>{count}</span></Button>)}</div>
-        <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}>{tab !== "enquiries" && <p className="report-lifecycle-note"><Info aria-hidden="true" /><span>Active or closed status is not reported. Payment status is shown separately.</span></p>}<div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
+        <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}>{tab !== "enquiries" && <p className="report-lifecycle-note"><Info aria-hidden="true" /><span>Account information uses sample statuses and dates. Payment status is shown separately.</span></p>}<div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
       </> : <>
         <section className="report-section report-score-hero">
           <div className="report-score-head"><p className="report-score-headline"><span className="report-score-greeting">{firstName},</span>{scoreHeadline.slice(firstName.length + 2)}</p></div>
