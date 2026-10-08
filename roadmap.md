@@ -30,3 +30,5 @@
 - [x] Drop the boxed score card; build the chosen minimalist floating hero with a band-aware headline.
 - [x] Match the supplied curved-gauge report hero with Equifax branding and verify its actions.
 - [x] Integrate the hero with the page, refine the personalised headline, add carousel dots and score details, and replace the trend action with Talk to Arjun.
+- [ ] Add an isolated shaded report comparison account with refined typography and spacing.
+- [ ] Animate the needle on first opening and verify baseline and comparison reports.

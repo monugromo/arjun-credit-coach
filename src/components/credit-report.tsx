@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, Lightbulb, List, MessageCircle, RefreshCw, Wallet, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -51,7 +51,20 @@ function BureauFooter() {
   return <footer className="report-bureau"><span>Powered by</span><img className="report-bureau-logo" src={equifaxLogo.url} alt="Equifax" /></footer>;
 }
 
-function ScoreGauge({ score }: { score: number }) {
+const openedScoreGauges = new Set<string>();
+
+function ScoreGauge({ score, animationKey }: { score: number; animationKey: string }) {
+  const needleRef = useRef<SVGGElement>(null);
+  const angle = Math.max(0, Math.min(180, (score - 300) / 600 * 180));
+  useEffect(() => {
+    if (openedScoreGauges.has(animationKey)) return;
+    openedScoreGauges.add(animationKey);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    needleRef.current?.animate(
+      [{ transform: "rotate(0deg)" }, { transform: `rotate(${angle}deg)` }],
+      { duration: 1100, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
+    );
+  }, [animationKey, angle]);
   const point = (angle: number, radius: number) => {
     const radians = angle * Math.PI / 180;
     return [160 - radius * Math.cos(radians), 150 - radius * Math.sin(radians)];
@@ -66,7 +79,7 @@ function ScoreGauge({ score }: { score: number }) {
       start = end;
       return <g key={item.name} className={`report-tone-${item.tone}`}><path d={path} className="report-gauge-soft" /><path d={path} className="report-gauge-edge" /></g>;
     })}
-    <g transform={`translate(160 150) rotate(${Math.max(0, Math.min(180, (score - 300) / 600 * 180))})`}><path d="M -99 -7 L -99 7 L -113 0 Z" className="report-gauge-pointer" /></g>
+    <g transform="translate(160 150)"><g ref={needleRef} className="report-gauge-needle" transform={`rotate(${angle})`}><path d="M -99 -7 L -99 7 L -113 0 Z" className="report-gauge-pointer" /></g></g>
     <text x="15" y="164" className="report-gauge-label">300</text><text x="282" y="164" className="report-gauge-label">900</text>
   </svg>;
 }
@@ -129,7 +142,7 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
   </Button>)}</div>;
   const enquiryRows = <div className="report-account-list">{enquiries.map(enquiry => <div className="report-enquiry-row" key={enquiry.lender}><span className="report-icon"><FileText /></span><span className="report-row-label"><strong>{enquiry.lender}</strong><small>{enquiry.product}</small></span><time>{enquiry.date}</time></div>)}</div>;
 
-  return <div className="credit-report flex min-h-0 flex-1 flex-col bg-card text-foreground" data-testid="credit-report">
+  return <div className={`credit-report flex min-h-0 flex-1 flex-col bg-card text-foreground${user.reportDesign === "comparison" ? " report-comparison" : ""}`} data-testid="credit-report">
     <header className="flex h-14 shrink-0 items-center gap-3 bg-primary-deep px-3 text-primary-foreground">
       <Button variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground" aria-label="Back from credit report" onClick={goBack}><ArrowLeft /></Button>
       <h1 className="flex-1 text-[17px] font-semibold">Credit Report</h1>
@@ -172,7 +185,7 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
           <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
             <div className="report-slide">
               <div className="report-gauge-wrap">
-                <ScoreGauge score={score} />
+                <ScoreGauge score={score} animationKey={user.phone} />
                 <div className="report-gauge-value"><strong>{score}</strong><div className={`report-gauge-band report-tone-${bandTone}`}><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" aria-haspopup="dialog" onClick={() => setShowInfo(true)}><Info /></Button></div><span className="report-score-change"><ArrowUpRight />+12 this month</span></div>
               </div>
             </div>
