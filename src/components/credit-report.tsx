@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, Lightbulb, MessageCircle, RefreshCw, Wallet } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, MessageCircle, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { DemoUser } from "@/lib/groscore-data";
@@ -190,7 +190,6 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
           <small>{view === "payment" ? "Payments on time" : factor.unit}</small>
           <div className="rf-metric-row"><strong>{factor.value}</strong></div>
           <span className={`rf-pill rf-pill-${factor.tone}`}>{factor.tone === "positive" ? "Good" : factor.tone === "warning" ? "Fair" : "Needs work"}<Info size={14} /></span>
-          <div className="rf-tip"><Lightbulb /><p>{view === "payment" ? "You should always pay the full credit card bill and EMI by the due date." : `${factor.advice}. ${factor.note}`}</p></div>
         </section>
         <section className="report-section rf-accounts"><div className="rf-group">{view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <>{cardRows}{loanRows}</> : <div className="report-account-list">{loans.map((loan, index) => <Button variant="ghost" key={loan.name} className="rf-history-account" onClick={() => openAccount({ kind: "loan", index })}><Wallet /><span className="report-row-label"><strong>{loan.lender}</strong><small>{loan.name}</small></span><span className="rf-history-status">{loan.status}</span><ChevronRight /></Button>)}</div>}</div></section>
       </> : view === "accounts" ? <>
