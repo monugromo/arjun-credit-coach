@@ -35,7 +35,6 @@ type Account = { kind: "card"; index: number } | { kind: "loan"; index: number }
 // Demo bureau pull date; replace with the real report date from the backend.
 const REPORT_LAST_PULLED = "2026-10-05T00:00:00";
 const REFRESH_CYCLE_DAYS = 30;
-const formatDate = (d: Date) => d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 const money = (amount: number) => "₹" + amount.toLocaleString("en-IN");
 const totalLimit = cards.reduce((sum, card) => sum + card.limit, 0);
 const totalOutstanding = loans.reduce((sum, loan) => sum + loan.outstanding, 0);
@@ -135,7 +134,7 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
         <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}><div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
       </> : <>
         <section className="report-section report-score-hero">
-          <div className="report-meta-row"><span className="report-equifax"><img className="report-equifax-logo" src={equifaxLogo.url} alt="Equifax" /></span><Button variant="ghost" size="icon" aria-label="About your credit score" onClick={() => setShowInfo(!showInfo)}><Info /></Button></div>
+          <div className="report-meta-row"><span /><Button variant="ghost" size="icon" aria-label="About your credit score" onClick={() => setShowInfo(!showInfo)}><Info /></Button></div>
           <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
             <div className="report-slide">
               <div className="report-score-value"><strong>{score}</strong><span>of 900</span></div>
@@ -143,7 +142,7 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
                 <span className={`report-band report-tone-${band === "Poor" ? "danger" : band === "Fair" ? "warning" : "positive"}`}><i aria-hidden />{band}</span>
                 <span className="report-change"><ArrowUpRight />+12 this month</span>
               </div>
-              <div className="report-range" aria-label={`Credit score ${score} out of 900`}><div className="report-range-track"><span /><span /><span /><span /></div><span className="report-range-marker" style={{ left: `${Math.max(0, Math.min(100, (score - 300) / 6))}%` }} /><div className="report-range-labels"><span>Poor</span><span>Fair</span><span>Good</span><span>Excellent</span></div></div>
+              <div className="report-range" aria-label={`Credit score ${score} out of 900`}><div className="report-range-track" /><span className="report-range-marker" style={{ left: `${Math.max(0, Math.min(100, (score - 300) / 6))}%` }} /><div className="report-range-labels"><span>Poor</span><span>Fair</span><span>Good</span><span>Excellent</span></div></div>
             </div>
             <div className="report-slide">
               <div className="report-trend-card">
@@ -162,10 +161,9 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
           </div>
           <div className="report-dots">{[0, 1].map(i => <button key={i} type="button" aria-label={i ? "Show trend" : "Show score"} className={slide === i ? "is-active" : ""} onClick={() => carouselRef.current?.scrollTo({ left: i * carouselRef.current.clientWidth, behavior: "smooth" })} />)}</div>
           <div className="report-refresh-row">
-            <span className="report-updated">Updated {formatDate(lastPulled)}</span>
             {daysLeft > 0 ? <span className="report-updated">Next update in {daysLeft} {daysLeft === 1 ? "day" : "days"}</span> : <Button variant="link" className="report-refresh" onClick={() => setLastPulled(new Date())}><RefreshCw />Refresh now</Button>}
           </div>
-          {showInfo && <div className="report-info"><Button variant="ghost" size="icon" aria-label="Close score information" onClick={() => setShowInfo(false)}><X /></Button><p>Your score and accounts are based on the information in your Equifax credit report. Checking this report does not create a credit enquiry.</p></div>}
+          {showInfo && <div className="report-info"><Button variant="ghost" size="icon" aria-label="Close score information" onClick={() => setShowInfo(false)}><X /></Button><p>Your score and accounts are based on the information in your Equifax credit report. Checking this report does not create a credit enquiry.</p><ul className="report-info-bands"><li><i className="report-status-dot report-tone-danger" aria-hidden /><strong>Poor</strong> 300-549 - lenders see high risk</li><li><i className="report-status-dot report-tone-warning" aria-hidden /><strong>Fair</strong> 550-649 - some lenders may approve</li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Good</strong> 650-749 - most lenders approve</li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Excellent</strong> 750-900 - best rates and offers</li></ul></div>}
         </section>
         <section className="report-section report-factors" role="tabpanel" aria-label="Score"><h3 className="report-factors-title">What's shaping it</h3><div>{factors.map(item => <Button variant="ghost" className="report-factor-row" key={item.key} onClick={() => navigate(item.key)}><span className="report-icon"><item.icon /></span><span className="report-row-label"><strong>{item.title}</strong><small>{item.subtitle}</small></span><span className={`report-status-word report-tone-${item.tone}`}><i className="report-status-dot" aria-hidden />{item.tone === "positive" ? "Good" : item.tone === "warning" ? "Fair" : "Poor"}</span><ChevronRight className="report-chevron" /></Button>)}</div></section>
         <div className="report-accounts-link-wrap"><Button variant="ghost" className="report-accounts-link" onClick={() => navigate("accounts", "cards")}><List />Show credit cards and loans</Button></div>
