@@ -27,4 +27,4 @@
 - [x] Apply the selected Clean Minimalist credit report design while preserving data and core journeys.
 - [x] Verify report overview, factor details, accounts, savings and navigation in the browser.
 - [x] Align every report screen with the app theme, consistent type sizes and spacing; verify all drill-downs without changing flows.
-- [ ] Score hero: drop the boxed card, show 2-3 presentation samples with better score typography
+- [x] Drop the boxed score card; build the chosen minimalist floating hero with a band-aware headline.
