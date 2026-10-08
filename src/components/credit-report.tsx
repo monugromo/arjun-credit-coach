@@ -20,10 +20,10 @@ const cards = [
   { bank: "SBI Card", last4: "1102", used: 24000, limit: 80000, pct: 30, tone: "positive" },
 ] as const;
 const loans = [
-  { name: "Personal Loan", lender: "HDFC Bank", outstanding: 210000, emi: 8420, sanctioned: 300000, status: "On time", tone: "positive" },
-  { name: "Consumer Loan", lender: "Bajaj Finserv", outstanding: 42000, emi: 3200, sanctioned: 55000, status: "On time", tone: "positive" },
-  { name: "Auto Loan", lender: "ICICI Bank", outstanding: 228000, emi: 12800, sanctioned: 600000, status: "1 DPD", tone: "warning" },
-  { name: "Two-wheeler Loan", lender: "TVS Credit", outstanding: 18000, emi: 1650, sanctioned: 65000, status: "On time", tone: "positive" },
+  { name: "Personal Loan", lender: "HDFC Bank", last4: "6620", outstanding: 210000, emi: 8420, sanctioned: 300000, status: "On time", tone: "positive" },
+  { name: "Consumer Loan", lender: "Bajaj Finserv", last4: "3418", outstanding: 42000, emi: 3200, sanctioned: 55000, status: "On time", tone: "positive" },
+  { name: "Auto Loan", lender: "ICICI Bank", last4: "9034", outstanding: 228000, emi: 12800, sanctioned: 600000, status: "1 DPD", tone: "warning" },
+  { name: "Two-wheeler Loan", lender: "TVS Credit", last4: "7745", outstanding: 18000, emi: 1650, sanctioned: 65000, status: "On time", tone: "positive" },
 ] as const;
 const enquiries = [
   { lender: "Kotak Bank", product: "Credit Card", date: "12 May 2026" },
@@ -164,10 +164,10 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   };
 
   const cardRows = <div className="report-account-list">{cards.map((card, index) => <Button variant="ghost" key={card.last4} className="report-account-row" onClick={() => openAccount({ kind: "card", index })}>
-    <span className="report-account-top"><ReportBankMark name={card.bank} logoUrl={bankLogos[card.bank]} /><span className="report-row-label"><strong>{card.bank}</strong><small>Credit card</small></span></span>
+    <span className="report-account-top"><ReportBankMark name={card.bank} logoUrl={bankLogos[card.bank]} /><span className="report-row-label"><strong>{card.bank}</strong><small>Credit card</small></span><span className="report-row-value">{money(card.limit)} limit</span></span>
   </Button>)}</div>;
   const loanRows = <div className="report-account-list">{loans.map((loan, index) => <Button variant="ghost" key={loan.name} className="report-account-row" onClick={() => openAccount({ kind: "loan", index })}>
-    <span className="report-account-top"><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.lender}</strong><small>Loan</small></span></span>
+    <span className="report-account-top"><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.lender}</strong><small>Loan</small></span><span className="report-row-value">•••• {loan.last4}</span></span>
   </Button>)}</div>;
   const enquiryRows = <div className="report-account-list">{enquiries.map(enquiry => <div className="report-enquiry-row" key={enquiry.lender}><ReportBankMark name={enquiry.lender} logoUrl={bankLogos[enquiry.lender]} /><span className="report-row-label"><strong>{enquiry.lender}</strong><small>{enquiry.product}</small></span><time>{enquiry.date}</time></div>)}</div>;
 

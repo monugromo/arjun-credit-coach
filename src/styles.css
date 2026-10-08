@@ -300,6 +300,7 @@
 .report-row-label { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
 .report-row-label > strong { font-size: 14px; font-weight: 600; line-height: 1.45; overflow-wrap: anywhere; }
 .report-row-label > small { color: var(--report-subtle); font-size: 13px; line-height: 1.5; font-weight: 400; }
+.report-row-value { color: var(--report-subtle); font-size: 12px; font-weight: 400; flex-shrink: 0; white-space: nowrap; }
 .report-status-word, .report-status { font-size: 12.5px; font-weight: 500; flex-shrink: 0; }
 .report-status-word { display: inline-flex; align-items: center; color: var(--report-subtle); }
 .report-status-dot { width: 7px; height: 7px; border-radius: 100%; background: currentColor; }
