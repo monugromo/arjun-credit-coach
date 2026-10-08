@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Emphasise score change without an arrow, clarify unavailable account lifecycle status, and polish report wording with “Full credit details”; verify both samples.
+
 - [x] Rename Account Detail, compact all factor illustration layouts, and show loan account/status and card limit/threshold-coloured utilisation; verify both samples.
 
 - [x] Simplify report card and loan rows to logo, lender and type only; retain detail pages and verify both samples.

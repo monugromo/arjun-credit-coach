@@ -225,11 +225,11 @@
 .report-gauge-band { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; color: var(--report-subtle); }
 .report-gauge-band button { width: 26px; height: 26px; color: inherit; }
 .report-gauge-band svg { width: 16px; height: 16px; }
-.report-gauge-value .report-score-change { margin: 5px 0 0; font-size: 11px; white-space: nowrap; }
+
 .report-score-panel .report-refresh-row { justify-content: center; border: 0; margin: 0; padding: 0 12px 12px; font-size: 13px; }
 .report-score-panel .report-refresh { margin-left: 0; }
 .report-hero-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 0 0 8px; }
-.report-hero-actions button { height: 48px; padding: 8px; gap: 7px; border: 1px solid var(--report-ink); border-radius: 8px; background: var(--report-paper); color: var(--report-ink); font-size: 14px; font-weight: 600; box-shadow: none; }
+.report-hero-actions button { height: 48px; padding: 8px; gap: 7px; white-space: normal; line-height: 1.35; border: 1px solid var(--report-ink); border-radius: 8px; background: var(--report-paper); color: var(--report-ink); font-size: 14px; font-weight: 600; box-shadow: none; }
 .report-hero-actions button:hover { background: var(--report-surface); color: var(--report-ink); }
 .report-hero-actions svg { width: 16px; height: 16px; }
 .report-score-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
@@ -245,10 +245,15 @@
 .report-slide { flex: 0 0 100%; min-width: 0; min-height: 214px; scroll-snap-align: start; padding: 30px var(--report-gutter) 0; }
 .report-score-row { display: flex; align-items: baseline; gap: 8px; }
 .report-score-value { display: flex; align-items: baseline; gap: 8px; }
-.report-score-value strong { font-size: 72px; line-height: 1; font-weight: 500; letter-spacing: -0.045em; font-variant-numeric: tabular-nums; }
+.report-score-value strong { font-size: 72px; line-height: 1; font-weight: 500; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .report-score-value > span { font-size: 18px; color: var(--report-subtle); font-weight: 500; }
-.report-score-change { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 600; color: var(--report-positive); }
-.report-score-change svg { width: 14px; height: 14px; }
+.report-score-change { display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 2px 0 0; color: var(--report-positive); }
+.report-score-change > strong { font-size: 24px; line-height: 1.3; font-weight: 700; font-variant-numeric: tabular-nums; }
+.report-score-change > strong span { font-size: 14px; font-weight: 600; }
+.report-score-change > small { color: var(--report-subtle); font-size: 13px; font-weight: 400; }
+.report-lifecycle-note { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 20px; color: var(--report-subtle); font-size: 12px; line-height: 1.6; }
+.report-lifecycle-note svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+.report-lifecycle-detail { margin: 0 0 16px; }
 .report-score-meta { margin-top: 12px; }
 .report-band { display: inline-flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; }
 .report-band i { width: 8px; height: 8px; border-radius: 100%; background: currentColor; }
@@ -288,7 +293,7 @@
 .report-info-bands .report-status-dot { flex: none; align-self: center; }
 .report-info button { float: right; }
 .report-factors { border: 0; padding-top: 20px; padding-bottom: 8px; }
-.report-factors-title { margin-bottom: 4px; text-align: left; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.report-factors-title { margin-bottom: 4px; text-align: left; font-size: 17px; font-weight: 600; letter-spacing: 0; }
 .report-factor-row { display: flex; justify-content: initial; align-items: center; width: 100%; height: auto; min-height: 72px; gap: 14px; padding: 16px 0; border-radius: 0; white-space: normal; text-align: left; }
 .credit-report .report-factor-row:hover, .credit-report .report-account-row:hover, .credit-report .rf-history-account:hover { background: transparent; color: var(--report-ink); }
 .credit-report .report-factor-row:focus-visible, .credit-report .report-account-row:focus-visible, .credit-report .rf-history-account:focus-visible { outline: 2px solid var(--report-brand); outline-offset: 2px; }
