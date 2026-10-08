@@ -61,6 +61,7 @@ function ScoreGauge({ score, animationKey, band, onInfo }: { score: number; anim
     if (openedScoreGauges.has(animationKey)) return;
     openedScoreGauges.add(animationKey);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let completed = false;
     const started = Date.now();
     const update = () => {
       const elapsed = Date.now() - started;
@@ -69,10 +70,11 @@ function ScoreGauge({ score, animationKey, band, onInfo }: { score: number; anim
     };
     update();
     const timer = window.setInterval(update, 16);
-    const finish = window.setTimeout(() => { update(); window.clearInterval(timer); }, GAUGE_DURATION_MS);
+    const finish = window.setTimeout(() => { completed = true; setDisplayScore(score); window.clearInterval(timer); }, GAUGE_DURATION_MS);
     return () => {
       window.clearInterval(timer);
       window.clearTimeout(finish);
+      if (!completed) openedScoreGauges.delete(animationKey);
       setDisplayScore(score);
     };
   }, [animationKey, angle, score]);
