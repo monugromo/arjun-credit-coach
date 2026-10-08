@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Add distinct green factor illustrations and Credit age using existing report data; verify both samples.
+- [x] Add distinct green factor illustrations and Credit age using existing report data; verify both samples.
 
 - [x] Match factor screens to the supplied references with consistent green artwork and available top totals; verify both report samples.
 
