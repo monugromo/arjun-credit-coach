@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Slow the needle return, synchronize the score number, and apply the supplied Score trend styling without inventing history.
+
 - [x] Update report CTAs and summary labels, remove the automatic call popup, and verify the needle sweeps to 900 before settling.
 
 - [x] Add two direct-login Loan / CC demo accounts.
