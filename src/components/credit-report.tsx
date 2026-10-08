@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, Lightbulb, List, MessageCircle, RefreshCw, Wallet, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -52,22 +52,26 @@ function BureauFooter() {
 }
 
 function ScoreGauge({ score }: { score: number }) {
+  const gradientId = useId();
   const point = (angle: number, radius: number) => {
     const radians = angle * Math.PI / 180;
-    return [160 - radius * Math.cos(radians), 150 - radius * Math.sin(radians)];
+    return [160 - radius * Math.cos(radians), 148 - radius * Math.sin(radians)];
   };
-  let start = 0;
-  return <svg viewBox="0 0 320 175" className="report-score-gauge" role="img" aria-label={`Credit score ${score} out of 900`}>
-    {bands.map(item => {
-      const end = start + item.width / 99.5 * 180;
-      const a = point(start + 1, 116);
-      const b = point(end - 1, 116);
-      const path = `M ${a[0]} ${a[1]} A 116 116 0 0 1 ${b[0]} ${b[1]}`;
-      start = end;
-      return <g key={item.name} className={`report-tone-${item.tone}`}><path d={path} className="report-gauge-soft" /><path d={path} className="report-gauge-edge" /></g>;
+  const angle = Math.max(0, Math.min(180, (score - 300) / 600 * 180));
+  const marker = point(angle, 112);
+  return <svg viewBox="0 0 320 270" className="report-score-gauge" role="img" aria-label={`Credit score ${score} out of 900`}>
+    <defs><linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" className="report-dial-stop-low" /><stop offset="45%" className="report-dial-stop-mid" /><stop offset="72%" className="report-dial-stop-high" /><stop offset="100%" className="report-dial-stop-top" /></linearGradient></defs>
+    <circle cx="160" cy="148" r="94" className="report-dial-track" />
+    <circle cx="160" cy="148" r="77" className="report-dial-face" />
+    {angle > 0 && <path d={`M 48 148 A 112 112 0 0 1 ${marker[0]} ${marker[1]}`} stroke={`url(#${gradientId})`} className="report-dial-arc" />}
+    {[550, 650, 750].map(value => {
+      const tickAngle = (value - 300) / 600 * 180;
+      const a = point(tickAngle, 107); const b = point(tickAngle, 117); const label = point(tickAngle, 133);
+      return <g key={value}>{tickAngle < angle && <line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} className="report-dial-tick" />}<text x={label[0]} y={label[1]} textAnchor="middle" dominantBaseline="middle" className="report-gauge-label">{value}</text></g>;
     })}
-    <g transform={`translate(160 150) rotate(${Math.max(0, Math.min(180, (score - 300) / 600 * 180))})`}><path d="M -99 -7 L -99 7 L -113 0 Z" className="report-gauge-pointer" /></g>
-    <text x="15" y="164" className="report-gauge-label">300</text><text x="282" y="164" className="report-gauge-label">900</text>
+    <g transform={`translate(160 148) rotate(${angle})`}><path d="M -83 -9 Q -80 -10 -79 -7 L -79 7 Q -80 10 -83 9 L -96 0 Z" className="report-gauge-pointer" /></g>
+    <circle cx={marker[0]} cy={marker[1]} r="9" stroke={`url(#${gradientId})`} className="report-dial-marker" />
+    <text x="25" y="153" textAnchor="middle" className="report-gauge-label">300</text><text x="295" y="153" textAnchor="middle" className="report-gauge-label">900</text>
   </svg>;
 }
 
@@ -166,9 +170,8 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
         <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}><div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
       </> : <>
         <section className="report-section report-score-hero">
-          <div className="report-score-head"><p className="report-score-headline"><span className="report-score-greeting">{firstName},</span>{scoreHeadline.slice(firstName.length + 2)}</p></div>
+          <div className="report-score-head"><p className="report-score-headline"><span className="report-score-greeting">{firstName}, </span>{scoreHeadline.slice(firstName.length + 2)}</p></div>
           <div className="report-score-panel">
-          <div className="report-hero-bureau"><img src={equifaxLogo.url} alt="Equifax" /></div>
           <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
             <div className="report-slide">
               <div className="report-gauge-wrap">
@@ -194,6 +197,7 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
           <div className="report-dots" aria-label="Score views">{[0, 1].map(index => <Button key={index} variant="ghost" size="icon" aria-label={index === 0 ? "Show score overview" : "Show score trend"} aria-pressed={slide === index} onClick={() => { const el = carouselRef.current; if (el) el.scrollTo({ left: index * el.clientWidth, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }}><span className={slide === index ? "is-active" : ""} /></Button>)}</div>
           <div className="report-refresh-row">
             {daysLeft > 0 ? <span className="report-updated">Next update in {daysLeft} {daysLeft === 1 ? "day" : "days"}</span> : <Button variant="link" className="report-refresh" onClick={() => setLastPulled(new Date())}><RefreshCw />Refresh now</Button>}
+            <div className="report-hero-bureau"><span>By</span><img src={equifaxLogo.url} alt="Equifax" /></div>
           </div>
           <div className="report-hero-actions"><Button variant="ghost" onClick={download}><Download />Download Report</Button><Button variant="ghost" onClick={onBack}><MessageCircle />Talk to Arjun</Button></div>
           </div>
