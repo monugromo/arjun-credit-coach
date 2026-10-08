@@ -15,6 +15,7 @@ const bankLogos: Record<string, string> = {
   "HDFC Bank": hdfcLogo,
   "Axis Bank": axisLogo.url,
   "SBI Card": sbiLogo.url,
+  "SBI": sbiLogo.url,
   "Bajaj Finserv": bajajLogo.url,
   "ICICI Bank": iciciLogo.url,
   "TVS Credit": tvsLogo.url,
