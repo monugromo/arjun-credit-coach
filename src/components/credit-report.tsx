@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, Lightbulb, List, MessageCircle, RefreshCw, Wallet, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { DemoUser } from "@/lib/groscore-data";
@@ -44,7 +44,7 @@ function BureauFooter() {
   return <footer className="report-bureau"><span>Powered by</span><img className="report-bureau-logo" src={equifaxLogo.url} alt="Equifax" /></footer>;
 }
 
-export function CreditReport({ user, onBack, onStartChat, savings }: { user: DemoUser; onBack: () => void; onStartChat: () => void; savings: ReactNode }) {
+export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; onBack: () => void; onStartChat: () => void }) {
   const [view, setView] = useState<View>("score");
   const [tab, setTab] = useState<Tab>("cards");
   const [account, setAccount] = useState<Account | null>(null);
