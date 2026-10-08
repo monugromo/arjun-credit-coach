@@ -290,10 +290,11 @@
 .report-factors { border: 0; padding-top: 20px; padding-bottom: 8px; }
 .report-factors-title { margin-bottom: 4px; text-align: left; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
 .report-factor-row { display: flex; justify-content: initial; align-items: center; width: 100%; height: auto; min-height: 72px; gap: 14px; padding: 16px 0; border-radius: 0; white-space: normal; text-align: left; }
-.report-factor-row:hover, .report-account-row:hover, .rf-history-account:hover { background: var(--report-surface); }
+.credit-report .report-factor-row:hover, .credit-report .report-account-row:hover, .credit-report .rf-history-account:hover { background: transparent; color: var(--report-ink); }
+.credit-report .report-factor-row:focus-visible, .credit-report .report-account-row:focus-visible, .credit-report .rf-history-account:focus-visible { outline: 2px solid var(--report-brand); outline-offset: 2px; }
 .report-factor-row .report-icon { background: transparent; color: var(--report-ink); width: 24px; height: 24px; }
 .report-factor-row .report-icon svg { width: 22px; height: 22px; stroke-width: 1.5; }
-.report-factor-row:not(:last-child) .report-row-label { border-bottom: 1px solid var(--report-line); padding-bottom: 16px; margin-bottom: -16px; }
+.report-factor-row:not(:last-child) { border-bottom: 1px solid var(--report-line); }
 .report-icon { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 8px; background: var(--report-surface); color: var(--report-ink); }
 .report-icon svg { width: 20px; height: 20px; stroke-width: 1.75; }
 .report-row-label { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
@@ -406,10 +407,14 @@
 .rf-tip { display: flex; align-items: flex-start; gap: 12px; margin-top: 20px; padding: 16px; border-radius: 8px; background: var(--report-history-tip); }
 .rf-tip > svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; color: var(--report-brand); }
 .rf-tip p { font-size: 14px; line-height: 1.65; margin: 0; color: var(--report-ink); }
-.rf-accounts { padding-top: 24px; padding-bottom: 24px; border: 0; }
+.rf-accounts { padding-top: 20px; padding-bottom: 24px; margin-top: 24px; border: 0; border-top: 1px solid var(--report-line); }
+.rf-accounts .rf-list-heading { margin: 0 0 8px; font-size: 15px; font-weight: 600; }
+.rf-account-group h4 { display: flex; align-items: center; justify-content: space-between; margin: 8px 0 0; font-size: 13px; font-weight: 500; color: var(--report-subtle); }
+.rf-account-group h4 span { font-variant-numeric: tabular-nums; }
+.rf-account-group + .rf-account-group { padding-top: 16px; margin-top: 8px; border-top: 1px solid var(--report-line); }
 .rf-group { border: 1px solid var(--report-history-border); border-radius: 8px; padding: 0 16px; background: var(--report-paper); }
 .rf-history-account { display: flex; width: 100%; min-height: 76px; height: auto; gap: 14px; padding: 16px 0; text-align: left; white-space: normal; border-radius: 0; border: 0; background: transparent; }
-.rf-history-account:not(:last-child) .report-row-label { border-bottom: 1px solid var(--report-line); padding-bottom: 16px; margin-bottom: -16px; }
+.rf-history-account:not(:last-child) { border-bottom: 1px solid var(--report-line); }
 .rf-history-account > svg:first-child { width: 20px; height: 20px; flex-shrink: 0; color: var(--report-ink); }
 .rf-history-account > svg:last-child { width: 16px; height: 16px; flex-shrink: 0; color: var(--report-subtle); }
 .rf-history-status { max-width: 60px; flex-shrink: 0; font-size: 12px; font-weight: 400; color: var(--report-subtle); text-align: right; }
