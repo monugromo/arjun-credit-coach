@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { CalendarCheck, CheckCircle2, Info, MessageCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -14,6 +14,20 @@ type LoanDetails = { lender: string; name: string; last4: string; sanctioned: nu
 type Props = ({ kind: "card"; account: CardDetails } | { kind: "loan"; account: LoanDetails }) & { logoUrl?: string; onStartChat: () => void };
 const money = (value: number) => `₹${value.toLocaleString("en-IN")}`;
 const loanArtwork: Record<string, string> = { "Personal Loan": personalArt.url, "Consumer Loan": personalArt.url, "Auto Loan": vehicleArt.url, "Vehicle Loan": vehicleArt.url, "Two-wheeler Loan": vehicleArt.url, "Home Loan": homeArt.url };
+
+function UsageIndicator({ pct, tone, label }: { pct: number; tone: string; label: string }) {
+  const clamped = Math.max(0, Math.min(100, Math.round(pct)));
+  const bubbleStyle: CSSProperties = { left: `clamp(18px, ${clamped}%, calc(100% - 18px))` };
+  return (
+    <div className={`account-usage-indicator report-tone-${tone}`}>
+      <div className="account-usage-track" role="img" aria-label={`${clamped}%`}>
+        <div className="account-usage-fill" style={{ width: `${clamped}%` }} />
+        <span className="account-usage-bubble" style={bubbleStyle}>{clamped}%</span>
+      </div>
+      <p className="account-usage-label">{label}</p>
+    </div>
+  );
+}
 
 export function ReportAccountDetail(props: Props) {
   const [showInfo, setShowInfo] = useState(false);
@@ -35,9 +49,12 @@ export function ReportAccountDetail(props: Props) {
       </dl>
     </section>
     {card && <section className="report-section account-detail-usage">
-      <div><h3>Credit utilisation</h3><strong className={`report-tone-${creditUsageTone(card.pct)}`}>{card.pct}%</strong></div>
-      <progress className={`account-usage-meter report-tone-${creditUsageTone(card.pct)}`} value={card.pct} max={100} aria-label="Credit utilisation" />
-      <p>{money(card.used)} used of {money(card.limit)}</p>
+      <h3>Credit utilisation</h3>
+      <UsageIndicator pct={card.pct} tone={creditUsageTone(card.pct)} label={`${money(card.used)} used of ${money(card.limit)}`} />
+    </section>}
+    {loan && <section className="report-section account-detail-usage">
+      <h3>Loan outstanding</h3>
+      <UsageIndicator pct={loan.sanctioned > 0 ? ((loan.sanctioned - loan.outstanding) / loan.sanctioned) * 100 : 0} tone="positive" label={`${money(Math.max(0, loan.sanctioned - loan.outstanding))} principal paid`} />
     </section>}
     <section className="report-section account-detail-history">
       <h3>Payment history</h3>
