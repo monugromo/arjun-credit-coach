@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, MessageCircle, RefreshCw, Wallet } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, Clock, CreditCard, Download, FileText, Info, Layers, MessageCircle, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { DemoUser } from "@/lib/groscore-data";
+import { distressedFactors } from "@/lib/groscore-data";
 import equifaxLogo from "@/assets/equifax-logo.png.asset.json";
-import factorIllustration from "@/assets/report-factor-illustration.png";
+import paymentIllustration from "@/assets/report-payment.png";
+import usageIllustration from "@/assets/report-usage.png";
+import mixIllustration from "@/assets/report-mix.png";
+import enquiryIllustration from "@/assets/report-enquiries.png";
+import ageIllustration from "@/assets/report-age.png";
 import { gaugeScoreAt, GAUGE_DURATION_MS } from "@/lib/report-animation";
 import { recentScoreRecords, scoreRecordDate } from "@/lib/report-trend";
 import { ReportBankMark } from "@/components/report-bank-mark";
@@ -32,7 +37,9 @@ const factors = [
   { key: "usage", title: "Credit usage", subtitle: "61% of your limit", value: "61%", unit: "USED", tone: "warning", icon: CreditCard, explanation: "Your report shows 61% credit utilisation. Individual card balances and limits are listed below.", advice: "Make room on your cards", note: "Pay down outstanding balances and keep new spending manageable." },
   { key: "mix", title: "Credit mix", subtitle: "3 cards · 4 loans", value: "7", unit: "ACCOUNTS", tone: "positive", icon: Layers, explanation: "Your report contains three credit cards and four loans. Each account contributes to your credit history.", advice: "Look after the credit you have", note: "You don't need to open a new account just to change your credit mix." },
   { key: "enquiries", title: "New enquiries", subtitle: "5 in last 6 months", value: "5", unit: "PULLS", tone: "danger", icon: FileText, explanation: "Five credit enquiries appear on your report in the last six months. Review them below to check that you recognise each one.", advice: "Review recent applications", note: "If an enquiry looks unfamiliar, talk to Arjun." },
+  { key: "age", title: "Credit age", subtitle: "Not available", value: "Not available", unit: "AVERAGE AGE", tone: "positive", icon: Clock, explanation: "Credit age reflects how long your credit accounts have been open. A longer history helps show how you manage credit over time.", advice: "Look after your credit history", note: "" },
 ] as const;
+const factorIllustrations = { payment: paymentIllustration, usage: usageIllustration, mix: mixIllustration, enquiries: enquiryIllustration, age: ageIllustration };
 const bands = [
   { name: "Poor", tone: "danger", width: 41.5, center: 20.75 },
   { name: "Fair", tone: "warning", width: 16.5, center: 49.75 },
@@ -121,8 +128,10 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   const trendLast = trendRecords[trendRecords.length - 1];
   const trendChange = trendFirst && trendLast && trendRecords.length > 1 ? trendLast.score - trendFirst.score : undefined;
   const isNTC = user.key === "ntc";
-  const factor = factors.find((item) => item.key === view);
-  const factorTotal = view === "payment" ? `${loans.length} loan accounts` : view === "usage" ? `${cards.length} credit cards` : view === "mix" ? `${cards.length + loans.length} total accounts` : `${enquiries.length} enquiries · Last 6 months`;
+  const creditAge = user.key === "distressed" ? distressedFactors.find(item => item.name === "Credit Age") : undefined;
+  const reportFactors = factors.map(item => item.key === "age" ? { ...item, value: creditAge?.note.replace("yr avg", "years") ?? "Not available", subtitle: creditAge?.note.replace("yr avg", "years average age") ?? "Not available" } : item);
+  const factor = reportFactors.find((item) => item.key === view);
+  const factorTotal = view === "payment" ? `${loans.length} loan accounts` : view === "usage" ? `${cards.length} credit cards` : view === "mix" || view === "age" ? `${cards.length + loans.length} total accounts` : `${enquiries.length} enquiries · Last 6 months`;
   const currentCard = account?.kind === "card" ? cards[account.index] : undefined;
   const currentLoan = account?.kind === "loan" ? loans[account.index] : undefined;
   const band = user.band ?? "Poor";
@@ -189,17 +198,17 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
       </> : factor ? <>
         <section className="report-section rf-hero">
           <div className="rf-hero-text"><h2>{factor.title}</h2><span className="rf-total-count">{factorTotal}</span><p>{view === "payment" ? "Paying on time impacts your credit score the most. It shows that you are a trustworthy borrower." : factor.explanation}</p></div>
-          <img className="rf-history-illustration" src={factorIllustration} alt="" loading="lazy" width={512} height={512} />
+          <img className="rf-history-illustration" src={factorIllustrations[factor.key]} alt="" loading="lazy" width={512} height={512} />
         </section>
         <section className="report-section rf-metric">
-          <small>{view === "payment" ? "Payments on time" : view === "usage" ? "Credit usage" : view === "mix" ? "Credit mix" : "Enquiries"}</small>
-          <div className={`rf-metric-row${view === "usage" || view === "mix" ? " rf-metric-expanded" : ""}`}>
+          <small>{view === "payment" ? "Payments on time" : view === "usage" ? "Credit usage" : view === "mix" ? "Credit mix" : view === "age" ? "Average credit age" : "Enquiries"}</small>
+          <div className={`rf-metric-row${view === "usage" || view === "mix" || view === "age" ? " rf-metric-expanded" : ""}`}>
             <strong>{view === "usage" ? `${money(totalUsed)} / ${money(totalLimit)}` : view === "mix" ? `${cards.length} credit cards · ${loans.length} loans` : view === "enquiries" ? enquiries.length : factor.value}</strong>
             {view === "usage" && <span>{factor.value} reported usage</span>}
           </div>
-          <span className={`rf-pill rf-pill-${factor.tone}`}>{factor.tone === "positive" ? "Good" : factor.tone === "warning" ? "Fair" : "Needs work"}<Info size={14} /></span>
+          {(view !== "age" || creditAge) && <span className={`rf-pill rf-pill-${factor.tone}`}>{factor.tone === "positive" ? "Good" : factor.tone === "warning" ? "Fair" : "Needs work"}<Info size={14} /></span>}
         </section>
-        <section className="report-section rf-accounts"><div className="report-account-stack">{view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <>{cardRows}{loanRows}</> : <div className="report-account-list">{loans.map((loan, index) => <Button variant="ghost" key={loan.name} className="rf-history-account" onClick={() => openAccount({ kind: "loan", index })}><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.lender}</strong><small>{loan.name}</small></span><span className="rf-history-status">{loan.status}</span><ChevronRight /></Button>)}</div>}</div></section>
+        <section className="report-section rf-accounts"><div className="report-account-stack">{view === "age" ? <p className="report-description">Account opening dates are not available in this report.</p> : view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <>{cardRows}{loanRows}</> : <div className="report-account-list">{loans.map((loan, index) => <Button variant="ghost" key={loan.name} className="rf-history-account" onClick={() => openAccount({ kind: "loan", index })}><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.lender}</strong><small>{loan.name}</small></span><span className="rf-history-status">{loan.status}</span><ChevronRight /></Button>)}</div>}</div></section>
       </> : view === "accounts" ? <>
         <section className="report-section report-detail-heading"><span className="report-eyebrow">YOUR CREDIT ACCOUNTS</span><h2>Your cards & loans</h2><p>3 cards · 4 loans</p></section>
         <div className="report-account-tabs" role="tablist" aria-label="Credit accounts">{([ ["cards", "Cards", cards.length], ["loans", "Loans", loans.length], ["enquiries", "Enquiries", enquiries.length] ] as const).map(([key, label, count]) => <Button variant="ghost" key={key} role="tab" aria-selected={tab === key} className={tab === key ? "report-tab is-active" : "report-tab"} onClick={() => setTab(key)}>{label}<span>{count}</span></Button>)}</div>
@@ -245,7 +254,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         </section>
 
 
-        <section className="report-section report-factors" role="tabpanel" aria-label="Score"><h3 className="report-factors-title">Credit report summary</h3><div>{factors.map(item => <Button variant="ghost" className="report-factor-row" key={item.key} onClick={() => navigate(item.key)}><span className="report-icon"><item.icon /></span><span className="report-row-label"><strong>{item.title}</strong><small>{item.subtitle}</small></span><span className="report-status-word">{item.tone === "positive" ? "Good" : item.tone === "warning" ? "Fair" : "Poor"}</span><ChevronRight className="report-chevron" /></Button>)}</div></section>
+        <section className="report-section report-factors" role="tabpanel" aria-label="Score"><h3 className="report-factors-title">Credit report summary</h3><div>{reportFactors.map(item => <Button variant="ghost" className="report-factor-row" key={item.key} onClick={() => navigate(item.key)}><span className="report-icon"><item.icon /></span><span className="report-row-label"><strong>{item.title}</strong><small>{item.subtitle}</small></span><span className="report-status-word">{item.key === "age" && !creditAge ? "—" : item.tone === "positive" ? "Good" : item.tone === "warning" ? "Fair" : "Poor"}</span><ChevronRight className="report-chevron" /></Button>)}</div></section>
       </>}
       <BureauFooter />
     </div>
