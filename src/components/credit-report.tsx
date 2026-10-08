@@ -63,14 +63,14 @@ function ScoreGauge({ score, animationKey, scoreRef }: { score: number; animatio
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let frame = 0;
     const started = performance.now();
-    const update = (now: number) => {
-      const elapsed = now - started;
+    const update = () => {
+      const elapsed = performance.now() - started;
       const value = gaugeScoreAt(elapsed, score);
       needleRef.current?.setAttribute("transform", `rotate(${(value - 300) / 600 * 180})`);
       if (scoreRef.current) scoreRef.current.textContent = String(Math.round(value));
       if (elapsed < GAUGE_DURATION_MS) frame = requestAnimationFrame(update);
     };
-    update(started);
+    update();
     return () => {
       cancelAnimationFrame(frame);
       needleRef.current?.setAttribute("transform", `rotate(${angle})`);
