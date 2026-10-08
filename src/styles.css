@@ -229,7 +229,7 @@
 .report-range-track > span:nth-child(3) { background: var(--report-positive); }
 .report-range-track > span:nth-child(4) { background: var(--report-positive-soft); }
 .report-range-marker { position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 100%; background: var(--report-ink); border: 3px solid var(--report-paper); box-shadow: 0 1px 4px color-mix(in oklab, var(--report-ink) 35%, transparent); transform: translate(-50%, -50%); }
-.report-range-labels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-top: 12px; color: var(--report-subtle); font-size: 11px; font-weight: 500; text-align: center; }
+.report-range-labels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-top: 18px; color: var(--report-subtle); font-size: 11px; font-weight: 500; text-align: center; }
 .report-trend-card { padding-top: 4px; }
 .report-trend-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 14px; }
 .report-trend-head strong, .report-trend-head span { font-weight: 600; }
