@@ -366,38 +366,38 @@
 .account-detail-identity > div { min-width: 0; flex: 1; }
 .account-detail-identity .report-bank-mark { margin-top: 3px; }
 .account-detail-title { display: flex; align-items: center; gap: 6px; }
-.account-detail-title h2 { font-size: 22px; font-weight: 500; }
+.account-detail-title h2 { font-size: 20px; font-weight: 600; line-height: 1.4; letter-spacing: 0; }
 .account-detail-title button { width: 30px; height: 30px; flex-shrink: 0; color: var(--report-subtle); }
 .account-detail-title svg { width: 17px; height: 17px; }
 .account-detail-identity p { color: var(--report-subtle); font-size: 14px; margin-top: 2px; }
-.account-detail-identity small { display: block; color: var(--report-subtle); font-size: 12px; margin-top: 4px; }
-.account-detail-art { display: block; width: 100%; max-width: 360px; height: 204px; margin: 16px auto 24px; object-fit: contain; }
+.account-detail-identity small { display: block; color: var(--report-subtle); font-size: 14px; margin-top: 4px; }
+.account-detail-art { display: block; width: 100%; max-width: 320px; height: 180px; margin: 16px auto 20px; object-fit: contain; }
 .account-detail-balances { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-.account-detail-balances dt { font-size: 13px; color: var(--report-subtle); margin-bottom: 4px; }
-.account-detail-balances dd { font-size: 24px; font-weight: 500; line-height: 1.4; overflow-wrap: anywhere; }
-.report-account-detail .report-section h3 { font-size: 15px; font-weight: 600; }
+.account-detail-balances dt { font-size: 14px; color: var(--report-subtle); margin-bottom: 4px; }
+.account-detail-balances dd { font-size: 22px; font-weight: 600; line-height: 1.4; letter-spacing: 0; overflow-wrap: anywhere; }
+.report-account-detail .report-section h3 { font-size: 16px; font-weight: 600; }
 .account-detail-usage > div, .account-detail-payment { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-.account-detail-usage strong { font-size: 22px; font-weight: 600; }
-.account-detail-usage p { margin-top: 8px; font-size: 12px; color: var(--report-subtle); }
+.account-detail-usage strong { font-size: 20px; font-weight: 600; }
+.account-detail-usage p { margin-top: 8px; font-size: 14px; color: var(--report-subtle); }
 .account-usage-meter { display: block; appearance: none; width: 100%; height: 5px; border: 0; border-radius: 4px; overflow: hidden; margin-top: 16px; background: var(--report-line); }
 .account-usage-meter::-webkit-progress-bar { background: var(--report-line); }
 .account-usage-meter::-webkit-progress-value { background: currentColor; }
 .account-usage-meter::-moz-progress-bar { background: currentColor; }
-.account-detail-payment { margin-top: 18px; font-size: 13px; }
+.account-detail-payment { margin-top: 18px; font-size: 14px; }
 .account-detail-payment > span { color: var(--report-subtle); }
 .account-detail-payment strong { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
 .account-detail-payment svg { width: 16px; height: 16px; }
 .account-history-unavailable { display: flex; gap: 12px; align-items: flex-start; margin-top: 20px; padding: 18px 0 0; border-top: 1px dashed var(--report-line); }
 .account-history-unavailable > svg { width: 22px; height: 22px; flex-shrink: 0; color: var(--report-subtle); }
-.account-history-unavailable strong { font-size: 13px; font-weight: 500; }
-.account-history-unavailable p { font-size: 12px; line-height: 1.65; color: var(--report-subtle); margin-top: 4px; }
+.account-history-unavailable strong { font-size: 14px; font-weight: 500; }
+.account-history-unavailable p { font-size: 14px; line-height: 1.6; color: var(--report-subtle); margin-top: 4px; }
 .account-detail-facts dl { display: grid; gap: 24px; margin-top: 24px; }
-.account-detail-facts dt { font-size: 13px; color: var(--report-subtle); margin-bottom: 4px; }
+.account-detail-facts dt { font-size: 14px; color: var(--report-subtle); margin-bottom: 4px; }
 .account-detail-facts dd { font-size: 16px; font-weight: 500; }
 .account-detail-facts .account-value-unavailable { color: var(--report-subtle); font-size: 14px; font-weight: 400; }
 .account-detail-support { border-bottom: 0; }
-.account-detail-support p { font-size: 13px; line-height: 1.65; color: var(--report-subtle); }
-.account-detail-support button { width: 100%; min-height: 46px; height: auto; margin-top: 16px; border-color: var(--report-brand); color: var(--report-brand); border-radius: 8px; box-shadow: none; font-size: 13px; white-space: normal; }
+.account-detail-support p { font-size: 14px; line-height: 1.6; color: var(--report-subtle); }
+.account-detail-support button { width: 100%; min-height: 46px; height: auto; margin-top: 16px; border-color: var(--report-brand); color: var(--report-brand); border-radius: 8px; box-shadow: none; font-size: 14px; white-space: normal; }
 .report-detail-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid var(--report-line); padding: 0 var(--report-gutter); }
 .report-detail-stats > div { display: flex; flex-direction: column; gap: 8px; padding: 20px 0; min-width: 0; }
 .report-detail-stats > div + div { padding-left: 16px; }
