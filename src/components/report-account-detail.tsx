@@ -8,12 +8,14 @@ import cardArt from "@/assets/account-art/account-credit-card.png.asset.json";
 import personalArt from "@/assets/account-art/account-personal.png.asset.json";
 import vehicleArt from "@/assets/account-art/account-vehicle.png.asset.json";
 import homeArt from "@/assets/account-art/account-home.png.asset.json";
+import goldArt from "@/assets/account-art/gold.png.asset.json";
+import otherArt from "@/assets/account-art/other.png.asset.json";
 
 type CardDetails = { bank: string; last4: string; limit: number; used: number; pct: number };
 type LoanDetails = { lender: string; name: string; last4: string; sanctioned: number; outstanding: number; emi: number; status: string; tone: string };
 type Props = ({ kind: "card"; account: CardDetails } | { kind: "loan"; account: LoanDetails }) & { logoUrl?: string; seed?: string; onStartChat: () => void };
 const money = (value: number) => `₹${value.toLocaleString("en-IN")}`;
-const loanArtwork: Record<string, string> = { "Personal Loan": personalArt.url, "Consumer Loan": personalArt.url, "Auto Loan": vehicleArt.url, "Vehicle Loan": vehicleArt.url, "Two-wheeler Loan": vehicleArt.url, "Home Loan": homeArt.url };
+const loanArtwork: Record<string, string> = { "Personal Loan": personalArt.url, "Consumer Loan": personalArt.url, "Auto Loan": vehicleArt.url, "Vehicle Loan": vehicleArt.url, "Two-wheeler Loan": vehicleArt.url, "Home Loan": homeArt.url, "Gold Loan": goldArt.url, "Education Loan": otherArt.url, "Other Loan": otherArt.url };
 
 function UsageIndicator({ pct, tone, label }: { pct: number; tone: string; label: string }) {
   const clamped = Math.max(0, Math.min(100, Math.round(pct)));

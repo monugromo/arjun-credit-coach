@@ -26,6 +26,8 @@ const loans = [
   { name: "Consumer Loan", lender: "Bajaj Finserv", last4: "3418", outstanding: 42000, emi: 3200, sanctioned: 55000, status: "On time", tone: "positive" },
   { name: "Auto Loan", lender: "ICICI Bank", last4: "9034", outstanding: 228000, emi: 12800, sanctioned: 600000, status: "1 DPD", tone: "warning" },
   { name: "Two-wheeler Loan", lender: "TVS Credit", last4: "7745", outstanding: 18000, emi: 1650, sanctioned: 65000, status: "On time", tone: "positive" },
+  { name: "Gold Loan", lender: "SBI", last4: "5512", outstanding: 96000, emi: 4100, sanctioned: 150000, status: "On time", tone: "positive" },
+  { name: "Education Loan", lender: "Kotak Bank", last4: "8807", outstanding: 310000, emi: 9200, sanctioned: 400000, status: "On time", tone: "positive" },
 ] as const;
 const enquiries = [
   { lender: "Kotak Bank", product: "Credit Card", date: "12 May 2026" },
@@ -37,7 +39,7 @@ const enquiries = [
 const factors = [
   { key: "payment", title: "Payment history", subtitle: "97% of EMIs paid on time", value: "97%", unit: "ON TIME", tone: "warning", icon: CalendarCheck, explanation: "Paying on time impacts your CIBIL score the most. It shows that you are a trustworthy borrower.", advice: "Keep every payment on time", note: "Set up reminders or auto-pay for your next bills." },
   { key: "usage", title: "Credit usage", subtitle: "61% of your limit", value: "61%", unit: "USED", tone: "warning", icon: CreditCard, explanation: "Credit usage tells you how much credit you used out of your total credit limit.", advice: "Make room on your cards", note: "Pay down outstanding balances and keep new spending manageable." },
-  { key: "mix", title: "Credit mix", subtitle: "3 cards · 4 loans", value: "7", unit: "ACCOUNTS", tone: "positive", icon: Layers, explanation: "Credit mix shows all your credit cards and loans and how diverse they are.", advice: "Look after the credit you have", note: "You don't need to open a new account just to change your credit mix." },
+  { key: "mix", title: "Credit mix", subtitle: "3 cards · 6 loans", value: "9", unit: "ACCOUNTS", tone: "positive", icon: Layers, explanation: "Credit mix shows all your credit cards and loans and how diverse they are.", advice: "Look after the credit you have", note: "You don't need to open a new account just to change your credit mix." },
   { key: "enquiries", title: "New enquiries", subtitle: "5 in the last 6 months", value: "5", unit: "PULLS", tone: "danger", icon: FileText, explanation: "An enquiry occurs when a lending institution checks your credit report when you've applied for a credit product (loans, credit cards, etc.)", advice: "Review recent applications", note: "If an enquiry looks unfamiliar, talk to Arjun." },
   { key: "age", title: "Credit age", subtitle: "Not available", value: "Not available", unit: "AVERAGE AGE", tone: "positive", icon: Clock, explanation: "Credit age reflects how long credit accounts have been open. A longer history helps demonstrate consistent credit management over time.", advice: "Look after your credit history", note: "" },
 ] as const;
