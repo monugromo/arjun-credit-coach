@@ -71,7 +71,7 @@ export function ReportAccountDetail(props: Props) {
         {MONTHS.map(month => (
           <div key={month} className="account-history-cell account-history-unreported">
             <span className="account-history-month">{month}</span>
-            <span className="account-history-missing" aria-label="Not reported">–</span>
+            <i className="account-history-dot account-history-unreported" aria-label="Not reported" />
           </div>
         ))}
       </div>
