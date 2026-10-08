@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, CreditCard, Download, FileText, Info, Layers, Lightbulb, MessageCircle, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -54,8 +54,8 @@ function BureauFooter() {
 
 const openedScoreGauges = new Set<string>();
 
-function ScoreGauge({ score, animationKey, scoreRef }: { score: number; animationKey: string; scoreRef: RefObject<HTMLElement | null> }) {
-  const needleRef = useRef<SVGGElement>(null);
+function ScoreGauge({ score, animationKey, band, onInfo }: { score: number; animationKey: string; band: string; onInfo: () => void }) {
+  const [displayScore, setDisplayScore] = useState(score);
   const angle = Math.max(0, Math.min(180, (score - 300) / 600 * 180));
   useEffect(() => {
     if (openedScoreGauges.has(animationKey)) return;
@@ -65,8 +65,7 @@ function ScoreGauge({ score, animationKey, scoreRef }: { score: number; animatio
     const update = () => {
       const elapsed = Date.now() - started;
       const value = gaugeScoreAt(elapsed, score);
-      needleRef.current?.setAttribute("transform", `rotate(${(value - 300) / 600 * 180})`);
-      if (scoreRef.current) scoreRef.current.textContent = String(Math.round(value));
+      setDisplayScore(value);
     };
     update();
     const timer = window.setInterval(update, 16);
@@ -74,16 +73,15 @@ function ScoreGauge({ score, animationKey, scoreRef }: { score: number; animatio
     return () => {
       window.clearInterval(timer);
       window.clearTimeout(finish);
-      needleRef.current?.setAttribute("transform", `rotate(${angle})`);
-      if (scoreRef.current) scoreRef.current.textContent = String(score);
+      setDisplayScore(score);
     };
-  }, [animationKey, angle, score, scoreRef]);
+  }, [animationKey, angle, score]);
   const point = (angle: number, radius: number) => {
     const radians = angle * Math.PI / 180;
     return [160 - radius * Math.cos(radians), 150 - radius * Math.sin(radians)];
   };
   let start = 0;
-  return <svg viewBox="0 0 320 175" className="report-score-gauge" role="img" aria-label={`Credit score ${score} out of 900`}>
+  return <><svg viewBox="0 0 320 175" className="report-score-gauge" role="img" aria-label={`Credit score ${score} out of 900`}>
     {bands.map(item => {
       const end = start + item.width / 99.5 * 180;
       const a = point(start + 1, 116);
@@ -92,9 +90,9 @@ function ScoreGauge({ score, animationKey, scoreRef }: { score: number; animatio
       start = end;
       return <g key={item.name} className={`report-tone-${item.tone}`}><path d={path} className="report-gauge-soft" /><path d={path} className="report-gauge-edge" /></g>;
     })}
-    <g transform="translate(160 150)"><g ref={needleRef} className="report-gauge-needle" transform={`rotate(${angle})`}><path d="M -99 -7 L -99 7 L -113 0 Z" className="report-gauge-pointer" /></g></g>
+    <g transform="translate(160 150)"><g className="report-gauge-needle" transform={`rotate(${(displayScore - 300) / 600 * 180})`}><path d="M -99 -7 L -99 7 L -113 0 Z" className="report-gauge-pointer" /></g></g>
     <text x="15" y="164" className="report-gauge-label">300</text><text x="282" y="164" className="report-gauge-label">900</text>
-  </svg>;
+  </svg><div className="report-gauge-value"><strong>{Math.round(displayScore)}</strong><div className="report-gauge-band"><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" aria-haspopup="dialog" onClick={onInfo}><Info /></Button></div><span className="report-score-change"><ArrowUpRight />+12 this month</span></div></>;
 }
 
 export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; onBack: () => void; onStartChat: () => void }) {
@@ -103,7 +101,6 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
   const [account, setAccount] = useState<Account | null>(null);
   const [showInfo, setShowInfo] = useState(false);
   const [slide, setSlide] = useState(0);
-  const scoreValueRef = useRef<HTMLElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [lastPulled, setLastPulled] = useState(() => new Date(REPORT_LAST_PULLED));
   const daysLeft = Math.max(0, REFRESH_CYCLE_DAYS - Math.floor((Date.now() - lastPulled.getTime()) / 86400000));
@@ -198,8 +195,7 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
           <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
             <div className="report-slide">
               <div className="report-gauge-wrap">
-                <ScoreGauge score={score} animationKey={user.phone} scoreRef={scoreValueRef} />
-                <div className="report-gauge-value"><strong ref={scoreValueRef}>{score}</strong><div className="report-gauge-band"><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" aria-haspopup="dialog" onClick={() => setShowInfo(true)}><Info /></Button></div><span className="report-score-change"><ArrowUpRight />+12 this month</span></div>
+                <ScoreGauge score={score} animationKey={user.phone} band={band} onInfo={() => setShowInfo(true)} />
               </div>
             </div>
             <div className="report-slide">
