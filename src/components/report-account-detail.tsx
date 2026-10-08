@@ -58,7 +58,8 @@ export function ReportAccountDetail(props: Props) {
     <section className="report-section account-detail-hero">
       <div className="account-detail-identity">
         <ReportBankMark name={lender} logoUrl={props.logoUrl} />
-        <div className="account-detail-copy"><div className="account-detail-title"><h2>{lender}</h2><Button variant="ghost" size="icon" aria-label="About this account" onClick={() => setShowInfo(true)}><Info /></Button></div><p className="account-detail-subtitle"><span>{product}</span><span>A/C No. XXXX{props.account.last4}</span></p></div>
+        <div className="account-detail-copy"><div className="account-detail-title"><h2>{lender}</h2><Button variant="ghost" size="icon" aria-label="About this account" onClick={() => setShowInfo(true)}><Info /></Button></div><p className="account-detail-subtitle"><span>{product}</span></p></div>
+        <p className="account-detail-account">Acc No. xx{props.account.last4}</p>
       </div>
       <div className="account-art-stage">
         <div className="account-art-stage-bg" aria-hidden="true">
