@@ -178,7 +178,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
     <header className="flex h-14 shrink-0 items-center gap-3 bg-primary-deep px-3 text-primary-foreground">
       <Button variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground" aria-label="Back from credit report" onClick={goBack}><ArrowLeft /></Button>
       <h1 className="flex-1 text-[17px] font-semibold">Credit report</h1>
-      {!isNTC && <Button variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground" title="Download credit report" aria-label="Download credit report" onClick={download}><Download /></Button>}
+      {!isNTC && <Button variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground" aria-label="Download credit report" onClick={download}><Download /></Button>}
     </header>
     <div className="report-scroll min-h-0 flex-1 overflow-y-auto" ref={scrollRef}>
       {isNTC ? <>
