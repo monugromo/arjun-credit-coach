@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Match all loan and credit card detail pages to the supplied account reference using GroScore styling and available data; verify every account and back navigation.
+- [x] Match all loan and credit card detail pages to the supplied account reference using GroScore styling and available data; verified all seven accounts on both samples, artwork, back navigation, narrow-screen spacing and Arjun handoff.
 
 - [x] Remove “This month”, refine score spacing and +12 sizing, and use a fixed 300–900 trend with single-line dates and all available recorded values; verified both samples (only one recorded pull is available).
 
