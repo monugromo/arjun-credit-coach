@@ -61,18 +61,19 @@ function ScoreGauge({ score, animationKey, scoreRef }: { score: number; animatio
     if (openedScoreGauges.has(animationKey)) return;
     openedScoreGauges.add(animationKey);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let frame = 0;
-    const started = performance.now();
+    const started = Date.now();
     const update = () => {
-      const elapsed = performance.now() - started;
+      const elapsed = Date.now() - started;
       const value = gaugeScoreAt(elapsed, score);
       needleRef.current?.setAttribute("transform", `rotate(${(value - 300) / 600 * 180})`);
       if (scoreRef.current) scoreRef.current.textContent = String(Math.round(value));
-      if (elapsed < GAUGE_DURATION_MS) frame = requestAnimationFrame(update);
     };
     update();
+    const timer = window.setInterval(update, 16);
+    const finish = window.setTimeout(() => { update(); window.clearInterval(timer); }, GAUGE_DURATION_MS);
     return () => {
-      cancelAnimationFrame(frame);
+      window.clearInterval(timer);
+      window.clearTimeout(finish);
       needleRef.current?.setAttribute("transform", `rotate(${angle})`);
       if (scoreRef.current) scoreRef.current.textContent = String(score);
     };
