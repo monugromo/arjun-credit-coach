@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { Check, X, ChevronLeft, ChevronRight, Info, MessageCircle } from "lucide-react";
+import { Check, X, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { ReportBankMark } from "@/components/report-bank-mark";
@@ -58,7 +58,7 @@ export function ReportAccountDetail(props: Props) {
     <section className="report-section account-detail-hero">
       <div className="account-detail-identity">
         <ReportBankMark name={lender} logoUrl={props.logoUrl} />
-        <div className="account-detail-copy"><div className="account-detail-title"><h2>{lender}</h2><Button variant="ghost" size="icon" aria-label="About this account" onClick={() => setShowInfo(true)}><Info /></Button></div><p className="account-detail-subtitle"><span>{product}</span><span>(A/C No. XXXX{props.account.last4})</span></p></div>
+        <div className="account-detail-copy"><div className="account-detail-title"><h2>{lender}</h2><Button variant="ghost" size="icon" aria-label="About this account" onClick={() => setShowInfo(true)}><Info /></Button></div><p className="account-detail-subtitle"><span>{product}</span><span>A/C No. XXXX{props.account.last4}</span></p></div>
       </div>
       <div className="account-art-stage">
         <div className="account-art-stage-bg" aria-hidden="true">
@@ -112,10 +112,9 @@ export function ReportAccountDetail(props: Props) {
         <div><dt>Account status</dt><dd className={props.information ? "account-facts-status" : "account-value-unavailable"}>{props.information?.status ?? "Not reported"}</dd></div>
         <div><dt>Account opened on</dt><dd className={props.information ? undefined : "account-value-unavailable"}>{props.information?.openedOn ?? "Not reported"}</dd></div>
         <div><dt>Account closed on</dt><dd className={props.information ? undefined : "account-value-unavailable"}>{props.information?.closedOn ?? (props.information?.status === "Active" ? "Not closed" : "Not reported")}</dd></div>
-        <div><dt>Last updated by bureau</dt><dd className={props.information ? undefined : "account-value-unavailable"}>{props.information?.updatedOn ?? "Not reported"}</dd></div>
       </dl>
     </section>
-    <section className="report-section account-detail-support"><p>This information is based on what the lender reports to Equifax.</p><Button variant="outline" onClick={props.onStartChat}><MessageCircle />Report an issue to Arjun</Button></section>
+    <section className="report-section account-detail-support"><p>This information is based on what the lender reports to Equifax.</p><Button variant="link" onClick={props.onStartChat}>Report an issue to Arjun</Button></section>
     <Dialog open={showInfo} onOpenChange={setShowInfo}><DialogContent className="credit-report report-score-dialog"><DialogTitle>About this account</DialogTitle><DialogDescription>{props.information?.sample ? "Account information includes sample statuses and dates for this demo, not verified bureau records. " : `Balances and payment information are supplied by ${lender} to Equifax. `}Payment status is separate from whether an account is active or closed.</DialogDescription></DialogContent></Dialog>
   </div>;
 }

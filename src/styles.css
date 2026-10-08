@@ -361,7 +361,7 @@
 .report-loan-values strong { font-size: 12px; font-weight: 600; overflow-wrap: anywhere; }
 .report-enquiry-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 16px 0; border: 0; border-radius: 0; }
 .report-enquiry-row time { color: var(--report-subtle); font-size: 12px; flex-shrink: 0; }
-.account-detail-hero { padding-top: 24px; padding-bottom: 24px; }
+.account-detail-hero { padding-top: 24px; padding-bottom: 24px; border-bottom: 0; }
 .account-detail-identity { display: flex; align-items: flex-start; gap: 12px; }
 .account-detail-copy { min-width: 0; flex: 1; }
 .account-detail-identity .report-bank-mark { margin-top: 2px; flex: 0 0 34px; }
@@ -369,8 +369,8 @@
 .account-detail-title h2 { font-size: 16px; font-weight: 600; line-height: 1.4; letter-spacing: 0; }
 .account-detail-title button { width: 28px; height: 28px; flex-shrink: 0; color: var(--report-subtle); }
 .account-detail-title svg { width: 16px; height: 16px; }
-.account-detail-subtitle { display: flex; flex-wrap: wrap; column-gap: 5px; row-gap: 2px; color: var(--report-subtle); font-size: 12px; line-height: 1.5; margin-top: 2px; }
-.account-detail-subtitle span { white-space: nowrap; }
+.account-detail-subtitle { display: flex; flex-direction: column; gap: 2px; color: var(--report-subtle); font-size: 12px; line-height: 1.5; margin-top: 2px; }
+.account-detail-subtitle span { overflow-wrap: anywhere; }
 .account-art-stage { position: relative; display: flex; justify-content: center; padding: 28px 24px 24px; margin: 4px 0 8px; }
 .account-art-stage-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
 .account-art-ring { position: absolute; border-radius: 50%; }
@@ -396,7 +396,7 @@
 .account-detail-payment strong { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
 .account-detail-payment svg { width: 16px; height: 16px; }
 .report-account-detail .account-detail-history { padding: 0; }
-.account-history-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 20px var(--report-gutter); border-bottom: 1px solid var(--report-line); }
+.account-history-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 20px var(--report-gutter); }
 .account-history-head h3 { margin: 0; }
 .account-history-year { display: inline-flex; align-items: center; gap: 2px; }
 .account-history-year span { font-size: 14px; font-weight: 600; min-width: 44px; text-align: center; }
@@ -412,13 +412,13 @@
 .account-history-unreported .account-history-dot, i.account-history-unreported { background: transparent; border: 1.5px solid var(--report-line); }
 .account-history-month { font-size: 11px; font-weight: 500; letter-spacing: 0; color: var(--report-subtle); }
 .account-history-missing { display: grid; place-items: center; width: 20px; height: 20px; color: var(--report-faint); font-size: 16px; line-height: 1; }
-.account-history-legend { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; padding: 20px 12px; border-top: 1px solid var(--report-line); }
+.account-history-legend { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; padding: 20px 12px; }
 .account-history-legend span { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--report-ink); }
 .account-history-recorded { margin: 0; padding: 16px var(--report-gutter); border-top: 1px solid var(--report-line); color: var(--report-subtle); font-size: 12px; font-weight: 400; line-height: 1.6; text-align: center; }
 .account-facts-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; }
 .account-facts-heading > span { font-size: 11px; color: var(--report-subtle); }
 .account-detail-facts dl { display: grid; gap: 0; margin-top: 16px; }
-.account-detail-facts dl > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--report-line); }
+.account-detail-facts dl > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: baseline; gap: 16px; padding: 14px 0; }
 .account-detail-facts dl > div:last-child { border-bottom: 0; padding-bottom: 0; }
 .account-detail-facts dt { font-size: 12px; line-height: 1.6; color: var(--report-subtle); }
 .account-detail-facts dd { font-size: 13px; line-height: 1.6; font-weight: 500; text-align: right; overflow-wrap: anywhere; }
@@ -427,7 +427,7 @@
 .account-facts-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--report-brand); flex-shrink: 0; }
 .account-detail-support { border-bottom: 0; }
 .account-detail-support p { font-size: 14px; line-height: 1.6; color: var(--report-subtle); }
-.account-detail-support button { width: 100%; min-height: 46px; height: auto; margin-top: 16px; border-color: var(--report-brand); color: var(--report-brand); border-radius: 8px; box-shadow: none; font-size: 14px; white-space: normal; }
+.account-detail-support button { width: auto; min-height: 44px; height: auto; padding: 10px 0; margin-top: 8px; color: var(--report-ink); border: 0; background: transparent; box-shadow: none; font-size: 14px; white-space: normal; text-align: left; justify-content: flex-start; text-decoration: underline; text-underline-offset: 4px; }
 .report-detail-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid var(--report-line); padding: 0 var(--report-gutter); }
 .report-detail-stats > div { display: flex; flex-direction: column; gap: 8px; padding: 20px 0; min-width: 0; }
 .report-detail-stats > div + div { padding-left: 16px; }
