@@ -12,4 +12,6 @@
 ## Architecture rules
 - Keep the credit report's presentation and drill-down state in a dedicated report component, passing existing chat and savings actions from the main screen; this isolates restyling from other journeys.
 - Scope report typography and visual tokens to the report root; other screens must retain their existing appearance.
+- Select report comparison styling through an optional demo-user presentation flag; this preserves baseline accounts and keeps all report data and actions shared.
+- Track first gauge openings in session memory per demo account and animate only the SVG needle; this avoids replay during report navigation and honours reduced-motion preferences.
 - Use only available report fields in account details and trends; never invent payment calendars, bureau dates or historical scores to fill a layout.

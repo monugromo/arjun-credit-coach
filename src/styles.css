@@ -218,6 +218,7 @@
 .report-gauge-soft { fill: none; stroke: none; }
 .report-gauge-edge { fill: none; stroke: currentColor; stroke-width: 5px; transform: translate(160px, 150px) scale(1.11) translate(-160px, -150px); }
 .report-gauge-pointer { fill: var(--report-ink); }
+.report-gauge-needle { transform-origin: 0 0; }
 .report-gauge-label { fill: var(--report-subtle); font-size: 12px; }
 .report-gauge-value { position: absolute; top: 44%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
 .report-gauge-value > strong { font-size: 44px; line-height: 1.15; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -234,6 +235,20 @@
 .report-score-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .report-score-headline { margin: 0; max-width: 320px; font-size: 20px; line-height: 1.4; font-weight: 500; color: var(--report-ink); }
 .report-score-greeting { display: block; margin-bottom: 4px; font-size: 14px; font-weight: 400; color: var(--report-subtle); }
+.report-comparison .report-score-hero { padding: 24px 20px 0; }
+.report-comparison .report-score-headline { font-size: 22px; line-height: 1.4; }
+.report-comparison .report-score-greeting { margin-bottom: 6px; }
+.report-comparison .report-score-panel { margin-top: 12px; }
+.report-comparison .report-hero-bureau { padding: 12px 12px 8px; }
+.report-comparison .report-score-panel .report-slide { min-height: 208px; padding: 2px 8px 0; }
+.report-comparison .report-gauge-soft { stroke: currentColor; stroke-width: 28px; opacity: 0.16; }
+.report-comparison .report-gauge-value { top: 43%; }
+.report-comparison .report-gauge-value > strong { font-size: 48px; line-height: 1.1; font-weight: 500; }
+.report-comparison .report-gauge-band { font-size: 16px; font-weight: 500; gap: 6px; }
+.report-comparison .report-gauge-value .report-score-change { margin-top: 8px; font-size: 12px; }
+.report-comparison .report-dots { margin-bottom: 4px; }
+.report-comparison .report-score-panel .report-refresh-row { padding-bottom: 16px; }
+.report-comparison .report-hero-actions button { font-size: 13px; height: 52px; }
 .report-score-dialog { width: calc(100% - 32px); max-width: 390px; border-radius: 8px; padding: 24px; }
 .report-score-dialog .report-info-bands { margin: 0; gap: 16px; }
 .report-score-dialog .report-info-bands li { display: grid; grid-template-columns: 7px 70px 1fr; gap: 8px; }
