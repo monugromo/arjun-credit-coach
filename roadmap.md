@@ -28,4 +28,4 @@
 - [x] Verify report overview, factor details, accounts, savings and navigation in the browser.
 - [x] Align every report screen with the app theme, consistent type sizes and spacing; verify all drill-downs without changing flows.
 - [x] Drop the boxed score card; build the chosen minimalist floating hero with a band-aware headline.
-- [ ] Match the supplied curved-gauge report hero with Equifax branding and verify its actions.
+- [x] Match the supplied curved-gauge report hero with Equifax branding and verify its actions.
