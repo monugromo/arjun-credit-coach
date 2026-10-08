@@ -78,18 +78,21 @@ export function ReportAccountDetail(props: Props) {
         </div>
       </div>
       <div className="account-history-grid" role="img" aria-label={`Monthly payment status for ${historyYear}`}>
-        {MONTHS.map(month => (
-          <div key={month} className="account-history-cell account-history-unreported">
-            <span className="account-history-month">{month}</span>
-            <i className="account-history-dot account-history-unreported" aria-label="Not reported" />
-          </div>
-        ))}
+        {MONTHS.map((month, i) => {
+          const status = statuses[i];
+          return (
+            <div key={month} className={`account-history-cell account-history-${status}`}>
+              <span className="account-history-month">{month}</span>
+              {status === "ontime" ? <i className="account-history-dot account-history-ontime" aria-label="On time payment"><Check /></i> : status === "delayed" ? <i className="account-history-dot account-history-delayed" aria-label="Late payment"><X /></i> : <i className="account-history-dot account-history-unreported" aria-label="Not reported" />}
+            </div>
+          );
+        })}
       </div>
       <div className="account-history-legend">
         <span><i className="account-history-dot account-history-ontime"><Check /></i>On time Payment</span>
         <span><i className="account-history-dot account-history-delayed"><X /></i>Late Payment</span>
       </div>
-      <p className="account-history-recorded">Last payment recorded by Bureau: Not reported</p>
+      <p className="account-history-recorded">Last payment recorded by Bureau: {lastReportedIndex >= 0 ? `${MONTHS[lastReportedIndex]} ${historyYear}` : "Not reported"}</p>
     </section>
     <section className="report-section account-detail-facts">
       <h3>Account information</h3>
