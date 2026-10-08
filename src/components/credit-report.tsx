@@ -50,6 +50,26 @@ function BureauFooter() {
   return <footer className="report-bureau"><span>Powered by</span><img className="report-bureau-logo" src={equifaxLogo.url} alt="Equifax" /></footer>;
 }
 
+function ScoreGauge({ score }: { score: number }) {
+  const point = (angle: number, radius: number) => {
+    const radians = angle * Math.PI / 180;
+    return [160 - radius * Math.cos(radians), 150 - radius * Math.sin(radians)];
+  };
+  let start = 0;
+  return <svg viewBox="0 0 320 175" className="report-score-gauge" role="img" aria-label={`Credit score ${score} out of 900`}>
+    {bands.map(item => {
+      const end = start + item.width / 99.5 * 180;
+      const a = point(start + 1, 116);
+      const b = point(end - 1, 116);
+      const path = `M ${a[0]} ${a[1]} A 116 116 0 0 1 ${b[0]} ${b[1]}`;
+      start = end;
+      return <g key={item.name} className={`report-tone-${item.tone}`}><path d={path} className="report-gauge-soft" /><path d={path} className="report-gauge-edge" /></g>;
+    })}
+    <g transform={`translate(160 150) rotate(${Math.max(0, Math.min(180, (score - 300) / 600 * 180))})`}><path d="M -99 -7 L -99 7 L -113 0 Z" className="report-gauge-pointer" /></g>
+    <text x="15" y="164" className="report-gauge-label">300</text><text x="282" y="164" className="report-gauge-label">900</text>
+  </svg>;
+}
+
 export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; onBack: () => void; onStartChat: () => void }) {
   const [view, setView] = useState<View>("score");
   const [tab, setTab] = useState<Tab>("cards");
@@ -145,21 +165,14 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
         <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}><div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
       </> : <>
         <section className="report-section report-score-hero">
-          <div className="report-score-head">
-            <p className="report-score-headline">{scoreHeadline}</p>
-            <Button variant="ghost" size="icon" aria-label="About your credit score" onClick={() => setShowInfo(!showInfo)}><Info /></Button>
-          </div>
+          <div className="report-score-head"><p className="report-score-headline">{scoreHeadline}</p></div>
+          <div className="report-score-panel">
+          <div className="report-hero-bureau"><img src={equifaxLogo.url} alt="Equifax" /></div>
           <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
             <div className="report-slide">
-              <div className="report-score-row">
-                <div className="report-score-value"><strong>{score}</strong><span>of 900</span></div>
-                <span className="report-score-change"><ArrowUpRight />+12 this month</span>
-              </div>
-              <div className="report-score-meta"><span className={`report-band report-tone-${bandTone}`}><i aria-hidden />{band}</span></div>
-              <div className="report-range" aria-label={`Credit score ${score} out of 900`}>
-                <div className="report-range-segments">{bands.map(item => <span key={item.name} className={`report-segment report-tone-${item.tone}${item.name === band ? " is-active" : ""}`} style={{ flexGrow: item.width }} />)}</div>
-                <span className="report-range-marker" style={{ left: `${Math.max(0, Math.min(100, (score - 300) / 6))}%` }} />
-                <div className="report-range-labels">{bands.map(item => <span key={item.name} className={item.name === band ? "is-active" : ""} style={{ left: `${item.center}%` }}>{item.name}</span>)}</div>
+              <div className="report-gauge-wrap">
+                <ScoreGauge score={score} />
+                <div className="report-gauge-value"><strong>{score}</strong><div className={`report-gauge-band report-tone-${bandTone}`}><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" onClick={() => setShowInfo(!showInfo)}><Info /></Button></div><span className="report-score-change"><ArrowUpRight />+12 this month</span></div>
               </div>
             </div>
             <div className="report-slide">
@@ -177,9 +190,10 @@ export function CreditReport({ user, onBack, onStartChat }: { user: DemoUser; on
               </div>
             </div>
           </div>
-          <div className="report-dots">{[0, 1].map(i => <button key={i} type="button" aria-label={i ? "Show trend" : "Show score"} className={slide === i ? "is-active" : ""} onClick={() => carouselRef.current?.scrollTo({ left: i * carouselRef.current.clientWidth, behavior: "smooth" })} />)}</div>
           <div className="report-refresh-row">
             {daysLeft > 0 ? <span className="report-updated">Next update in {daysLeft} {daysLeft === 1 ? "day" : "days"}</span> : <Button variant="link" className="report-refresh" onClick={() => setLastPulled(new Date())}><RefreshCw />Refresh now</Button>}
+          </div>
+          <div className="report-hero-actions"><Button variant="ghost" onClick={download}><Download />Download Report</Button><Button variant="ghost" onClick={() => { const el = carouselRef.current; if (el) el.scrollTo({ left: slide === 0 ? el.clientWidth : 0, behavior: "smooth" }); }}><ArrowUpRight />{slide === 0 ? "Score Trend" : "Score Overview"}</Button></div>
           </div>
           {showInfo && <div className="report-info"><Button variant="ghost" size="icon" aria-label="Close score information" onClick={() => setShowInfo(false)}><X /></Button><p>Your score and accounts are based on the information in your Equifax credit report. Checking this report does not create a credit enquiry.</p><ul className="report-info-bands"><li><i className="report-status-dot report-tone-danger" aria-hidden /><strong>Poor</strong> 300-549 - lenders see high risk</li><li><i className="report-status-dot report-tone-warning" aria-hidden /><strong>Fair</strong> 550-649 - some lenders may approve</li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Good</strong> 650-749 - most lenders approve</li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Excellent</strong> 750-900 - best rates and offers</li></ul></div>}
         </section>
