@@ -11,7 +11,7 @@ import homeArt from "@/assets/account-art/account-home.png.asset.json";
 
 type CardDetails = { bank: string; last4: string; limit: number; used: number; pct: number };
 type LoanDetails = { lender: string; name: string; last4: string; sanctioned: number; outstanding: number; emi: number; status: string; tone: string };
-type Props = ({ kind: "card"; account: CardDetails } | { kind: "loan"; account: LoanDetails }) & { logoUrl?: string; onStartChat: () => void };
+type Props = ({ kind: "card"; account: CardDetails } | { kind: "loan"; account: LoanDetails }) & { logoUrl?: string; seed?: string; onStartChat: () => void };
 const money = (value: number) => `₹${value.toLocaleString("en-IN")}`;
 const loanArtwork: Record<string, string> = { "Personal Loan": personalArt.url, "Consumer Loan": personalArt.url, "Auto Loan": vehicleArt.url, "Vehicle Loan": vehicleArt.url, "Two-wheeler Loan": vehicleArt.url, "Home Loan": homeArt.url };
 
@@ -31,7 +31,15 @@ function UsageIndicator({ pct, tone, label }: { pct: number; tone: string; label
 
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 const CURRENT_YEAR = new Date().getFullYear();
+const CURRENT_MONTH = new Date().getMonth();
 const HISTORY_YEARS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2];
+
+type MonthStatus = "ontime" | "delayed" | "unreported";
+const hashSeed = (value: string) => { let h = 7; for (const ch of value) h = (h * 31 + ch.charCodeAt(0)) | 0; return Math.abs(h); };
+const sampleMonthStatuses = (seed: string, year: number): MonthStatus[] => MONTHS.map((_, i) => {
+  if (year > CURRENT_YEAR || (year === CURRENT_YEAR && i > CURRENT_MONTH)) return "unreported";
+  return hashSeed(`${seed}:${year}:${i}`) % 100 < 18 ? "delayed" : "ontime";
+});
 
 export function ReportAccountDetail(props: Props) {
   const [showInfo, setShowInfo] = useState(false);
@@ -41,6 +49,8 @@ export function ReportAccountDetail(props: Props) {
   const lender = card?.bank ?? loan?.lender ?? "";
   const product = loan?.name.replace("Loan", "loan") ?? "Credit card";
   const artwork = loan ? loanArtwork[loan.name] ?? personalArt.url : cardArt.url;
+  const statuses = sampleMonthStatuses(props.seed ?? lender, historyYear);
+  const lastReportedIndex = (() => { for (let i = CURRENT_MONTH; i >= 0; i--) if (statuses[i] !== "unreported") return i; return -1; })();
   return <div className="report-account-detail">
     <section className="report-section account-detail-hero">
       <div className="account-detail-identity">
@@ -68,18 +78,21 @@ export function ReportAccountDetail(props: Props) {
         </div>
       </div>
       <div className="account-history-grid" role="img" aria-label={`Monthly payment status for ${historyYear}`}>
-        {MONTHS.map(month => (
-          <div key={month} className="account-history-cell account-history-unreported">
-            <span className="account-history-month">{month}</span>
-            <i className="account-history-dot account-history-unreported" aria-label="Not reported" />
-          </div>
-        ))}
+        {MONTHS.map((month, i) => {
+          const status = statuses[i];
+          return (
+            <div key={month} className={`account-history-cell account-history-${status}`}>
+              <span className="account-history-month">{month}</span>
+              {status === "ontime" ? <i className="account-history-dot account-history-ontime" aria-label="On time payment"><Check /></i> : status === "delayed" ? <i className="account-history-dot account-history-delayed" aria-label="Late payment"><X /></i> : <i className="account-history-dot account-history-unreported" aria-label="Not reported" />}
+            </div>
+          );
+        })}
       </div>
       <div className="account-history-legend">
         <span><i className="account-history-dot account-history-ontime"><Check /></i>On time Payment</span>
         <span><i className="account-history-dot account-history-delayed"><X /></i>Late Payment</span>
       </div>
-      <p className="account-history-recorded">Last payment recorded by Bureau: Not reported</p>
+      <p className="account-history-recorded">Last payment recorded by Bureau: {lastReportedIndex >= 0 ? `${MONTHS[lastReportedIndex]} ${historyYear}` : "Not reported"}</p>
     </section>
     <section className="report-section account-detail-facts">
       <h3>Account information</h3>
