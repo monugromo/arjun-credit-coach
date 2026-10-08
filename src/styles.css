@@ -408,10 +408,16 @@
 .account-history-legend { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; padding: 20px 12px; border-top: 1px solid var(--report-line); }
 .account-history-legend span { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--report-ink); }
 .account-history-recorded { margin: 0; padding: 16px var(--report-gutter); border-top: 1px solid var(--report-line); color: var(--report-subtle); font-size: 12px; font-weight: 400; line-height: 1.6; text-align: center; }
-.account-detail-facts dl { display: grid; gap: 24px; margin-top: 24px; }
-.account-detail-facts dt { font-size: 14px; color: var(--report-subtle); margin-bottom: 4px; }
-.account-detail-facts dd { font-size: 16px; font-weight: 500; }
-.account-detail-facts .account-value-unavailable { color: var(--report-subtle); font-size: 14px; font-weight: 400; }
+.account-facts-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; }
+.account-facts-heading > span { font-size: 11px; color: var(--report-subtle); }
+.account-detail-facts dl { display: grid; gap: 0; margin-top: 16px; }
+.account-detail-facts dl > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--report-line); }
+.account-detail-facts dl > div:last-child { border-bottom: 0; padding-bottom: 0; }
+.account-detail-facts dt { font-size: 12px; line-height: 1.6; color: var(--report-subtle); }
+.account-detail-facts dd { font-size: 13px; line-height: 1.6; font-weight: 500; text-align: right; overflow-wrap: anywhere; }
+.account-detail-facts .account-value-unavailable { color: var(--report-subtle); font-size: 13px; font-weight: 400; }
+.account-facts-status { display: inline-flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.account-facts-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--report-brand); flex-shrink: 0; }
 .account-detail-support { border-bottom: 0; }
 .account-detail-support p { font-size: 14px; line-height: 1.6; color: var(--report-subtle); }
 .account-detail-support button { width: 100%; min-height: 46px; height: auto; margin-top: 16px; border-color: var(--report-brand); color: var(--report-brand); border-radius: 8px; box-shadow: none; font-size: 14px; white-space: normal; }

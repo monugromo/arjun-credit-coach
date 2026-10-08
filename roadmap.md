@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Fill demo account information with labelled sample lifecycle details and compact aligned rows; verify cards and loans on both comparison accounts.
+
 - [x] Replace green account artwork with the four supplied grayscale illustrations and standardise account-detail text sizes; verified all seven existing accounts on both samples and navigation, with home artwork ready for home-loan data.
 
 - [x] Match all loan and credit card detail pages to the supplied account reference using GroScore styling and available data; verified all seven accounts on both samples, artwork, back navigation, narrow-screen spacing and Arjun handoff.
