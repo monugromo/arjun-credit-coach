@@ -174,13 +174,14 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   </Button>)}</div>;
   const enquiryRows = <div className="report-account-list">{enquiries.map(enquiry => <div className="report-enquiry-row" key={enquiry.lender}><ReportBankMark name={enquiry.lender} logoUrl={bankLogos[enquiry.lender]} /><span className="report-row-label"><strong>{enquiry.lender}</strong><small>{enquiry.product}</small></span><time>{enquiry.date}</time></div>)}</div>;
 
-  return <div className={`credit-report flex min-h-0 flex-1 flex-col bg-card text-foreground${user.reportDesign === "comparison" ? " report-comparison" : ""}`} data-testid="credit-report">
+  return <div className={`credit-report flex min-h-0 flex-1 flex-col bg-card text-foreground${user.reportDesign === "comparison" ? " report-comparison" : ""}${user.reportDensity === "compact" ? " report-compact" : ""}`} data-testid="credit-report">
     <header className="flex h-14 shrink-0 items-center gap-3 bg-primary-deep px-3 text-primary-foreground">
       <Button variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground" aria-label="Back from credit report" onClick={goBack}><ArrowLeft /></Button>
       <h1 className="flex-1 text-[17px] font-semibold">Credit report</h1>
       {!isNTC && <Button variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground" aria-label="Download credit report" onClick={download}><Download /></Button>}
     </header>
     <div className="report-scroll min-h-0 flex-1 overflow-y-auto" ref={scrollRef}>
+      <div className="report-content">
       {isNTC ? <>
         <section className="report-section report-ntc-intro"><div className="report-brand">GroScore</div><span className="report-icon report-ntc-icon"><FileText /></span><h2>No credit score yet</h2><p>You're new to credit, {user.name}. Start with a secured card to build your credit history.</p><Button className="report-primary" onClick={onStartChat}>Get a secured card <ArrowUpRight /></Button></section>
         <section className="report-section"><h3>Start with a secured card</h3><p className="report-description">Against a small FD, with guaranteed approval. Build your score in 3-4 months.</p><ol className="report-steps">{[
@@ -255,6 +256,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         <section className="report-section report-factors" role="tabpanel" aria-label="Score"><h3 className="report-factors-title">Credit report summary</h3><div>{reportFactors.map(item => <Button variant="ghost" className="report-factor-row" key={item.key} onClick={() => navigate(item.key)}><span className="report-icon"><item.icon /></span><span className="report-row-label"><strong>{item.title}</strong><small>{item.subtitle}</small></span><span className="report-status-word">{item.key === "age" && !creditAge ? "—" : item.tone === "positive" ? "Good" : item.tone === "warning" ? "Fair" : "Poor"}</span><ChevronRight className="report-chevron" /></Button>)}</div></section>
       </>}
       <BureauFooter />
+      </div>
     </div>
   </div>;
 }
