@@ -52,9 +52,10 @@ export function ReportAccountDetail(props: Props) {
       <div className="account-detail-identity">
         <ReportBankMark name={lender} logoUrl={props.logoUrl} />
         <div className="account-detail-copy"><div className="account-detail-title"><h2>{product}</h2></div><p className="account-detail-subtitle"><span>{lender}</span></p></div>
-        <div className="account-detail-meta"><span className={`report-lifecycle-status${props.information?.status === "Active" ? " is-active" : ""}`}>{props.information?.status ?? "Not reported"}</span><p className="account-detail-account">Acc No. xx{props.account.last4}</p></div>
+        <div className="account-detail-meta">{props.layout !== "artwork-first" && <span className={`report-lifecycle-status${props.information?.status === "Active" ? " is-active" : ""}`}>{props.information?.status ?? "Not reported"}</span>}<p className="account-detail-account">Acc No. xx{props.account.last4}</p></div>
       </div>
       <div className="account-art-stage">
+        {props.layout === "artwork-first" && <span className={`account-art-status report-lifecycle-status${props.information?.status === "Active" ? " is-active" : ""}`}>{props.information?.status ?? "Not reported"}</span>}
         <div className="account-art-stage-bg" aria-hidden="true">
           <span className="account-art-ring account-art-ring-outer" />
           <span className="account-art-ring account-art-ring-inner" />
@@ -63,6 +64,7 @@ export function ReportAccountDetail(props: Props) {
         </div>
         <img className="account-detail-art" src={artwork} alt={`${product} illustration`} loading="eager" decoding="async" fetchPriority="high" width={320} height={190} />
       </div>
+      {props.layout === "artwork-first" && <p className="account-detail-issued"><span>Issue date</span><time>{props.information?.openedOn ?? "Not reported"}</time></p>}
       <dl className="account-detail-balances">
         <div><dt>{card ? "Total Spends" : "Sanctioned amount"}</dt><dd>{money(card?.used ?? loan?.sanctioned ?? 0)}</dd></div>
         <div><dt>{card ? "Credit limit" : "Current balance"}</dt><dd>{money(card?.limit ?? loan?.outstanding ?? 0)}</dd></div>
@@ -104,7 +106,7 @@ export function ReportAccountDetail(props: Props) {
       <dl>
         {loan && <div><dt>Monthly EMI</dt><dd>{money(loan.emi)}</dd></div>}
         <div><dt>Account status</dt><dd className={props.information ? `account-facts-status${props.information.status === "Closed" ? " is-closed" : ""}` : "account-value-unavailable"}>{props.information?.status ?? "Not reported"}</dd></div>
-        <div><dt>Issue date</dt><dd className={props.information ? undefined : "account-value-unavailable"}>{props.information?.openedOn ?? "Not reported"}</dd></div>
+        {props.layout !== "artwork-first" && <div><dt>Issue date</dt><dd className={props.information ? undefined : "account-value-unavailable"}>{props.information?.openedOn ?? "Not reported"}</dd></div>}
         <div><dt>Account closed on</dt><dd className={props.information ? undefined : "account-value-unavailable"}>{props.information?.closedOn ?? (props.information?.status === "Active" ? "Not closed" : "Not reported")}</dd></div>
       </dl>
     </section>
