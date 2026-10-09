@@ -192,6 +192,7 @@
   --report-history-tip: var(--primary-soft);
   --report-history-border: var(--border);
   --report-gutter: 24px;
+  --report-card-shadow: 0 1px 3px 0 color-mix(in oklab, var(--report-ink) 10%, transparent), 0 1px 2px -1px color-mix(in oklab, var(--report-ink) 10%, transparent);
   font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.5;
@@ -534,7 +535,7 @@
 
 /* Clickable account cards */
 .credit-report .report-account-list { gap: 10px; }
-.credit-report .report-account-row { padding: 0; overflow: hidden; border: 1px solid var(--report-line); border-radius: 8px; background: var(--report-paper); box-shadow: none; transition: border-color .15s; cursor: pointer; }
+.credit-report .report-account-row { padding: 0; overflow: hidden; border: 1px solid var(--report-line); border-radius: 8px; background: var(--report-paper); box-shadow: var(--report-card-shadow); transition: border-color .15s; cursor: pointer; }
 .credit-report .report-account-row:hover { background: var(--report-paper); border-color: var(--report-brand); }
 .report-account-row .report-account-top { padding: 14px 14px 12px; gap: 10px; align-items: center; }
 .report-account-row .report-row-label { gap: 2px; }
@@ -612,3 +613,8 @@
 .report-compact .account-detail-facts dd { font-size: 14px; }
 .report-compact .account-detail-support p, .report-compact .account-detail-support button { font-size: 15px; }
 .report-compact .report-bureau { padding: 16px var(--report-gutter); font-size: 13px; }
+
+/* Isolated artwork-first account comparison; existing detail layouts stay intact. */
+.credit-report .account-detail-artwork-first .account-detail-hero { display: flex; flex-direction: column; padding-top: 8px; }
+.credit-report .account-detail-artwork-first .account-art-stage { order: -1; margin: 0 0 20px; }
+.credit-report .account-detail-artwork-first .account-detail-identity { margin-bottom: 24px; }

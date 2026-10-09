@@ -8,7 +8,7 @@ import { accountIllustrations } from "@/lib/report-artwork";
 
 type CardDetails = { bank: string; last4: string; limit: number; used: number; pct: number };
 type LoanDetails = { lender: string; name: string; last4: string; sanctioned: number; outstanding: number; emi: number; status: string; tone: string };
-type Props = ({ kind: "card"; account: CardDetails } | { kind: "loan"; account: LoanDetails }) & { information?: AccountInformation; logoUrl?: string; seed?: string; onStartChat: () => void };
+type Props = ({ kind: "card"; account: CardDetails } | { kind: "loan"; account: LoanDetails }) & { layout?: "artwork-first"; information?: AccountInformation; logoUrl?: string; seed?: string; onStartChat: () => void };
 const money = (value: number) => `₹${value.toLocaleString("en-IN")}`;
 const loanArtwork: Record<string, string> = { "Personal Loan": accountIllustrations.personal, "Consumer Loan": accountIllustrations.personal, "Auto Loan": accountIllustrations.vehicle, "Vehicle Loan": accountIllustrations.vehicle, "Two-wheeler Loan": accountIllustrations.vehicle, "Home Loan": accountIllustrations.home, "Gold Loan": accountIllustrations.gold, "Education Loan": accountIllustrations.other, "Other Loan": accountIllustrations.other };
 
@@ -47,7 +47,7 @@ export function ReportAccountDetail(props: Props) {
   const artwork = loan ? loanArtwork[loan.name] ?? accountIllustrations.other : accountIllustrations.card;
   const statuses = sampleMonthStatuses(props.seed ?? lender, historyYear);
   const lastReportedIndex = (() => { for (let i = CURRENT_MONTH; i >= 0; i--) if (statuses[i] !== "unreported") return i; return -1; })();
-  return <div className={`report-account-detail${loan ? " report-loan-detail" : ""}`}>
+  return <div className={`report-account-detail${loan ? " report-loan-detail" : ""}${props.layout === "artwork-first" ? " account-detail-artwork-first" : ""}`}>
     <section className="report-section account-detail-hero">
       <div className="account-detail-identity">
         <ReportBankMark name={lender} logoUrl={props.logoUrl} />
