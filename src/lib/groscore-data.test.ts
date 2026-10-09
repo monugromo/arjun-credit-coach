@@ -3,8 +3,9 @@ import { describe, expect, test } from "bun:test";
 import { DEMOS } from "./groscore-data";
 
 describe("report comparison account", () => {
-  test("017 copies compact 016 and changes only account-detail presentation", () => {
-    expect(DEMOS["9876500017"]).toEqual({ ...DEMOS["9876500016"], phone: "9876500017", accountDetailLayout: "artwork-first" });
+  test("017 copies 015 and changes only account-detail presentation", () => {
+    expect(DEMOS["9876500017"]).toEqual({ ...DEMOS["9876500015"], phone: "9876500017", accountDetailLayout: "artwork-first" });
+    expect(DEMOS["9876500017"]?.reportDensity).toBeUndefined();
     expect(DEMOS["9876500016"]?.accountDetailLayout).toBeUndefined();
     expect(DEMOS["9876500017"]?.directReportLogin).toBe(true);
   });
