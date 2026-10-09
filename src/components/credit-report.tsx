@@ -5,17 +5,13 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import type { DemoUser } from "@/lib/groscore-data";
 import { distressedFactors } from "@/lib/groscore-data";
 import equifaxLogo from "@/assets/equifax-logo.png.asset.json";
-import paymentIllustration from "@/assets/report-payment.png";
-import usageIllustration from "@/assets/report-usage.png";
-import mixIllustration from "@/assets/report-mix.png";
-import enquiryIllustration from "@/assets/report-enquiries.png";
-import ageIllustration from "@/assets/report-age.png";
+import { factorIllustrations, reportArtworkUrls } from "@/lib/report-artwork";
 import { gaugeScoreAt, GAUGE_DURATION_MS } from "@/lib/report-animation";
 import { recentScoreRecords, scoreRecordDate, SCORE_TREND_TICKS, scoreTrendY } from "@/lib/report-trend";
 import { ReportBankMark } from "@/components/report-bank-mark";
 import { creditUsageTone } from "@/lib/report-usage";
 import { ReportAccountDetail } from "@/components/report-account-detail";
-import { demoAccountInformation } from "@/lib/report-account-information";
+import { accountsByLifecycle, demoAccountInformation } from "@/lib/report-account-information";
 import { paymentSummary } from "@/lib/report-payments";
 
 const cards = [
@@ -47,7 +43,6 @@ const factors = [
   { key: "enquiries", title: "New enquiries", subtitle: "5 in the last 6 months", value: "5", unit: "PULLS", tone: "danger", icon: FileText, explanation: "An enquiry occurs when a lending institution checks your credit report when you've applied for a credit product (loans, credit cards, etc.)", advice: "Review recent applications", note: "If an enquiry looks unfamiliar, talk to Arjun." },
   { key: "age", title: "Credit age", subtitle: "Not available", value: "Not available", unit: "AVERAGE AGE", tone: "positive", icon: Clock, explanation: "Credit age reflects how long credit accounts have been open. A longer history helps demonstrate consistent credit management over time.", advice: "Look after your credit history", note: "" },
 ] as const;
-const factorIllustrations = { payment: paymentIllustration, usage: usageIllustration, mix: mixIllustration, enquiries: enquiryIllustration, age: ageIllustration };
 const bands = [
   { name: "Poor", tone: "danger", width: 41.5, center: 20.75 },
   { name: "Fair", tone: "warning", width: 16.5, center: 49.75 },
@@ -117,6 +112,10 @@ function ScoreGauge({ score, animationKey, band, onInfo }: { score: number; anim
 
 export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { user: DemoUser; onBack: () => void; onStartChat: () => void; bankLogos?: Record<string, string> }) {
   const [view, setView] = useState<View>("score");
+  useEffect(() => {
+    const images = reportArtworkUrls.map(url => { const image = new Image(); image.decoding = "async"; image.src = url; return image; });
+    return () => { images.forEach(image => { image.onload = null; }); };
+  }, []);
   const [tab, setTab] = useState<Tab>("cards");
   const [account, setAccount] = useState<Account | null>(null);
   const [showInfo, setShowInfo] = useState(false);
@@ -165,16 +164,18 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
-  const cardRows = <div className="report-account-list">{cards.map((card, index) => <Button variant="ghost" key={card.last4} className="report-account-row" onClick={() => openAccount({ kind: "card", index })}>
-    <span className="report-account-top"><ReportBankMark name={card.bank} logoUrl={bankLogos[card.bank]} /><span className="report-row-label"><strong>{card.bank}</strong><small>{money(card.limit)} limit</small></span><span className={`report-account-status report-tone-${creditUsageTone(card.pct)}`}><strong>{card.pct}%</strong><small>Utilisation</small></span></span>
+  const cardRows = <div className="report-account-list">{accountsByLifecycle(cards, demoAccountInformation).map(({ account: card, index }) => <Button variant="ghost" key={card.last4} className="report-account-row" onClick={() => openAccount({ kind: "card", index })}>
+    <span className="report-account-top"><ReportBankMark name={card.bank} logoUrl={bankLogos[card.bank]} /><span className="report-row-label"><strong>{card.bank}</strong><small>Credit card · xx{card.last4}</small><small>{money(card.limit)} limit</small></span><span className={`report-account-status report-tone-${creditUsageTone(card.pct)}`}><strong>{card.pct}%</strong><small>Utilisation</small></span></span>
+    <span className="report-account-meta"><span>Issued {demoAccountInformation[card.last4]?.openedOn ?? "Not reported"}</span><span className={`report-lifecycle-status${demoAccountInformation[card.last4]?.status === "Active" ? " is-active" : ""}`}>{demoAccountInformation[card.last4]?.status ?? "Not reported"}</span></span>
   </Button>)}</div>;
-  const loanRows = <div className="report-account-list">{loans.map((loan, index) => <Button variant="ghost" key={loan.name} className="report-account-row" onClick={() => openAccount({ kind: "loan", index })}>
-    <span className="report-account-top"><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.lender}</strong><small>Account xx{loan.last4}</small></span><span className={`report-account-status report-tone-${loan.tone}`}>{loan.status}</span></span>
+  const loanRows = <div className="report-account-list">{accountsByLifecycle(loans, demoAccountInformation).map(({ account: loan, index }) => <Button variant="ghost" key={loan.name} className="report-account-row" onClick={() => openAccount({ kind: "loan", index })}>
+    <span className="report-account-top"><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.lender}</strong><small>{loan.name.replace("Loan", "loan")}</small><small>Acc No. xx{loan.last4}</small></span><span className={`report-account-status report-tone-${loan.tone}`}>{loan.status}</span></span>
+    <span className="report-account-meta"><span>Issued {demoAccountInformation[loan.last4]?.openedOn ?? "Not reported"}</span><span className={`report-lifecycle-status${demoAccountInformation[loan.last4]?.status === "Active" ? " is-active" : ""}`}>{demoAccountInformation[loan.last4]?.status ?? "Not reported"}</span></span>
   </Button>)}</div>;
   const enquiryRows = <div className="report-account-list">{enquiries.map(enquiry => <div className="report-enquiry-row" key={enquiry.lender}><ReportBankMark name={enquiry.lender} logoUrl={bankLogos[enquiry.lender]} /><span className="report-row-label"><strong>{enquiry.lender}</strong><small>{enquiry.product}</small></span><time>{enquiry.date}</time></div>)}</div>;
 
   return <div className={`credit-report flex min-h-0 flex-1 flex-col bg-card text-foreground${user.reportDesign === "comparison" ? " report-comparison" : ""}${user.reportDensity === "compact" ? " report-compact" : ""}`} data-testid="credit-report">
-    <header className="flex h-14 shrink-0 items-center gap-3 bg-primary-deep px-3 text-primary-foreground">
+    <header className="report-header flex h-14 shrink-0 items-center gap-3 bg-primary-deep text-primary-foreground">
       <Button variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground" aria-label="Back from credit report" onClick={goBack}><ArrowLeft /></Button>
       <h1 className="flex-1 text-[17px] font-semibold">Credit report</h1>
       {!isNTC && <Button variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground" aria-label="Download credit report" onClick={download}><Download /></Button>}
@@ -192,7 +193,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         {currentCard ? <ReportAccountDetail kind="card" account={currentCard} information={demoAccountInformation[currentCard.last4]} logoUrl={bankLogos[currentCard.bank]} seed={`${currentCard.bank}-${currentCard.last4}`} onStartChat={onStartChat} /> : currentLoan ? <ReportAccountDetail kind="loan" account={currentLoan} information={demoAccountInformation[currentLoan.last4]} logoUrl={bankLogos[currentLoan.lender]} seed={`${currentLoan.lender}-${currentLoan.last4}`} onStartChat={onStartChat} /> : null}
       </> : factor ? <>
         <section className="report-section rf-hero">
-          <div className="rf-hero-heading"><div className="rf-hero-text"><h2>{factor.title}</h2><span className="rf-total-count">{factorTotal}</span></div><img className="rf-history-illustration" src={factorIllustrations[factor.key]} alt="" loading="lazy" width={512} height={512} /></div>
+          <div className="rf-hero-heading"><div className="rf-hero-text"><h2>{factor.title}</h2><span className="rf-total-count">{factorTotal}</span></div><img className="rf-history-illustration" src={factorIllustrations[factor.key]} alt="" loading="eager" decoding="async" fetchPriority="high" width={112} height={112} /></div>
           <p className="rf-explanation">{factor.explanation}</p>
         </section>
         <section className="report-section rf-metric">
@@ -205,10 +206,11 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         </section>
         <section className="report-section rf-accounts">
           <h3 className="rf-list-heading">{view === "age" ? "Account age" : view === "usage" ? "Credit cards" : view === "enquiries" ? "Recent enquiries" : view === "mix" ? "Credit accounts" : "Loan accounts"}</h3>
+          {view !== "age" && view !== "enquiries" && <p className="report-sample-note">Sample issue dates and account statuses</p>}
           <div className="report-account-stack">{view === "age" ? <p className="report-description">Account opening dates are not available.</p> : view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <><div className="rf-account-group"><h4>Credit cards <span>{cards.length}</span></h4>{cardRows}</div><div className="rf-account-group"><h4>Loans <span>{loans.length}</span></h4>{loanRows}</div></> : loanRows}</div>
         </section>
       </> : view === "accounts" ? <>
-        <section className="report-section report-detail-heading"><h2>Full credit details</h2><p>{cards.length} credit cards · {loans.length} loans</p></section>
+        <section className="report-section report-detail-heading"><h2>Full credit details</h2><p>{cards.length} credit cards · {loans.length} loans</p><span className="report-sample-note">Sample issue dates and account statuses</span></section>
         <div className="report-account-tabs" role="tablist" aria-label="Credit accounts">{([ ["cards", "Cards", cards.length], ["loans", "Loans", loans.length], ["enquiries", "Enquiries", enquiries.length] ] as const).map(([key, label, count]) => <Button variant="ghost" key={key} role="tab" aria-selected={tab === key} className={tab === key ? "report-tab is-active" : "report-tab"} onClick={() => setTab(key)}>{label}<span>{count}</span></Button>)}</div>
         <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}><div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
       </> : <>
