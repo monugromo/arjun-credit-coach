@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Simplify account lists with product-first headings, use product-first detail headers with lifecycle status instead of the info button, and tighten balance/outstanding spacing; verify account navigation.
+- [x] Simplify account lists with product-first headings, use product-first detail headers with lifecycle status instead of the info button, and tighten balance/outstanding spacing; verified cards, loans and year switching on #014–#016 with no overflow or page errors and five passing account-rule tests.
 
 - [x] Refine factor header framing and spacing, regroup clickable account cards, and remove the list sample-note text; verified factor and card/loan navigation on #014–#016 with no overflow or page errors, reviewed screenshots, and passed five account-rule tests.
 
