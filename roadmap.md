@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Refine factor header framing and spacing, regroup clickable account cards, and remove the list sample-note text; verify comparison report navigation and spacing.
+- [x] Refine factor header framing and spacing, regroup clickable account cards, and remove the list sample-note text; verified factor and card/loan navigation on #014–#016 with no overflow or page errors, reviewed screenshots, and passed five account-rule tests.
 
 - [x] Unify report page gutters, replace green factor artwork with grayscale illustrations and optimize image loading; show account type, sample issue date and lifecycle status with active accounts first. Verified all five factors and nine account details on #014, #015 and #016 with no page errors and 16 passing tests; existing sample accounts are all active.
 
