@@ -127,9 +127,6 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   const score = user.score ?? 413;
   const trendRecords = recentScoreRecords(user.scoreHistory ?? [{ date: REPORT_LAST_PULLED, score }]);
   const trendPoints = trendRecords.map((record, index) => ({ ...record, x: trendRecords.length === 1 ? 172 : 48 + index * 248 / (trendRecords.length - 1), y: scoreTrendY(record.score) }));
-  const trendFirst = trendRecords[0];
-  const trendLast = trendRecords[trendRecords.length - 1];
-  const trendChange = trendFirst && trendLast && trendRecords.length > 1 ? trendLast.score - trendFirst.score : undefined;
   const isNTC = user.key === "ntc";
   const creditAge = user.key === "distressed" ? distressedFactors.find(item => item.name === "Credit Age") : undefined;
   const reportFactors = factors.map(item => item.key === "age" ? { ...item, value: creditAge?.note.replace("yr avg", "years") ?? "Not available", subtitle: creditAge?.note.replace("yr avg", "years average age") ?? "Not available" } : item);
@@ -138,8 +135,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   const currentCard = account?.kind === "card" ? cards[account.index] : undefined;
   const currentLoan = account?.kind === "loan" ? loans[account.index] : undefined;
   const band = user.band ?? "Poor";
-  const firstName = user.name.split(" ")[0];
-  const scoreHeadline = band === "Excellent" ? `${firstName}, your score is in excellent shape` : band === "Good" ? `${firstName}, your score is in a good place` : band === "Fair" ? `${firstName}, your score can still improve` : `${firstName}, your score needs work`;
+  const scoreHeadline = band === "Excellent" ? "Your credit score is in excellent shape." : band === "Good" ? "Your credit score is in a good place." : band === "Fair" ? "Your credit score can still improve." : "Your credit score needs work.";
 
   const navigate = (next: View, nextTab: Tab = tab) => {
     if (view === "score" || view === "trend") scoreScroll.current = scrollRef.current?.scrollTop ?? 0;
@@ -214,9 +210,9 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}>{tab !== "enquiries" && <p className="report-lifecycle-note"><Info aria-hidden="true" /><span>Account information uses sample statuses and dates. Payment status is shown separately.</span></p>}<div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
       </> : <>
         <section className="report-section report-score-hero">
-          <div className="report-score-head"><p className="report-score-headline"><span className="report-score-greeting">{firstName},</span>{scoreHeadline.slice(firstName.length + 2)}</p></div>
+          <div className="report-score-head"><p className="report-score-headline">{scoreHeadline}</p></div>
           <div className="report-score-panel">
-          <div className="report-hero-bureau"><img src={equifaxLogo.url} alt="Equifax" /></div>
+          <div className="report-hero-bureau"><span className="report-bureau-updated">Updated on <strong>06 Oct'26</strong></span><img src={equifaxLogo.url} alt="Equifax" /></div>
           <div className="report-carousel" ref={carouselRef} onScroll={(e) => { const el = e.currentTarget; setSlide(Math.round(el.scrollLeft / el.clientWidth)); }}>
             <div className="report-slide">
               <div className="report-gauge-wrap">
@@ -225,7 +221,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
             </div>
             <div className="report-slide">
               <div className="report-trend-card">
-                <div className="report-trend-head"><strong>Score trend</strong>{trendChange !== undefined && <span>{trendChange > 0 ? "+" : ""}{trendChange} points</span>}</div>
+                <div className="report-trend-head"><strong>Score trend</strong></div>
                 <svg viewBox="0 0 320 156" className="report-trend-chart" role="img" aria-label={trendRecords.length ? `Score trend: ${trendRecords.map(record => `${scoreRecordDate(record.date)}, ${record.score}`).join("; ")}` : "No recorded score history"}>
                   {SCORE_TREND_TICKS.map(value => <g key={value}><line x1="32" y1={scoreTrendY(value)} x2="308" y2={scoreTrendY(value)} className="grid" /><text x="25" y={scoreTrendY(value) + 4} textAnchor="end" className="label">{value}</text></g>)}
                   <line x1="32" y1="120" x2="308" y2="120" className="baseline" />

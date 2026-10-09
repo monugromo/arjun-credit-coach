@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Update all report versions: anonymous credit-score heading, right-aligned Equifax with bold 06 Oct'26 update date, balanced score/band/points spacing, clearer carousel markers and no duplicate trend change; verify both carousel views and report navigation.
+
 - [x] Refine #016 to fit more report content through tighter spacing and slightly larger fonts instead of zoom; verified overview, trend, five factors and nine account details with no overflow or page errors, keeping #015 unchanged.
 
 - [x] Simplify account-page dividers, remove the bureau-update fact, use an Arjun text action and separate product from masked account number; verified both account types and chat handoff without page errors.
