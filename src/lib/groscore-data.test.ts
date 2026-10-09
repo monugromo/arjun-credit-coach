@@ -3,6 +3,15 @@ import { describe, expect, test } from "bun:test";
 import { DEMOS } from "./groscore-data";
 
 describe("report comparison account", () => {
+  test("016 copies 015 with compact report presentation only", () => {
+    const original = DEMOS["9876500015"];
+    const compact = DEMOS["9876500016"];
+    expect(original).toBeDefined();
+    expect(compact).toBeDefined();
+    expect(compact).toEqual({ ...original, phone: "9876500016", reportDensity: "compact" });
+    expect(original?.reportDensity).toBeUndefined();
+    expect(compact?.directReportLogin).toBe(true);
+  });
   test("both new comparison numbers skip onboarding after demo OTP", () => {
     expect(DEMOS["9876500014"]?.directReportLogin).toBe(true);
     expect(DEMOS["9876500015"]?.directReportLogin).toBe(true);

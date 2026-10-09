@@ -15,6 +15,7 @@ export interface DemoUser {
   loanJourney?: "returning" | "first";
   noCreditCardOffer?: boolean;
   reportDesign?: "comparison";
+  reportDensity?: "compact";
   directReportLogin?: boolean;
   // Loans error-state demos: bureau = "unavailable" (never pulled), bre = "none" (no eligible lenders), "empty" | "error" (check failed)
   loanErrors?: { bureau?: "no_hit" | "unavailable"; bre?: "none" | "empty" | "error" };
@@ -181,6 +182,20 @@ export const DEMOS: Record<string, DemoUser> = {
     score: 413,
     band: "Poor",
     reportDesign: "comparison",
+    scoreHistory: SAMPLE_SCORE_HISTORY,
+    directReportLogin: true,
+  },
+  "9876500016": {
+    key: "distressed",
+    phone: "9876500016",
+    name: "Sonu",
+    pan: "ABCPS5678F",
+    dob: "24/03/1992",
+    hasScore: true,
+    score: 413,
+    band: "Poor",
+    reportDesign: "comparison",
+    reportDensity: "compact",
     scoreHistory: SAMPLE_SCORE_HISTORY,
     directReportLogin: true,
   },

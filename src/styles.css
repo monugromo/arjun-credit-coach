@@ -200,6 +200,7 @@
 .credit-report, .credit-report * { letter-spacing: 0; }
 .credit-report button { font-family: inherit; }
 .report-scroll { scrollbar-width: thin; }
+.report-compact .report-content { zoom: 0.92; }
 .report-section { padding: 24px var(--report-gutter); border-bottom: 1px solid var(--report-line); }
 .report-section h2 { font-size: 22px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
 .report-section h3 { font-size: 18px; line-height: 1.4; font-weight: 600; }

@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Copy shaded comparison #015 into #016 with slightly zoomed-out report content across all report views; verified trend, five factors, nine account details and unchanged #015.
+
 - [x] Simplify account-page dividers, remove the bureau-update fact, use an Arjun text action and separate product from masked account number; verified both account types and chat handoff without page errors.
 
 - [x] Fill demo account information with labelled sample lifecycle details and compact aligned rows; verified all nine accounts on both comparison reports, typography, navigation and no page errors.
