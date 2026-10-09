@@ -480,12 +480,13 @@
 .report-bureau-logo { height: 12px; width: auto; display: block; }
 /* Preserve the supplied history illustration and account-group layout. */
 .rf-hero { position: relative; padding-top: 20px; padding-bottom: 8px; border: 0; }
-.rf-hero-heading { display: grid; grid-template-columns: minmax(0, 1fr) 112px; align-items: center; gap: 12px; margin-bottom: 20px; padding: 16px 0; border-radius: 0; background: var(--report-paper); }
+.rf-hero-heading { display: grid; grid-template-columns: minmax(0, 1fr) 100px; align-items: center; gap: 12px; margin-bottom: 14px; padding: 16px; border: 1px solid var(--report-line); border-radius: 8px; background: var(--report-surface); }
+.rf-hero-heading h2 { font-size: 20px; }
 .rf-hero-text { min-width: 0; }
 .rf-hero-text h2 { margin: 0 0 6px; }
 .rf-total-count { display: block; font-size: 13px; color: var(--report-subtle); font-weight: 500; }
 .rf-explanation { margin: 0; width: 100%; font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
-.rf-history-illustration { display: block; margin: 0; width: 112px; height: 112px; object-fit: contain; }
+.rf-history-illustration { display: block; margin: 0; width: 100px; height: 100px; object-fit: contain; }
 .rf-hero-art { position: absolute; right: var(--report-gutter); top: 76px; width: 88px; height: 72px; display: grid; place-items: center; color: var(--report-ink); }
 .rf-hero-art svg { width: 44px; height: 44px; stroke-width: 1.5; }
 .rf-metric { padding-top: 16px; padding-bottom: 0; border: 0; }
@@ -504,7 +505,7 @@
 .rf-tip p { font-size: 14px; line-height: 1.65; margin: 0; color: var(--report-ink); }
 .rf-accounts { padding-top: 20px; padding-bottom: 24px; margin-top: 24px; border: 0; border-top: 1px solid var(--report-line); }
 .rf-accounts .rf-list-heading { margin: 0 0 8px; font-size: 15px; font-weight: 600; }
-.rf-account-group h4 { display: flex; align-items: center; justify-content: space-between; margin: 8px 0 0; font-size: 13px; font-weight: 500; color: var(--report-subtle); }
+.rf-account-group h4 { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 12px; font-size: 14px; font-weight: 600; color: var(--report-subtle); }
 .rf-account-group h4 span { font-variant-numeric: tabular-nums; }
 .rf-account-group + .rf-account-group { padding-top: 16px; margin-top: 8px; border-top: 1px solid var(--report-line); }
 .rf-group { border: 1px solid var(--report-history-border); border-radius: 8px; padding: 0 16px; background: var(--report-paper); }
@@ -529,10 +530,18 @@
 
 /* Clickable account cards */
 .credit-report .report-account-list { gap: 10px; }
-.credit-report .report-account-row { position: relative; padding: 14px 40px 14px 14px; border: 1px solid var(--report-line) !important; border-radius: 14px; background: var(--report-paper); box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 4px 12px rgba(15,23,42,.04); transition: transform .15s, box-shadow .15s, border-color .15s; cursor: pointer; }
-.credit-report .report-account-row::after { content: ""; position: absolute; right: 16px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid var(--report-subtle); border-top: 1.5px solid var(--report-subtle); transform: translateY(-50%) rotate(45deg); }
-.credit-report .report-account-row:hover { background: var(--report-paper); border-color: color-mix(in srgb, var(--report-brand) 40%, var(--report-line)) !important; box-shadow: 0 6px 18px rgba(15,23,42,.08); }
-.credit-report .report-account-row:active { transform: scale(.99); }
+.credit-report .report-account-row { padding: 0; overflow: hidden; border: 1px solid var(--report-line); border-radius: 8px; background: var(--report-paper); box-shadow: none; transition: border-color .15s; cursor: pointer; }
+.credit-report .report-account-row:hover { background: var(--report-paper); border-color: var(--report-brand); }
+.report-account-row .report-account-top { padding: 14px 14px 12px; gap: 10px; align-items: center; }
+.report-account-row .report-row-label { gap: 2px; }
+.report-account-row .report-lifecycle-status { color: var(--report-subtle); font-size: 11px; }
+.report-account-row .report-chevron { width: 14px; height: 14px; margin-left: -4px; }
+.report-account-reference { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; width: 100%; padding: 0 14px 12px; color: var(--report-subtle); font-size: 11px; font-weight: 400; }
+.report-account-row .report-account-meta { margin: 0; padding: 10px 14px; align-items: center; background: color-mix(in oklab, var(--report-surface) 65%, var(--report-paper)); }
+.report-account-meta > span { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.report-account-meta > .report-account-status { align-items: flex-end; }
+.report-account-meta small, .report-account-meta > span > span { font-size: 11px; font-weight: 400; color: var(--report-subtle); }
+.report-account-meta strong { font-size: 13px; line-height: 1.5; font-weight: 600; }
 .credit-report .rf-group .report-account-list > .report-account-row:last-child { border-bottom: 1px solid var(--report-line) !important; }
 
 /* Compact comparison uses spacing, never whole-page scaling. */
@@ -566,9 +575,12 @@
 .report-compact .report-account-panel { padding-top: 12px; }
 .report-compact .report-lifecycle-note { margin-bottom: 12px; font-size: 13px; }
 .report-compact .report-account-list { gap: 8px; }
-.report-compact .report-account-row { padding-top: 11px; padding-bottom: 11px; }
+.report-compact .report-account-row { padding: 0; }
+.report-compact .report-account-row .report-account-top { padding: 12px 14px 10px; }
+.report-compact .report-account-reference { padding-bottom: 10px; }
+.report-compact .report-account-meta strong { font-size: 14px; }
 .report-compact .rf-hero { padding-top: 16px; padding-bottom: 4px; }
-.report-compact .rf-hero-heading { padding: 12px 0; gap: 10px; margin-bottom: 12px; }
+.report-compact .rf-hero-heading { padding: 14px; gap: 10px; margin-bottom: 12px; }
 .report-compact .rf-total-count, .report-compact .rf-metric > small { font-size: 14px; }
 .report-compact .rf-explanation { font-size: 15px; line-height: 1.55; }
 .report-compact .rf-metric { padding-top: 12px; padding-bottom: 0; }
