@@ -386,6 +386,10 @@
 .account-detail-subtitle { display: flex; flex-direction: column; gap: 2px; color: var(--report-subtle); font-size: 12px; line-height: 1.5; margin-top: 2px; }
 .account-detail-subtitle span { overflow-wrap: anywhere; }
 .account-detail-account { flex-shrink: 0; margin: 4px 0 0; color: var(--report-subtle); font-size: 12px; font-weight: 500; line-height: 1.5; white-space: nowrap; text-align: right; }
+.account-detail-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; color: var(--report-subtle); font-size: 12px; }
+.account-detail-meta .account-detail-account { margin: 0; }
+.credit-report .report-loan-detail .account-detail-hero { padding-bottom: 10px; }
+.credit-report .report-loan-detail .account-detail-usage { padding-top: 10px; }
 .account-art-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 242px; padding: 28px 24px 24px; margin: 4px 0 8px; }
 .account-art-stage-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
 .account-art-ring { position: absolute; border-radius: 50%; }
@@ -537,7 +541,7 @@
 .report-account-row .report-lifecycle-status { color: var(--report-subtle); font-size: 11px; }
 .report-account-row .report-chevron { width: 14px; height: 14px; margin-left: -4px; }
 .report-account-reference { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; width: 100%; padding: 0 14px 12px; color: var(--report-subtle); font-size: 11px; font-weight: 400; }
-.report-account-row .report-account-meta { margin: 0; padding: 10px 14px; align-items: center; background: color-mix(in oklab, var(--report-surface) 65%, var(--report-paper)); }
+.report-account-row .report-account-meta { margin: 0; padding: 0 14px 12px; align-items: center; background: var(--report-paper); }
 .report-account-meta > span { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
 .report-account-meta > .report-account-status { align-items: flex-end; }
 .report-account-meta small, .report-account-meta > span > span { font-size: 11px; font-weight: 400; color: var(--report-subtle); }

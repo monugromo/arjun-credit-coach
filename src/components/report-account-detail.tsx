@@ -1,7 +1,6 @@
 import { useState, type CSSProperties } from "react";
-import { Check, X, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { Check, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { ReportBankMark } from "@/components/report-bank-mark";
 import { creditUsageTone } from "@/lib/report-usage";
 import type { AccountInformation } from "@/lib/report-account-information";
@@ -40,7 +39,6 @@ const sampleMonthStatuses = (seed: string, year: number): MonthStatus[] => MONTH
 });
 
 export function ReportAccountDetail(props: Props) {
-  const [showInfo, setShowInfo] = useState(false);
   const [historyYear, setHistoryYear] = useState(CURRENT_YEAR);
   const card = props.kind === "card" ? props.account : undefined;
   const loan = props.kind === "loan" ? props.account : undefined;
@@ -49,12 +47,12 @@ export function ReportAccountDetail(props: Props) {
   const artwork = loan ? loanArtwork[loan.name] ?? accountIllustrations.other : accountIllustrations.card;
   const statuses = sampleMonthStatuses(props.seed ?? lender, historyYear);
   const lastReportedIndex = (() => { for (let i = CURRENT_MONTH; i >= 0; i--) if (statuses[i] !== "unreported") return i; return -1; })();
-  return <div className="report-account-detail">
+  return <div className={`report-account-detail${loan ? " report-loan-detail" : ""}`}>
     <section className="report-section account-detail-hero">
       <div className="account-detail-identity">
         <ReportBankMark name={lender} logoUrl={props.logoUrl} />
-        <div className="account-detail-copy"><div className="account-detail-title"><h2>{lender}</h2><Button variant="ghost" size="icon" aria-label="About this account" onClick={() => setShowInfo(true)}><Info /></Button></div><p className="account-detail-subtitle"><span>{product}</span></p></div>
-        <p className="account-detail-account">Acc No. xx{props.account.last4}</p>
+        <div className="account-detail-copy"><div className="account-detail-title"><h2>{product}</h2></div><p className="account-detail-subtitle"><span>{lender}</span></p></div>
+        <div className="account-detail-meta"><span className={`report-lifecycle-status${props.information?.status === "Active" ? " is-active" : ""}`}>{props.information?.status ?? "Not reported"}</span><p className="account-detail-account">Acc No. xx{props.account.last4}</p></div>
       </div>
       <div className="account-art-stage">
         <div className="account-art-stage-bg" aria-hidden="true">
@@ -111,6 +109,5 @@ export function ReportAccountDetail(props: Props) {
       </dl>
     </section>
     <section className="report-section account-detail-support"><p>This information is based on what the lender reports to Equifax.</p><Button variant="outline" onClick={props.onStartChat}>Talk to Arjun</Button></section>
-    <Dialog open={showInfo} onOpenChange={setShowInfo}><DialogContent className="credit-report report-score-dialog"><DialogTitle>About this account</DialogTitle><DialogDescription>{props.information?.sample ? "Account information includes sample statuses and dates for this demo, not verified bureau records. " : `Balances and payment information are supplied by ${lender} to Equifax. `}Payment status is separate from whether an account is active or closed.</DialogDescription></DialogContent></Dialog>
   </div>;
 }
