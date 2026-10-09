@@ -107,7 +107,7 @@ export function ReportAccountDetail(props: Props) {
       <p className="account-history-recorded">Last payment recorded by Bureau: {lastReportedIndex >= 0 ? `${MONTHS[lastReportedIndex]} ${historyYear}` : "Not reported"}</p>
     </section>
     <section className="report-section account-detail-facts">
-      <div className="account-facts-heading"><h3>Account information</h3>{props.information?.sample && <span>Sample details</span>}</div>
+      {props.information?.sample && <div className="account-facts-heading"><span>Sample details</span></div>}
       <dl>
         {loan && <div><dt>Monthly EMI</dt><dd>{money(loan.emi)}</dd></div>}
         <div><dt>Account status</dt><dd className={props.information ? "account-facts-status" : "account-value-unavailable"}>{props.information?.status ?? "Not reported"}</dd></div>

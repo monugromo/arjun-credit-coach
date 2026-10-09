@@ -16,6 +16,7 @@ import { ReportBankMark } from "@/components/report-bank-mark";
 import { creditUsageTone } from "@/lib/report-usage";
 import { ReportAccountDetail } from "@/components/report-account-detail";
 import { demoAccountInformation } from "@/lib/report-account-information";
+import { paymentSummary } from "@/lib/report-payments";
 
 const cards = [
   { bank: "HDFC Bank", last4: "4521", used: 128000, limit: 150000, pct: 85, tone: "danger" },
@@ -37,8 +38,10 @@ const enquiries = [
   { lender: "Bajaj Markets", product: "Consumer Loan", date: "02 Apr 2026" },
   { lender: "Paytm", product: "BNPL", date: "21 Mar 2026" },
 ];
+const payments = paymentSummary(loans);
+const paymentCount = `${payments.onTime}/${payments.total}`;
 const factors = [
-  { key: "payment", title: "Payment history", subtitle: "97% of EMIs paid on time", value: "97%", unit: "ON TIME", tone: "warning", icon: CalendarCheck, explanation: "Paying on time impacts your CIBIL score the most. It shows that you are a trustworthy borrower.", advice: "Keep every payment on time", note: "Set up reminders or auto-pay for your next bills." },
+  { key: "payment", title: "Payment history", subtitle: `${paymentCount} EMIs paid on time`, value: paymentCount, unit: "ON TIME", tone: "warning", icon: CalendarCheck, explanation: "Paying on time impacts your CIBIL score the most. It shows that you are a trustworthy borrower.", advice: "Keep every payment on time", note: "Set up reminders or auto-pay for your next bills." },
   { key: "usage", title: "Credit usage", subtitle: "61% of your limit", value: "61%", unit: "USED", tone: "warning", icon: CreditCard, explanation: "Credit usage tells you how much credit you used out of your total credit limit.", advice: "Make room on your cards", note: "Pay down outstanding balances and keep new spending manageable." },
   { key: "mix", title: "Credit mix", subtitle: "3 cards · 6 loans", value: "9", unit: "ACCOUNTS", tone: "positive", icon: Layers, explanation: "Credit mix shows all your credit cards and loans and how diverse they are.", advice: "Look after the credit you have", note: "You don't need to open a new account just to change your credit mix." },
   { key: "enquiries", title: "New enquiries", subtitle: "5 in the last 6 months", value: "5", unit: "PULLS", tone: "danger", icon: FileText, explanation: "An enquiry occurs when a lending institution checks your credit report when you've applied for a credit product (loans, credit cards, etc.)", advice: "Review recent applications", note: "If an enquiry looks unfamiliar, talk to Arjun." },
@@ -205,9 +208,9 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
           <div className="report-account-stack">{view === "age" ? <p className="report-description">Account opening dates are not available.</p> : view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <><div className="rf-account-group"><h4>Credit cards <span>{cards.length}</span></h4>{cardRows}</div><div className="rf-account-group"><h4>Loans <span>{loans.length}</span></h4>{loanRows}</div></> : loanRows}</div>
         </section>
       </> : view === "accounts" ? <>
-        <section className="report-section report-detail-heading"><span className="report-eyebrow">Credit accounts</span><h2>Full credit details</h2><p>{cards.length} credit cards · {loans.length} loans</p></section>
+        <section className="report-section report-detail-heading"><h2>Full credit details</h2><p>{cards.length} credit cards · {loans.length} loans</p></section>
         <div className="report-account-tabs" role="tablist" aria-label="Credit accounts">{([ ["cards", "Cards", cards.length], ["loans", "Loans", loans.length], ["enquiries", "Enquiries", enquiries.length] ] as const).map(([key, label, count]) => <Button variant="ghost" key={key} role="tab" aria-selected={tab === key} className={tab === key ? "report-tab is-active" : "report-tab"} onClick={() => setTab(key)}>{label}<span>{count}</span></Button>)}</div>
-        <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}>{tab !== "enquiries" && <p className="report-lifecycle-note"><Info aria-hidden="true" /><span>Account information uses sample statuses and dates. Payment status is shown separately.</span></p>}<div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
+        <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}><div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
       </> : <>
         <section className="report-section report-score-hero">
           <div className="report-score-head"><p className="report-score-headline">{scoreHeadline}</p></div>
@@ -243,7 +246,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
           <div className="report-refresh-row">
             {daysLeft > 0 ? <span className="report-updated">Next update in {daysLeft} {daysLeft === 1 ? "day" : "days"}</span> : <Button variant="link" className="report-refresh" onClick={() => setLastPulled(new Date())}><RefreshCw />Refresh now</Button>}
           </div>
-          <div className="report-hero-actions"><Button variant="outline" onClick={() => navigate("accounts", "cards")}>Full credit details</Button><Button variant="outline" onClick={onBack}><MessageCircle />Talk to Arjun</Button></div>
+          <div className="report-hero-actions"><Button className="report-cta-primary" onClick={() => navigate("accounts", "cards")}>Full credit details</Button><Button variant="outline" onClick={onBack}><MessageCircle />Talk to Arjun</Button></div>
           </div>
           <Dialog open={showInfo} onOpenChange={setShowInfo}><DialogContent className="credit-report report-score-dialog"><DialogTitle>What your score means</DialogTitle><DialogDescription>Your score and accounts are based on the information in your Equifax credit report. Checking this report does not create a credit enquiry.</DialogDescription><ul className="report-info-bands"><li><i className="report-status-dot report-tone-danger" aria-hidden /><strong>Poor</strong><span>300-549 - lenders see high risk</span></li><li><i className="report-status-dot report-tone-warning" aria-hidden /><strong>Fair</strong><span>550-649 - some lenders may approve</span></li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Good</strong><span>650-749 - most lenders approve</span></li><li><i className="report-status-dot report-tone-positive" aria-hidden /><strong>Excellent</strong><span>750-900 - best rates and offers</span></li></ul></DialogContent></Dialog>
         </section>
