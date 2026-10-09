@@ -209,7 +209,9 @@
 .report-eyebrow { display: block; font-size: 12px; font-weight: 500; color: var(--report-subtle); margin-bottom: 8px; }
 .report-score-hero { padding: 20px 16px 0; border-bottom: 0; }
 .report-score-panel { margin-top: 8px; overflow: hidden; background: var(--report-paper); }
-.report-hero-bureau { display: flex; justify-content: flex-end; padding: 16px 18px 0; }
+.report-hero-bureau { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 4px 0; }
+.report-bureau-updated { font-size: 12px; color: var(--report-subtle); white-space: nowrap; }
+.report-bureau-updated strong { font-weight: 700; color: var(--report-ink); }
 .report-hero-bureau img { width: 76px; height: 24px; object-fit: contain; }
 .report-score-panel .report-carousel { margin: 0; }
 .report-score-panel .report-slide { padding: 2px 12px 0; min-height: 0; aspect-ratio: 320 / 175; }
@@ -222,8 +224,8 @@
 .report-gauge-label { fill: var(--report-subtle); font-size: 12px; }
 .report-gauge-value { position: absolute; top: 44%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
 .report-gauge-value > strong { font-size: 44px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
-.report-gauge-band { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 14px; padding-left: 26px; font-size: 14px; font-weight: 600; color: var(--report-subtle); }
-.report-gauge-band button { width: 26px; height: 26px; color: inherit; }
+.report-gauge-band { position: relative; display: flex; align-items: center; justify-content: center; min-height: 26px; margin-top: 10px; font-size: 14px; font-weight: 600; color: var(--report-subtle); }
+.report-gauge-band button { position: absolute; left: calc(100% + 4px); width: 26px; height: 26px; color: inherit; }
 .report-gauge-band svg { width: 16px; height: 16px; }
 
 .report-score-panel .report-refresh-row { justify-content: center; border: 0; margin: 0; padding: 0 12px 12px; font-size: 13px; }
@@ -247,7 +249,7 @@
 .report-score-value { display: flex; align-items: baseline; gap: 8px; }
 .report-score-value strong { font-size: 72px; line-height: 1; font-weight: 500; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .report-score-value > span { font-size: 18px; color: var(--report-subtle); font-weight: 500; }
-.report-score-change { display: flex; align-items: baseline; justify-content: center; gap: 6px; margin: -6px 0 0; color: var(--report-positive); }
+.report-score-change { display: flex; align-items: baseline; justify-content: center; gap: 6px; margin: 8px 0 0; color: var(--report-positive); }
 .report-score-change > strong { display: flex; align-items: baseline; gap: 6px; font-size: 22px; line-height: 1.3; font-weight: 700; font-variant-numeric: tabular-nums; }
 .report-score-change > strong span { font-size: 14px; font-weight: 600; }
 .report-lifecycle-note { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 20px; color: var(--report-subtle); font-size: 12px; line-height: 1.6; }
@@ -276,10 +278,11 @@
 .report-trend-chart .dot { fill: var(--report-paper); stroke: var(--report-ink); stroke-width: 2; }
 .report-trend-chart .score-label { fill: var(--report-ink); font-size: 12px; font-weight: 600; }
 .report-trend-chart .label, .report-trend-chart .axis { fill: var(--report-subtle); font-size: 10px; font-weight: 500; }
-.report-dots { display: flex; justify-content: center; gap: 0; margin: 0; }
-.report-dots button { width: 32px; height: 32px; padding: 0; border-radius: 100%; }
-.report-dots button span { width: 6px; height: 6px; border-radius: 100%; background: var(--report-line); }
-.report-dots button span.is-active { background: var(--report-brand); }
+.report-dots { display: flex; justify-content: center; gap: 0; margin: 2px 0; }
+.report-dots button { width: 40px; height: 36px; padding: 0; border-radius: 8px; }
+.report-dots button span { width: 7px; height: 7px; border-radius: 999px; background: var(--report-line); transition: width 180ms ease, background 180ms ease; }
+.report-dots button span.is-active { width: 22px; background: var(--report-brand); }
+@media (prefers-reduced-motion: reduce) { .report-dots button span { transition: none; } }
 .report-refresh-row { display: flex; align-items: center; gap: 8px; margin-top: 26px; padding: 18px 0; border-top: 1px solid var(--report-line); font-size: 14px; color: var(--report-subtle); }
 
 .report-updated + .report-updated::before { content: "·"; margin-right: 8px; color: var(--report-faint); }
@@ -524,15 +527,15 @@
 .report-compact { --report-gutter: 18px; font-size: 15px; }
 .report-compact .report-section { padding-top: 16px; padding-bottom: 16px; }
 .report-compact .report-score-hero { padding: 14px 16px 0; }
-.report-compact .report-score-greeting { font-size: 15px; margin-bottom: 2px; }
 .report-compact .report-score-headline { font-size: 21px; }
 .report-compact .report-score-panel { margin-top: 2px; }
 .report-compact .report-hero-bureau { padding: 6px 4px 0; }
+.report-compact .report-bureau-updated { font-size: 13px; }
 .report-compact .report-score-panel .report-slide { aspect-ratio: auto; padding: 0 8px; }
 .report-compact .report-gauge-wrap { max-width: 300px; }
 .report-compact .report-gauge-value > strong { font-size: 46px; }
 .report-compact .report-gauge-band { font-size: 15px; margin-top: 10px; }
-.report-compact .report-score-change { margin-top: 0; }
+.report-compact .report-score-change { margin-top: 6px; }
 .report-compact .report-score-change > strong { font-size: 23px; }
 .report-compact .report-score-change > strong span { font-size: 15px; }
 .report-compact .report-score-panel .report-refresh-row { padding-bottom: 8px; font-size: 14px; }
