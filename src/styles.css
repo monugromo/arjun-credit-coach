@@ -536,7 +536,7 @@
 .report-compact .report-hero-bureau { padding: 6px 4px 0; }
 .report-compact .report-bureau-updated { font-size: 13px; }
 .report-compact .report-score-panel .report-slide { aspect-ratio: auto; padding: 0 8px; }
-.report-compact .report-gauge-wrap { max-width: 300px; }
+.report-compact .report-gauge-wrap { max-width: 360px; }
 .report-compact .report-gauge-value > strong { font-size: 46px; }
 .report-compact .report-gauge-band { font-size: 15px; margin-top: 10px; }
 .report-compact .report-score-change { margin-top: 2px; }
