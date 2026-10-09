@@ -1,6 +1,6 @@
 # Roadmap
 
-- [x] Copy shaded comparison #015 into #016 with slightly zoomed-out report content across all report views; verified trend, five factors, nine account details and unchanged #015.
+- [ ] Refine #016 to fit more report content through tighter spacing and slightly larger fonts instead of zoom; verify overview, factors and account details while keeping #015 unchanged.
 
 - [x] Simplify account-page dividers, remove the bureau-update fact, use an Arjun text action and separate product from masked account number; verified both account types and chat handoff without page errors.
 

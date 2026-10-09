@@ -200,7 +200,6 @@
 .credit-report, .credit-report * { letter-spacing: 0; }
 .credit-report button { font-family: inherit; }
 .report-scroll { scrollbar-width: thin; }
-.report-compact .report-content { zoom: 0.92; }
 .report-section { padding: 24px var(--report-gutter); border-bottom: 1px solid var(--report-line); }
 .report-section h2 { font-size: 22px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
 .report-section h3 { font-size: 18px; line-height: 1.4; font-weight: 600; }
@@ -520,3 +519,65 @@
 .credit-report .report-account-row:hover { background: var(--report-paper); border-color: color-mix(in srgb, var(--report-brand) 40%, var(--report-line)) !important; box-shadow: 0 6px 18px rgba(15,23,42,.08); }
 .credit-report .report-account-row:active { transform: scale(.99); }
 .credit-report .rf-group .report-account-list > .report-account-row:last-child { border-bottom: 1px solid var(--report-line) !important; }
+
+/* Compact comparison uses spacing, never whole-page scaling. */
+.report-compact { --report-gutter: 18px; font-size: 15px; }
+.report-compact .report-section { padding-top: 16px; padding-bottom: 16px; }
+.report-compact .report-score-hero { padding: 14px 16px 0; }
+.report-compact .report-score-greeting { font-size: 15px; margin-bottom: 2px; }
+.report-compact .report-score-headline { font-size: 21px; }
+.report-compact .report-score-panel { margin-top: 2px; }
+.report-compact .report-hero-bureau { padding: 6px 4px 0; }
+.report-compact .report-score-panel .report-slide { aspect-ratio: auto; padding: 0 8px; }
+.report-compact .report-gauge-wrap { max-width: 300px; }
+.report-compact .report-gauge-value > strong { font-size: 46px; }
+.report-compact .report-gauge-band { font-size: 15px; margin-top: 10px; }
+.report-compact .report-score-change { margin-top: 0; }
+.report-compact .report-score-change > strong { font-size: 23px; }
+.report-compact .report-score-change > strong span { font-size: 15px; }
+.report-compact .report-score-panel .report-refresh-row { padding-bottom: 8px; font-size: 14px; }
+.report-compact .report-hero-actions { gap: 8px; padding-bottom: 0; }
+.report-compact .report-hero-actions button { height: 44px; font-size: 15px; }
+.report-compact .report-factors { padding-top: 14px; padding-bottom: 0; }
+.report-compact .report-factors-title { font-size: 18px; margin-bottom: 2px; }
+.report-compact .report-factor-row { min-height: 60px; padding: 9px 0; gap: 10px; }
+.report-compact .report-row-label { gap: 2px; }
+.report-compact .report-row-label > strong { font-size: 15px; }
+.report-compact .report-row-label > small { font-size: 14px; }
+.report-compact .report-status-word, .report-compact .report-status,
+.report-compact .report-account-status, .report-compact .rf-history-status { font-size: 13px; }
+.report-compact .report-trend-head { font-size: 15px; }
+.report-compact .report-trend-chart { margin-top: 4px; }
+.report-compact .report-account-panel { padding-top: 12px; }
+.report-compact .report-lifecycle-note { margin-bottom: 12px; font-size: 13px; }
+.report-compact .report-account-list { gap: 8px; }
+.report-compact .report-account-row { padding-top: 11px; padding-bottom: 11px; }
+.report-compact .rf-hero { padding-top: 16px; padding-bottom: 4px; }
+.report-compact .rf-hero-heading { padding: 12px; gap: 10px; margin-bottom: 12px; }
+.report-compact .rf-total-count, .report-compact .rf-metric > small { font-size: 14px; }
+.report-compact .rf-explanation { font-size: 15px; line-height: 1.55; }
+.report-compact .rf-metric { padding-top: 12px; padding-bottom: 0; }
+.report-compact .rf-accounts { margin-top: 16px; padding-top: 16px; }
+.report-compact .rf-history-account { min-height: 64px; padding: 10px 0; }
+.report-compact .account-detail-title h2 { font-size: 17px; }
+.report-compact .account-detail-subtitle, .report-compact .account-detail-account,
+.report-compact .account-detail-balances dt { font-size: 13px; }
+.report-compact .account-detail-balances dd { font-size: 18px; }
+.report-compact .account-art-stage { padding: 16px 12px; margin-bottom: 6px; }
+.report-compact .report-account-detail .report-section h3 { font-size: 17px; }
+.report-compact .account-detail-usage .account-usage-indicator { margin-top: 44px; }
+.report-compact .account-usage-label { font-size: 13px; }
+.report-compact .report-account-detail .account-detail-history { padding: 0; }
+.report-compact .account-history-head { padding: 14px var(--report-gutter) 8px; }
+.report-compact .account-history-grid { gap: 18px 4px; padding: 14px var(--report-gutter) 16px; }
+.report-compact .account-history-cell { gap: 10px; }
+.report-compact .account-history-month { font-size: 12px; }
+.report-compact .account-history-legend { padding: 12px; gap: 16px; }
+.report-compact .account-history-legend span, .report-compact .account-history-recorded { font-size: 13px; }
+.report-compact .account-history-recorded { padding: 12px var(--report-gutter); }
+.report-compact .account-detail-facts dl { margin-top: 8px; }
+.report-compact .account-detail-facts dl > div { padding: 9px 0; }
+.report-compact .account-detail-facts dt { font-size: 13px; }
+.report-compact .account-detail-facts dd { font-size: 14px; }
+.report-compact .account-detail-support p, .report-compact .account-detail-support button { font-size: 15px; }
+.report-compact .report-bureau { padding: 16px; font-size: 13px; }
