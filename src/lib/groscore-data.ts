@@ -210,7 +210,6 @@ export const DEMOS: Record<string, DemoUser> = {
     score: 413,
     band: "Poor",
     reportDesign: "comparison",
-    reportDensity: "compact",
     accountDetailLayout: "artwork-first",
     scoreHistory: SAMPLE_SCORE_HISTORY,
     directReportLogin: true,
