@@ -24,3 +24,4 @@
 - Derive the report payment count from supplied loan payment statuses through a shared summary helper; this keeps the overview and factor totals consistent.
 - Sort report lists through the lifecycle helper while retaining source indices; this keeps detail navigation correct after active/closed ordering.
 - Share optimized report artwork URLs and warm their browser cache on report entry; this keeps factor and account illustrations consistent and fast without server-side image processing.
+- Gate artwork-first account detail layouts with an optional demo presentation flag in the shared detail component; this isolates comparisons while preserving existing account journeys.
