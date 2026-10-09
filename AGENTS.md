@@ -21,3 +21,4 @@
 - Derive card utilisation colour through the shared report usage helper in lists and details; this keeps threshold boundaries consistent and testable.
 - Render every loan and card drill-down through one shared account-detail component using the existing report state and supplied account fields; this keeps the reference layout consistent without changing navigation or inventing history.
 - Pass explicitly labelled account-information fixtures only from the demo report into the shared detail view; missing real fields remain unreported so sample lifecycle dates cannot masquerade as bureau records.
+- Derive the report payment count from supplied loan payment statuses through a shared summary helper; this keeps the overview and factor totals consistent.
