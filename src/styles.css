@@ -202,6 +202,7 @@
 .credit-report, .credit-report * { letter-spacing: 0; }
 .credit-report button { font-family: inherit; }
 .report-scroll { scrollbar-width: thin; }
+.report-header { padding-inline: var(--report-gutter); }
 .report-section { padding: 24px var(--report-gutter); border-bottom: 1px solid var(--report-line); }
 .report-section h2 { font-size: 22px; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
 .report-section h3 { font-size: 18px; line-height: 1.4; font-weight: 600; }
@@ -209,9 +210,9 @@
 .report-description, .report-detail-heading > p, .report-ntc-intro > p { font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
 .report-detail-heading h2 { margin: 0 0 8px; }
 .report-eyebrow { display: block; font-size: 12px; font-weight: 500; color: var(--report-subtle); margin-bottom: 8px; }
-.report-score-hero { padding: 20px 16px 0; border-bottom: 0; }
+.report-score-hero { padding: 20px var(--report-gutter) 0; border-bottom: 0; }
 .report-score-panel { margin-top: 8px; overflow: hidden; background: var(--report-paper); }
-.report-hero-bureau { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 4px 0; }
+.report-hero-bureau { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0 0; }
 .report-bureau-updated { font-size: 12px; color: var(--report-subtle); white-space: nowrap; }
 .report-bureau-updated strong { font-weight: 700; color: var(--report-ink); }
 .report-hero-bureau img { width: 76px; height: 24px; object-fit: contain; }
@@ -349,6 +350,12 @@
 .report-loan-status strong.report-tone-warning { color: var(--report-warning); }
 .report-account-row .report-utilisation { margin-top: 6px; }
 .report-account-top { display: flex; gap: 10px; width: 100%; align-items: center; }
+.report-account-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; width: 100%; margin-top: 10px; font-size: 11px; font-weight: 400; line-height: 1.5; color: var(--report-subtle); }
+.report-account-meta > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.report-lifecycle-status { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; font-weight: 500; }
+.report-lifecycle-status::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--report-subtle); }
+.report-lifecycle-status.is-active::before { background: var(--report-positive); }
+.report-sample-note { display: block; color: var(--report-subtle); font-size: 11px; line-height: 1.5; margin: 6px 0 10px; }
 .report-metric { display: flex; flex-direction: column; text-align: right; gap: 2px; flex-shrink: 0; }
 .report-metric strong { font-size: 16px; font-weight: 600; }
 .report-metric small { font-size: 11px; font-weight: 400; color: var(--report-subtle); }
@@ -379,12 +386,12 @@
 .account-detail-subtitle { display: flex; flex-direction: column; gap: 2px; color: var(--report-subtle); font-size: 12px; line-height: 1.5; margin-top: 2px; }
 .account-detail-subtitle span { overflow-wrap: anywhere; }
 .account-detail-account { flex-shrink: 0; margin: 4px 0 0; color: var(--report-subtle); font-size: 12px; font-weight: 500; line-height: 1.5; white-space: nowrap; text-align: right; }
-.account-art-stage { position: relative; display: flex; justify-content: center; padding: 28px 24px 24px; margin: 4px 0 8px; }
+.account-art-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 242px; padding: 28px 24px 24px; margin: 4px 0 8px; }
 .account-art-stage-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
 .account-art-ring { position: absolute; border-radius: 50%; }
 .account-art-ring-outer { width: 288px; height: 288px; border: 1px solid color-mix(in srgb, var(--report-brand, #01BE87) 6%, transparent); }
 .account-art-ring-inner { width: 240px; height: 240px; border: 1px solid color-mix(in srgb, var(--report-brand, #01BE87) 12%, transparent); }
-.account-art-glow { position: absolute; width: 256px; height: 256px; border-radius: 50%; background: #E8F9F3; filter: blur(48px); opacity: 0.6; }
+.account-art-glow { position: absolute; width: 256px; height: 256px; border-radius: 50%; background: var(--report-surface); filter: blur(48px); opacity: 0.6; }
 .account-art-pedestal { position: absolute; bottom: 26px; width: 192px; height: 44px; border-radius: 50%; background: rgba(15, 23, 42, 0.05); filter: blur(16px); }
 .account-detail-art { position: relative; z-index: 1; display: block; width: auto; height: auto; max-width: 100%; max-height: 190px; margin: 0 auto; object-fit: contain; filter: drop-shadow(0 20px 32px rgba(0, 0, 0, 0.1)); }
 .account-detail-balances { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
@@ -420,7 +427,7 @@
 .account-history-unreported .account-history-dot, i.account-history-unreported { background: transparent; border: 1.5px solid var(--report-line); }
 .account-history-month { font-size: 11px; font-weight: 500; letter-spacing: 0; color: var(--report-subtle); }
 .account-history-missing { display: grid; place-items: center; width: 20px; height: 20px; color: var(--report-faint); font-size: 16px; line-height: 1; }
-.account-history-legend { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; padding: 20px 12px; }
+.account-history-legend { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; padding: 20px var(--report-gutter); }
 .account-history-legend span { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--report-ink); }
 .account-history-recorded { margin: 0; padding: 16px var(--report-gutter); border-top: 1px solid var(--report-line); color: var(--report-subtle); font-size: 12px; font-weight: 400; line-height: 1.6; text-align: center; }
 .account-facts-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; }
@@ -433,6 +440,7 @@
 .account-detail-facts .account-value-unavailable { color: var(--report-subtle); font-size: 13px; font-weight: 400; }
 .account-facts-status { display: inline-flex; align-items: center; justify-content: flex-end; gap: 6px; }
 .account-facts-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--report-brand); flex-shrink: 0; }
+.account-facts-status.is-closed::before { background: var(--report-subtle); }
 .account-detail-support { border-bottom: 0; }
 .account-detail-support p { font-size: 14px; line-height: 1.6; color: var(--report-subtle); }
 .account-detail-support button { width: 100%; min-height: 48px; height: auto; padding: 12px 16px; margin-top: 12px; gap: 7px; white-space: normal; line-height: 1.35; border: 1px solid var(--report-action); border-radius: 8px; background: var(--report-action); color: var(--report-action-foreground); box-shadow: none; font-size: 14px; font-weight: 600; text-align: center; justify-content: center; text-decoration: none; }
@@ -468,14 +476,14 @@
 .report-savings details[open] summary { margin-bottom: 20px; }
 .report-savings details[open] summary svg { transform: rotate(90deg); }
 .report-savings > div, .report-savings details > div > div { padding: 0; border-radius: 0; box-shadow: none; background: transparent; }
-.report-bureau { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 24px; font-size: 12px; color: var(--report-subtle); border-top: 1px solid var(--report-line); }
+.report-bureau { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 24px var(--report-gutter); font-size: 12px; color: var(--report-subtle); border-top: 1px solid var(--report-line); }
 .report-bureau-logo { height: 12px; width: auto; display: block; }
 /* Preserve the supplied history illustration and account-group layout. */
 .rf-hero { position: relative; padding-top: 20px; padding-bottom: 8px; border: 0; }
-.rf-hero-heading { display: grid; grid-template-columns: minmax(0, 1fr) 112px; align-items: center; gap: 16px; margin-bottom: 20px; padding: 16px; border-radius: 16px; background: color-mix(in srgb, var(--report-brand) 7%, var(--report-paper)); }
+.rf-hero-heading { display: grid; grid-template-columns: minmax(0, 1fr) 112px; align-items: center; gap: 12px; margin-bottom: 20px; padding: 16px 0; border-radius: 0; background: var(--report-paper); }
 .rf-hero-text { min-width: 0; }
 .rf-hero-text h2 { margin: 0 0 6px; }
-.rf-total-count { display: block; font-size: 13px; color: var(--report-brand); font-weight: 500; }
+.rf-total-count { display: block; font-size: 13px; color: var(--report-subtle); font-weight: 500; }
 .rf-explanation { margin: 0; width: 100%; font-size: 14px; line-height: 1.65; color: var(--report-subtle); }
 .rf-history-illustration { display: block; margin: 0; width: 112px; height: 112px; object-fit: contain; }
 .rf-hero-art { position: absolute; right: var(--report-gutter); top: 76px; width: 88px; height: 72px; display: grid; place-items: center; color: var(--report-ink); }
@@ -530,10 +538,10 @@
 /* Compact comparison uses spacing, never whole-page scaling. */
 .report-compact { --report-gutter: 18px; font-size: 15px; }
 .report-compact .report-section { padding-top: 16px; padding-bottom: 16px; }
-.report-compact .report-score-hero { padding: 14px 16px 0; }
+.report-compact .report-score-hero { padding: 14px var(--report-gutter) 0; }
 .report-compact .report-score-headline { font-size: 21px; }
 .report-compact .report-score-panel { margin-top: 2px; }
-.report-compact .report-hero-bureau { padding: 6px 4px 0; }
+.report-compact .report-hero-bureau { padding: 6px 0 0; }
 .report-compact .report-bureau-updated { font-size: 13px; }
 .report-compact .report-score-panel .report-slide { aspect-ratio: auto; padding: 0 8px; }
 .report-compact .report-gauge-wrap { max-width: 360px; }
@@ -560,7 +568,7 @@
 .report-compact .report-account-list { gap: 8px; }
 .report-compact .report-account-row { padding-top: 11px; padding-bottom: 11px; }
 .report-compact .rf-hero { padding-top: 16px; padding-bottom: 4px; }
-.report-compact .rf-hero-heading { padding: 12px; gap: 10px; margin-bottom: 12px; }
+.report-compact .rf-hero-heading { padding: 12px 0; gap: 10px; margin-bottom: 12px; }
 .report-compact .rf-total-count, .report-compact .rf-metric > small { font-size: 14px; }
 .report-compact .rf-explanation { font-size: 15px; line-height: 1.55; }
 .report-compact .rf-metric { padding-top: 12px; padding-bottom: 0; }
@@ -570,7 +578,7 @@
 .report-compact .account-detail-subtitle, .report-compact .account-detail-account,
 .report-compact .account-detail-balances dt { font-size: 13px; }
 .report-compact .account-detail-balances dd { font-size: 18px; }
-.report-compact .account-art-stage { padding: 16px 12px; margin-bottom: 6px; }
+.report-compact .account-art-stage { min-height: 222px; padding: 16px 12px; margin-bottom: 6px; }
 .report-compact .report-account-detail .report-section h3 { font-size: 17px; }
 .report-compact .account-detail-usage .account-usage-indicator { margin-top: 44px; }
 .report-compact .account-usage-label { font-size: 13px; }
@@ -579,7 +587,7 @@
 .report-compact .account-history-grid { gap: 18px 4px; padding: 14px var(--report-gutter) 16px; }
 .report-compact .account-history-cell { gap: 10px; }
 .report-compact .account-history-month { font-size: 12px; }
-.report-compact .account-history-legend { padding: 12px; gap: 16px; }
+.report-compact .account-history-legend { padding: 12px var(--report-gutter); gap: 16px; }
 .report-compact .account-history-legend span, .report-compact .account-history-recorded { font-size: 13px; }
 .report-compact .account-history-recorded { padding: 12px var(--report-gutter); }
 .report-compact .account-detail-facts dl { margin-top: 8px; }
@@ -587,4 +595,4 @@
 .report-compact .account-detail-facts dt { font-size: 13px; }
 .report-compact .account-detail-facts dd { font-size: 14px; }
 .report-compact .account-detail-support p, .report-compact .account-detail-support button { font-size: 15px; }
-.report-compact .report-bureau { padding: 16px; font-size: 13px; }
+.report-compact .report-bureau { padding: 16px var(--report-gutter); font-size: 13px; }

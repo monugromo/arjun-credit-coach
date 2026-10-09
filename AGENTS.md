@@ -22,3 +22,5 @@
 - Render every loan and card drill-down through one shared account-detail component using the existing report state and supplied account fields; this keeps the reference layout consistent without changing navigation or inventing history.
 - Pass explicitly labelled account-information fixtures only from the demo report into the shared detail view; missing real fields remain unreported so sample lifecycle dates cannot masquerade as bureau records.
 - Derive the report payment count from supplied loan payment statuses through a shared summary helper; this keeps the overview and factor totals consistent.
+- Sort report lists through the lifecycle helper while retaining source indices; this keeps detail navigation correct after active/closed ordering.
+- Share optimized report artwork URLs and warm their browser cache on report entry; this keeps factor and account illustrations consistent and fast without server-side image processing.

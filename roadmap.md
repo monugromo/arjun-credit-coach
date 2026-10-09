@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Unify report page gutters, replace green factor artwork with grayscale illustrations and optimize image loading; show account type, sample issue date and lifecycle status with active accounts first. Verified all five factors and nine account details on #014, #015 and #016 with no page errors and 16 passing tests; existing sample accounts are all active.
+
 - [x] Refine report score spacing and smaller points text, align CTAs with loan actions, show 5/6 on-time EMIs, remove redundant account labels; verified all comparison accounts, account facts and chat actions with 15 passing tests.
 
 - [x] Update all report versions: anonymous credit-score heading, right-aligned Equifax with bold 06 Oct'26 update date, balanced score/band/points spacing, clearer carousel markers and no duplicate trend change; verified both carousel views and account navigation on #014, #015 and #016 with no page errors and 11 passing tests.

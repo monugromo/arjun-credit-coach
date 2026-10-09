@@ -5,18 +5,13 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { ReportBankMark } from "@/components/report-bank-mark";
 import { creditUsageTone } from "@/lib/report-usage";
 import type { AccountInformation } from "@/lib/report-account-information";
-import cardArt from "@/assets/account-art/account-credit-card.png.asset.json";
-import personalArt from "@/assets/account-art/account-personal.png.asset.json";
-import vehicleArt from "@/assets/account-art/account-vehicle.png.asset.json";
-import homeArt from "@/assets/account-art/account-home.png.asset.json";
-import goldArt from "@/assets/account-art/gold.png.asset.json";
-import otherArt from "@/assets/account-art/other.png.asset.json";
+import { accountIllustrations } from "@/lib/report-artwork";
 
 type CardDetails = { bank: string; last4: string; limit: number; used: number; pct: number };
 type LoanDetails = { lender: string; name: string; last4: string; sanctioned: number; outstanding: number; emi: number; status: string; tone: string };
 type Props = ({ kind: "card"; account: CardDetails } | { kind: "loan"; account: LoanDetails }) & { information?: AccountInformation; logoUrl?: string; seed?: string; onStartChat: () => void };
 const money = (value: number) => `₹${value.toLocaleString("en-IN")}`;
-const loanArtwork: Record<string, string> = { "Personal Loan": personalArt.url, "Consumer Loan": personalArt.url, "Auto Loan": vehicleArt.url, "Vehicle Loan": vehicleArt.url, "Two-wheeler Loan": vehicleArt.url, "Home Loan": homeArt.url, "Gold Loan": goldArt.url, "Education Loan": otherArt.url, "Other Loan": otherArt.url };
+const loanArtwork: Record<string, string> = { "Personal Loan": accountIllustrations.personal, "Consumer Loan": accountIllustrations.personal, "Auto Loan": accountIllustrations.vehicle, "Vehicle Loan": accountIllustrations.vehicle, "Two-wheeler Loan": accountIllustrations.vehicle, "Home Loan": accountIllustrations.home, "Gold Loan": accountIllustrations.gold, "Education Loan": accountIllustrations.other, "Other Loan": accountIllustrations.other };
 
 function UsageIndicator({ pct, tone, label }: { pct: number; tone: string; label: string }) {
   const clamped = Math.max(0, Math.min(100, Math.round(pct)));
@@ -51,7 +46,7 @@ export function ReportAccountDetail(props: Props) {
   const loan = props.kind === "loan" ? props.account : undefined;
   const lender = card?.bank ?? loan?.lender ?? "";
   const product = loan?.name.replace("Loan", "loan") ?? "Credit card";
-  const artwork = loan ? loanArtwork[loan.name] ?? personalArt.url : cardArt.url;
+  const artwork = loan ? loanArtwork[loan.name] ?? accountIllustrations.other : accountIllustrations.card;
   const statuses = sampleMonthStatuses(props.seed ?? lender, historyYear);
   const lastReportedIndex = (() => { for (let i = CURRENT_MONTH; i >= 0; i--) if (statuses[i] !== "unreported") return i; return -1; })();
   return <div className="report-account-detail">
@@ -68,7 +63,7 @@ export function ReportAccountDetail(props: Props) {
           <span className="account-art-glow" />
           <span className="account-art-pedestal" />
         </div>
-        <img className="account-detail-art" src={artwork} alt={`${product} illustration`} />
+        <img className="account-detail-art" src={artwork} alt={`${product} illustration`} loading="eager" decoding="async" fetchPriority="high" width={320} height={190} />
       </div>
       <dl className="account-detail-balances">
         <div><dt>{card ? "Total Spends" : "Sanctioned amount"}</dt><dd>{money(card?.used ?? loan?.sanctioned ?? 0)}</dd></div>
@@ -110,8 +105,8 @@ export function ReportAccountDetail(props: Props) {
       {props.information?.sample && <div className="account-facts-heading"><span>Sample details</span></div>}
       <dl>
         {loan && <div><dt>Monthly EMI</dt><dd>{money(loan.emi)}</dd></div>}
-        <div><dt>Account status</dt><dd className={props.information ? "account-facts-status" : "account-value-unavailable"}>{props.information?.status ?? "Not reported"}</dd></div>
-        <div><dt>Account opened on</dt><dd className={props.information ? undefined : "account-value-unavailable"}>{props.information?.openedOn ?? "Not reported"}</dd></div>
+        <div><dt>Account status</dt><dd className={props.information ? `account-facts-status${props.information.status === "Closed" ? " is-closed" : ""}` : "account-value-unavailable"}>{props.information?.status ?? "Not reported"}</dd></div>
+        <div><dt>Issue date</dt><dd className={props.information ? undefined : "account-value-unavailable"}>{props.information?.openedOn ?? "Not reported"}</dd></div>
         <div><dt>Account closed on</dt><dd className={props.information ? undefined : "account-value-unavailable"}>{props.information?.closedOn ?? (props.information?.status === "Active" ? "Not closed" : "Not reported")}</dd></div>
       </dl>
     </section>
