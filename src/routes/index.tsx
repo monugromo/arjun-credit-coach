@@ -461,9 +461,6 @@ function Index() {
   return (
     <div className="h-[100dvh] w-full bg-neutral-200 flex items-stretch sm:items-center justify-center overflow-hidden">
       <div className="relative w-full sm:max-w-[420px] h-[100dvh] sm:h-[min(900px,100dvh-3rem)] sm:my-6 bg-white overflow-hidden sm:rounded-[2.5rem] sm:shadow-2xl sm:border sm:border-black/10 flex flex-col">
-        {screen !== "loans" && <div className="absolute top-2 right-2 z-[100] pointer-events-none select-none px-2 py-1 rounded-md bg-black/70 text-white text-[10px] font-mono tracking-wide shadow">
-          {screen}
-        </div>}
         {screen === "landing" && <Landing onStart={() => go("phone")} />}
         {screen === "phone" && (
           <PhoneScreen phone={phone} setPhone={setPhone} onBack={() => go("landing")} onSubmit={onPhoneSubmit} onDirectLogin={onDirectReportLogin} />
