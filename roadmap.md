@@ -81,3 +81,4 @@
 - [x] Integrate the hero with the page, refine the personalised headline, add carousel dots and score details, and replace the trend action with Talk to Arjun.
 - [x] Add an isolated shaded report comparison account with refined typography and spacing.
 - [x] Animate the needle on first opening and verify baseline and comparison reports.
+- [x] Group all report comparison demos (#013–#019) under a "Report demos" heading at the top of the login list, with "Bureau data found" and "No bureau data" below; verified order, direct report entry and a clean build.
