@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Match account lists and five factor screens to the six supplied references, preserving existing values and account actions; verified all five factors, card/loan drill-downs and narrow-screen spacing, with five passing tests and no page errors. Missing historical factor measurements remain unreported.
+
 - [x] Add loan-style account-card shadows and a separate #017 artwork-first account-detail comparison; verified card/loan layouts, year switching and unchanged #016 layout, with seven passing tests and no page errors.
 
 - [x] Simplify account lists with product-first headings, use product-first detail headers with lifecycle status instead of the info button, and tighten balance/outstanding spacing; verified cards, loans and year switching on #014–#016 with no overflow or page errors and five passing account-rule tests.

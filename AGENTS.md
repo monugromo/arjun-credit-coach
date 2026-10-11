@@ -25,3 +25,4 @@
 - Sort report lists through the lifecycle helper while retaining source indices; this keeps detail navigation correct after active/closed ordering.
 - Share optimized report artwork URLs and warm their browser cache on report entry; this keeps factor and account illustrations consistent and fast without server-side image processing.
 - Gate artwork-first account detail layouts with an optional demo presentation flag in the shared detail component; this isolates comparisons while preserving existing account journeys.
+- Render report account rows through a factor-aware shared renderer and cycle factor views through existing report state; this keeps identity, values and drill-down targets consistent across reference layouts.
