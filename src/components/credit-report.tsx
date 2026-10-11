@@ -133,6 +133,8 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   const creditAge = user.key === "distressed" ? distressedFactors.find(item => item.name === "Credit Age") : undefined;
   const reportFactors = factors.map(item => item.key === "age" ? { ...item, value: creditAge?.note.replace("yr avg", "years") ?? "Not available", subtitle: creditAge?.note.replace("yr avg", "years average age") ?? "Not available" } : item);
   const factor = reportFactors.find((item) => item.key === view);
+  const factorTotal = view === "payment" ? `${loans.length} loan accounts` : view === "usage" ? `${cards.length} credit cards` : view === "mix" || view === "age" ? `${cards.length + loans.length} total accounts` : `${enquiries.length} enquiries · Last 6 months`;
+  const legacyRows = user.reportLayout === "previous";
   const currentCard = account?.kind === "card" ? cards[account.index] : undefined;
   const currentLoan = account?.kind === "loan" ? loans[account.index] : undefined;
   const band = user.band ?? "Poor";
@@ -187,9 +189,18 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
       </Button>;
     })}</div>;
   };
-  const cardRows = accountRows("card");
-  const loanRows = accountRows("loan");
-  const enquiryRows = <div className="report-account-list">{enquiries.map(enquiry => <div className="report-enquiry-row report-reference-row" key={enquiry.lender}><ReportBankMark name={enquiry.lender} logoUrl={bankLogos[enquiry.lender]} /><span className="report-row-label"><strong>{enquiry.product.replace("Loan", "loan").replace("Card", "card")}</strong><small>{enquiry.lender}</small></span><span className="report-reference-value"><time>{enquiry.date}</time><small>Enquired on</small></span></div>)}</div>;
+  const legacyCardRows = <div className="report-account-list">{accountsByLifecycle(cards, demoAccountInformation).map(({ account: card, index }) => <Button variant="ghost" key={card.last4} className="report-account-row report-summary-account-row" onClick={() => openAccount({ kind: "card", index })}>
+    <span className="report-account-top"><ReportBankMark name={card.bank} logoUrl={bankLogos[card.bank]} /><span className="report-row-label"><strong>Credit card</strong><span className="report-account-secondary">{card.bank}</span></span><span className="report-account-trailing"><span className={`report-lifecycle-status${demoAccountInformation[card.last4]?.status === "Active" ? " is-active" : ""}`}>{demoAccountInformation[card.last4]?.status ?? "Not reported"}</span><ChevronRight className="report-chevron" /></span></span>
+    <span className="report-account-meta"><span><small>Credit limit</small><strong>{money(card.limit)}</strong></span><span className="report-account-status"><small>Utilisation</small><strong className={`report-tone-${creditUsageTone(card.pct)}`}>{card.pct}%</strong></span></span>
+  </Button>)}</div>;
+  const legacyLoanRows = <div className="report-account-list">{accountsByLifecycle(loans, demoAccountInformation).map(({ account: loan, index }) => <Button variant="ghost" key={loan.name} className="report-account-row report-summary-account-row report-loan-account-row" onClick={() => openAccount({ kind: "loan", index })}>
+    <span className="report-account-top"><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.name.replace("Loan", "loan")}</strong><span className="report-account-secondary">{loan.lender}</span></span><span className="report-account-trailing"><span className={`report-lifecycle-status${demoAccountInformation[loan.last4]?.status === "Active" ? " is-active" : ""}`}>{demoAccountInformation[loan.last4]?.status ?? "Not reported"}</span><ChevronRight className="report-chevron" /></span></span>
+    <span className="report-account-meta"><span><small>Acc No.</small><strong>xx{loan.last4}</strong></span><span className="report-account-status"><small>Payment</small><strong className={`report-tone-${loan.tone}`}>{loan.status === "On time" ? <CheckCircle2 aria-hidden="true" /> : <Clock aria-hidden="true" />}{loan.status}</strong></span></span>
+  </Button>)}</div>;
+  const legacyEnquiryRows = <div className="report-account-list">{enquiries.map(enquiry => <div className="report-enquiry-row" key={enquiry.lender}><ReportBankMark name={enquiry.lender} logoUrl={bankLogos[enquiry.lender]} /><span className="report-row-label"><strong>{enquiry.lender}</strong><small>{enquiry.product}</small></span><time>{enquiry.date}</time></div>)}</div>;
+  const cardRows = legacyRows ? legacyCardRows : accountRows("card");
+  const loanRows = legacyRows ? legacyLoanRows : accountRows("loan");
+  const enquiryRows = legacyRows ? legacyEnquiryRows : <div className="report-account-list">{enquiries.map(enquiry => <div className="report-enquiry-row report-reference-row" key={enquiry.lender}><ReportBankMark name={enquiry.lender} logoUrl={bankLogos[enquiry.lender]} /><span className="report-row-label"><strong>{enquiry.product.replace("Loan", "loan").replace("Card", "card")}</strong><small>{enquiry.lender}</small></span><span className="report-reference-value"><time>{enquiry.date}</time><small>Enquired on</small></span></div>)}</div>;
   const factorIndex = reportFactors.findIndex(item => item.key === view);
   const changeFactor = (direction: number) => {
     const next = reportFactors[(factorIndex + direction + reportFactors.length) % reportFactors.length];
