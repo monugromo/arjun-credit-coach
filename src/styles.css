@@ -549,6 +549,21 @@
 .report-account-meta strong { font-size: 13px; line-height: 1.5; font-weight: 600; }
 .credit-report .rf-group .report-account-list > .report-account-row:last-child { border-bottom: 1px solid var(--report-line) !important; }
 
+/* Loan identity and payment status stay in two clear, aligned groups. */
+.credit-report .report-loan-account-row:hover { border-color: var(--report-line); background: var(--report-surface); }
+.report-loan-account-row .report-account-top { padding: 16px; gap: 12px; align-items: flex-start; }
+.report-loan-account-row .report-bank-mark { margin-top: 2px; }
+.report-loan-account-row .report-row-label { gap: 5px; }
+.report-loan-account-row .report-row-label > strong { font-size: 15px; line-height: 1.4; }
+.report-loan-secondary { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; color: var(--report-subtle); font-size: 12px; font-weight: 400; line-height: 1.5; }
+.report-loan-account-row .report-lifecycle-status { font-size: 11px; }
+.report-loan-account-row .report-chevron { margin: 4px 0 0; width: 16px; height: 16px; }
+.report-loan-account-row .report-account-meta { padding: 11px 16px; border-top: 1px solid var(--report-line); background: transparent; }
+.report-loan-account-row .report-account-meta small { font-size: 12px; font-variant-numeric: tabular-nums; }
+.report-loan-account-row .report-account-meta > .report-account-status { flex-direction: row; align-items: center; gap: 6px; }
+.report-loan-account-row .report-account-status svg { width: 14px; height: 14px; stroke-width: 1.75; }
+.report-loan-account-row .report-account-status strong { font-size: 12px; font-weight: 600; }
+
 /* Compact comparison uses spacing, never whole-page scaling. */
 .report-compact { --report-gutter: 18px; font-size: 15px; }
 .report-compact .report-section { padding-top: 16px; padding-bottom: 16px; }
