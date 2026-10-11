@@ -321,9 +321,9 @@
 .report-status-word { display: inline-flex; align-items: center; color: var(--report-subtle); }
 .report-status-dot { width: 7px; height: 7px; border-radius: 100%; background: currentColor; }
 .report-chevron { color: var(--report-subtle); width: 16px; height: 16px; flex-shrink: 0; }
-.report-tone-warning { color: var(--report-warning); }
-.report-tone-danger { color: var(--report-danger); }
-.report-tone-positive { color: var(--report-positive); }
+.report-tone-warning { --report-tone: var(--report-warning); color: var(--report-warning); }
+.report-tone-danger { --report-tone: var(--report-danger); color: var(--report-danger); }
+.report-tone-positive { --report-tone: var(--report-positive); color: var(--report-positive); }
 .report-fill-warning { background: var(--report-warning); }
 .report-fill-danger { background: var(--report-danger); }
 .report-fill-positive { background: var(--report-positive); }

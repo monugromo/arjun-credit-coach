@@ -164,7 +164,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   };
 
   const accountRows = (kind: "card" | "loan", context: View = view) => {
-    const source = kind === "card" ? cards : loans;
+    const source: readonly (typeof cards[number] | typeof loans[number])[] = kind === "card" ? cards : loans;
     return <div className="report-account-list">{accountsByLifecycle(source, demoAccountInformation).map(({ account: item, index }) => {
       const card = "bank" in item ? item : undefined;
       const loan = "lender" in item ? item : undefined;
@@ -173,7 +173,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
       const title = loan?.name.replace("Loan", "loan") ?? lender;
       const secondary = loan ? lender : "Credit card";
       let value = card ? money(card.limit) : money(loan?.outstanding ?? 0);
-      let label = information?.status ?? "Not reported";
+      let label: string = information?.status ?? "Not reported";
       let tone = "";
       if (context === "usage" && card) { value = money(card.used); label = `${card.pct}% used`; tone = creditUsageTone(card.pct); }
       if (context === "payment" && loan) { value = loan.status; label = `Acc No. xx${loan.last4}`; tone = loan.tone; }
