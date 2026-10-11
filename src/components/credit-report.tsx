@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronRight, Clock, CreditCard, Download, FileText, Info, Layers, MessageCircle, RefreshCw, Wallet } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarCheck, CheckCircle2, ChevronLeft, ChevronRight, Clock, CreditCard, Download, FileText, Info, Layers, MessageCircle, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { DemoUser } from "@/lib/groscore-data";
@@ -133,7 +133,6 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   const creditAge = user.key === "distressed" ? distressedFactors.find(item => item.name === "Credit Age") : undefined;
   const reportFactors = factors.map(item => item.key === "age" ? { ...item, value: creditAge?.note.replace("yr avg", "years") ?? "Not available", subtitle: creditAge?.note.replace("yr avg", "years average age") ?? "Not available" } : item);
   const factor = reportFactors.find((item) => item.key === view);
-  const factorTotal = view === "payment" ? `${loans.length} loan accounts` : view === "usage" ? `${cards.length} credit cards` : view === "mix" || view === "age" ? `${cards.length + loans.length} total accounts` : `${enquiries.length} enquiries · Last 6 months`;
   const currentCard = account?.kind === "card" ? cards[account.index] : undefined;
   const currentLoan = account?.kind === "loan" ? loans[account.index] : undefined;
   const band = user.band ?? "Poor";
@@ -164,15 +163,38 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
-  const cardRows = <div className="report-account-list">{accountsByLifecycle(cards, demoAccountInformation).map(({ account: card, index }) => <Button variant="ghost" key={card.last4} className="report-account-row report-summary-account-row" onClick={() => openAccount({ kind: "card", index })}>
-    <span className="report-account-top"><ReportBankMark name={card.bank} logoUrl={bankLogos[card.bank]} /><span className="report-row-label"><strong>Credit card</strong><span className="report-account-secondary">{card.bank}</span></span><span className="report-account-trailing"><span className={`report-lifecycle-status${demoAccountInformation[card.last4]?.status === "Active" ? " is-active" : ""}`}>{demoAccountInformation[card.last4]?.status ?? "Not reported"}</span><ChevronRight className="report-chevron" /></span></span>
-    <span className="report-account-meta"><span><small>Credit limit</small><strong>{money(card.limit)}</strong></span><span className="report-account-status"><small>Utilisation</small><strong className={`report-tone-${creditUsageTone(card.pct)}`}>{card.pct}%</strong></span></span>
-  </Button>)}</div>;
-  const loanRows = <div className="report-account-list">{accountsByLifecycle(loans, demoAccountInformation).map(({ account: loan, index }) => <Button variant="ghost" key={loan.name} className="report-account-row report-summary-account-row report-loan-account-row" onClick={() => openAccount({ kind: "loan", index })}>
-    <span className="report-account-top"><ReportBankMark name={loan.lender} logoUrl={bankLogos[loan.lender]} /><span className="report-row-label"><strong>{loan.name.replace("Loan", "loan")}</strong><span className="report-account-secondary">{loan.lender}</span></span><span className="report-account-trailing"><span className={`report-lifecycle-status${demoAccountInformation[loan.last4]?.status === "Active" ? " is-active" : ""}`}>{demoAccountInformation[loan.last4]?.status ?? "Not reported"}</span><ChevronRight className="report-chevron" /></span></span>
-    <span className="report-account-meta"><span><small>Acc No.</small><strong>xx{loan.last4}</strong></span><span className="report-account-status"><small>Payment</small><strong className={`report-tone-${loan.tone}`}>{loan.status === "On time" ? <CheckCircle2 aria-hidden="true" /> : <Clock aria-hidden="true" />}{loan.status}</strong></span></span>
-  </Button>)}</div>;
-  const enquiryRows = <div className="report-account-list">{enquiries.map(enquiry => <div className="report-enquiry-row" key={enquiry.lender}><ReportBankMark name={enquiry.lender} logoUrl={bankLogos[enquiry.lender]} /><span className="report-row-label"><strong>{enquiry.lender}</strong><small>{enquiry.product}</small></span><time>{enquiry.date}</time></div>)}</div>;
+  const accountRows = (kind: "card" | "loan", context: View = view) => {
+    const source = kind === "card" ? cards : loans;
+    return <div className="report-account-list">{accountsByLifecycle(source, demoAccountInformation).map(({ account: item, index }) => {
+      const card = "bank" in item ? item : undefined;
+      const loan = "lender" in item ? item : undefined;
+      const lender = card?.bank ?? loan?.lender ?? "";
+      const information = demoAccountInformation[item.last4];
+      const title = loan?.name.replace("Loan", "loan") ?? lender;
+      const secondary = loan ? lender : "Credit card";
+      let value = card ? money(card.limit) : money(loan?.outstanding ?? 0);
+      let label = information?.status ?? "Not reported";
+      let tone = "";
+      if (context === "usage" && card) { value = money(card.used); label = `${card.pct}% used`; tone = creditUsageTone(card.pct); }
+      if (context === "payment" && loan) { value = loan.status; label = `Acc No. xx${loan.last4}`; tone = loan.tone; }
+      if (context === "age") { value = information?.openedOn ?? "Not reported"; label = information?.status ?? "Not reported"; }
+      if (context === "mix") { value = information?.status ?? "Not reported"; label = card ? "Credit card" : "Loan"; }
+      return <Button variant="ghost" key={item.last4} className={`report-account-row report-reference-row${loan ? " report-loan-account-row" : ""}`} onClick={() => openAccount({ kind, index })}>
+        <ReportBankMark name={lender} logoUrl={bankLogos[lender]} />
+        <span className="report-row-label"><strong>{title}</strong><small>{secondary}</small></span>
+        <span className="report-reference-value"><strong className={tone ? `report-tone-${tone}` : undefined}>{value}</strong><small className={label === "Active" ? "report-tone-positive" : undefined}>{label}</small></span>
+        <ChevronRight className="report-chevron" />
+      </Button>;
+    })}</div>;
+  };
+  const cardRows = accountRows("card");
+  const loanRows = accountRows("loan");
+  const enquiryRows = <div className="report-account-list">{enquiries.map(enquiry => <div className="report-enquiry-row report-reference-row" key={enquiry.lender}><ReportBankMark name={enquiry.lender} logoUrl={bankLogos[enquiry.lender]} /><span className="report-row-label"><strong>{enquiry.product.replace("Loan", "loan").replace("Card", "card")}</strong><small>{enquiry.lender}</small></span><span className="report-reference-value"><time>{enquiry.date}</time><small>Enquired on</small></span></div>)}</div>;
+  const factorIndex = reportFactors.findIndex(item => item.key === view);
+  const changeFactor = (direction: number) => {
+    const next = reportFactors[(factorIndex + direction + reportFactors.length) % reportFactors.length];
+    if (next) navigate(next.key);
+  };
 
   return <div className={`credit-report flex min-h-0 flex-1 flex-col bg-card text-foreground${user.reportDesign === "comparison" ? " report-comparison" : ""}${user.reportDensity === "compact" ? " report-compact" : ""}`} data-testid="credit-report">
     <header className="report-header flex h-14 shrink-0 items-center gap-3 bg-primary-deep text-primary-foreground">
@@ -192,22 +214,32 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
       </> : account && (currentCard || currentLoan) ? <>
         {currentCard ? <ReportAccountDetail kind="card" layout={user.accountDetailLayout} account={currentCard} information={demoAccountInformation[currentCard.last4]} logoUrl={bankLogos[currentCard.bank]} seed={`${currentCard.bank}-${currentCard.last4}`} onStartChat={onStartChat} /> : currentLoan ? <ReportAccountDetail kind="loan" layout={user.accountDetailLayout} account={currentLoan} information={demoAccountInformation[currentLoan.last4]} logoUrl={bankLogos[currentLoan.lender]} seed={`${currentLoan.lender}-${currentLoan.last4}`} onStartChat={onStartChat} /> : null}
       </> : factor ? <>
-        <section className="report-section rf-hero">
-          <div className="rf-hero-heading"><div className="rf-hero-text"><h2>{factor.title}</h2><span className="rf-total-count">{factorTotal}</span></div><img className="rf-history-illustration" src={factorIllustrations[factor.key]} alt="" loading="eager" decoding="async" fetchPriority="high" width={112} height={112} /></div>
-          <p className="rf-explanation">{factor.explanation}</p>
-        </section>
-        <section className="report-section rf-metric">
-          <small>{view === "payment" ? "Payments on time" : view === "usage" ? "Credit usage" : view === "mix" ? "Credit mix" : view === "age" ? "Average credit age" : "Enquiries"}</small>
-          <div className={`rf-metric-row${view === "usage" || view === "mix" || view === "age" ? " rf-metric-expanded" : ""}`}>
-            <strong>{view === "usage" ? `${money(totalUsed)} / ${money(totalLimit)}` : view === "mix" ? `${cards.length} credit cards · ${loans.length} loans` : view === "enquiries" ? enquiries.length : factor.value}</strong>
-            {view === "usage" && <span>{factor.value} reported usage</span>}
+        <section className="report-section report-reference-factor">
+          <div className="report-factor-navigation">
+            <Button variant="outline" size="icon" aria-label="Previous credit factor" onClick={() => changeFactor(-1)}><ChevronLeft /></Button>
+            <div><span>Key factors</span><h2>{factor.title}</h2></div>
+            <Button variant="outline" size="icon" aria-label="Next credit factor" onClick={() => changeFactor(1)}><ChevronRight /></Button>
           </div>
-          {(view !== "age" || creditAge) && <span className={`rf-pill rf-pill-${factor.tone}`}>{factor.tone === "positive" ? "Good" : factor.tone === "warning" ? "Fair" : "Needs work"}<Info size={14} /></span>}
+          {view === "usage" || view === "payment" ? <div className={`report-factor-snapshot report-tone-${factor.tone}`}>
+            <svg viewBox="0 0 340 180" role="img" aria-label={`${factor.title}: ${view === "usage" ? factor.value : `${paymentCount} EMIs paid on time`}. Latest report only; earlier measurements not reported.`}>
+              {[0, 25, 50, 75, 100].map(tick => <g key={tick}><line x1="38" x2="324" y1={142 - tick * 1.16} y2={142 - tick * 1.16} className="snapshot-grid" /><text x="30" y={146 - tick * 1.16} textAnchor="end" className="snapshot-label">{tick}%</text></g>)}
+              <line x1="278" x2="278" y1="22" y2="142" className="snapshot-guide" />
+              <circle cx="278" cy={142 - (view === "usage" ? 61 : payments.onTime / payments.total * 100) * 1.16} r="5" className="snapshot-point" />
+              <text x="260" y={142 - (view === "usage" ? 61 : payments.onTime / payments.total * 100) * 1.16 - 13} textAnchor="end" className="snapshot-value">{view === "usage" ? factor.value : paymentCount}</text>
+              <text x="278" y="166" textAnchor="middle" className="snapshot-label">05 Oct '26</text>
+            </svg>
+            <p>Latest report · Earlier measurements not reported</p>
+          </div> : <div className={`report-factor-orbit report-tone-${factor.tone}`}><img src={factorIllustrations[factor.key]} alt="" width={140} height={140} /><strong>{factor.value}</strong><span>{factor.unit.toLowerCase()}</span></div>}
+          <div className={`report-factor-insight report-tone-${factor.tone}`}>
+            <div className="report-insight-message"><span className="report-insight-symbol">{factor.tone === "positive" ? <CheckCircle2 /> : <Info />}</span><div><h3>{factor.advice}</h3>{factor.note && <p>{factor.note}</p>}</div></div>
+            <div className="report-insight-stats"><span><strong>{view === "usage" ? factor.value : view === "payment" ? paymentCount : factor.value}</strong><small>{view === "usage" ? "Reported usage" : view === "payment" ? "EMIs paid on time" : view === "age" ? "Average credit age" : view === "mix" ? "Credit accounts" : "Recent enquiries"}</small></span><span><strong>{view === "enquiries" ? "6" : view === "usage" ? cards.length : cards.length + loans.length}</strong><small>{view === "enquiries" ? "Month period" : view === "usage" ? "Credit cards" : "Total accounts"}</small></span></div>
+          </div>
         </section>
-        <section className="report-section rf-accounts">
-          <h3 className="rf-list-heading">{view === "age" ? "Account age" : view === "usage" ? "Credit cards" : view === "enquiries" ? "Recent enquiries" : view === "mix" ? "Credit accounts" : "Loan accounts"}</h3>
-          <div className="report-account-stack">{view === "age" ? <p className="report-description">Account opening dates are not available.</p> : view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <><div className="rf-account-group"><h4>Credit cards <span>{cards.length}</span></h4>{cardRows}</div><div className="rf-account-group"><h4>Loans <span>{loans.length}</span></h4>{loanRows}</div></> : loanRows}</div>
+        <section className="report-section report-reference-accounts">
+          <h3>{view === "enquiries" ? `Recent enquiries (${enquiries.length})` : view === "age" ? "Account opening dates" : "Your accounts"}</h3>
+          {view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "payment" ? loanRows : <>{cardRows}{loanRows}</>}
         </section>
+        <section className="report-section report-factor-definition"><h3>What is {factor.title.toLowerCase()}?</h3><p>{factor.explanation}</p>{view === "age" && <small>Opening dates below are sample details; individual account ages are not reported.</small>}</section>
       </> : view === "accounts" ? <>
         <section className="report-section report-detail-heading"><h2>Full credit details</h2><p>{cards.length} credit cards · {loans.length} loans</p></section>
         <div className="report-account-tabs" role="tablist" aria-label="Credit accounts">{([ ["cards", "Cards", cards.length], ["loans", "Loans", loans.length], ["enquiries", "Enquiries", enquiries.length] ] as const).map(([key, label, count]) => <Button variant="ghost" key={key} role="tab" aria-selected={tab === key} className={tab === key ? "report-tab is-active" : "report-tab"} onClick={() => setTab(key)}>{label}<span>{count}</span></Button>)}</div>
