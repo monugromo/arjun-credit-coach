@@ -246,17 +246,17 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         <section className="report-section report-reference-factor">
           <div className="report-factor-navigation">
             <Button variant="outline" size="icon" aria-label="Previous credit factor" onClick={() => changeFactor(-1)}><ChevronLeft /></Button>
-            <div><span>Key factors</span><h2>{factor.title}</h2></div>
+            <div><h2>{factor.title}</h2></div>
             <Button variant="outline" size="icon" aria-label="Next credit factor" onClick={() => changeFactor(1)}><ChevronRight /></Button>
           </div>
           {compactFactors ? <>
             <div className="report-factor-brief">
               <img src={factorIllustrations[factor.key]} alt="" width={112} height={112} decoding="async" loading="eager" />
-              <div className="report-factor-brief-value"><strong>{factor.value}</strong><span>{view === "payment" ? "EMIs paid on time" : view === "usage" ? "Reported usage" : view === "mix" ? "Credit accounts" : view === "age" ? "Average credit age" : "Recent enquiries"}</span><small>{factorTotal}</small></div>
+              <dl className="report-factor-brief-value"><dt>{view === "payment" ? "EMIs paid on time" : view === "usage" ? "Reported usage" : view === "mix" ? "Credit accounts" : view === "age" ? "Average credit age" : "Recent enquiries"}</dt><dd>{factor.value}</dd></dl>
             </div>
             <div className={`report-factor-verdict report-tone-${factor.tone}`}>
-              {factor.tone === "positive" ? <CheckCircle2 aria-hidden="true" /> : <Info aria-hidden="true" />}
-              <div><h3>{factor.advice}</h3>{factor.note && <p>{factor.note}</p>}</div>
+              <dl><div><dt>{view === "enquiries" ? "Period" : "Accounts reviewed"}</dt><dd>{view === "enquiries" ? "Last 6 months" : factorTotal}</dd></div><div><dt>Status</dt><dd className="report-factor-verdict-status">{factor.tone === "positive" ? "Good" : factor.tone === "warning" ? "Fair" : "Needs work"}</dd></div></dl>
+              <p>{factor.advice}</p>
             </div>
           </> : <>
           {view === "usage" || view === "payment" ? <div className={`report-factor-snapshot report-tone-${factor.tone}`}>

@@ -707,14 +707,16 @@
 
 /* Compact illustration-led factors, isolated to their comparison demo. */
 .report-factor-compact .report-reference-factor { padding-bottom: 0; }
-.report-factor-brief { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 20px; padding: 12px 0; }
+.report-factor-brief { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 20px; padding: 14px 0; }
 .report-factor-brief img { display: block; width: 112px; height: 112px; object-fit: contain; }
-.report-factor-brief-value { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; min-width: 0; }
-.report-factor-brief-value strong { color: var(--report-ink); font-size: 26px; font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; }
-.report-factor-brief-value span { color: var(--report-ink); font-size: 13px; line-height: 1.5; }
-.report-factor-brief-value small { color: var(--report-subtle); font-size: 12px; line-height: 1.5; }
-.report-factor-verdict { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid var(--report-line); border-left: 3px solid var(--report-tone); border-radius: 6px; background: var(--report-paper); }
-.report-factor-verdict > svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; color: var(--report-tone); }
-.report-factor-verdict h3 { color: var(--report-ink); font-size: 13px; font-weight: 600; line-height: 1.5; margin: 0; }
-.report-factor-verdict p { color: var(--report-subtle); font-size: 12px; line-height: 1.5; margin: 4px 0 0; }
+.report-factor-brief-value { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; margin: 0; }
+.report-factor-brief-value dd { color: var(--report-ink); font-size: 30px; font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; margin: 0; }
+.report-factor-brief-value dt { color: var(--report-subtle); font-size: 13px; line-height: 1.5; }
+.report-factor-verdict { border-top: 1px solid var(--report-line); padding-top: 12px; }
+.report-factor-verdict dl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; margin: 0; }
+.report-factor-verdict dl > div:last-child { text-align: right; }
+.report-factor-verdict dt { color: var(--report-subtle); font-size: 12px; line-height: 1.5; }
+.report-factor-verdict dd { color: var(--report-ink); font-size: 14px; font-weight: 600; line-height: 1.5; margin: 3px 0 0; }
+.report-factor-verdict dd.report-factor-verdict-status { color: var(--report-tone); }
+.report-factor-verdict p { color: var(--report-subtle); font-size: 13px; line-height: 1.5; margin: 10px 0 0; }
 .report-factor-compact .report-reference-accounts { padding-top: 18px; }
