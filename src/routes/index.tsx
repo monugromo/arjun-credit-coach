@@ -21,7 +21,6 @@ export const Route = createFileRoute("/")({
 const REPORT_DEMOS: { phone: string; label: string }[] = [
   { phone: "9876500014", label: "014 · Report comparison · Original" },
   { phone: "9876500015", label: "015 · Report comparison · Shaded" },
-  { phone: "9876500016", label: "016 · Report comparison · Compact" },
   { phone: "9876500017", label: "017 · Report comparison · Artwork first" },
   { phone: "9876500018", label: "018 · Report comparison · Previous layout" },
   { phone: "9876500019", label: "019 · Report comparison · Compact factors" },
