@@ -135,6 +135,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   const factor = reportFactors.find((item) => item.key === view);
   const factorTotal = view === "payment" ? `${loans.length} loan accounts` : view === "usage" ? `${cards.length} credit cards` : view === "mix" || view === "age" ? `${cards.length + loans.length} total accounts` : `${enquiries.length} enquiries · Last 6 months`;
   const legacyRows = user.reportLayout === "previous";
+  const compactFactors = user.reportFactorLayout === "compact";
   const currentCard = account?.kind === "card" ? cards[account.index] : undefined;
   const currentLoan = account?.kind === "loan" ? loans[account.index] : undefined;
   const band = user.band ?? "Poor";
@@ -207,7 +208,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
     if (next) navigate(next.key);
   };
 
-  return <div className={`credit-report flex min-h-0 flex-1 flex-col bg-card text-foreground${user.reportDesign === "comparison" ? " report-comparison" : ""}${user.reportDensity === "compact" ? " report-compact" : ""}${user.reportLayout === "previous" ? " report-legacy" : ""}`} data-testid="credit-report">
+  return <div className={`credit-report flex min-h-0 flex-1 flex-col bg-card text-foreground${user.reportDesign === "comparison" ? " report-comparison" : ""}${user.reportDensity === "compact" ? " report-compact" : ""}${user.reportLayout === "previous" ? " report-legacy" : ""}${compactFactors ? " report-factor-compact" : ""}`} data-testid="credit-report">
     <header className="report-header flex h-14 shrink-0 items-center gap-3 bg-primary-deep text-primary-foreground">
       <Button variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground" aria-label="Back from credit report" onClick={goBack}><ArrowLeft /></Button>
       <h1 className="flex-1 text-[17px] font-semibold">Credit report</h1>
@@ -248,6 +249,16 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
             <div><span>Key factors</span><h2>{factor.title}</h2></div>
             <Button variant="outline" size="icon" aria-label="Next credit factor" onClick={() => changeFactor(1)}><ChevronRight /></Button>
           </div>
+          {compactFactors ? <>
+            <div className="report-factor-brief">
+              <img src={factorIllustrations[factor.key]} alt="" width={112} height={112} decoding="async" loading="eager" />
+              <div className="report-factor-brief-value"><strong>{factor.value}</strong><span>{view === "payment" ? "EMIs paid on time" : view === "usage" ? "Reported usage" : view === "mix" ? "Credit accounts" : view === "age" ? "Average credit age" : "Recent enquiries"}</span><small>{factorTotal}</small></div>
+            </div>
+            <div className={`report-factor-verdict report-tone-${factor.tone}`}>
+              {factor.tone === "positive" ? <CheckCircle2 aria-hidden="true" /> : <Info aria-hidden="true" />}
+              <div><h3>{factor.advice}</h3>{factor.note && <p>{factor.note}</p>}</div>
+            </div>
+          </> : <>
           {view === "usage" || view === "payment" ? <div className={`report-factor-snapshot report-tone-${factor.tone}`}>
             <svg viewBox="0 0 340 180" role="img" aria-label={`${factor.title}: ${view === "usage" ? factor.value : `${paymentCount} EMIs paid on time`}. Latest report only; earlier measurements not reported.`}>
               {[0, 25, 50, 75, 100].map(tick => <g key={tick}><line x1="38" x2="324" y1={142 - tick * 1.16} y2={142 - tick * 1.16} className="snapshot-grid" /><text x="30" y={146 - tick * 1.16} textAnchor="end" className="snapshot-label">{tick}%</text></g>)}
@@ -262,6 +273,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
             <div className="report-insight-message"><span className="report-insight-symbol">{factor.tone === "positive" ? <CheckCircle2 /> : <Info />}</span><div><h3>{factor.advice}</h3>{factor.note && <p>{factor.note}</p>}</div></div>
             <div className="report-insight-stats"><span><strong>{view === "usage" ? factor.value : view === "payment" ? paymentCount : factor.value}</strong><small>{view === "usage" ? "Reported usage" : view === "payment" ? "EMIs paid on time" : view === "age" ? "Average credit age" : view === "mix" ? "Credit accounts" : "Recent enquiries"}</small></span><span><strong>{view === "enquiries" ? "6" : view === "usage" ? cards.length : cards.length + loans.length}</strong><small>{view === "enquiries" ? "Month period" : view === "usage" ? "Credit cards" : "Total accounts"}</small></span></div>
           </div>
+          </>}
         </section>
         <section className="report-section report-reference-accounts">
           <h3>{view === "enquiries" ? `Recent enquiries (${enquiries.length})` : view === "age" ? "Account opening dates" : "Your accounts"}</h3>
