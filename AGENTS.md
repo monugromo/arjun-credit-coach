@@ -26,3 +26,4 @@
 - Share optimized report artwork URLs and warm their browser cache on report entry; this keeps factor and account illustrations consistent and fast without server-side image processing.
 - Gate artwork-first account detail layouts with an optional demo presentation flag in the shared detail component; this isolates comparisons while preserving existing account journeys.
 - Render report account rows through a factor-aware shared renderer and cycle factor views through existing report state; this keeps identity, values and drill-down targets consistent across reference layouts.
+- Serve the pre-rebuild report lists and factor screens through an optional `reportLayout: "previous"` demo flag so layout comparisons run side by side without touching current journeys.

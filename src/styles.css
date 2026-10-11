@@ -649,6 +649,8 @@
 
 /* Reference-led lists and factor screens, scoped to the credit report. */
 .credit-report .report-account-list { gap: 0; }
+.credit-report.report-legacy .report-account-list { gap: 10px; }
+.credit-report.report-legacy.report-compact .report-account-list { gap: 8px; }
 .credit-report .report-reference-row { display: flex; flex-direction: row; align-items: center; gap: 12px; width: 100%; min-height: 86px; height: auto; padding: 20px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; overflow: visible; text-align: left; white-space: normal; }
 .credit-report .report-reference-row:hover { background: transparent; border-color: var(--report-line); }
 .credit-report .report-reference-row:not(:last-child), .report-reference-accounts .report-account-list + .report-account-list { border-bottom: 1px dashed var(--report-line); }
