@@ -681,7 +681,6 @@
 .snapshot-grid { stroke: var(--report-line); stroke-width: .6; }
 .snapshot-guide { stroke: var(--report-subtle); stroke-width: .8; stroke-dasharray: 3 4; }
 .snapshot-point { fill: var(--report-paper); stroke: var(--report-brand); stroke-width: 2; }
-.snapshot-line { fill: none; stroke: var(--report-brand); stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
 .snapshot-label { fill: var(--report-subtle); font-family: inherit; font-size: 10px; }
 .snapshot-value { fill: var(--report-ink); font-family: inherit; font-size: 14px; font-weight: 600; }
 .report-factor-snapshot p { text-align: center; color: var(--report-subtle); font-size: 10px; margin: 8px 0 0; }
@@ -721,12 +720,3 @@
 .report-factor-verdict dd.report-factor-verdict-status { color: var(--report-tone); }
 .report-factor-verdict p { color: var(--report-subtle); font-size: 13px; line-height: 1.5; margin: 10px 0 0; }
 .report-factor-compact .report-reference-accounts { padding-top: 18px; }
-
-/* Report-only demo picker */
-.report-demo-picker { max-width: 480px; margin: 0 auto; padding: 48px 24px; font-family: "Plus Jakarta Sans", system-ui, sans-serif; }
-.report-demo-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
-.report-demo-subtitle { font-size: 13px; color: #6b7280; margin: 0 0 24px; }
-.report-demo-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-.report-demo-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 16px 4px; background: none; border: none; border-bottom: 1px solid #e5e7eb; font: inherit; font-size: 14px; font-weight: 600; text-align: left; cursor: pointer; color: inherit; }
-.report-demo-row:hover { background: #f9fafb; }
-.report-demo-phone { margin-left: auto; font-size: 12px; font-weight: 500; color: #6b7280; }
