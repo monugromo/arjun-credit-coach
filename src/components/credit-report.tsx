@@ -224,7 +224,24 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
         <section className="report-section"><h3>Still see an error?</h3><p className="report-description">Our support team will look into it within 24 hours.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Raise a ticket <ArrowUpRight /></Button></section>
       </> : account && (currentCard || currentLoan) ? <>
         {currentCard ? <ReportAccountDetail kind="card" layout={user.accountDetailLayout} account={currentCard} information={demoAccountInformation[currentCard.last4]} logoUrl={bankLogos[currentCard.bank]} seed={`${currentCard.bank}-${currentCard.last4}`} onStartChat={onStartChat} /> : currentLoan ? <ReportAccountDetail kind="loan" layout={user.accountDetailLayout} account={currentLoan} information={demoAccountInformation[currentLoan.last4]} logoUrl={bankLogos[currentLoan.lender]} seed={`${currentLoan.lender}-${currentLoan.last4}`} onStartChat={onStartChat} /> : null}
-      </> : factor ? <>
+      </> : factor ? (legacyRows ? <>
+        <section className="report-section rf-hero">
+          <div className="rf-hero-heading"><div className="rf-hero-text"><h2>{factor.title}</h2><span className="rf-total-count">{factorTotal}</span></div><img className="rf-history-illustration" src={factorIllustrations[factor.key]} alt="" loading="eager" decoding="async" fetchPriority="high" width={112} height={112} /></div>
+          <p className="rf-explanation">{factor.explanation}</p>
+        </section>
+        <section className="report-section rf-metric">
+          <small>{view === "payment" ? "Payments on time" : view === "usage" ? "Credit usage" : view === "mix" ? "Credit mix" : view === "age" ? "Average credit age" : "Enquiries"}</small>
+          <div className={`rf-metric-row${view === "usage" || view === "mix" || view === "age" ? " rf-metric-expanded" : ""}`}>
+            <strong>{view === "usage" ? `${money(totalUsed)} / ${money(totalLimit)}` : view === "mix" ? `${cards.length} credit cards · ${loans.length} loans` : view === "enquiries" ? enquiries.length : factor.value}</strong>
+            {view === "usage" && <span>{factor.value} reported usage</span>}
+          </div>
+          {(view !== "age" || creditAge) && <span className={`rf-pill rf-pill-${factor.tone}`}>{factor.tone === "positive" ? "Good" : factor.tone === "warning" ? "Fair" : "Needs work"}<Info size={14} /></span>}
+        </section>
+        <section className="report-section rf-accounts">
+          <h3 className="rf-list-heading">{view === "age" ? "Account age" : view === "usage" ? "Credit cards" : view === "enquiries" ? "Recent enquiries" : view === "mix" ? "Credit accounts" : "Loan accounts"}</h3>
+          <div className="report-account-stack">{view === "age" ? <p className="report-description">Account opening dates are not available.</p> : view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "mix" ? <><div className="rf-account-group"><h4>Credit cards <span>{cards.length}</span></h4>{cardRows}</div><div className="rf-account-group"><h4>Loans <span>{loans.length}</span></h4>{loanRows}</div></> : loanRows}</div>
+        </section>
+      </> : <>
         <section className="report-section report-reference-factor">
           <div className="report-factor-navigation">
             <Button variant="outline" size="icon" aria-label="Previous credit factor" onClick={() => changeFactor(-1)}><ChevronLeft /></Button>
