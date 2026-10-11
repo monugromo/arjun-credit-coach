@@ -551,19 +551,24 @@
 
 /* Shared card and loan hierarchy keeps identity separate from key metrics. */
 .credit-report .report-summary-account-row:hover { border-color: var(--report-line); background: var(--report-surface); }
-.report-summary-account-row .report-account-top { padding: 16px; gap: 12px; align-items: flex-start; }
-.report-summary-account-row .report-bank-mark { margin-top: 2px; }
-.report-summary-account-row .report-row-label { gap: 5px; }
+.report-summary-account-row .report-account-top { padding: 16px 16px 14px; gap: 10px; align-items: center; }
+.report-summary-account-row .report-bank-mark { margin-top: 0; }
+.report-summary-account-row .report-row-label { gap: 3px; }
 .report-summary-account-row .report-row-label > strong { font-size: 15px; line-height: 1.4; }
-.report-account-secondary { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; color: var(--report-subtle); font-size: 12px; font-weight: 400; line-height: 1.5; }
+.report-account-secondary { display: block; color: var(--report-subtle); font-size: 12px; font-weight: 400; line-height: 1.5; }
+.report-account-trailing { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .report-summary-account-row .report-lifecycle-status { font-size: 11px; }
-.report-summary-account-row .report-chevron { margin: 4px 0 0; width: 16px; height: 16px; }
-.report-summary-account-row .report-account-meta { padding: 11px 16px; border-top: 1px solid var(--report-line); background: transparent; }
-.report-summary-account-row .report-account-meta small { font-size: 12px; font-variant-numeric: tabular-nums; }
-.report-summary-account-row .report-account-meta small b { color: var(--report-ink); font-weight: 500; }
-.report-summary-account-row .report-account-meta > .report-account-status { flex-direction: row; align-items: center; gap: 6px; }
+.report-summary-account-row .report-chevron { margin: 0; width: 14px; height: 14px; }
+.report-summary-account-row .report-account-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0 16px 16px; border-top: 0; background: transparent; align-items: start; }
+.report-summary-account-row .report-account-meta > span { gap: 4px; min-width: 0; }
+.report-summary-account-row .report-account-meta small { font-size: 11px; line-height: 1.5; }
+.report-summary-account-row .report-account-meta strong { display: flex; align-items: center; gap: 5px; font-size: 15px; line-height: 1.5; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--report-ink); }
+.report-summary-account-row .report-account-meta > .report-account-status { flex-direction: column; align-items: flex-end; }
+.report-summary-account-row .report-account-status strong.report-tone-positive { color: var(--report-positive); }
+.report-summary-account-row .report-account-status strong.report-tone-warning { color: var(--report-warning); }
+.report-summary-account-row .report-account-status strong.report-tone-danger { color: var(--report-danger); }
 .report-summary-account-row .report-account-status svg { width: 14px; height: 14px; stroke-width: 1.75; }
-.report-summary-account-row .report-account-status strong { font-size: 12px; font-weight: 600; }
+.report-summary-account-row .report-account-status strong { font-size: 15px; font-weight: 600; }
 
 /* Compact comparison uses spacing, never whole-page scaling. */
 .report-compact { --report-gutter: 18px; font-size: 15px; }
