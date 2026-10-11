@@ -259,15 +259,14 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
               <p>{factor.advice}</p>
             </div>
           </> : <>
-          {view === "usage" || view === "payment" ? <div className={`report-factor-snapshot report-tone-${factor.tone}`}>
-            <svg viewBox="0 0 340 180" role="img" aria-label={`${factor.title}: ${view === "usage" ? factor.value : `${paymentCount} EMIs paid on time`}. Latest report only; earlier measurements not reported.`}>
+          {view === "payment" ? <div className={`report-factor-snapshot report-tone-${factor.tone}`}>
+            <svg viewBox="0 0 340 180" role="img" aria-label={`${factor.title}: ${paymentCount} EMIs paid on time. Demo history.`}>
               {[0, 25, 50, 75, 100].map(tick => <g key={tick}><line x1="38" x2="324" y1={142 - tick * 1.16} y2={142 - tick * 1.16} className="snapshot-grid" /><text x="30" y={146 - tick * 1.16} textAnchor="end" className="snapshot-label">{tick}%</text></g>)}
-              <line x1="278" x2="278" y1="22" y2="142" className="snapshot-guide" />
-              <circle cx="278" cy={142 - (view === "usage" ? 61 : payments.onTime / payments.total * 100) * 1.16} r="5" className="snapshot-point" />
-              <text x="260" y={142 - (view === "usage" ? 61 : payments.onTime / payments.total * 100) * 1.16 - 13} textAnchor="end" className="snapshot-value">{view === "usage" ? factor.value : paymentCount}</text>
-              <text x="278" y="166" textAnchor="middle" className="snapshot-label">05 Oct '26</text>
+              <polyline className="snapshot-line" points={DEMO_PAYMENT_HISTORY.map((v, i) => `${58 + i * 44},${142 - v * 1.16}`).join(" ")} />
+              {DEMO_PAYMENT_HISTORY.map((v, i) => <circle key={i} cx={58 + i * 44} cy={142 - v * 1.16} r={i === DEMO_PAYMENT_HISTORY.length - 1 ? 5 : 3.5} className="snapshot-point" />)}
+              <text x={58 + (DEMO_PAYMENT_HISTORY.length - 1) * 44 - 18} y={142 - DEMO_PAYMENT_HISTORY[DEMO_PAYMENT_HISTORY.length - 1] * 1.16 - 13} textAnchor="end" className="snapshot-value">{paymentCount}</text>
+              {DEMO_PAYMENT_LABELS.map((label, i) => <text key={label} x={58 + i * 44} y="166" textAnchor="middle" className="snapshot-label">{label}</text>)}
             </svg>
-            <p>Latest report · Earlier measurements not reported</p>
           </div> : <div className={`report-factor-orbit report-tone-${factor.tone}`}><img src={factorIllustrations[factor.key]} alt="" width={140} height={140} /><strong>{factor.value}</strong><span>{factor.unit.toLowerCase()}</span></div>}
           <div className={`report-factor-insight report-tone-${factor.tone}`}>
             <div className="report-insight-message"><span className="report-insight-symbol">{factor.tone === "positive" ? <CheckCircle2 /> : <Info />}</span><div><h3>{factor.advice}</h3>{factor.note && <p>{factor.note}</p>}</div></div>
