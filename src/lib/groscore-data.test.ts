@@ -3,6 +3,11 @@ import { describe, expect, test } from "bun:test";
 import { DEMOS } from "./groscore-data";
 
 describe("report comparison account", () => {
+  test("019 preserves 016 data and changes only factor presentation", () => {
+    expect(DEMOS["9876500019"]).toEqual({ ...DEMOS["9876500016"], phone: "9876500019", reportFactorLayout: "compact" });
+    expect(DEMOS["9876500016"]?.reportFactorLayout).toBeUndefined();
+    expect(DEMOS["9876500019"]?.directReportLogin).toBe(true);
+  });
   test("017 copies 015 and changes only account-detail presentation", () => {
     expect(DEMOS["9876500017"]).toEqual({ ...DEMOS["9876500015"], phone: "9876500017", accountDetailLayout: "artwork-first" });
     expect(DEMOS["9876500017"]?.reportDensity).toBeUndefined();
