@@ -681,6 +681,7 @@
 .snapshot-grid { stroke: var(--report-line); stroke-width: .6; }
 .snapshot-guide { stroke: var(--report-subtle); stroke-width: .8; stroke-dasharray: 3 4; }
 .snapshot-point { fill: var(--report-paper); stroke: var(--report-brand); stroke-width: 2; }
+.snapshot-line { fill: none; stroke: var(--report-brand); stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
 .snapshot-label { fill: var(--report-subtle); font-family: inherit; font-size: 10px; }
 .snapshot-value { fill: var(--report-ink); font-family: inherit; font-size: 14px; font-weight: 600; }
 .report-factor-snapshot p { text-align: center; color: var(--report-subtle); font-size: 10px; margin: 8px 0 0; }
