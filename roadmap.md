@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Match account lists and five factor screens to the six supplied references, preserving existing values and account actions.
+- [x] Match account lists and five factor screens to the six supplied references, preserving existing values and account actions; verified all five factors, card/loan drill-downs and narrow-screen spacing, with five passing tests and no page errors. Missing historical factor measurements remain unreported.
 
 - [x] Add loan-style account-card shadows and a separate #017 artwork-first account-detail comparison; verified card/loan layouts, year switching and unchanged #016 layout, with seven passing tests and no page errors.
 
