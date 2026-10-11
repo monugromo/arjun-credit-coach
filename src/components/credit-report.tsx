@@ -36,6 +36,9 @@ const enquiries = [
 ];
 const payments = paymentSummary(loans);
 const paymentCount = `${payments.onTime}/${payments.total}`;
+// Demo on-time payment percentages for the payment-history factor chart.
+const DEMO_PAYMENT_HISTORY = [67, 83, 83, 100, 83, 83] as const;
+const DEMO_PAYMENT_LABELS = ["May", "Jun", "Jul", "Aug", "Sep", "Oct"] as const;
 const factors = [
   { key: "payment", title: "Payment history", subtitle: `${paymentCount} EMIs paid on time`, value: paymentCount, unit: "ON TIME", tone: "warning", icon: CalendarCheck, explanation: "Paying on time impacts your CIBIL score the most. It shows that you are a trustworthy borrower.", advice: "Keep every payment on time", note: "Set up reminders or auto-pay for your next bills." },
   { key: "usage", title: "Credit usage", subtitle: "61% of your limit", value: "61%", unit: "USED", tone: "warning", icon: CreditCard, explanation: "Credit usage tells you how much credit you used out of your total credit limit.", advice: "Make room on your cards", note: "Pay down outstanding balances and keep new spending manageable." },
