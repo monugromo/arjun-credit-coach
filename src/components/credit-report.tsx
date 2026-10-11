@@ -268,7 +268,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
           {view === "usage" ? cardRows : view === "enquiries" ? enquiryRows : view === "payment" ? loanRows : <>{cardRows}{loanRows}</>}
         </section>
         <section className="report-section report-factor-definition"><h3>What is {factor.title.toLowerCase()}?</h3><p>{factor.explanation}</p>{view === "age" && <small>Opening dates below are sample details; individual account ages are not reported.</small>}</section>
-      </> : view === "accounts" ? <>
+      </>) : view === "accounts" ? <>
         <section className="report-section report-detail-heading"><h2>Full credit details</h2><p>{cards.length} credit cards · {loans.length} loans</p></section>
         <div className="report-account-tabs" role="tablist" aria-label="Credit accounts">{([ ["cards", "Cards", cards.length], ["loans", "Loans", loans.length], ["enquiries", "Enquiries", enquiries.length] ] as const).map(([key, label, count]) => <Button variant="ghost" key={key} role="tab" aria-selected={tab === key} className={tab === key ? "report-tab is-active" : "report-tab"} onClick={() => setTab(key)}>{label}<span>{count}</span></Button>)}</div>
         <section className="report-section report-account-panel" role="tabpanel" aria-label={tab}><div className="report-section-title"><span>{tab === "cards" ? "Total limit" : tab === "loans" ? "Total outstanding" : "Last 6 months"}</span><strong>{tab === "cards" ? money(totalLimit) : tab === "loans" ? money(totalOutstanding) : "5 enquiries"}</strong></div>{tab === "cards" ? cardRows : tab === "loans" ? loanRows : enquiryRows}</section>
