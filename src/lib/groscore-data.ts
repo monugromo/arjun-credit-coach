@@ -163,6 +163,7 @@ export const DEMOS: Record<string, DemoUser> = {
     scoreHistory: SAMPLE_SCORE_HISTORY,
     directReportLogin: true,
   },
+  "9876500015": {
     key: "distressed",
     phone: "9876500015",
     name: "Sonu",
