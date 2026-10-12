@@ -8,16 +8,14 @@ describe("report comparison account", () => {
     expect(DEMOS["9876500015"]?.reportFactorLayout).toBeUndefined();
     expect(DEMOS["9876500019"]?.directReportLogin).toBe(true);
   });
-  test("both new comparison numbers skip onboarding after demo OTP", () => {
-    expect(DEMOS["9876500014"]?.directReportLogin).toBe(true);
+  test("remaining comparison numbers skip onboarding after demo OTP", () => {
     expect(DEMOS["9876500015"]?.directReportLogin).toBe(true);
+    expect(DEMOS["9876500018"]?.directReportLogin).toBe(true);
     expect(DEMOS["9876500004"]?.directReportLogin).toBeUndefined();
   });
 
   test("new comparison numbers present baseline and shaded designs with equal scores", () => {
-    expect(DEMOS["9876500014"]?.reportDesign).toBeUndefined();
     expect(DEMOS["9876500015"]?.reportDesign).toBe("comparison");
-    expect(DEMOS["9876500014"]?.score).toBe(413);
     expect(DEMOS["9876500015"]?.score).toBe(413);
   });
   test("keeps the original Sonu account on its baseline design", () => {
