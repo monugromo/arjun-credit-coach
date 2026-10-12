@@ -782,7 +782,7 @@ function PhoneScreen({ phone, setPhone, onBack, onSubmit, onDirectLogin }: { pho
             <div>
               <div className="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wider">Report demos</div>
               <div className="flex flex-col gap-2">
-                {[["9876500014", "014", "Report comparison · Original"], ["9876500015", "015", "Report comparison · Shaded"], ["9876500016", "016", "Report comparison · Shaded compact"], ["9876500017", "017", "Report comparison · Illustration first"], ["9876500018", "018", "Report comparison · Previous layout"], ["9876500019", "019", "Report comparison · Compact factors"], ["9876500013", "013", "Sonu · Report design comparison"]].map(([p, id, label]) => (
+                {[["9876500015", "015", "Report comparison · Shaded"], ["9876500018", "018", "Report comparison · Previous layout"], ["9876500019", "019", "Report comparison · Compact factors"], ["9876500013", "013", "Sonu · Report design comparison"]].map(([p, id, label]) => (
                   <button key={p} onClick={() => DEMOS[p]?.directReportLogin ? onDirectLogin(p) : setPhone(p)}
                     className="text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-300 flex items-center justify-between">
                     <span>
