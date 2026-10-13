@@ -1,4 +1,4 @@
-import payment from "@/assets/report-payment-neutral.webp";
+import payment from "@/assets/report-payment-outlined.webp";
 import usage from "@/assets/report-usage-neutral.webp";
 import mix from "@/assets/report-mix-neutral.webp";
 import enquiries from "@/assets/report-enquiries-neutral.webp";
