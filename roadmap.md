@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Create a positive illustrated no-score report with Arjun handoff and a working edit-details entry; preserve scored reports and other journeys.
+- [x] Create a positive illustrated no-score report with Arjun handoff and a working edit-details entry; verified desktop/mobile rendering, name and PAN save/readback, chat handoff, nine passing regression tests and clean build. Corrections stay in the current demo session; no live bureau refetch is claimed.
 
 - [x] Add #019 from #016 with compact illustration-led factor summaries and plain verdicts; verified all five factors with 244–283px summary sections, visible account rows, working detail navigation, no overflow or page errors, and 12 passing tests. Existing demos remain unchanged.
 
