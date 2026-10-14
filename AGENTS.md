@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## Architecture rules
+- Select the no-score report from `hasScore` and pass an edit-details action from the main screen into the report; reuse the existing identity form and keep demo corrections session-only without fabricating a bureau refresh.
 - Keep the credit report's presentation and drill-down state in a dedicated report component, passing existing chat and savings actions from the main screen; this isolates restyling from other journeys.
 - Scope report typography and visual tokens to the report root; other screens must retain their existing appearance.
 - Select report comparison styling and content density through optional demo-user presentation flags; compact shared report spacing without scaling text or the app shell to preserve readability, baseline accounts, navigation and shared actions.

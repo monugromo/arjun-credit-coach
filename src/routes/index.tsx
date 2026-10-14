@@ -106,7 +106,7 @@ type Screen =
   | "perm-all" | "perm-blocked" | "perm-email-intro" | "loading-email" | "perm-email" | "loading-journey" | "score-journey"
   | "ntc-checklist"
   | "chat" | "call-incoming" | "call-active"
-  | "report" | "tasks" | "loans" | "arjun-profile"
+  | "report" | "report-edit" | "tasks" | "loans" | "arjun-profile"
   | "profile" | "subscription" | "help";
 
 type ChatPhase = "intro" | "awaiting-consent" | "in-call" | "post-call";
@@ -626,7 +626,13 @@ function Index() {
           <ActiveCall user={user} onEnd={() => postCallChat(true)} />
         )}
         {screen === "report" && user && (
-          <ReportScreen user={user} onBack={() => go(user ? "chat" : "arjun-profile")} onStartChat={triggerNtcBuild} />
+          <ReportScreen user={user} onBack={() => go(user ? "chat" : "arjun-profile")} onStartChat={triggerNtcBuild} onEditDetails={() => go("report-edit")} />
+        )}
+        {screen === "report-edit" && user && (
+          <EditDetailsScreen user={user} name={name} setName={setName} submitLabel="Save details" onBack={() => go("report")} onContinue={(details) => {
+            if (details) setUser({ ...user, name: details.name, pan: details.pan });
+            go("report");
+          }} />
         )}
         {screen === "tasks" && user && (
           <TasksScreen user={user} tasks={tasks}
@@ -1335,8 +1341,8 @@ function BureauRefetch({ onDone }: { onDone: () => void }) {
 
 
 /* ====================== EDIT DETAILS (NTC2: user says they have a loan/CC) ====================== */
-function EditDetailsScreen({ user, name, setName, onBack, onContinue }:
-  { user: DemoUser; name: string; setName: (v: string) => void; onBack: () => void; onContinue: () => void }) {
+function EditDetailsScreen({ user, name, setName, onBack, onContinue, submitLabel = "Continue" }:
+  { user: DemoUser; name: string; setName: (v: string) => void; onBack: () => void; onContinue: (details?: { name: string; pan: string }) => void; submitLabel?: string }) {
   const [localName, setLocalName] = useState(name || user.name);
   const [pan, setPan] = useState(user.pan || "");
   const valid = localName.trim().length >= 2 && pan.length === 10;
@@ -1369,10 +1375,10 @@ function EditDetailsScreen({ user, name, setName, onBack, onContinue }:
         </div>
       </div>
       <div className={UI.footer}>
-        <button onClick={() => { setName(localName.trim()); onContinue(); }} disabled={!valid}
+        <button onClick={() => { setName(localName.trim()); onContinue({ name: localName.trim(), pan }); }} disabled={!valid}
           className={UI.primaryBtn}
           style={{ background: WA.accent }}>
-          Continue
+          {submitLabel}
         </button>
       </div>
     </div>
@@ -3008,8 +3014,8 @@ function FdDetailSheet({ card, onClose }: { card: FdCard; onClose: () => void })
 }
 
 /* ====================== REPORT ====================== */
-function ReportScreen({ user, onBack, onStartChat }: { user: DemoUser; onBack: () => void; onStartChat: () => void }) {
-  return <CreditReport user={user} onBack={onBack} onStartChat={onStartChat} />;
+function ReportScreen({ user, onBack, onStartChat, onEditDetails }: { user: DemoUser; onBack: () => void; onStartChat: () => void; onEditDetails: () => void }) {
+  return <CreditReport user={user} onBack={onBack} onStartChat={onStartChat} onEditDetails={onEditDetails} />;
 }
 
 function BigGauge({ value }: { value: number }) {
