@@ -13,6 +13,7 @@ import { creditUsageTone } from "@/lib/report-usage";
 import { ReportAccountDetail } from "@/components/report-account-detail";
 import { accountsByLifecycle, demoAccountInformation } from "@/lib/report-account-information";
 import { paymentSummary } from "@/lib/report-payments";
+import noScoreArtwork from "@/assets/report-no-score.jpg";
 
 const cards = [
   { bank: "HDFC Bank", last4: "4521", used: 128000, limit: 150000, pct: 85, tone: "danger" },
@@ -110,7 +111,7 @@ function ScoreGauge({ score, animationKey, band, onInfo }: { score: number; anim
   </svg><div className="report-gauge-value"><strong>{Math.round(displayScore)}</strong><div className="report-gauge-band"><span>{band}</span><Button variant="ghost" size="icon" aria-label="About your credit score" aria-haspopup="dialog" onClick={onInfo}><Info /></Button></div></div></>;
 }
 
-export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { user: DemoUser; onBack: () => void; onStartChat: () => void; bankLogos?: Record<string, string> }) {
+export function CreditReport({ user, onBack, onStartChat, onEditDetails, bankLogos = {} }: { user: DemoUser; onBack: () => void; onStartChat: () => void; onEditDetails: () => void; bankLogos?: Record<string, string> }) {
   const [view, setView] = useState<View>("score");
   useEffect(() => {
     const images = reportArtworkUrls.map(url => { const image = new Image(); image.decoding = "async"; image.src = url; return image; });
@@ -129,7 +130,7 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
   const score = user.score ?? 413;
   const trendRecords = recentScoreRecords(user.scoreHistory ?? [{ date: REPORT_LAST_PULLED, score }]);
   const trendPoints = trendRecords.map((record, index) => ({ ...record, x: trendRecords.length === 1 ? 172 : 48 + index * 248 / (trendRecords.length - 1), y: scoreTrendY(record.score) }));
-  const isNTC = user.key === "ntc";
+  const isNTC = !user.hasScore;
   const creditAge = user.key === "distressed" ? distressedFactors.find(item => item.name === "Credit Age") : undefined;
   const reportFactors = factors.map(item => item.key === "age" ? { ...item, value: creditAge?.note.replace("yr avg", "years") ?? "Not available", subtitle: creditAge?.note.replace("yr avg", "years average age") ?? "Not available" } : item);
   const factor = reportFactors.find((item) => item.key === view);
@@ -215,14 +216,24 @@ export function CreditReport({ user, onBack, onStartChat, bankLogos = {} }: { us
       {!isNTC && <Button variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground" aria-label="Download credit report" onClick={download}><Download /></Button>}
     </header>
     <div className="report-scroll min-h-0 flex-1 overflow-y-auto" ref={scrollRef}>
-      <div className="report-content">
+      <div className={`report-content${isNTC ? " report-ntc-content" : ""}`}>
       {isNTC ? <>
-        <section className="report-section report-ntc-intro"><div className="report-brand">GroScore</div><span className="report-icon report-ntc-icon"><FileText /></span><h2>No credit score yet</h2><p>You're new to credit, {user.name}. Start with a secured card to build your credit history.</p><Button className="report-primary" onClick={onStartChat}>Get a secured card <ArrowUpRight /></Button></section>
-        <section className="report-section"><h3>Start with a secured card</h3><p className="report-description">Against a small FD, with guaranteed approval. Build your score in 3-4 months.</p><ol className="report-steps">{[
-          ["Get a secured card", "Against a small FD - guaranteed approval"], ["Use it for daily purchases", "Keep usage under 30%"], ["Pay the full bill on time", "Every on-time payment builds your history"], ["Score appears in 90 days", "Bureaus start tracking your credit history"],
-        ].map(([title, description], index) => <li key={title}><Button variant="ghost" className="report-step" onClick={onStartChat}><span>{index + 1}</span><span><strong>{title}</strong><small>{description}</small></span><ChevronRight /></Button></li>)}</ol></section>
-        <section className="report-section"><h3>Already have loans or cards?</h3><p className="report-description">Your PAN or name may be incorrect. Update them to fetch the right report.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Update name & PAN <ArrowUpRight /></Button></section>
-        <section className="report-section"><h3>Still see an error?</h3><p className="report-description">Our support team will look into it within 24 hours.</p><Button variant="link" className="report-text-action" onClick={onStartChat}>Raise a ticket <ArrowUpRight /></Button></section>
+        <section className="report-section report-ntc-welcome">
+          <h2>Your credit journey<br />starts here.</h2>
+          <p>No score yet? That's a fresh start,<br />not a setback.</p>
+          <img className="report-ntc-art" src={noScoreArtwork} alt="A credit report beside small steps and a growing plant" width={1024} height={768} decoding="async" fetchPriority="high" />
+          <div className="report-ntc-status"><span aria-hidden="true" />No credit score available yet</div>
+        </section>
+        <section className="report-section report-ntc-build">
+          <h3>Build your first score with Arjun</h3>
+          <p>Find a starting point that fits you, build healthy credit habits, and take it one step at a time.</p>
+          <Button className="report-primary" onClick={onStartChat}>Start building with Arjun <ArrowUpRight /></Button>
+        </section>
+        <section className="report-section report-ntc-correction">
+          <h3>Already have a loan or credit card?</h3>
+          <p>Your report may be linked to different details. Check your name and PAN so we can match the right credit record.</p>
+          <Button variant="link" className="report-text-action" onClick={onEditDetails}>Check & edit details <ChevronRight /></Button>
+        </section>
       </> : account && (currentCard || currentLoan) ? <>
         {currentCard ? <ReportAccountDetail kind="card" layout={user.accountDetailLayout} account={currentCard} information={demoAccountInformation[currentCard.last4]} logoUrl={bankLogos[currentCard.bank]} seed={`${currentCard.bank}-${currentCard.last4}`} onStartChat={onStartChat} /> : currentLoan ? <ReportAccountDetail kind="loan" layout={user.accountDetailLayout} account={currentLoan} information={demoAccountInformation[currentLoan.last4]} logoUrl={bankLogos[currentLoan.lender]} seed={`${currentLoan.lender}-${currentLoan.last4}`} onStartChat={onStartChat} /> : null}
       </> : factor ? (legacyRows ? <>

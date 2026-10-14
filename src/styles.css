@@ -467,6 +467,21 @@
 .report-primary { width: 100%; height: 54px; margin-top: 24px; border-radius: 8px; font-size: 16px; font-weight: 600; }
 .report-ntc-intro > p { margin-top: 12px; }
 .report-ntc-icon { margin: 20px 0 16px; width: 48px; height: 48px; }
+.report-ntc-content { min-height: 100%; display: flex; flex-direction: column; }
+.report-ntc-welcome { text-align: center; border: 0; padding-top: 28px; padding-bottom: 16px; }
+.report-ntc-welcome h2 { font-size: 26px; line-height: 1.3; font-weight: 650; }
+.report-ntc-welcome > p { margin-top: 10px; color: var(--report-subtle); font-size: 14px; line-height: 1.6; }
+.report-ntc-art { display: block; width: 268px; max-width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; margin: 8px auto 4px; }
+.report-ntc-status { display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--report-subtle); font-size: 12px; }
+.report-ntc-status > span { width: 6px; height: 6px; border-radius: 50%; background: var(--report-faint); }
+.report-ntc-build { border: 0; padding-top: 12px; padding-bottom: 24px; }
+.report-ntc-build h3 { font-size: 18px; }
+.report-ntc-build > p, .report-ntc-correction > p { margin-top: 8px; color: var(--report-subtle); font-size: 13px; line-height: 1.65; }
+.report-ntc-build .report-primary { height: auto; min-height: 48px; margin-top: 18px; font-size: 14px; white-space: normal; padding: 12px; background: var(--report-action); color: var(--report-action-foreground); }
+.report-ntc-correction { border-top: 1px solid var(--report-line); border-bottom: 0; padding-top: 20px; padding-bottom: 12px; }
+.report-ntc-correction h3 { font-size: 14px; }
+.report-ntc-correction .report-text-action { font-size: 13px; gap: 4px; }
+.report-ntc-content > .report-bureau { margin-top: auto; border: 0; padding-top: 18px; padding-bottom: 18px; }
 .report-steps { margin-top: 16px; }
 .report-step { height: auto; min-height: 72px; width: 100%; justify-content: flex-start; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--report-line); border-radius: 0; text-align: left; white-space: normal; }
 .report-step > span:first-child { color: var(--report-brand); background: var(--report-positive-soft); flex-shrink: 0; border-radius: 100%; width: 28px; height: 28px; display: flex; justify-content: center; align-items: center; }
